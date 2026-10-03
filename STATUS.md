@@ -36,10 +36,13 @@ compatibility work resumes.
 Families, in order; one game proves each family. Details and next steps per game
 are in [Status by game](docs/COMPATIBILITY.md#status-by-game).
 
-1. **GameCube and Wii** (reference BlueWake): BlueWake's iPhone module builds
-   without Xcode on Linux ([draft #42](https://github.com/chrissotraidis/bluewake/pull/42));
-   its Mac run is in progress. Next: SunPad (same recipe change, needs the
-   `cpp-ipc` submodule), then MeleePad.
+1. **GameCube and Wii** (reference BlueWake): the iPhone module builds without
+   Xcode through PadMint for BlueWake on Linux and on a Mac
+   ([draft #42](https://github.com/chrissotraidis/bluewake/pull/42)) and for SunPad on
+   Linux ([draft #57](https://github.com/chrissotraidis/sunpad/pull/57)). Both still need
+   a device check and a release. Next: MeleePad. Recipes that compile these
+   generated chunks with clang 22 need `-fno-slp-vectorize -mllvm
+   -large-interval-freq-threshold=10`: without them one chunk can take hours.
 2. **N64** (reference GoldenPad): Mac only. Needs a published app without game
    code that loads a module.
 3. **Engine ports** (reference SpaghettiPad): iPhone modules build on Windows and
