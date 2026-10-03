@@ -40,7 +40,9 @@ are in [Status by game](docs/COMPATIBILITY.md#status-by-game).
    Xcode through PadMint for BlueWake on Linux and on a Mac
    ([draft #42](https://github.com/chrissotraidis/bluewake/pull/42)) and for SunPad on
    Linux ([draft #57](https://github.com/chrissotraidis/sunpad/pull/57)). Both still need
-   a device check and a release. Next: MeleePad. Recipes that compile these
+   a device check and a release. MeleePad is blocked on its Slippi parts (a
+   Rust toolchain for iOS, Slippi's C++ libraries and multi-file insertion); see
+   its row. Recipes that compile these
    generated chunks with clang 22 need `-fno-slp-vectorize -mllvm
    -large-interval-freq-threshold=10`: without them one chunk can take hours.
 2. **N64** (reference GoldenPad): Mac only. Needs a published app without game
