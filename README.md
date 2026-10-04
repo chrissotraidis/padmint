@@ -172,6 +172,14 @@ README (for example KartPad needs the European disc, RMCP01). Use an untouched
 In Finder, right-click the file, choose **Download Now**, wait, then choose it
 again.
 
+**The app I made doesn't open on iOS or iPadOS 27.**
+Some games still need an update for iOS 27: apps built with Xcode 27 have to use
+the newer app startup Apple requires, and PadMint's finish screen says when
+yours may be affected. Devices on iOS 26 or earlier aren't affected. Please
+report it on the game's issue page so the fix is prioritized; the
+[compatibility page](docs/COMPATIBILITY.md#recorded-mac-builds-4-october) lists
+which games are affected.
+
 **Windows or macOS warns me about PadMint.**
 Expected for a free tool without a paid certificate. Windows: **More info →
 Run anyway**. Mac: **System Settings → Privacy & Security → Open Anyway**.

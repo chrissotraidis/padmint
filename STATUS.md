@@ -22,6 +22,14 @@ compatibility work resumes.
 
 ## PadMint itself
 
+- **v0.3.6**: one directory of every game (tabs for Build with PadMint, Download
+  and Not available yet, console badges, search, back buttons). Games this
+  computer can't build stay listed with the reason (**Needs an M1+ Mac**) instead
+  of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
+  On a Mac the plan shows each game's install-once Homebrew line with a Copy
+  button. README rewritten for every game.
+- **Next (0.3.7):** the finish screen warns when a copy may not open on iOS 27
+  (see below).
 - **v0.3.5**: alphabetical game list with console filters and search, language
   switching that keeps your choices, release lookup that skips releases
   without a PadMint recipe, and the KartPad ready-to-play notice.
@@ -32,6 +40,16 @@ compatibility work resumes.
   the packages' content gate.
 
 ## Where the compatibility work stands
+
+**Mac builds, 4 October:** every game PadMint builds was built from its latest
+public recipe on one Apple Silicon Mac with Xcode 27; all that ran completed,
+including StarshipPad v0.2.0, whose old SDK-selection failure no longer happens
+([recorded Mac builds](docs/COMPATIBILITY.md#recorded-mac-builds-4-october)).
+**iOS 27 risk:** 11 of those apps (AnnePad, BananaPad, BarrelPad, BrawlerPad,
+GoldenPad, HarkinianPad, MaskPad, MeleePad, PaperPad, StarshipPad, SunPad) are
+linked with the iOS 27 SDK without UIKit scene startup, which Apple requires, so
+they may not open on iOS 27 when built with Xcode 27. Each needs the fix
+SpaghettiPad already has, and a new recipe release under its tracker row.
 
 Families, in order; one game proves each family. Details and next steps per game
 are in [Status by game](docs/COMPATIBILITY.md#status-by-game).

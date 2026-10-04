@@ -108,6 +108,50 @@ steps.
 
 **Excluded:** CTRPad stays out while private.
 
+## Recorded Mac builds, 4 October
+
+On 4 October, the public PadMint **v0.3.5** Mac package ran `make <game> ios` for
+every game it builds, one after another, against each game's latest public
+release recipe. The host was an Apple Silicon Mac (macOS 26.6.2, **Xcode 27.0**)
+that already had each README's Homebrew packages; some games reused earlier work.
+
+| Game (release) | Build | Minutes | iOS 27 startup |
+|---|---|---|---|
+| AnnePad v0.2.1 | Completed | 36.5 | At risk |
+| BallPad v1.1.1 | Completed | 4.9 | Scene callback in code |
+| BananaPad v0.2.1 | Completed | 30.7 | At risk |
+| BarrelPad v0.2.0 | Completed (cached) | 0.9 | At risk |
+| BearBirdPad v0.2.2 | Not run: the test cartridge file on this Mac is half size, and PadMint refused it with the right message | — | — |
+| BellPad v0.2.1 | Completed (cached) | 1.7 | Scene callback in code |
+| BrawlerPad v0.2.0 | Completed | 13.8 | At risk |
+| GoldenPad v0.2.2 | Completed | 6.6 | At risk |
+| HarkinianPad v0.2.0 | Completed | 22.8 | At risk |
+| KartPad v0.7.9 | Completed (cached): IPA and game data folder | 0.9 | Declared |
+| MaskPad v0.2.0 | Completed | 21.5 | At risk |
+| MeleePad v0.2.1 | Completed | 25.1 | At risk |
+| PaperPad v0.2.1 | Completed | 4.7 | At risk |
+| SpaghettiPad v0.2.1 | Completed | 25.6 | Declared |
+| StarshipPad v0.2.0 | Completed: the earlier SDK-selection failure no longer happens | 12.5 | At risk |
+| SunPad v0.2.0 | Completed | 32.9 | At risk |
+
+Not run: DinoPad (no input file on this Mac), AgePad and BlueWake (skipped when
+free space fell under the run's 30 GB guard). These are completed builds and
+package checks only: no app was installed or played in this run.
+
+**iOS 27 startup.** Apple requires apps built with the iOS 27 SDK to start through
+UIKit scenes. *At risk* means the app was linked with the iOS 27 SDK and PadMint
+found no scene startup, so it may not open on iOS or iPadOS 27. SpaghettiPad
+crashed on launch for this reason until its fix
+([#26](https://github.com/chrissotraidis/spaghettipad/issues/26)), and SunPad
+[#54](https://github.com/chrissotraidis/sunpad/issues/54) looks the same. Not
+checked on an iOS 27 device here (this Mac has no iOS 27 Simulator). Apps built
+with Xcode 26 are not affected, and iOS 26 devices are not affected. The fix is
+per game: add scene startup, as SpaghettiPad v0.2.1, StarshipPad
+[#22](https://github.com/chrissotraidis/starshippad/pull/22) and SunPad
+[#55](https://github.com/chrissotraidis/sunpad/pull/55) did, then release a new
+recipe. From 0.3.7, PadMint's finish screen tells the player when their copy is
+at risk.
+
 ## Recorded KartPad builds on x64
 
 On 3 October, public PadMint **v0.3.1** made both KartPad **v0.7.4** outputs on
@@ -159,7 +203,7 @@ observations from different environments, not a performance comparison.
 | SpaghettiPad v0.2.1 | [Reporter confirmed both iPhone and iPad work](https://github.com/chrissotraidis/spaghettipad/issues/26#issuecomment-5955452885) after the SDK 27 startup fix | This validates those reported devices, not every host or device |
 | SpaghettiPad off-Mac work | [Draft #29](https://github.com/chrissotraidis/spaghettipad/pull/29): native Windows/Linux x64 and ARM64 module builds, resource generation and portable package fixtures | Complete released PadMint recipe, matching runtime delivery and target-device acceptance of each host's output |
 | HarkinianPad | [Merged #35](https://github.com/chrissotraidis/harkinianpad/pull/35): resources on five native hosts and full Mac-hosted iOS CI at the reviewed candidate | Portable resources do not establish complete off-Mac apps; published v0.2.0 still uses its old prerequisites |
-| StarshipPad | Public v0.2.0 has a reproduced CoreVideo SDK-selection failure; [merged #22](https://github.com/chrissotraidis/starshippad/pull/22) passes candidate and main-branch full CI | Repair is not yet delivered in the public recipe |
+| StarshipPad | Public v0.2.0 builds through PadMint 0.3.5 with Xcode 27 (4 October, 12.5 minutes); the earlier SDK-selection failure no longer happens. That app has no scene startup (iOS 27 risk); [merged #22](https://github.com/chrissotraidis/starshippad/pull/22) adds it | A release with #22, which waits on its tracker row |
 | SunPad | Public v0.2.0 SDK 27 app lacks required scene startup for iOS/iPadOS 27; [merged #55](https://github.com/chrissotraidis/sunpad/pull/55) passes full iOS/tvOS compilation and a UIKit lifecycle probe with a stub controller | Public app update and physical iOS 27/game/save acceptance; [#54](https://github.com/chrissotraidis/sunpad/issues/54) reporter OS and crash cause are unconfirmed |
 | AgePad | Packages a matching supported Mac Steam installation without Xcode | Updated Steam client was rejected in prior checks; exact-profile support required. Do not bypass fingerprint checks |
 | Other Mac recipes | Release manifests declare experimental Mac ARM64 iOS builds | Per-project tools, source/input requirements and device acceptance still apply; no blanket fresh-host or gameplay claim |
