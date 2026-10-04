@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "ectopad",
+  "name": "EctoPad",
+  "game": "Metroid Prime (GameCube)",
+  "plays_on": [
+    "iphone",
+    "ipad",
+    "mac"
+  ],
+  "repo_url": "https://github.com/chrissotraidis/ectopad",
+  "reviewed_revision": null,
+  "player_help": "https://github.com/chrissotraidis/ectopad#getting-started",
+  "notes": "Listed so players can find it: nothing to build or download through PadMint yet.",
+  "later": {
+    "text": "No download yet. You can build it yourself from source on a Mac with Xcode and your own game; its page has the steps.",
+    "translations": {
+      "es": {
+        "text": "Todavía no hay descarga. Puedes crearlo tú mismo desde el código fuente en una Mac con Xcode y tu propio juego; su página tiene los pasos."
+      },
+      "pt": {
+        "text": "Ainda não há download. Você pode criá-lo a partir do código-fonte em um Mac com Xcode e o seu próprio jogo; a página dele tem os passos."
+      }
+    }
+  },
+  "manifest": null
+}

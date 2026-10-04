@@ -90,10 +90,17 @@ class NextStepsTests(unittest.TestCase):
         self.assertIn("Full guide: https://github.com/example/game#get-game", text)
 
     def test_without_steps_or_a_file_the_guide_link_is_shown(self):
-        for platform, result in (("ios", Path("/out/x.ipa")), ("android", None)):
-            stream = io.StringIO()
-            cli.next_steps(ENTRY, platform, result, stream)
-            self.assertEqual(stream.getvalue(), "Next: https://github.com/example/game#get-game\n")
+        stream = io.StringIO()
+        cli.next_steps(ENTRY, "android", None, stream)
+        self.assertEqual(stream.getvalue(), "Next: https://github.com/example/game#get-game\n")
+
+    def test_an_iphone_copy_without_its_own_steps_gets_the_common_ones(self):
+        stream = io.StringIO()
+        cli.next_steps(ENTRY, "ios", Path("/out/x.ipa"), stream)
+        text = stream.getvalue()
+        self.assertIn("Install x.ipa on your iPhone or iPad with AltStore, SideStore or Sideloadly", text)
+        self.assertIn("same tool and Apple ID", text)
+        self.assertIn("https://github.com/example/game#get-game", text)
 
     def test_start_shows_steps_and_the_file_after_a_build(self):
         stream = io.StringIO()

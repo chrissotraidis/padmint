@@ -63,12 +63,12 @@ class DoctorTests(unittest.TestCase):
     def test_the_player_path_checks_only_what_the_player_installs(self):
         text, code = self.doctor(recipe(SDL2, DEVELOPER), missing=("sdl2-config", "rg"))
         self.assertEqual(code, 1)
-        self.assertIn("FIX  sdl2-config: Install SDL2: brew install sdl2", text)
+        self.assertIn("FIX  SDL2 (sdl2-config): Install SDL2: brew install sdl2", text)
         self.assertNotIn("rg", text.replace("recipe", ""))
 
     def test_installed_is_ok(self):
         text, _code = self.doctor(recipe(SDL2), missing=())
-        self.assertIn("ok   sdl2-config: /usr/bin/sdl2-config", text)
+        self.assertIn("ok   SDL2 (sdl2-config): /usr/bin/sdl2-config", text)
 
 
 class MakeTests(unittest.TestCase):
@@ -105,7 +105,7 @@ class MakeTests(unittest.TestCase):
         result, install, execute = self.make(self.game(SDL2, xdelta, DEVELOPER),
                                              missing=("sdl2-config", "xdelta3", "rg"))
         self.assertEqual(result, "GoldenPad needs these installed first:\n"
-                                 "  sdl2-config: Install SDL2: brew install sdl2\n"
+                                 "  SDL2 (sdl2-config): Install SDL2: brew install sdl2\n"
                                  "  xdelta3: Install xdelta: brew install xdelta\n"
                                  "Then run PadMint again.")
         install.assert_not_called()

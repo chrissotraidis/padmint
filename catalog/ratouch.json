@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "ratouch",
+  "name": "RAtouch",
+  "game": "Command & Conquer: Red Alert (PC)",
+  "plays_on": [
+    "iphone",
+    "ipad"
+  ],
+  "repo_url": "https://github.com/chrissotraidis/ratouch",
+  "reviewed_revision": null,
+  "player_help": "https://github.com/chrissotraidis/ratouch#install-status",
+  "notes": "Listed so players can find it: nothing to build or download through PadMint yet.",
+  "later": {
+    "text": "Its public alpha and install steps are on its page: an unsigned IPA you sign and sideload yourself. PadMint doesn't list install steps for it yet.",
+    "translations": {
+      "es": {
+        "text": "Su alfa pública y los pasos de instalación están en su página: una IPA sin firmar que firmas e instalas tú mismo. PadMint todavía no muestra pasos de instalación para él."
+      },
+      "pt": {
+        "text": "A alfa pública e os passos de instalação estão na página dele: um IPA sem assinatura que você mesmo assina e instala. O PadMint ainda não mostra os passos de instalação dele."
+      }
+    }
+  },
+  "manifest": null
+}

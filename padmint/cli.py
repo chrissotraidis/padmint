@@ -941,7 +941,13 @@ def host_requirements(manifest):
 
 def label(tool):
     """What a requirements.tools entry is called for people: its label, else the program's name."""
-    return tool.get("label", tool["name"])
+    return tool.get("label") or FRIENDLY.get(tool["name"], tool["name"])
+
+
+# Plain names for programs recipes ask players to install, when a recipe gives no label.
+FRIENDLY = {"rg": "ripgrep (rg)", "sdl2-config": "SDL2 (sdl2-config)", "xcodebuild": "Xcode",
+            "xcrun": "Xcode command-line tools", "pkg-config": "pkg-config", "jq": "jq",
+            "brew": "Homebrew", "cargo": "Rust (cargo)", "python3.11": "Python 3.11"}
 
 
 def check_program(tool):
@@ -1073,7 +1079,16 @@ def next_step_text(entry, platform_name, result, lang=None):
     """(steps, note, guide): the few steps that get this file into the game, in the player's words."""
     guide = entry.get("player_help") or f"{entry['repo_url']}#get-{entry['id']}"
     steps = (entry.get("player_next") or {}).get(platform_name)
-    if not steps or result is None:
+    if result is None:
+        return [], None, guide
+    if not steps and platform_name == "ios":
+        # Every iPhone and iPad copy installs the same way; the game's guide has the rest.
+        in_app = entry.get("player_game_file", "build") == "in-app"
+        keys = ["next_ios_install", "next_ios_update", "next_ios_in_app" if in_app else "next_ios_open"]
+        say = (lambda key, **fields: phrase(key, lang, **fields)) if lang else t
+        name = entry.get("name") or (entry.get("manifest") or {}).get("name", entry["id"])
+        return [say(key, file=result.name, name=name) for key in keys], None, guide
+    if not steps:
         return [], None, guide
     instructions = localized(steps, "steps", lang)
     if platform_name == "android" and on_android():
@@ -1217,6 +1232,12 @@ def downloads():
     """[(app, name)]: apps with nothing to build, only their published app and the player's
     own files (catalog "download")."""
     return [(app, entry["name"]) for app, entry in sorted(catalog().items()) if entry.get("download")]
+
+
+def later():
+    """[(game, name)]: games listed so players can find them, with nothing to build or
+    download through PadMint yet (catalog "later")."""
+    return [(game, entry["name"]) for game, entry in sorted(catalog().items()) if entry.get("later")]
 
 
 def download_steps(app, stream, lang=None):
@@ -1481,7 +1502,7 @@ def list_games(stream=None):
     stream = stream or sys.stdout
     for game, entry in sorted(catalog().items()):
         targets = ", ".join(entry.get("player_targets") or []) or (
-            "no build needed" if entry.get("download") else "see repo")
+            "no build needed" if entry.get("download") else "not yet" if entry.get("later") else "see repo")
         print(f"{game:12} {targets:12} {entry['repo_url']}", file=stream)
     return 0
 

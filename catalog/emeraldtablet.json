@@ -2,6 +2,11 @@
   "schema_version": 1,
   "id": "emeraldtablet",
   "name": "Emerald Tablet",
+  "game": "Pharaoh + Cleopatra (PC)",
+  "plays_on": [
+    "iphone",
+    "ipad"
+  ],
   "repo_url": "https://github.com/chrissotraidis/emeraldtablet",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/emeraldtablet#get-started",

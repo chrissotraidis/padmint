@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "openrct2touch",
+  "name": "OpenRCT2 Touch",
+  "game": "RollerCoaster Tycoon 2 (PC)",
+  "plays_on": [
+    "ipad"
+  ],
+  "repo_url": "https://github.com/chrissotraidis/OpenRCT2Touch",
+  "reviewed_revision": null,
+  "player_help": "https://github.com/chrissotraidis/OpenRCT2Touch",
+  "notes": "Listed so players can find it: nothing to build or download through PadMint yet.",
+  "later": {
+    "text": "No iPad download yet. Its page has the latest news.",
+    "translations": {
+      "es": {
+        "text": "Todavía no hay descarga para iPad. Su página tiene las últimas novedades."
+      },
+      "pt": {
+        "text": "Ainda não há download para iPad. A página dele tem as últimas novidades."
+      }
+    }
+  },
+  "manifest": null
+}

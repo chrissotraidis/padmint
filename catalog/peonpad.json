@@ -2,6 +2,10 @@
   "schema_version": 1,
   "id": "peonpad",
   "name": "PeonPad",
+  "game": "Warcraft II (PC)",
+  "plays_on": [
+    "ipad"
+  ],
   "repo_url": "https://github.com/chrissotraidis/peonpad",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/peonpad/blob/main/docs/INSTALL_IPA.md",
