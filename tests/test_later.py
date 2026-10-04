@@ -26,6 +26,21 @@ class LaterTests(unittest.TestCase):
                 with mock.patch.object(manifest, "CATALOG", Path(folder)), self.assertRaises(ValueError):
                     manifest.catalog()
 
+    def test_games_this_computer_cannot_make_are_listed_with_the_reason(self):
+        from padmint import cli
+        with mock.patch.object(cli, "host_id", return_value="windows-x86_64"), \
+                mock.patch.object(cli, "on_android", return_value=False):
+            data = ui.player_data("en")
+        built = {game["id"] for game in data["games"]}
+        waiting = {game["id"]: game for game in data["later"]}
+        self.assertIn("kartpad", built)
+        self.assertNotIn("bellpad", built)
+        self.assertIn("Apple Silicon", waiting["bellpad"]["text"])
+        self.assertEqual(waiting["bellpad"]["tag"], "Needs an M1+ Mac")
+        self.assertEqual(waiting["bellpad"]["about"], "Animal Crossing (GameCube)")
+        everything = built | set(waiting) | {app["id"] for app in data["downloads"]}
+        self.assertEqual(everything, set(manifest.catalog()))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1219,6 +1219,14 @@ def player_games():
     return games
 
 
+def elsewhere():
+    """[(game, name, targets)]: games PadMint builds, but not on this computer (an iPhone copy
+    needs an Apple Silicon Mac), listed so the player learns why instead of not finding them."""
+    offered = {game for game, _name, _targets in player_games()}
+    return [(game, (entry.get("manifest") or {}).get("name") or entry.get("name", game), entry["player_targets"])
+            for game, entry in sorted(catalog().items()) if entry.get("player_targets") and game not in offered]
+
+
 def platform_label(platform_name, lang=None):
     """How the menu names a device: an iPhone copy needs this Mac, or is experimental elsewhere."""
     key = {"android": "android", "ios": "ios_mac" if host_id() == "macos-arm64" else "ios_off_mac",
@@ -1275,6 +1283,9 @@ def start(ask=input, stream=None):
     games = player_games()
     if not games:
         raise ValueError("no game can be made on this computer yet")
+    missing = [name for _game, name, targets in elsewhere() if "ios" in targets]
+    if missing:
+        print(t("elsewhere", names=", ".join(missing)), file=stream)
     disc = game = None
     offered = games
     if len(games) > 1 and any(catalog()[id_].get("game_ids") for id_, _, _ in games):
