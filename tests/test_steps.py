@@ -11,7 +11,7 @@ import tempfile
 import unittest
 
 from padmint.cli import digest, execute, validate
-from padmint.manifest import HOSTS, validate_manifest
+from padmint.manifest import HOSTS, host_id, steps_here, validate_manifest
 from fixtures import entries, write_ipa
 
 STEPS = {
@@ -103,6 +103,44 @@ class StepsTests(unittest.TestCase):
         both["targets"]["ios"]["command"] = ["/bin/true"]
         with self.assertRaisesRegex(ValueError, "not both"):
             validate_manifest(both)
+
+    def test_a_step_runs_only_on_the_systems_it_lists(self):
+        here = host_id().split("-")[0]
+        elsewhere = next(system for system in ("windows", "linux", "macos") if system != here)
+        manifest = copy.deepcopy(STEPS)
+        steps = manifest["targets"]["ios"]["steps"]
+        # The same stage, once per system: the other system's script isn't even in the checkout.
+        steps[0:1] = [{"stage": "dependencies", "on": [elsewhere],
+                       "command": ["/bin/bash", "{repo}/scripts/other-system.sh"]},
+                      dict(steps[0], on=[here])]
+        self.commit(manifest)
+        repo, disc = validate(self.args)
+        self.assertEqual(execute(self.args, repo, disc), 0)
+        _record, stages = self.records()
+        self.assertEqual(stages, [("stage_started", "dependencies"), ("stage_completed", "dependencies"),
+                                  ("stage_started", "package"), ("stage_completed", "package")])
+        self.assertEqual([step["stage"] for step in steps_here(manifest["targets"]["ios"], f"{elsewhere}-x86_64")],
+                         ["dependencies", "package"])
+
+    def test_step_systems_are_checked(self):
+        def variant(**change):
+            manifest = copy.deepcopy(STEPS)
+            manifest["targets"]["ios"]["steps"][0].update(change)
+            return manifest
+        validate_manifest(variant(on=["macos", "linux"]))
+        with self.assertRaisesRegex(ValueError, "must list systems"):
+            validate_manifest(variant(on=["android"]))
+        with self.assertRaisesRegex(ValueError, "must list systems"):
+            validate_manifest(variant(on=[]))
+        overlap = copy.deepcopy(STEPS)
+        overlap["targets"]["ios"]["steps"].append(dict(overlap["targets"]["ios"]["steps"][0], on=["macos"]))
+        with self.assertRaisesRegex(ValueError, "unique on macos"):
+            validate_manifest(overlap)
+        nothing_here = copy.deepcopy(STEPS)
+        for step in nothing_here["targets"]["ios"]["steps"]:
+            step["on"] = ["linux"]
+        with self.assertRaisesRegex(ValueError, "no step runs on macos-arm64"):
+            validate_manifest(nothing_here)
 
     def test_step_environment_receives_placeholders(self):
         manifest = copy.deepcopy(STEPS)

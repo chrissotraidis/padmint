@@ -15,6 +15,8 @@ SCHEMA_VERSION = 1
 KINDS = {"disc-translation", "emulator-shell", "decomp-patches", "upstream-engine", "clean-engine"}
 STATUSES = {"draft-untested", "experimental", "supported", "retired"}
 HOSTS = {"macos-arm64", "macos-x86_64", "linux-x86_64", "linux-arm64", "windows-x86_64", "windows-arm64"}
+# A step's "on" lists the systems it runs on; without it, a step runs everywhere.
+SYSTEMS = {"macos", "linux", "windows"}
 HOST_STATES = {"verified", "experimental", "planned", "unsupported"}
 RUNNABLE_STATES = {"verified", "experimental"}
 TARGETS = {"ios", "macos", "android", "windows", "linux"}
@@ -96,12 +98,20 @@ def validate_manifest(data):
                          f"{where}.steps[{index}] needs a stage name")
                 _argv(step.get("command"), f"{where}.steps[{index}].command")
                 _require(step["command"], f"{where}.steps[{index}].command must not be empty")
+                on = step.get("on")
+                _require(on is None or (isinstance(on, list) and on and set(on) <= SYSTEMS),
+                         f"{where}.steps[{index}].on must list systems from {sorted(SYSTEMS)}")
                 env = step.get("env", {})
                 _require(isinstance(env, dict) and all(re.fullmatch(r"[A-Z][A-Z0-9_]*", key) for key in env),
                          f"{where}.steps[{index}].env must map UPPER_CASE names to values")
                 _argv(list(env.values()), f"{where}.steps[{index}].env")
-                names.append(step["stage"])
-            _require(len(names) == len(set(names)), f"{where}.steps stage names must be unique")
+                names.append((step["stage"], set(on or SYSTEMS)))
+            for system in SYSTEMS:
+                here = [stage for stage, systems in names if system in systems]
+                _require(len(here) == len(set(here)), f"{where}.steps stage names must be unique on {system}")
+            for host, state in hosts.items():
+                _require(state not in RUNNABLE_STATES or steps_here(target, host),
+                         f"{where}: no step runs on {host}")
             _require(not target.get("modes") and not target.get("options"),
                      f"{where}: steps targets do not support modes or options yet")
         _require(not runnable or "command" in target or "steps" in target,
@@ -313,6 +323,14 @@ def host_id():
     machine = platform.machine().lower()
     machine = {"aarch64": "arm64", "amd64": "x86_64"}.get(machine, machine)
     return f"{system}-{machine}"
+
+
+def steps_here(target, host=None):
+    """The target's steps that run on this computer (or on host): a step with "on" runs only
+    on those systems, so one recipe can use a shell script on Macs and Linux and a Python
+    builder on Windows, then share the steps that are the same everywhere."""
+    system = (host or host_id()).split("-")[0]
+    return [step for step in target["steps"] if system in step.get("on", [system])]
 
 
 ANDROID_MARK = Path("/system/build.prop")

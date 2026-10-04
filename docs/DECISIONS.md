@@ -306,6 +306,27 @@ common keys are removed. So three ports (BlueWake, SunPad, MeleePad) already
 separate the app from the game module, which is the design a runtime-only
 public app would need.
 
+## D14. Steps choose their systems; four parts make any game buildable off a Mac (4 Oct 2026)
+
+A recipe step may list the systems it runs on (`"on": ["windows"]`); without `on` it
+runs everywhere, so existing recipes are unchanged. Steps for different systems may share
+a stage name, and every runnable host must have a step. `steps_here()` picks the steps
+in validation, planning and the build.
+
+Why: the game repositories already have the pieces, in different languages per system.
+BlueWake translates with `scripts/builder/build.sh` on Macs and Linux and with
+`scripts/windows/build.py` on Windows, and both produce the same verified composite
+source; the iPhone library build after that is identical on every computer (D13). One
+recipe with per-system source steps reuses that work instead of rewriting each game's
+scripts in one language or shipping a Unix shell for Windows (MinGit's `sh` lacks
+`sha256sum`, `nproc`, `tar` and `patch`, and a shell does not bring the host compiler
+the translators need).
+
+The per-game work is then the same four parts, in `docs/ADDING_A_GAME.md`: a published
+app with no game code, source steps per system, a library build with `{ios_toolchain}`,
+and `ios_module`. Families share them: the GameCube and Wii ports follow BlueWake, the
+engine ports SpaghettiPad, and the N64 ports need the app split first (D10).
+
 ## S2. Android builds from Linux/Windows: conditional yes
 
 KartPad's Android build reuses the same translation output as iOS and uses
