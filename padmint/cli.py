@@ -941,7 +941,13 @@ def host_requirements(manifest):
 
 def label(tool):
     """What a requirements.tools entry is called for people: its label, else the program's name."""
-    return tool.get("label", tool["name"])
+    return tool.get("label") or FRIENDLY.get(tool["name"], tool["name"])
+
+
+# Plain names for programs recipes ask players to install, when a recipe gives no label.
+FRIENDLY = {"rg": "ripgrep (rg)", "sdl2-config": "SDL2 (sdl2-config)", "xcodebuild": "Xcode",
+            "xcrun": "Xcode command-line tools", "pkg-config": "pkg-config", "jq": "jq",
+            "brew": "Homebrew", "cargo": "Rust (cargo)", "python3.11": "Python 3.11"}
 
 
 def check_program(tool):
@@ -1073,7 +1079,16 @@ def next_step_text(entry, platform_name, result, lang=None):
     """(steps, note, guide): the few steps that get this file into the game, in the player's words."""
     guide = entry.get("player_help") or f"{entry['repo_url']}#get-{entry['id']}"
     steps = (entry.get("player_next") or {}).get(platform_name)
-    if not steps or result is None:
+    if result is None:
+        return [], None, guide
+    if not steps and platform_name == "ios":
+        # Every iPhone and iPad copy installs the same way; the game's guide has the rest.
+        in_app = entry.get("player_game_file", "build") == "in-app"
+        keys = ["next_ios_install", "next_ios_update", "next_ios_in_app" if in_app else "next_ios_open"]
+        say = (lambda key, **fields: phrase(key, lang, **fields)) if lang else t
+        name = entry.get("name") or (entry.get("manifest") or {}).get("name", entry["id"])
+        return [say(key, file=result.name, name=name) for key in keys], None, guide
+    if not steps:
         return [], None, guide
     instructions = localized(steps, "steps", lang)
     if platform_name == "android" and on_android():

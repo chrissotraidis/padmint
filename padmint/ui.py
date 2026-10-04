@@ -470,6 +470,10 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 .card{box-shadow:0 1px 0 color-mix(in srgb,var(--text) 4%,transparent),0 8px 24px -18px rgba(0,0,0,.5)}
 
 .loading{display:flex;align-items:center;gap:.6rem}.loading:before{content:"";width:1rem;height:1rem;border-radius:50%;border:2px solid var(--line);border-top-color:var(--mint);animation:spin 1s linear infinite}
+
+#headCard .big{font-size:1.45rem;font-weight:750;letter-spacing:-.01em}
+#headCard.okb{background:linear-gradient(135deg,color-mix(in srgb,var(--mint) 16%,var(--panel)),var(--panel))}
+#headCard.okb .big:before{content:"✓";display:inline-grid;place-items:center;width:1.8rem;height:1.8rem;margin-right:.6rem;border-radius:50%;background:var(--mint);color:#06281a;font-size:1rem;vertical-align:.12em}
 </style></head><body><div class="wrap">
 <header><div class="brand"><div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06281a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-5-3-8-7-8-11a8 8 0 0 1 16 0c0 4-3 8-8 11z"/><path d="M12 21V9"/><path d="M12 13l3-3"/></svg></div>
 <div><h1>PadMint</h1><div class="v" id="ver"></div></div></div>
@@ -497,7 +501,7 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 <details id="typeBox"><summary data-t="type_toggle"></summary><p class="muted small" data-t="type"></p>
 <div class="row"><input id="path" style="flex:1;min-width:240px"><button class="btn" id="use" data-t="use"></button></div></details>
 <p class="state" id="fileState"></p></section>
-<p id="inApp" class="muted hidden"></p>
+<section class="card hidden" id="inApp"><h2 data-t="step2"></h2><p id="inAppText" class="muted"></p></section>
 
 <section class="card hidden" id="deviceBox"><h2 data-t="step3"></h2><div class="grid" id="devices"></div></section>
 
@@ -507,7 +511,7 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 </main>
 
 <main id="progress" class="hidden">
-<section class="card banner" id="headCard"><p class="big" id="making"></p><p class="muted small"><span data-t="elapsed"></span>: <b id="elapsed"></b></p></section>
+<section class="card banner" id="headCard"><p class="big" id="making"></p><p class="muted small"><span id="elapsedLabel" data-t="elapsed"></span>: <b id="elapsed"></b></p></section>
 <section class="card"><ul class="steps" id="phases"></ul>
 <div class="row" style="margin-top:.8rem"><button class="btn" id="cancel" data-t="cancel"></button><span class="muted small" id="cancelNote" data-t="cancel_note"></span>
 <button class="btn hidden" id="again" data-t="again"></button></div></section>
@@ -587,7 +591,7 @@ function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("p
   if(g.formats.length)h.append(" ",el("span",fill("file_formats",{formats:g.formats.join(", ")}),"muted"));
   if(g.ids.length)h.append(" · ",el("span",fill(g.ids[0].length==4?"file_code":"file_ids",{ids:g.ids.join(", ")}),"muted"));$("foundBox").classList.toggle("hidden",!g.files.length);$("found").textContent=fill("found",{folder:D.folder});
   $("files").replaceChildren(...g.files.map(f=>{const b=el("button",null,"btn file");b.append(el("b",base(f)),el("span","→","muted"));b.title=f;b.onclick=()=>useFile(f);return b}))}
- else{$("inApp").textContent=fill("file_in_app",{name:g.name});$("inApp").classList.remove("hidden")}
+ else{$("inAppText").textContent=fill("file_in_app",{name:g.name});$("inApp").classList.remove("hidden")}
  $("deviceBox").classList.remove("hidden");$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}));
  if(g.platforms.length==1)pickDevice(g.platforms[0].id);($("fileBox").classList.contains("hidden")?$("deviceBox"):$("fileBox")).scrollIntoView({behavior:"smooth"});ready()}
 async function pickDevice(id){dev=id;for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
@@ -601,7 +605,7 @@ function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.err
   if(p.tools.length){const li=el("li",fill("plan_tools",{folder:p.tools_folder}));const u=el("ul",null,"tools");
   for(const t of p.tools){const r=el("li");r.append(el("span",t.name+" "+t.version+" · "+fill("from",{host:t.source})),el("span",t.here?S.tool_here:gb(t.size),t.here?"ok":"muted"));u.append(r)}
   li.append(u);o.append(li)}if(p.app)o.append(el("li",fill("plan_app",{name:g.name})));
- o.append(el("li",S.plan_build),el("li",fill("plan_save",{folder:p.folder})));box.append(o);
+ o.append(el("li",g.needs_file?S.plan_build:S.plan_build_app),el("li",fill("plan_save",{folder:p.folder})));box.append(o);
  if(p.space_gb)box.append(el("p",fill("plan_space",{gb:p.space_gb}),"muted small"))}
 function ready(){const g=game();$("make").disabled=!g||!dev||reading||blocked||(g.needs_file&&!file)}
 async function useFile(path){if(!path)return;$("path").value=path;reading=true;file=null;ready();$("fileState").className="state";
@@ -633,7 +637,7 @@ function phaseRow(p,r,g){const li=el("li",null,p.state||"pending"),ico=el("div",
  li.append(ico,body);return li}
 function show(r){if(r.state=="idle")return;last=r;$("form").classList.add("hidden");$("progress").classList.remove("hidden");
  const g=D.games.find(x=>x.id==r.game);$("making").textContent=r.state=="done"?S.done_title:r.state=="failed"?S.failed_title:r.state=="cancelled"?S.cancelled:fill("making",{name:g?g.name:r.game,device:r.device||""});
- $("headCard").classList.toggle("badb",r.state=="failed");$("elapsed").textContent=clock(r.elapsed);
+ $("headCard").classList.toggle("badb",r.state=="failed");$("headCard").classList.toggle("okb",r.state=="done");$("elapsedLabel").textContent=r.state=="done"?S.took:S.elapsed;$("elapsed").textContent=clock(r.elapsed);
  const ids=["release","source","tools","app","build","save"],have={};for(const p of r.phases||[])have[p.id]=p;
  const list=ids.filter(id=>have[id]||(id!="app"&&r.state=="running")).map(id=>have[id]||{id,state:"pending"});
  $("phases").replaceChildren(...list.map(p=>phaseRow(p,r,g)));
