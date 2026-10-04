@@ -256,7 +256,6 @@ def catalog():
                                              for text in [later] + list((later.get("translations") or {}).values()))):
             raise ValueError(f"catalog/{path.name}: later needs a name, a game, text, "
                              "and no player_targets or download")
-        # Games offered to players must say how much space their first build needs, or doctor
         # Games that also publish ready-to-play downloads: where they are and one line saying so.
         ready = entry.get("ready_to_play")
         if ready is not None and (not isinstance(ready, dict) or not targets
@@ -264,6 +263,14 @@ def catalog():
                                   or not all(isinstance(text.get("text", ready.get("text")), str)
                                              for text in [ready] + list((ready.get("translations") or {}).values()))):
             raise ValueError(f"catalog/{path.name}: ready_to_play needs player_targets, an https url and text")
+        # Programs the game's README asks Mac players to install once (Homebrew and the like),
+        # shown on the page before the build: Terminal lines, copied from the README.
+        before = entry.get("before_build")
+        if before is not None and (not targets or not isinstance(before, dict) or set(before) != {"commands"}
+                                   or not isinstance(before["commands"], list) or not before["commands"]
+                                   or not all(isinstance(line, str) and line.strip() for line in before["commands"])):
+            raise ValueError(f"catalog/{path.name}: before_build needs player_targets and a list of commands")
+        # Games offered to players must say how much space their first build needs, or doctor
         # reports "0 GB needed" and make's early check does nothing.
         space = entry.get("free_space_gb", 0 if not targets else None)
         if not isinstance(space, int) or isinstance(space, bool) or space < 0 or (targets and space < 1):

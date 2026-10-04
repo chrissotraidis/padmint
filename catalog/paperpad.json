@@ -14,5 +14,10 @@
   "player_help": "https://github.com/chrissotraidis/paperpad#get-paperpad",
   "reviewed_revision": null,
   "notes": "Manifest owned by the game repository (builds PaperBoat: build-paperboat.sh device, then package-paperboat.py).",
-  "manifest": null
+  "manifest": null,
+  "before_build": {
+    "commands": [
+      "brew install cmake ninja"
+    ]
+  }
 }

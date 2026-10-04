@@ -14,5 +14,11 @@
   "player_help": "https://github.com/chrissotraidis/bananapad#get-started",
   "reviewed_revision": null,
   "notes": "Manifest owned by the game repository (wraps bootstrap-bananapad.sh --target device).",
-  "manifest": null
+  "manifest": null,
+  "before_build": {
+    "commands": [
+      "brew install cmake ninja jq python@3.12 rust gcc llvm@18 ripgrep",
+      "xcodebuild -downloadComponent MetalToolchain"
+    ]
+  }
 }

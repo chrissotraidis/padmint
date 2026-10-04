@@ -26,7 +26,7 @@ trees are still the backend's responsibility. These commands operate on the
 selected checkout. Separately, `get` downloads a catalogued game's source, and
 `make` resolves the published recipe and prepares managed source before calling
 the same runner. The recipe determines supported build hosts and output targets;
-see the [current player routes](../README.md#build-hosts-and-game-devices).
+see the [current player routes](../README.md#what-you-can-make-and-where).
 
 An attempt gets a private output directory under the backend's ignored
 `build/padmint/`. The reusable workspace key includes a workspace-schema version,

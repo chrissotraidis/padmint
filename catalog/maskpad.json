@@ -15,5 +15,10 @@
   "player_help": "https://github.com/chrissotraidis/maskpad#get-started",
   "reviewed_revision": null,
   "notes": "MaskPad owns padmint.json in its repository. The build needs no ROM; players import theirs in the app.",
-  "manifest": null
+  "manifest": null,
+  "before_build": {
+    "commands": [
+      "brew install cmake ninja pkgconf sdl2 glew nlohmann-json libpng libzip tinyxml2 libogg libvorbis opus opusfile sdl2_net"
+    ]
+  }
 }

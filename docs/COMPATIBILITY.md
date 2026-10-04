@@ -1,7 +1,7 @@
 # Build compatibility
 
 Public recipe snapshot: **4 October 2026**, rechecked against each game's latest release
-recipe with PadMint **v0.3.4**.
+recipe with PadMint **v0.3.5** (KartPad rechecked at v0.7.9: same hosts as v0.7.8).
 The table describes the recipe shipped with each game's latest public release.
 It does not promote a declared host to tested gameplay support. See
 [catalog-wide compatibility work](https://github.com/chrissotraidis/padmint/issues/75)
@@ -38,9 +38,9 @@ guided setup offers its Android and iOS targets only.
 | [DinoPad v0.2.0](https://github.com/chrissotraidis/dinopad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [GoldenPad v0.2.2](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.2.2) | iOS IPA | Experimental | Planned / Unavailable | Planned / Unavailable |
 | [HarkinianPad v0.2.0](https://github.com/chrissotraidis/harkinianpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
-| [KartPad v0.7.8](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.8) | iOS IPA | Experimental | Experimental / Experimental | Experimental / Experimental |
-| [KartPad v0.7.8](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.8) | macOS app | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
-| [KartPad v0.7.8](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.8) | Android game pack | Experimental | Experimental / Experimental | Experimental / Experimental |
+| [KartPad v0.7.9](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.9) | iOS IPA | Experimental | Experimental / Experimental | Experimental / Experimental |
+| [KartPad v0.7.9](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.9) | macOS app | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
+| [KartPad v0.7.9](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.9) | Android game pack | Experimental | Experimental / Experimental | Experimental / Experimental |
 | [MaskPad v0.2.0](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [MeleePad v0.2.1](https://github.com/chrissotraidis/meleepad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [PaperPad v0.2.1](https://github.com/chrissotraidis/paperpad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |

@@ -975,6 +975,21 @@ def check_program(tool):
             f"{detail} (need {tool['min_version']}+)" if text else tool.get("note") or "not installed")
 
 
+def before_build(game):
+    """On a Mac: the Terminal lines a game's README asks players to run once (catalog
+    "before_build"), and whether Homebrew and each package they install are already here.
+    None elsewhere, or for games that need nothing."""
+    before = catalog()[game].get("before_build")
+    if not before or not host_id().startswith("macos-"):
+        return None
+    brew = shutil.which("brew")
+    opt = Path(brew).resolve().parent.parent / "opt" if brew else None
+    names = [name for line in before["commands"] if line.startswith("brew install ")
+             for name in line.split()[2:] if not name.startswith("-")]
+    return {"commands": before["commands"], "homebrew": bool(brew),
+            "packages": [{"name": name, "ok": bool(opt and (opt / name).exists())} for name in names]}
+
+
 def published_recipe(game, release=None):
     """(recipe, where it came from): the one the game's latest release publishes, checked
     against the release's SHA256SUMS, or PadMint's built-in copy when that can't be had."""
@@ -1219,6 +1234,14 @@ def player_games():
     return games
 
 
+def elsewhere():
+    """[(game, name, targets)]: games PadMint builds, but not on this computer (an iPhone copy
+    needs an Apple Silicon Mac), listed so the player learns why instead of not finding them."""
+    offered = {game for game, _name, _targets in player_games()}
+    return [(game, (entry.get("manifest") or {}).get("name") or entry.get("name", game), entry["player_targets"])
+            for game, entry in sorted(catalog().items()) if entry.get("player_targets") and game not in offered]
+
+
 def platform_label(platform_name, lang=None):
     """How the menu names a device: an iPhone copy needs this Mac, or is experimental elsewhere."""
     key = {"android": "android", "ios": "ios_mac" if host_id() == "macos-arm64" else "ios_off_mac",
@@ -1275,6 +1298,9 @@ def start(ask=input, stream=None):
     games = player_games()
     if not games:
         raise ValueError("no game can be made on this computer yet")
+    missing = [name for _game, name, targets in elsewhere() if "ios" in targets]
+    if missing:
+        print(t("elsewhere", names=", ".join(missing)), file=stream)
     disc = game = None
     offered = games
     if len(games) > 1 and any(catalog()[id_].get("game_ids") for id_, _, _ in games):

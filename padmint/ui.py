@@ -59,8 +59,16 @@ def player_data(lang):
         for app, name in cli.downloads()]
     waiting = [{"id": game, "name": name, "about": catalog()[game]["game"],
                 "text": localized(catalog()[game]["later"], "text", lang), "plays_on": catalog()[game].get("plays_on", []),
-                "link": catalog()[game].get("player_help") or catalog()[game]["repo_url"]}
+               "link": catalog()[game].get("player_help") or catalog()[game]["repo_url"]}
                for game, name in cli.later()]
+    # Games PadMint builds, but not here: listed with the reason, never silently left out.
+    waiting += [{"id": game, "name": name,
+                 "about": catalog()[game].get("game") or (catalog()[game].get("manifest") or {}).get("game", ""),
+                 "text": phrase("w_needs_mac" if "ios" in targets else "w_needs_windows", lang, name=name),
+                 "tag": phrase("w_needs_mac_tag", lang) if "ios" in targets else None,
+                 "plays_on": ["iphone", "ipad"] if "ios" in targets else [],
+                 "link": catalog()[game].get("player_help") or catalog()[game]["repo_url"]}
+                for game, name, targets in cli.elsewhere()]
     return {"lang": lang, "version": __version__, "folder": str(folder),
             "saved_in": phrase("saved_in", lang, folder=folder), "games": games, "downloads": apps, "later": waiting,
             "text": strings(lang), "picker": not cli.on_android(), "reveal": not cli.on_android()}
@@ -88,7 +96,7 @@ def plan(game, platform_name, lang):
     key = f"w_output_{platform_name}"
     return {"repo": entry["repo_url"], "tools": items, "tools_folder": str(tools.tools_root()),
             "app": bool(target.get("published_app")), "space_gb": entry.get("free_space_gb"),
-            "folder": str(cli.player_folder()), "needs": needs,
+            "folder": str(cli.player_folder()), "needs": needs, "before": cli.before_build(game),
             "output": phrase(key, lang, name=name) if key in MESSAGES else ""}
 
 
@@ -380,6 +388,7 @@ PAGE = r"""<!doctype html><html><head><meta charset="utf-8"><title>PadMint</titl
 a{color:var(--mint)}.wrap{max-width:860px;margin:0 auto;padding:1.4rem 1.2rem 3rem}
 header{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
 .top{display:flex;align-items:center;gap:.6rem}.gh{display:inline-grid;place-items:center;width:2.4rem;height:2.4rem;color:var(--text);border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.howLink{color:var(--muted);text-decoration:none;font-weight:600;font-size:.92rem;padding:.4rem .2rem}.howLink:hover{color:var(--mint)}
 .gh:hover{border-color:var(--mint);color:var(--mint)}.gh svg{width:20px;height:20px}
 .btn.back{border:0;background:none;color:var(--mint);font-weight:650;padding:.2rem 0;margin:0 0 .4rem}.btn.back:hover{text-decoration:underline}
 .backBtn{margin-top:.6rem}
@@ -473,6 +482,11 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 .card{box-shadow:0 1px 0 color-mix(in srgb,var(--text) 4%,transparent),0 8px 24px -18px rgba(0,0,0,.5)}
 
 .loading{display:flex;align-items:center;gap:.6rem}.loading:before{content:"";width:1rem;height:1rem;border-radius:50%;border:2px solid var(--line);border-top-color:var(--mint);animation:spin 1s linear infinite}
+.cmd{display:flex;gap:.5rem;align-items:center;background:#0a0f0d;color:#cfe3d8;border-radius:9px;padding:.4rem .45rem .4rem .7rem;margin:.35rem 0}
+.cmd code{flex:1;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem}
+.cmd button{font:inherit;font-size:.78rem;border-radius:7px;padding:.2rem .6rem;border:1px solid #2a3c35;background:#16211d;color:#cfe3d8;cursor:pointer}.cmd button:hover{border-color:var(--mint)}
+.pks{display:flex;flex-wrap:wrap;gap:.3rem;margin:.3rem 0 .2rem}.pk{font-size:.76rem;border-radius:6px;padding:.05rem .45rem;background:color-mix(in srgb,var(--mint) 15%,transparent);color:var(--mint)}
+.pk.no{background:color-mix(in srgb,var(--bad) 13%,transparent);color:var(--bad)}
 
 #headCard .big{font-size:1.45rem;font-weight:750;letter-spacing:-.01em}
 #headCard.okb{background:linear-gradient(135deg,color-mix(in srgb,var(--mint) 16%,var(--panel)),var(--panel))}
@@ -480,7 +494,7 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 </style></head><body><div class="wrap">
 <header><div class="brand"><div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06281a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-5-3-8-7-8-11a8 8 0 0 1 16 0c0 4-3 8-8 11z"/><path d="M12 21V9"/><path d="M12 13l3-3"/></svg></div>
 <div><h1>PadMint</h1><div class="v" id="ver"></div></div></div>
-<div class="top"><a class="gh" id="gh" href="https://github.com/chrissotraidis" target="_blank" rel="noopener" title="Chris Sotraidis on GitHub" aria-label="Chris Sotraidis on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+<div class="top"><a class="howLink" href="#about" data-t="how_link"></a><a class="gh" id="gh" href="https://github.com/chrissotraidis" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
 <select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></div></header>
 
 <section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div>
@@ -563,7 +577,7 @@ function filters(){const systems=[...new Set(all().map(systemOf).filter(Boolean)
 function row(x){const kind=groupOf(x.id),b=el("button",null,"item "+kind+(x.id==sel?" on":""));b.style.setProperty("--c",colorOf(x));
  const badge=el("span",BADGES[systemOf(x)]||(x.name||"?").charAt(0),"av");badge.title=systemOf(x)?fill("original",{system:systemOf(x)}):"";
  b.append(badge,el("span",x.about?title(x):x.name,"t"));const t=el("div",null,"tags");
- if(kind=="later")t.append(el("span",S.later_head,"tag soon"));if(kind=="download")t.append(el("span",S.tab_download,"tag dl"));
+ if(kind=="later")t.append(el("span",x.tag||S.later_head,"tag soon"));if(kind=="download")t.append(el("span",S.dl_tag,"tag dl"));
  if(kind=="build"&&x.ready)t.append(el("span",S.ready_tag,"tag ready"));
  if(kind=="build")for(const p of x.platforms)t.append(el("span",p.short||p.label,"tag"));else{const o=x.plays_on||[];const ios=o.includes("iphone")&&o.includes("ipad")?["iPhone/iPad"]:o.filter(d=>d!="mac").map(d=>DEVICES[d]);for(const d of [...ios,...(o.includes("mac")?["Mac"]:[])])t.append(el("span",d,"tag"))}b.append(t);
  b.append(el("span",x.name+(systemOf(x)?" · "+fill("original",{system:systemOf(x)}):""),"s"));b.onclick=()=>choose(x.id);return b}
@@ -604,6 +618,10 @@ function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.err
  if(p.output)box.append(el("div",p.output,"out"));
  blocked=p.needs.some(n=>!n.ok);
  if(p.needs.length){box.append(el("p",S.plan_needs,"state"));const u=el("ul",null,"tools");for(const n of p.needs){const li=el("li");li.append(el("span",n.label),el("span",n.ok?S.needs_ok:S.needs_missing,n.ok?"ok":"bad"));u.append(li);if(!n.ok)u.append(el("li",n.note,"detail"))}box.append(u)}
+ if(p.before){const b=p.before;box.append(el("p",S.before_title,"state"),linked(b.homebrew?S.before_hint:S.before_brew,"p"));
+  if(b.homebrew&&b.packages.length){const k=el("div",null,"pks");for(const x of b.packages)k.append(el("span",(x.ok?"✓ ":"✗ ")+x.name,"pk"+(x.ok?"":" no")));box.append(k)}
+  for(const line of b.commands){const c=el("div",null,"cmd"),btn=el("button",S.copy);c.append(el("code",line),btn);
+   btn.onclick=async()=>{try{await navigator.clipboard.writeText(line);btn.textContent=S.copied;setTimeout(()=>btn.textContent=S.copy,1500)}catch(e){getSelection().selectAllChildren(c.firstChild)}};box.append(c)}}
  const o=el("ol");const repo=p.repo.replace("https://","");o.append(el("li",fill("plan_source",{name:g.name,repo})));
   if(p.tools.length){const li=el("li",fill("plan_tools",{folder:p.tools_folder}));const u=el("ul",null,"tools");
   for(const t of p.tools){const r=el("li");r.append(el("span",t.name+" "+t.version+" · "+fill("from",{host:t.source})),el("span",t.here?S.tool_here:gb(t.size),t.here?"ok":"muted"));u.append(r)}
@@ -624,7 +642,7 @@ $("again").onclick=()=>{location.search="?token="+T+"&lang="+D.lang};
 $("copy").onclick=async()=>{const text="PadMint "+D.version+" ("+navigator.platform+")\n"+$("tail").textContent;
  try{await navigator.clipboard.writeText(text);$("copy").textContent=S.copied}catch(e){getSelection().selectAllChildren($("tail"))}};
 const clock=s=>[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map((n,i)=>i?String(n).padStart(2,"0"):n).join(":");
-function linked(text){const li=el("li");for(const part of text.split(/(https:\/\/[^\s)]*[^\s).,;:])/)){if(/^https:\/\//.test(part)){const a=el("a",part);a.href=part;a.target="_blank";li.append(a)}else li.append(part)}return li}
+function linked(text,tag){const li=el(tag||"li",null,tag?"muted small":null);for(const part of text.split(/(https:\/\/[^\s)]*[^\s).,;:])/)){if(/^https:\/\//.test(part)){const a=el("a",part);a.href=part;a.target="_blank";li.append(a)}else li.append(part)}return li}
 function bar(pct){const b=el("div",null,"bar"),i=el("i");i.style.width=Math.max(0,Math.min(100,pct))+"%";b.append(i);return b}
 function phaseRow(p,r,g){const li=el("li",null,p.state||"pending"),ico=el("div",p.state=="done"?"✓":p.state=="failed"?"✕":p.state=="cancelled"?"–":"","ico"),body=el("div");
  const name=g?g.name:r.game;body.append(el("div",fill("ph_"+p.id,{name})));
