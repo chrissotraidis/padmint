@@ -324,6 +324,7 @@ MESSAGES = {
     "w_file_hint": {"en": "Your own copy of {game}.", "es": "Tu propia copia de {game}.", "pt": "A sua própria cópia de {game}."},
     "w_file_formats": {"en": "Accepted: {formats}", "es": "Formatos aceptados: {formats}", "pt": "Formatos aceitos: {formats}"},
     "w_file_ids": {"en": "Disc ID {ids}", "es": "ID del disco {ids}", "pt": "ID do disco {ids}"},
+    "w_file_code": {"en": "Game code {ids}", "es": "Código del juego {ids}", "pt": "Código do jogo {ids}"},
     "w_stage": {"en": "Current step: {stage}", "es": "Paso actual: {stage}", "pt": "Etapa atual: {stage}"},
     "w_what_you_got": {"en": "What you got", "es": "Lo que obtuviste", "pt": "O que você recebeu"},
     "w_short_android": {"en": "Android", "es": "Android", "pt": "Android"},

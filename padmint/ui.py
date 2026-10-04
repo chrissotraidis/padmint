@@ -69,9 +69,10 @@ def player_data(lang):
 def plan(game, platform_name, lang):
     """What a build will do on this computer, before it starts: what it downloads and from
     where, how big, what the player installs first, and where the copy goes. Read from the
-    catalog's copy of the game's recipe, so sizes are close, not exact."""
+    recipe the game's latest release publishes (as doctor does), so the tools and the programs
+    to install first match what the build will use; sizes are close, not exact."""
     entry = catalog()[game]
-    manifest = entry.get("manifest") or {}
+    manifest = release_recipe(game) or entry.get("manifest") or {}
     target = (manifest.get("targets") or {}).get(platform_name) or {}
     host, table = cli.host_id(), tools.lock()
     any_host = bool(target.get("ios_module"))
@@ -89,6 +90,20 @@ def plan(game, platform_name, lang):
             "app": bool(target.get("published_app")), "space_gb": entry.get("free_space_gb"),
             "folder": str(cli.player_folder()), "needs": needs,
             "output": phrase(key, lang, name=name) if key in MESSAGES else ""}
+
+
+RECIPES = {}
+
+
+def release_recipe(game):
+    """The game's latest release recipe, fetched once per PadMint window; None when it can't
+    be read (the plan then falls back to the catalog's copy)."""
+    if game not in RECIPES:
+        try:
+            RECIPES[game] = cli.published_recipe(game)[0]
+        except Exception:  # an offline or too-old PadMint still shows the catalog's plan
+            RECIPES[game] = None
+    return RECIPES[game]
 
 
 PHASES = ("release", "source", "tools", "app", "build", "save")
@@ -523,7 +538,7 @@ function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("p
  if(g.needs_file){$("fileBox").classList.remove("hidden");
   const h=$("fileHint");h.replaceChildren(el("b",fill("file_hint",{game:g.about||g.name})));
   if(g.formats.length)h.append(" ",el("span",fill("file_formats",{formats:g.formats.join(", ")}),"muted"));
-  if(g.ids.length)h.append(" · ",el("span",fill("file_ids",{ids:g.ids.join(", ")}),"muted"));$("foundBox").classList.toggle("hidden",!g.files.length);$("found").textContent=fill("found",{folder:D.folder});
+  if(g.ids.length)h.append(" · ",el("span",fill(g.ids[0].length==4?"file_code":"file_ids",{ids:g.ids.join(", ")}),"muted"));$("foundBox").classList.toggle("hidden",!g.files.length);$("found").textContent=fill("found",{folder:D.folder});
   $("files").replaceChildren(...g.files.map(f=>{const b=el("button",null,"btn file");b.append(el("b",base(f)),el("span","→","muted"));b.title=f;b.onclick=()=>useFile(f);return b}))}
  else{$("inApp").textContent=fill("file_in_app",{name:g.name});$("inApp").classList.remove("hidden")}
  $("deviceBox").classList.remove("hidden");$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}));
@@ -536,9 +551,9 @@ function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.err
  blocked=p.needs.some(n=>!n.ok);
  if(p.needs.length){box.append(el("p",S.plan_needs,"state"));const u=el("ul",null,"tools");for(const n of p.needs){const li=el("li");li.append(el("span",n.label),el("span",n.ok?S.needs_ok:S.needs_missing,n.ok?"ok":"bad"));u.append(li);if(!n.ok)u.append(el("li",n.note,"detail"))}box.append(u)}
  const o=el("ol");const repo=p.repo.replace("https://","");o.append(el("li",fill("plan_source",{name:g.name,repo})));
- const li=el("li",fill("plan_tools",{folder:p.tools_folder}));const u=el("ul",null,"tools");
- for(const t of p.tools){const r=el("li");r.append(el("span",t.name+" "+t.version+" · "+fill("from",{host:t.source})),el("span",t.here?S.tool_here:gb(t.size),t.here?"ok":"muted"));u.append(r)}
- li.append(u);o.append(li);if(p.app)o.append(el("li",fill("plan_app",{name:g.name})));
+  if(p.tools.length){const li=el("li",fill("plan_tools",{folder:p.tools_folder}));const u=el("ul",null,"tools");
+  for(const t of p.tools){const r=el("li");r.append(el("span",t.name+" "+t.version+" · "+fill("from",{host:t.source})),el("span",t.here?S.tool_here:gb(t.size),t.here?"ok":"muted"));u.append(r)}
+  li.append(u);o.append(li)}if(p.app)o.append(el("li",fill("plan_app",{name:g.name})));
  o.append(el("li",S.plan_build),el("li",fill("plan_save",{folder:p.folder})));box.append(o);
  if(p.space_gb)box.append(el("p",fill("plan_space",{gb:p.space_gb}),"muted small"))}
 function ready(){const g=game();$("make").disabled=!g||!dev||reading||blocked||(g.needs_file&&!file)}
