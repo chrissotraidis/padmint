@@ -230,12 +230,12 @@ again.
 <details>
 <summary><strong>The app I made doesn't open on iOS or iPadOS 27.</strong></summary>
 
-Some games still need an update for iOS 27: apps built with Xcode 27 have to use
-the newer app startup Apple requires, and PadMint's finish screen says when
-yours may be affected. Devices on iOS 26 or earlier aren't affected. Please
-report it on the game's issue page so the fix is prioritized; the
-[compatibility page](docs/COMPATIBILITY.md#recorded-mac-builds-4-october) lists
-which games are affected.
+Build it again with PadMint and install it over the old copy; your saves stay.
+Apps built with Xcode 27 have to use the newer app startup Apple requires, and
+every game's latest release has it since 4 October, so a copy built before then
+may not open on iOS 27. If a new copy still doesn't open, report it on the game's
+issue page. The [compatibility page](docs/COMPATIBILITY.md#recorded-mac-builds-4-october)
+has the details.
 
 </details>
 <details>
