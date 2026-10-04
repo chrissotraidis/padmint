@@ -263,6 +263,9 @@ class Builds:
             key = f"w_output_{job['platform']}"
             job["results"][lang] = {"file": str(built) if built else None, "steps": steps, "note": note,
                                     "guide": guide, "private": phrase("keep_private", lang),
+                                    "warning": (phrase("w_ios27", lang, name=name, issues=entry["repo_url"] + "/issues")
+                                                if built and built.suffix.lower() == ".ipa"
+                                                and cli.ios27_launch_risk(built) else ""),
                                     "about": phrase(key, lang, name=name) if key in MESSAGES else ""}
         return job["results"][lang]
 
@@ -672,6 +675,7 @@ function show(r){if(r.state=="idle")return;last=r;$("form").classList.add("hidde
   if(x.file){const row=el("div",null,"row out");row.append(el("span",x.file,"mono ok"));if(D.reveal){const b=el("button",S.show,"btn");b.onclick=()=>post("/api/reveal");row.append(b)}f.append(row)}
   if(x.steps.length){const o=el("ol",null,"next");for(const s of x.steps)o.append(linked(s));f.append(el("h2",S.next),o)}
   if(x.note)f.append(el("p",x.note,"muted"));
+  if(x.warning){const w=linked(x.warning,"p");w.className="warn small";f.append(w)}
   const p=el("p",S.guide+": ","small"),a=el("a",x.guide);a.href=x.guide;a.target="_blank";p.append(a);f.append(p,el("p",x.private,"warn small"))}}
 async function poll(){const r=await (await fetch("/api/build?lang="+D.lang,{headers:H})).json();show(r);if(r.state=="running")setTimeout(poll,1500)}
 if(!D.games.length&&!D.downloads.length){$("form").replaceChildren(el("p",S.none,"bad"))}else{filters();cards();poll()}

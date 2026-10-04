@@ -360,6 +360,11 @@ MESSAGES = {
         "pt": "Estas linhas usam o Homebrew, que ainda não está neste Mac. Instale-o primeiro em https://brew.sh e depois execute-as.",
     },
     "w_copy": {"en": "Copy", "es": "Copiar", "pt": "Copiar"},
+    "w_ios27": {
+        "en": "Heads-up: this app was built with Apple's iOS 27 tools, and PadMint couldn't confirm it uses the app startup Apple requires with them. It may not open on iOS or iPadOS 27 until {name} is updated; iOS 26 and earlier aren't affected. If it doesn't open, please say so at {issues}",
+        "es": "Aviso: esta app se creó con las herramientas de iOS 27 de Apple y PadMint no pudo confirmar que use el inicio de app que Apple exige con ellas. Puede que no abra en iOS o iPadOS 27 hasta que {name} se actualice; iOS 26 y anteriores no se ven afectados. Si no abre, avísanos en {issues}",
+        "pt": "Atenção: este app foi criado com as ferramentas do iOS 27 da Apple e o PadMint não conseguiu confirmar que ele usa a inicialização de app que a Apple exige com elas. Ele pode não abrir no iOS ou iPadOS 27 até que {name} seja atualizado; o iOS 26 e anteriores não são afetados. Se não abrir, avise em {issues}",
+    },
     "w_needs_mac": {
         "en": "PadMint makes {name} for iPhone and iPad on a Mac with Apple Silicon (M1 or newer) and Xcode, so it can't make it on this computer yet. If you have such a Mac, open PadMint there and choose {name}. The game's page has the latest on other computers.",
         "es": "PadMint crea {name} para iPhone y iPad en un Mac con Apple Silicon (M1 o posterior) y Xcode, así que todavía no puede crearlo en esta computadora. Si tienes uno de esos Mac, abre PadMint allí y elige {name}. La página del juego tiene las novedades para otras computadoras.",

@@ -385,6 +385,17 @@ def check_output(check, output, game_revision, disc_sha256):
     return validate_ipa(output, check.split("-")[0], game_revision, disc_sha256)
 
 
+def ios27_launch_risk(output):
+    """True for an iPhone app linked with the iOS 27 SDK or newer that shows no UIKit scene
+    startup: Apple requires it for apps built with that SDK, so the app may not open on iOS 27."""
+    try:
+        apple = validate_ipa(output, None, None, None)["apple_compatibility"]
+    except (OSError, ValueError, KeyError):
+        return False
+    return apple.get("scene_startup") == "unverified" and any(
+        int(str(item["sdk"]).split(".")[0]) >= 27 for item in apple["linked_slices"])
+
+
 def publication_gate(output):
     """Audit every personal output; personal builds are never publishable either way."""
     findings, translated = gate.check(str(output))
