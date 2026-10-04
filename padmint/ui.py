@@ -359,6 +359,8 @@ header{display:flex;justify-content:space-between;align-items:center;gap:1rem;fl
 select,input{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:.55rem .7rem}
 .hero{margin:1.4rem 0 1rem}.hero p{margin:.2rem 0 .8rem;font-size:1.08rem}
 .chips{display:flex;gap:.5rem;flex-wrap:wrap}.chip{font-size:.85rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem}
+.explain{display:grid;gap:.5rem;margin-top:.9rem}.explain details{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:.55rem .9rem}
+.explain summary{color:var(--text);font-weight:600}.explain ol{margin:.5rem 0 .2rem;padding-left:1.3rem}.explain li{margin:.3rem 0}.explain p{font-size:.95rem;margin:.5rem 0 .2rem}
 .chip:before{content:"✓ ";color:var(--mint)}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.2rem;margin:1rem 0}
 .card h2{margin:0 0 .7rem;font-size:1.1rem}.muted{color:var(--muted)}.small{font-size:.88rem}
@@ -402,7 +404,9 @@ footer{margin-top:2rem;color:var(--muted);font-size:.82rem;display:flex;gap:1rem
 <div><h1>PadMint</h1><div class="v" id="ver"></div></div></div>
 <select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></header>
 
-<section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div></section>
+<section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div>
+<div class="explain"><details id="howBox"><summary data-t="how_title"></summary><ol><li data-t="how_1"></li><li data-t="how_2"></li><li data-t="how_3"></li><li data-t="how_4"></li><li data-t="how_5"></li></ol></details>
+<details id="whyBox"><summary data-t="why_title"></summary><p data-t="why_1"></p><p data-t="why_2"></p></details></div></section>
 
 <main id="form">
 <section class="card"><div class="row" style="justify-content:space-between"><h2 data-t="step1"></h2><button class="btn hidden" id="changeGame" data-t="change"></button></div>
