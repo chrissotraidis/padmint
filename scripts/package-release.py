@@ -58,11 +58,51 @@ def windows_python():
     return zipfile.ZipFile(io.BytesIO(data))
 
 
+# What a player sees after unzipping: the launcher, this note and one app folder.
+START = {
+    "PadMint.cmd": ("Double-click PadMint (PadMint.cmd).",
+                    "If Windows says it protected your PC: More info, then Run anyway.",
+                    "Haz doble clic en PadMint (PadMint.cmd). Si Windows dice que protegió tu PC: Más información, luego Ejecutar de todas formas.",
+                    "Clique duas vezes em PadMint (PadMint.cmd). Se o Windows disser que protegeu o seu PC: Mais informações, depois Executar assim mesmo."),
+    "PadMint.command": ("Double-click PadMint.command. Once, before that, run this in Terminal: xcode-select --install",
+                        "The first time, macOS says Apple could not verify it: choose Done, then System Settings, Privacy & Security, Open Anyway.",
+                        "Antes, una sola vez, ejecuta en Terminal: xcode-select --install. Luego haz doble clic en PadMint.command. La primera vez, macOS dice que Apple no pudo verificarlo: cierra el aviso y ve a Ajustes del Sistema, Privacidad y seguridad, Abrir igualmente.",
+                        "Antes, uma única vez, execute no Terminal: xcode-select --install. Depois clique duas vezes em PadMint.command. Na primeira vez, o macOS diz que a Apple não pôde verificá-lo: feche o aviso e vá em Ajustes do Sistema, Privacidade e Segurança, Abrir Mesmo Assim."),
+    "padmint.sh": ("In a terminal in this folder, run: sh padmint.sh",
+                   "It needs Python 3.9 or newer and Git, for example: sudo apt install python3 git",
+                   "En una terminal en esta carpeta, ejecuta: sh padmint.sh (necesita Python 3.9 o más nuevo y Git).",
+                   "Num terminal nesta pasta, execute: sh padmint.sh (precisa do Python 3.9 ou mais novo e do Git)."),
+}
+
+
+def start_note(launcher):
+    open_, warning, es, pt = START[launcher]
+    lines = [
+        "PadMint: start here", "",
+        "1. " + open_, "   " + warning,
+        "2. A small window opens and stays open: that is PadMint working. Your web browser",
+        "   opens the PadMint page. If it doesn't, open the address the small window shows.",
+        "3. On the page, choose your game and follow the steps. It tells you what it will",
+        "   download before it starts, and how to install your copy when it finishes.",
+        "   Close the small window when you are done.", "",
+        "The app folder is PadMint itself: you don't need to open it.", "",
+        "Guide: https://github.com/chrissotraidis/padmint#quick-start",
+        "Help: https://discord.gg/xwHfUD2bxW", "",
+        "Español: " + es + " Se abre una ventana pequeña (déjala abierta) y la página de PadMint en tu navegador: elige tu juego y sigue los pasos.",
+        "",
+        "Português: " + pt + " Abre uma janela pequena (deixe-a aberta) e a página do PadMint no seu navegador: escolha o seu jogo e siga os passos.",
+        "",
+    ]
+    newline = "\r\n" if launcher.endswith(".cmd") else "\n"
+    return newline.join(lines).encode("utf-8")
+
+
 def make_zip(path, top, launcher, python=None):
     with zipfile.ZipFile(path, "w") as bundle:
-        for name, source in payload():
-            add(bundle, f"{top}/{name}", source.read_bytes())
         add(bundle, f"{top}/{launcher.name}", launcher.read_bytes(), executable=True)
+        add(bundle, f"{top}/Start here.txt", start_note(launcher.name))
+        for name, source in payload():
+            add(bundle, f"{top}/app/{name}", source.read_bytes())
         if python is not None:
             for info in python.infolist():
                 data = python.read(info)
@@ -71,7 +111,7 @@ def make_zip(path, top, launcher, python=None):
                     lines = data.decode().splitlines()
                     lines.insert(lines.index(".") + 1, "..")
                     data = ("\r\n".join(lines) + "\r\n").encode()
-                add(bundle, f"{top}/python/{info.filename}", data)
+                add(bundle, f"{top}/app/python/{info.filename}", data)
 
 
 def main():

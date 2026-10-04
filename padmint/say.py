@@ -311,7 +311,7 @@ MESSAGES = {
                 "pt": "2. O seu próprio arquivo do jogo"},
     "w_step3": {"en": "3. Where will you play?", "es": "3. ¿Dónde vas a jugar?", "pt": "3. Onde você vai jogar?"},
     "w_dl_tag": {"en": "Download the app", "es": "Descarga la app", "pt": "Baixe o app"},
-    "w_how_link": {"en": "How it works", "es": "Cómo funciona", "pt": "Como funciona"},
+    "w_home": {"en": "PadMint: all games", "es": "PadMint: todos los juegos", "pt": "PadMint: todos os jogos"},
     "w_search": {"en": "Search games", "es": "Buscar juegos", "pt": "Buscar jogos"},
     "w_builds": {"en": "Made on this computer from your game file", "es": "Se crean en esta computadora con tu archivo del juego",
                  "pt": "Criados neste computador com o seu arquivo do jogo"},
