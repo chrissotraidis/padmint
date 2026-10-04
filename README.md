@@ -186,31 +186,50 @@ afterwards: `proot-distro remove padmint`.
 
 ## Questions
 
-**My game isn't in the list, or it's dimmed.**
+Click a question to see the answer.
+
+<details>
+<summary><strong>My game isn't in the list, or it's dimmed.</strong></summary>
+
 Choose it anyway: the page says why and what would work. **Needs an M1+ Mac**
 means the iPhone/iPad copy is built on a Mac with Apple Silicon.
 **Not available yet** means there is nothing to build or download through
 PadMint yet; the game's page has the latest.
 
-**Can I build iPhone apps on Windows or Linux?**
+</details>
+<details>
+<summary><strong>Can I build iPhone apps on Windows or Linux?</strong></summary>
+
 Only KartPad, and that is experimental. Every other iPhone/iPad game needs a Mac
 with Apple Silicon and Xcode today.
 
-**The window closed, or nothing seems to happen.**
+</details>
+<details>
+<summary><strong>The window closed, or nothing seems to happen.</strong></summary>
+
 PadMint opens a page in your web browser. If no browser opened, the PadMint
 window shows a link starting with `http://127.0.0.1`: open it. The first time,
 it can take a minute before the page opens or a build gets past **Starting…**.
 
-**It says my file is the wrong version, region or size.**
+</details>
+<details>
+<summary><strong>It says my file is the wrong version, region or size.</strong></summary>
+
 Each game needs one exact version of the game, named on its card and in its
 README (for example KartPad needs the European disc, RMCP01). Use an untouched
 1:1 dump: trimmed, patched or half-size files are refused on purpose.
 
-**It says my file is stored only in iCloud (Mac).**
+</details>
+<details>
+<summary><strong>It says my file is stored only in iCloud (Mac).</strong></summary>
+
 In Finder, right-click the file, choose **Download Now**, wait, then choose it
 again.
 
-**The app I made doesn't open on iOS or iPadOS 27.**
+</details>
+<details>
+<summary><strong>The app I made doesn't open on iOS or iPadOS 27.</strong></summary>
+
 Some games still need an update for iOS 27: apps built with Xcode 27 have to use
 the newer app startup Apple requires, and PadMint's finish screen says when
 yours may be affected. Devices on iOS 26 or earlier aren't affected. Please
@@ -218,36 +237,56 @@ report it on the game's issue page so the fix is prioritized; the
 [compatibility page](docs/COMPATIBILITY.md#recorded-mac-builds-4-october) lists
 which games are affected.
 
-**Windows or macOS warns me about PadMint.**
+</details>
+<details>
+<summary><strong>Windows or macOS warns me about PadMint.</strong></summary>
+
 Expected for a free tool without a paid certificate. Windows: **More info →
 Run anyway**. Mac: **System Settings → Privacy & Security → Open Anyway**.
 Only download PadMint from its
 [releases page](https://github.com/chrissotraidis/padmint/releases/latest).
 
-**It says a download was blocked, or it stops early.**
+</details>
+<details>
+<summary><strong>It says a download was blocked, or it stops early.</strong></summary>
+
 PadMint names the server it couldn't reach. Check your internet connection and
 the device's date and time, then run PadMint again; finished downloads are kept.
 Keep certificate checks and security software turned on.
 
-**Linux asks me to install something (libxml2, Git).**
+</details>
+<details>
+<summary><strong>Linux asks me to install something (libxml2, Git).</strong></summary>
+
 Run the command PadMint shows, for example `sudo apt install libxml2`, then
 start PadMint again.
 
-**Can someone send me their IPA or game data?**
+</details>
+<details>
+<summary><strong>Can someone send me their IPA or game data?</strong></summary>
+
 No. It's made from their copy of the game, so sharing it means sharing the
 game. Please don't ask for one or post yours.
 
-**What was PadForge?**
+</details>
+<details>
+<summary><strong>What was PadForge?</strong></summary>
+
 PadMint's old name. PadMint moves your old PadForge folder over and keeps the
 tools you already downloaded.
 
-**Still stuck?**
+</details>
+<details>
+<summary><strong>Still stuck?</strong></summary>
+
 Ask in the [Discord](https://discord.gg/xwHfUD2bxW) or open a
 [PadMint issue](https://github.com/chrissotraidis/padmint/issues) for setup,
 download or build problems. Include the game, your computer (Windows, Mac or
 Linux), the device you're building for and the copied log. Keep game files,
 keys and personal builds out of it. For a game that builds but has problems
 while playing, use that game's issue page.
+
+</details>
 
 ---
 
