@@ -28,7 +28,7 @@ compatibility work resumes.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
-- **Next (0.3.7):** the finish screen warns when a copy may not open on iOS 27
+- **v0.3.7**: the finish screen warns when a copy may not open on iOS 27
   (see below).
 - **v0.3.5**: alphabetical game list with console filters and search, language
   switching that keeps your choices, release lookup that skips releases
