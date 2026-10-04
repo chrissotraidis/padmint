@@ -1,6 +1,6 @@
 #!/bin/bash
 # PadMint for macOS. Double-click to start.
-cd "$(dirname "$0")" || exit 1
+cd "$(dirname "$0")/app" || exit 1
 # Apple's Python: it uses the system's certificates (a python.org Python needs its
 # Install Certificates step first) and comes with the command line tools PadMint needs.
 PYTHON=/usr/bin/python3

@@ -383,6 +383,7 @@ def serve(port=0, open_browser=True):
 
 PAGE = r"""<!doctype html><html><head><meta charset="utf-8"><title>PadMint</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='pmg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235ff0b0'/%3E%3Cstop offset='1' stop-color='%2314945f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23pmg)'/%3E%3Cpath fill='%2306281a' d='M19 19h26c7.2 0 12.6 6.6 11.2 13.7l-2.1 10.2c-1 4.9-7.1 6.6-10.5 2.9L39 41H25l-4.6 4.8c-3.4 3.7-9.5 2-10.5-2.9L7.8 32.7C6.4 25.6 11.8 19 19 19z'/%3E%3Cpath stroke='%235ff0b0' stroke-width='4' stroke-linecap='round' d='M20 26v10M15 31h10'/%3E%3Cpath fill='%235ff0b0' d='M37 37c0-6.5 4.8-11 12-11 0 6.5-4.8 11-12 11z'/%3E%3Cpath stroke='%2306281a' stroke-width='1.8' stroke-linecap='round' d='M39.5 34.5l6.5-6'/%3E%3C/svg%3E">
 <style>
 :root{--bg:#0f1714;--panel:#16211d;--panel2:#1c2a25;--line:#2a3c35;--text:#e8f1ec;--muted:#9db3a9;--mint:#3ddc97;--mint2:#1fa572;--bad:#ff7a7a;--warn:#f5c56b;
  font-family:-apple-system,"Segoe UI",Roboto,system-ui,sans-serif;color-scheme:dark}
@@ -391,15 +392,14 @@ PAGE = r"""<!doctype html><html><head><meta charset="utf-8"><title>PadMint</titl
 a{color:var(--mint)}.wrap{max-width:860px;margin:0 auto;padding:1.4rem 1.2rem 3rem}
 header{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
 .top{display:flex;align-items:center;gap:.6rem}.gh{display:inline-grid;place-items:center;width:2.4rem;height:2.4rem;color:var(--text);border:1px solid var(--line);border-radius:10px;background:var(--panel)}
-.howLink{color:var(--muted);text-decoration:none;font-weight:600;font-size:.92rem;padding:.4rem .2rem}.howLink:hover{color:var(--mint)}
 .gh:hover{border-color:var(--mint);color:var(--mint)}.gh svg{width:20px;height:20px}
 .btn.back{border:0;background:none;color:var(--mint);font-weight:650;padding:.2rem 0;margin:0 0 .4rem}.btn.back:hover{text-decoration:underline}
 .backBtn{margin-top:.6rem}
 .item.later{opacity:.72}.item.later .av{filter:grayscale(.85)}.item.later .t{font-weight:600}
 .tag.soon{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--muted)}.tag.dl{background:color-mix(in srgb,#2d9cdb 18%,transparent);color:#2d9cdb}
-.brand{display:flex;align-items:center;gap:.7rem}.brand h1{margin:0;font-size:1.6rem;letter-spacing:-.02em}
-.brand .v{color:var(--muted);font-size:.85rem}.mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--mint),var(--mint2));display:grid;place-items:center}
-.mark svg{width:22px;height:22px}
+.brand{display:flex;align-items:center;gap:.7rem;color:inherit;text-decoration:none;border-radius:12px}.brand:hover h1{color:var(--mint)}.brand:focus-visible{outline:2px solid var(--mint);outline-offset:4px}.brand h1{margin:0;font-size:1.6rem;letter-spacing:-.02em}
+.brand .v{color:var(--muted);font-size:.85rem}.mark{width:42px;height:42px;filter:drop-shadow(0 4px 10px color-mix(in srgb,var(--mint) 30%,transparent))}
+.mark svg{width:100%;height:100%;display:block}
 select,input{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:.55rem .7rem}
 .hero{margin:1.4rem 0 1rem}.hero p{margin:.2rem 0 .8rem;font-size:1.08rem}
 .chips{display:flex;gap:.5rem;flex-wrap:wrap}.chip{font-size:.85rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem}
@@ -476,8 +476,9 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 .item:hover{padding-left:.85rem;transform:translateY(-1px);border-color:color-mix(in srgb,var(--c) 70%,var(--line));background:color-mix(in srgb,var(--c) 7%,var(--panel2))}
 .item.on{grid-column:1/-1;box-shadow:inset 3px 0 0 var(--mint)}
 .item .av{grid-row:1/span 3}.item .tags{grid-row:3;grid-column:2;justify-content:flex-start;margin-top:.4rem}
-.about{margin-top:2.2rem}.about h2{font-size:1.05rem;margin:0 0 .2rem;color:var(--muted);font-weight:650}
-#progress:not(.hidden)~.about{display:none}
+.about{margin:0 0 .4rem}.about h2{font-size:.95rem;margin:0;color:var(--muted);font-weight:650;text-transform:uppercase;letter-spacing:.06em}
+.about .flow{margin:.55rem 0 .5rem}.about .explain{grid-template-columns:1fr 1fr;align-items:start;margin-top:0}
+@media (max-width:620px){.about .explain{grid-template-columns:1fr}.about .flow{gap:.4rem}.about .flow div{padding:.45rem .7rem .45rem 2.6rem}.about .flow i{top:.5rem;left:.65rem}.about .flow span{font-size:.82rem}}
 
 .item.on{padding:.95rem 1rem}.item.on .av{width:3.1rem;height:3.1rem;font-size:.95rem;border-radius:14px}.item.on .t{font-size:1.2rem}
 #pickCard h2{margin-bottom:.5rem}#gamePage{margin:.6rem 0 0}#gamePage a{font-weight:600;text-decoration:none}#gamePage a:hover{text-decoration:underline}
@@ -495,13 +496,16 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 #headCard.okb{background:linear-gradient(135deg,color-mix(in srgb,var(--mint) 16%,var(--panel)),var(--panel))}
 #headCard.okb .big:before{content:"✓";display:inline-grid;place-items:center;width:1.8rem;height:1.8rem;margin-right:.6rem;border-radius:50%;background:var(--mint);color:#06281a;font-size:1rem;vertical-align:.12em}
 </style></head><body><div class="wrap">
-<header><div class="brand"><div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06281a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-5-3-8-7-8-11a8 8 0 0 1 16 0c0 4-3 8-8 11z"/><path d="M12 21V9"/><path d="M12 13l3-3"/></svg></div>
-<div><h1>PadMint</h1><div class="v" id="ver"></div></div></div>
-<div class="top"><a class="howLink" href="#about" data-t="how_link"></a><a class="gh" id="gh" href="https://github.com/chrissotraidis" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+<header><a class="brand" id="home" href="#"><div class="mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="pmg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff0b0"/><stop offset="1" stop-color="#14945f"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#pmg)"/><path fill="#06281a" d="M19 19h26c7.2 0 12.6 6.6 11.2 13.7l-2.1 10.2c-1 4.9-7.1 6.6-10.5 2.9L39 41H25l-4.6 4.8c-3.4 3.7-9.5 2-10.5-2.9L7.8 32.7C6.4 25.6 11.8 19 19 19z"/><path stroke="#5ff0b0" stroke-width="4" stroke-linecap="round" d="M20 26v10M15 31h10"/><path fill="#5ff0b0" d="M37 37c0-6.5 4.8-11 12-11 0 6.5-4.8 11-12 11z"/><path stroke="#06281a" stroke-width="1.8" stroke-linecap="round" d="M39.5 34.5l6.5-6"/></svg></div>
+<div><h1>PadMint</h1><div class="v" id="ver"></div></div></a>
+<div class="top"><a class="gh" id="gh" href="https://github.com/chrissotraidis" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
 <select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></div></header>
 
 <section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div>
 </section>
+<section class="about" id="about"><h2 data-t="about_title"></h2><div class="flow"><div><i>1</i><b data-t="flow_1"></b><span data-t="flow_1s"></span></div><div><i>2</i><b data-t="flow_2"></b><span data-t="flow_2s"></span></div><div><i>3</i><b data-t="flow_3"></b><span data-t="flow_3s"></span></div></div>
+<div class="explain"><details id="howBox"><summary data-t="how_title"></summary><ol><li data-t="how_1"></li><li data-t="how_2"></li><li data-t="how_3"></li><li data-t="how_4"></li><li data-t="how_5"></li></ol></details>
+<details id="whyBox"><summary data-t="why_title"></summary><p data-t="why_1"></p><p data-t="why_2"></p></details></div></section>
 
 <main id="form">
 <section class="card" id="pickCard"><button class="btn back hidden" id="changeGame" data-t="change"></button><h2 data-t="step1"></h2>
@@ -539,9 +543,6 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 <section class="card"><details id="logBox"><summary><span data-t="log"></span> <span class="muted" id="lineCount"></span></summary>
 <pre id="tail"></pre><button class="btn" id="copy" data-t="copy_log"></button></details></section>
 </main>
-<section class="about" id="about"><h2 data-t="about_title"></h2><div class="flow"><div><i>1</i><b data-t="flow_1"></b><span data-t="flow_1s"></span></div><div><i>2</i><b data-t="flow_2"></b><span data-t="flow_2s"></span></div><div><i>3</i><b data-t="flow_3"></b><span data-t="flow_3s"></span></div></div>
-<div class="explain"><details id="howBox"><summary data-t="how_title"></summary><ol><li data-t="how_1"></li><li data-t="how_2"></li><li data-t="how_3"></li><li data-t="how_4"></li><li data-t="how_5"></li></ol></details>
-<details id="whyBox"><summary data-t="why_title"></summary><p data-t="why_1"></p><p data-t="why_2"></p></details></div></section>
 <footer><span data-t="local_note"></span><span><a href="https://github.com/chrissotraidis/padmint" target="_blank" data-t="source"></a> · <a id="reportLink" href="https://github.com/chrissotraidis/padmint/issues" target="_blank" data-t="report"></a></span></footer>
 </div>
 <script>
@@ -552,7 +553,7 @@ for(const e of document.querySelectorAll("[data-t]"))e.textContent=S[e.dataset.t
 document.documentElement.lang=D.lang;$("lang").value=D.lang;$("ver").textContent="v"+D.version;$("search").placeholder=S.search;
 $("choose").classList.toggle("hidden",!D.picker);
 let last=null;
-function texts(){for(const e of document.querySelectorAll("[data-t]"))e.textContent=S[e.dataset.t]||"";document.documentElement.lang=D.lang;$("search").placeholder=S.search}
+function texts(){for(const e of document.querySelectorAll("[data-t]"))e.textContent=S[e.dataset.t]||"";document.documentElement.lang=D.lang;$("search").placeholder=S.search;$("home").setAttribute("aria-label",S.home||"PadMint")}
 $("lang").onchange=async()=>{const lang=$("lang").value,r=await (await fetch("/api/player?lang="+lang,{headers:H})).json();
  if(r.error)return;D=r;S=D.text;texts();history.replaceState(null,"","?token="+T+"&lang="+lang);filters();cards();
  if(sel){const keep={file,dev};const g=game();if(g||app()||waiting())redraw(keep)}
@@ -595,8 +596,14 @@ function cards(){const q=$("search").value.trim().toLowerCase();
  for(const b of document.querySelectorAll(".tab")){b.classList.toggle("on",b.dataset.g==group);b.setAttribute("aria-selected",b.dataset.g==group);b.querySelector(".n").textContent=G[b.dataset.g].length}
  $("groupNote").textContent=sel?"":S[{all:"all_note",build:"builds",download:"no_build",later:"later_note"}[group]];
  $("list").replaceChildren(...G[group].map(x=>row(x)));$("list").classList.toggle("hidden",!G[group].length);
- $("noMatch").classList.toggle("hidden",!!G[group].length)}
-function back(){sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards();$("pickCard").scrollIntoView({behavior:"smooth"})}
+ $("noMatch").classList.toggle("hidden",!!G[group].length);layout()}
+function back(top){sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards();if(top)scrollTo({top:0,behavior:"smooth"});else $("pickCard").scrollIntoView({behavior:"smooth"})}
+function layout(){$("about").classList.toggle("hidden",!!sel||!$("progress").classList.contains("hidden"))}
+function home(){if(last&&last.state=="running"){scrollTo({top:0,behavior:"smooth"});return}
+ last=null;shown=false;$("progress").classList.add("hidden");$("form").classList.remove("hidden");$("finished").replaceChildren();$("finished").classList.add("hidden");
+ $("cancel").disabled=false;$("logBox").open=false;$("makeError").textContent="";$("reportLink").href="https://github.com/chrissotraidis/padmint/issues";
+ $("search").value="";system="";group="all";filters();back(true)}
+$("home").onclick=e=>{e.preventDefault();home()};$("home").setAttribute("aria-label",S.home||"PadMint");
 $("search").oninput=cards;$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
 function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);
@@ -641,7 +648,7 @@ $("use").onclick=()=>useFile($("path").value.trim().replace(/^["']|["']$/g,""));
 $("make").onclick=async()=>{$("make").disabled=true;const r=await post("/api/make",{game:sel,platform:dev,path:file});
  if(r.error){$("makeError").textContent=r.error;ready();return}show(r);poll()};
 $("cancel").onclick=async()=>{$("cancel").disabled=true;await post("/api/cancel")};
-$("again").onclick=()=>{location.search="?token="+T+"&lang="+D.lang};
+$("again").onclick=home;
 $("copy").onclick=async()=>{const text="PadMint "+D.version+" ("+navigator.platform+")\n"+$("tail").textContent;
  try{await navigator.clipboard.writeText(text);$("copy").textContent=S.copied}catch(e){getSelection().selectAllChildren($("tail"))}};
 const clock=s=>[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map((n,i)=>i?String(n).padStart(2,"0"):n).join(":");
@@ -659,7 +666,7 @@ function phaseRow(p,r,g){const li=el("li",null,p.state||"pending"),ico=el("div",
  if(p.id=="build"&&p.state=="running"&&r.now)body.append(el("div",r.now.slice(-160),"detail mono"));
  if(p.id=="save"&&p.file)body.append(el("div",p.file,"detail ok"));
  li.append(ico,body);return li}
-function show(r){if(r.state=="idle")return;last=r;$("form").classList.add("hidden");$("progress").classList.remove("hidden");
+function show(r){if(r.state=="idle")return;last=r;$("form").classList.add("hidden");$("progress").classList.remove("hidden");layout();
  const g=D.games.find(x=>x.id==r.game);$("making").textContent=r.state=="done"?S.done_title:r.state=="failed"?S.failed_title:r.state=="cancelled"?S.cancelled:fill("making",{name:g?g.name:r.game,device:r.device||""});
  $("headCard").classList.toggle("badb",r.state=="failed");$("headCard").classList.toggle("okb",r.state=="done");$("elapsedLabel").textContent=r.state=="done"?S.took:S.elapsed;$("elapsed").textContent=clock(r.elapsed);
  const ids=["release","source","tools","app","build","save"],have={};for(const p of r.phases||[])have[p.id]=p;

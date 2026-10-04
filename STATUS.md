@@ -28,6 +28,11 @@ compatibility work resumes.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.0**: the unzipped folder shows only the launcher, **Start here.txt**
+  (English, Spanish, Portuguese) and an **app** folder. On the page, **How it
+  works** is at the top, the PadMint logo takes you back to the game list, and
+  **Make another copy** goes back to the list instead of showing the finished
+  build again. New logo.
 - **v0.3.9**: SwiftUI apps (GoldenPad) are recognised as scene-based, so they get
   no iOS 27 warning.
 - **v0.3.8**: the download apps (CaesarPad, DaggerPad, DevilTouch, Emerald

@@ -1,4 +1,8 @@
-# PadMint
+<p align="center">
+  <img src="docs/images/padmint-logo.svg" width="96" height="96" alt="PadMint logo: a game controller with a mint leaf">
+</p>
+
+<h1 align="center">PadMint</h1>
 
 <p align="center">
   <strong>Make your own copy of a game from your own game file, on your own computer.</strong><br>
@@ -11,6 +15,13 @@
   <img alt="Windows, Mac and Linux" src="https://img.shields.io/badge/runs%20on-Windows%20%7C%20Mac%20%7C%20Linux-0A84FF">
   <img alt="Game files not included" src="https://img.shields.io/badge/game%20files-not%20included-FF453A">
   <a href="https://discord.gg/xwHfUD2bxW"><img alt="Discord" src="https://img.shields.io/badge/Discord-ask%20for%20help-5865F2?logo=discord&amp;logoColor=white"></a>
+</p>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/padmint-page-dark.png">
+    <img src="docs/images/padmint-page-light.png" width="820" alt="The PadMint page: how it works in three steps, then every game in one list with search, groups and filters">
+  </picture>
 </p>
 
 > **Two games don't need PadMint:**
@@ -34,20 +45,47 @@ every download, where it comes from, its size and the free space needed.
 
 ## Quick start
 
-1. **Download** the ZIP for your computer from the
-   [latest PadMint](https://github.com/chrissotraidis/padmint/releases/latest)
-   and unzip it.
-2. **Open it.**
-   - **Windows:** right-click the ZIP, choose **Extract All**, open the
-     `PadMint-v…` folder and double-click **PadMint** (`PadMint.cmd`). If
-     Windows says it protected your PC, choose **More info**, then **Run anyway**.
-   - **Mac:** once, run `xcode-select --install` in Terminal. Then double-click
-     `PadMint.command`. The first time, macOS says Apple could not verify it:
-     choose **Done**, then **System Settings → Privacy & Security → Open Anyway**.
-   - **Linux:** run `sh padmint.sh` in the folder (needs Python 3.9+ and Git).
-3. **Use the page** that opens in your web browser: choose your game and follow
-   it. Keep the small PadMint window open while you use the page. The page
-   speaks English, Spanish and Portuguese (menu at the top right).
+**1. Download** the ZIP for your computer from the
+[latest PadMint](https://github.com/chrissotraidis/padmint/releases/latest):
+
+| Your computer | Download | Open it |
+|---|---|---|
+| **Windows** 10 or 11 | `PadMint-v…-windows.zip` | Right-click the ZIP, choose **Extract All**, open the new folder and double-click **PadMint**. If Windows says it protected your PC, choose **More info**, then **Run anyway**. Python is included. |
+| **Mac** | `PadMint-v…-macos.zip` | Once, run `xcode-select --install` in Terminal. Double-click the ZIP, open the folder and double-click **PadMint.command**. The first time, macOS says Apple could not verify it: choose **Done**, then **System Settings → Privacy & Security → Open Anyway**. |
+| **Linux** | `PadMint-v…-linux.zip` | Unzip it and run `sh padmint.sh` in the folder. Needs Python 3.9+ and Git. |
+
+**2. Keep the small window open.** It is PadMint working. Your web browser opens
+the PadMint page; if it doesn't, open the `http://127.0.0.1…` address the
+window shows. The page comes from your own computer, not a website.
+
+**3. Choose your game and follow the page.** It speaks English, Spanish and
+Portuguese (menu at the top right). Close the small window when you are done.
+
+**What's in the folder you unzipped:**
+
+```
+PadMint-v…/
+├── PadMint          double-click this (PadMint.command on Mac, padmint.sh on Linux)
+├── Start here.txt   these steps, in English, Spanish and Portuguese
+└── app/             PadMint itself: you don't need to open it
+```
+
+The `app` folder holds PadMint's code, the game list and these guides, and on
+Windows a copy of Python. It is plain, readable source, so anyone can check what
+PadMint does.
+
+<details>
+<summary><strong>Why a ZIP, and not an installer or a .dmg?</strong></summary>
+
+An installer only helps if it is signed: Windows and macOS warn about unsigned
+installers exactly as they warn about these launchers, and signing needs a paid
+certificate for each system. One ZIP with a double-click launcher works the same
+way on Windows, Mac and Linux, and every release is rebuilt from this repository
+on separate computers and compared byte for byte before it is published. Signed
+apps are a later step if players need them.
+
+</details>
+
 
 ## What you can make, and where
 
@@ -68,8 +106,8 @@ need. For each game's exact versions, hosts and known problems, see
 ## Using the page
 
 1. **1. Choose a game.** Search or scroll; each card shows the original game,
-   where it plays (iPhone/iPad, Android) and its group. **← All games** takes
-   you back. **About …: install guide and updates** opens the game's own page.
+   where it plays (iPhone/iPad, Android) and its group. **← All games**, or the
+   PadMint logo at the top, takes you back to the full list. **About …: install guide and updates** opens the game's own page.
 2. **2. Your own game file.** Click **Choose file…** and pick your disc image or
    ROM. Game files already in your Downloads folder are listed, so you can click
    one of those. PadMint checks the file straight away and says **✓** or what is

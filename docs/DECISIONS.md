@@ -161,6 +161,8 @@ PadMint's release is three ZIP files: Windows (with Python's official
 embeddable package, pinned by python.org's SHA-256, so nothing else to
 install), macOS and Linux (the system Python). Each holds the same `padmint`
 package plus a launcher: `PadMint.cmd`, `PadMint.command`, `padmint.sh`.
+Since 0.4.0 the unzipped folder holds only the launcher, `Start here.txt` and
+an `app` folder with everything else, so players see what to open.
 Starting PadMint with no command asks only what it cannot know: the game (and
 the phone type when there is a choice), the player's game file (drag it into
 the window) and the folder to save in. `player_targets` in a catalog entry is

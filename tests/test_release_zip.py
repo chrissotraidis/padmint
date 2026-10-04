@@ -34,7 +34,17 @@ class ReleaseZipTests(unittest.TestCase):
         self.assertTrue(stat.S_ISREG(launcher))
         self.assertEqual(stat.S_IMODE(launcher), 0o755)
         self.assertTrue(all(stat.S_ISREG(mode) for mode in modes.values()))
-        self.assertEqual(stat.S_IMODE(modes["PadMint-vX/README.md"]), 0o644)
+        self.assertEqual(stat.S_IMODE(modes["PadMint-vX/app/README.md"]), 0o644)
+
+    def test_the_unzipped_folder_shows_only_the_launcher_a_note_and_the_app(self):
+        with zipfile.ZipFile(self.zip) as bundle:
+            top = {name.split("/")[1] for name in bundle.namelist()}
+            note = bundle.read("PadMint-vX/Start here.txt").decode("utf-8")
+        self.assertEqual(top, {"PadMint.command", "Start here.txt", "app"})
+        self.assertIn("PadMint.command", note)
+        self.assertIn("xcode-select --install", note)
+        for language in ("Español", "Português"):
+            self.assertIn(language, note)
 
     def test_packaged_guides_have_their_local_link_destinations(self):
         with zipfile.ZipFile(self.zip) as bundle:

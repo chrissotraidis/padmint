@@ -61,7 +61,8 @@ jobs:
           $tests = "$env:RUNNER_TEMP/player-checks"
           New-Item -ItemType Directory $tests | Out-Null
           Copy-Item tests/test_start.py, tests/test_finish_submodules.py, tests/test_host_preflight.py, tests/test_progress_output.py, tests/test_package.py, tests/test_tools.py, tests/fixtures.py, tests/test_next_steps.py, tests/test_game_data_folder.py, tests/test_ui.py $tests
-          Push-Location $package
+          foreach ($top in 'PadMint.cmd', 'Start here.txt', 'app/python/python.exe') { if (-not (Test-Path (Join-Path $package $top))) { throw "Missing $top" } }
+          Push-Location (Join-Path $package app)
           try {
             & ./python/python.exe -m padmint --version
             if ($LASTEXITCODE -ne 0) { throw 'Included Python cannot start PadMint' }
@@ -99,7 +100,8 @@ jobs:
           cp tests/test_start.py tests/test_finish_submodules.py tests/test_host_preflight.py tests/test_progress_output.py tests/test_package.py tests/test_tools.py tests/fixtures.py tests/test_next_steps.py tests/test_game_data_folder.py tests/test_ui.py "$player_tests/"
           linux_package=("$RUNNER_TEMP/linux-package-check"/PadMint-v*)
           test "${#linux_package[@]}" -eq 1
-          cd "${linux_package[0]}"
+          test -f "${linux_package[0]}/padmint.sh" && test -f "${linux_package[0]}/Start here.txt"
+          cd "${linux_package[0]}/app"
           unset PYTHONPATH PYTHONHOME
           python -c 'from pathlib import Path; import padmint; assert Path(padmint.__file__).resolve().parent == Path.cwd() / "padmint", padmint.__file__; print("Packaged import:", padmint.__file__)'
           python -m padmint --version
