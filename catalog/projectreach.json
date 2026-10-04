@@ -1,27 +1,21 @@
 {
   "schema_version": 1,
   "id": "projectreach",
-  "name": "HaloPad",
-  "game": "Halo: Combat Evolved (PC)",
-  "plays_on": [
-    "iphone",
-    "ipad",
-    "mac"
-  ],
   "repo_url": "https://github.com/chrissotraidis/projectreach",
-  "reviewed_revision": null,
+  "name": "HaloPad",
+  "game": "Halo: Custom Edition 1.10 (PC)",
+  "player_targets": [
+    "ios"
+  ],
+  "free_space_gb": 10,
   "player_help": "https://github.com/chrissotraidis/projectreach#build-and-install",
-  "notes": "Listed so players can find it: nothing to build or download through PadMint yet.",
-  "later": {
-    "text": "No download yet. You can build it yourself from source on a Mac with your own game files; a PadMint build is in progress.",
-    "translations": {
-      "es": {
-        "text": "Todavía no hay descarga. Puedes crearlo tú mismo desde el código fuente en una Mac con tus propios archivos del juego; se está preparando la versión para PadMint."
-      },
-      "pt": {
-        "text": "Ainda não há download. Você pode criá-lo a partir do código-fonte em um Mac com os seus próprios arquivos do jogo; a versão para o PadMint está em andamento."
-      }
-    }
-  },
-  "manifest": null
+  "reviewed_revision": null,
+  "notes": "HaloPad owns padmint.json; the iOS target runs scripts/builder/build.sh with the player's HaloCESetup.exe (the 1.10 update and an optional product-key.txt beside it). Complete PadMint build recorded 4 Oct; device acceptance of a builder-made app is still open. The game package (Halo-CE.halopad.zip) is written next to the IPA in the backend folder.",
+  "manifest": null,
+  "before_build": {
+    "commands": [
+      "brew install sevenzip winetricks",
+      "brew install --cask wine-stable"
+    ]
+  }
 }
