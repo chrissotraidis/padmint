@@ -50,11 +50,11 @@ compatibility work resumes.
 public recipe on one Apple Silicon Mac with Xcode 27; all that ran completed,
 including StarshipPad v0.2.0, whose old SDK-selection failure no longer happens
 ([recorded Mac builds](docs/COMPATIBILITY.md#recorded-mac-builds-4-october)).
-**iOS 27 risk:** 10 of those apps (AnnePad, BananaPad, BarrelPad, BrawlerPad,
-HarkinianPad, MaskPad, MeleePad, PaperPad, StarshipPad, SunPad) are
-linked with the iOS 27 SDK without UIKit scene startup, which Apple requires, so
-they may not open on iOS 27 when built with Xcode 27. Each needs the fix
-SpaghettiPad already has, and a new recipe release under its tracker row.
+**iOS 27:** 10 of those apps were linked with the iOS 27 SDK without UIKit scene
+startup, which Apple requires. Each game's source now has it (StarshipPad, SunPad
+and HarkinianPad already did; the others were fixed on 4 October), checked on the
+iOS 27.0 Simulator, and each next version waits as a draft release on its audit row
+([details](docs/COMPATIBILITY.md#recorded-mac-builds-4-october)).
 
 Families, in order; one game proves each family. Details and next steps per game
 are in [Status by game](docs/COMPATIBILITY.md#status-by-game).
