@@ -2,6 +2,7 @@
   "schema_version": 1,
   "id": "deviltouch",
   "name": "DevilTouch",
+  "game": "Diablo (PC)",
   "repo_url": "https://github.com/chrissotraidis/deviltouch",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/deviltouch#install-on-an-ipad",

@@ -52,7 +52,8 @@ def player_data(lang):
                                  "url": entry["ready_to_play"]["url"]} if entry.get("ready_to_play") else None),
                       "issues": entry["repo_url"] + "/issues"})
     apps = [] if cli.on_android() else [
-        {"id": app, "name": name, "intro": phrase("download_intro", lang, name=name).strip(),
+        {"id": app, "name": name, "about": catalog()[app].get("game", ""),
+         "intro": phrase("download_intro", lang, name=name).strip(),
          "steps": localized(catalog()[app]["download"], "steps", lang),
          "guide": catalog()[app].get("player_help") or catalog()[app]["repo_url"]}
         for app, name in cli.downloads()]
@@ -375,10 +376,21 @@ select,input{font:inherit;color:var(--text);background:var(--panel2);border:1px 
 .tags{margin-top:.4rem;display:flex;gap:.3rem;flex-wrap:wrap}.tag{font-size:.72rem;border-radius:6px;padding:.05rem .4rem;background:color-mix(in srgb,var(--mint) 16%,transparent);color:var(--mint)}
 .sub{margin:1rem 0 .5rem;font-size:.9rem;color:var(--muted);font-weight:600}
 .list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:11px;overflow:hidden}
-.item{display:grid;grid-template-columns:1fr auto;gap:.2rem .8rem;align-items:center;text-align:left;background:var(--panel2);border:0;border-bottom:1px solid var(--line);padding:.6rem .85rem;color:var(--text);cursor:pointer;font:inherit}
-.item:last-child{border-bottom:0}.item:hover{background:color-mix(in srgb,var(--mint) 10%,var(--panel2))}
+.item{display:grid;grid-template-columns:auto 1fr auto;gap:.1rem .85rem;align-items:center;text-align:left;background:var(--panel2);border:0;border-bottom:1px solid var(--line);padding:.6rem .85rem;color:var(--text);cursor:pointer;font:inherit;transition:background .15s,padding .15s}
+.item:last-child{border-bottom:0}.item:hover{background:color-mix(in srgb,var(--c,var(--mint)) 12%,var(--panel2));padding-left:1.05rem}
 .item.on{background:color-mix(in srgb,var(--mint) 18%,var(--panel2));box-shadow:inset 3px 0 0 var(--mint)}
-.item .t{font-weight:650}.item .s{color:var(--muted);font-size:.83rem;grid-column:1}.item .tags{grid-row:1/span 2;grid-column:2;margin:0;justify-content:flex-end}
+.item .av{grid-row:1/span 2;width:2.4rem;height:2.4rem;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:.8rem;letter-spacing:.02em;color:#fff;background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 60%,#000));box-shadow:0 2px 6px color-mix(in srgb,var(--c) 35%,transparent)}
+.item .t{font-weight:650;grid-column:2}.item .s{color:var(--muted);font-size:.83rem;grid-column:2}.item .tags{grid-row:1/span 2;grid-column:3;margin:0;justify-content:flex-end}
+.tabs{display:flex;gap:.2rem;border-bottom:1px solid var(--line);margin:.5rem 0 .6rem;overflow-x:auto}
+.tab{background:none;border:0;border-bottom:3px solid transparent;padding:.55rem .8rem;font:inherit;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.tab:hover{color:var(--text)}.tab.on{color:var(--text);border-bottom-color:var(--mint)}
+.tab .n{display:inline-block;margin-left:.35rem;min-width:1.5rem;padding:0 .4rem;border-radius:999px;background:var(--panel2);font-size:.78rem;color:var(--muted)}.tab.on .n{background:var(--mint);color:#06281a}
+.note{margin:.1rem 0 .6rem;font-size:.88rem;color:var(--muted)}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:1rem 0 .4rem}
+.flow div{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:.75rem .85rem .75rem 3rem}
+.flow i{position:absolute;left:.8rem;top:.8rem;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--mint);color:#06281a;font-style:normal;font-weight:800;display:grid;place-items:center;font-size:.85rem}
+.flow b{display:block}.flow span{color:var(--muted);font-size:.86rem}
+@media (max-width:620px){.flow{grid-template-columns:1fr}}
 .filters{display:flex;gap:.35rem;flex-wrap:wrap;margin:.2rem 0 .6rem}.filter{font:inherit;font-size:.82rem;border-radius:999px;padding:.2rem .7rem;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
 .filter.on{background:var(--mint);border-color:var(--mint);color:#06281a;font-weight:600}
 #search{width:100%;max-width:none;font-size:1rem;padding:.65rem .8rem}
@@ -410,15 +422,15 @@ footer{margin-top:2rem;color:var(--muted);font-size:.82rem;display:flex;gap:1rem
 <select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></header>
 
 <section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div>
+<div class="flow"><div><i>1</i><b data-t="flow_1"></b><span data-t="flow_1s"></span></div><div><i>2</i><b data-t="flow_2"></b><span data-t="flow_2s"></span></div><div><i>3</i><b data-t="flow_3"></b><span data-t="flow_3s"></span></div></div>
 <div class="explain"><details id="howBox"><summary data-t="how_title"></summary><ol><li data-t="how_1"></li><li data-t="how_2"></li><li data-t="how_3"></li><li data-t="how_4"></li><li data-t="how_5"></li></ol></details>
 <details id="whyBox"><summary data-t="why_title"></summary><p data-t="why_1"></p><p data-t="why_2"></p></details></div></section>
 
 <main id="form">
 <section class="card"><div class="row" style="justify-content:space-between"><h2 data-t="step1"></h2><button class="btn hidden" id="changeGame" data-t="change"></button></div>
 <div id="finder"><input id="search" type="search" autocomplete="off"><div class="filters" id="filters"></div></div>
-<div class="sub" id="buildsHead"><span data-t="builds"></span> <span class="muted" id="count"></span></div><div class="list" id="games"></div><p class="muted hidden" id="noMatch" data-t="no_match"></p>
-<div id="dlHead" class="sub" data-t="no_build"></div><div class="list" id="apps"></div>
-<div id="laterHead" class="sub" data-t="later_head"></div><div class="list" id="laterList"></div></section>
+<div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span data-t="later_head"></span><span class="n"></span></button></div>
+<p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
 
 <section class="card hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p></section>
 
@@ -476,23 +488,29 @@ let system="";
 const title=g=>(g.about||g.name).replace(/\s*\([^)]*\)\s*$/,"");
 const systemOf=g=>{const m=(g.about||"").match(/\(([^),]+)/);return m?m[1].replace(/ prototype$/,""):""};
 const sortKey=g=>title(g).replace(/^(The|A) /i,"").toLowerCase();
-function filters(){const systems=[...new Set(D.games.map(systemOf).filter(Boolean))].sort();
+const COLORS={"GameCube":"#6c5ce7","Wii":"#2d9cdb","N64":"#e2463a","Steam":"#2a6fb0","PC":"#d9822b"};
+const BADGES={"GameCube":"GC","Wii":"Wii","N64":"64","Steam":"PC","PC":"PC"};
+const colorOf=x=>COLORS[systemOf(x)]||"#1fa572";
+let group="build";const all=()=>[...D.games,...D.downloads,...D.later];
+const groupOf=id=>D.games.some(x=>x.id==id)?"build":D.downloads.some(x=>x.id==id)?"download":"later";
+for(const b of document.querySelectorAll(".tab"))b.onclick=()=>{group=b.dataset.g;cards()};
+function filters(){const systems=[...new Set(all().map(systemOf).filter(Boolean))].sort();
  $("filters").replaceChildren(...["",...systems].map(s=>{const b=el("button",s||S.all,"filter"+(s==system?" on":""));b.onclick=()=>{system=s;filters();cards()};return b}))}
-function row(x,isGame,waiting){const b=el("button",null,"item"+(x.id==sel?" on":""));
- b.append(el("span",isGame||waiting?title(x):x.name,"t"));const t=el("div",null,"tags");
- if(isGame&&x.ready)t.append(el("span",S.ready_tag,"tag ready"));if(isGame)for(const p of x.platforms)t.append(el("span",p.short||p.label,"tag"));b.append(t);
- if(isGame||waiting)b.append(el("span",x.name+(systemOf(x)?" · "+systemOf(x):""),"s"));b.onclick=()=>choose(x.id);return b}
+function row(x,kind){const b=el("button",null,"item"+(x.id==sel?" on":""));b.style.setProperty("--c",colorOf(x));
+ b.append(el("span",BADGES[systemOf(x)]||(x.name||"?").charAt(0),"av"),el("span",x.about?title(x):x.name,"t"));const t=el("div",null,"tags");
+ if(kind=="build"&&x.ready)t.append(el("span",S.ready_tag,"tag ready"));if(kind=="build")for(const p of x.platforms)t.append(el("span",p.short||p.label,"tag"));b.append(t);
+ b.append(el("span",x.name+(systemOf(x)?" · "+systemOf(x):""),"s"));b.onclick=()=>choose(x.id);return b}
 function cards(){const q=$("search").value.trim().toLowerCase();
- const m=x=>sel?x.id==sel:(!q||(x.name+" "+(x.about||"")).toLowerCase().includes(q));
- $("finder").classList.toggle("hidden",!!sel);$("changeGame").classList.toggle("hidden",!sel);
- const games=D.games.filter(g=>m(g)&&(sel||!system||systemOf(g)==system)).sort((a,b)=>sortKey(a).localeCompare(sortKey(b)));
- $("games").replaceChildren(...games.map(g=>row(g,true)));$("games").classList.toggle("hidden",!games.length);
- $("buildsHead").classList.toggle("hidden",!!sel||!games.length);$("count").textContent="("+fill("count",{count:games.length})+")";
- const as=sel||system?D.downloads.filter(a=>a.id==sel):D.downloads.filter(m);
- $("dlHead").classList.toggle("hidden",!as.length||!!sel);$("apps").replaceChildren(...as.map(a=>row(a,false)));$("apps").classList.toggle("hidden",!as.length);
- const ls=D.later.filter(l=>sel?l.id==sel:(m(l)&&(!system||systemOf(l)==system))).sort((a,b)=>sortKey(a).localeCompare(sortKey(b)));
- $("laterHead").classList.toggle("hidden",!ls.length||!!sel);$("laterList").replaceChildren(...ls.map(l=>row(l,false,true)));$("laterList").classList.toggle("hidden",!ls.length);
- $("noMatch").classList.toggle("hidden",!!(games.length||as.length||ls.length))}
+ const match=x=>(!q||(x.name+" "+(x.about||"")).toLowerCase().includes(q))&&(!system||systemOf(x)==system);
+ const order=a=>a.sort((x,y)=>sortKey(x).localeCompare(sortKey(y)));
+ const G={build:order(D.games.filter(match)),download:order(D.downloads.filter(match)),later:order(D.later.filter(match))};
+ if(sel){group=groupOf(sel);G[group]=all().filter(x=>x.id==sel)}
+ else if(!G[group].length){const k=["build","download","later"].find(k=>G[k].length);if(k)group=k}
+ $("finder").classList.toggle("hidden",!!sel);$("changeGame").classList.toggle("hidden",!sel);$("tabs").classList.toggle("hidden",!!sel);
+ for(const b of document.querySelectorAll(".tab")){b.classList.toggle("on",b.dataset.g==group);b.setAttribute("aria-selected",b.dataset.g==group);b.querySelector(".n").textContent=G[b.dataset.g].length}
+ $("groupNote").textContent=sel?"":S[{build:"builds",download:"no_build",later:"later_note"}[group]];
+ $("list").replaceChildren(...G[group].map(x=>row(x,group)));$("list").classList.toggle("hidden",!G[group].length);
+ $("noMatch").classList.toggle("hidden",!!G[group].length)}
 $("search").oninput=cards;$("changeGame").onclick=()=>{sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards()};
 function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);

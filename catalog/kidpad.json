@@ -2,6 +2,7 @@
   "schema_version": 1,
   "id": "kidpad",
   "name": "KidPad",
+  "game": "Kid Pix (PC)",
   "repo_url": "https://github.com/chrissotraidis/kidpad",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/kidpad#create-a-local-unsigned-ipa",
