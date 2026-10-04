@@ -32,7 +32,7 @@ guided setup offers its Android and iOS targets only.
 | [BananaPad v0.2.1](https://github.com/chrissotraidis/bananapad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [BarrelPad v0.2.0](https://github.com/chrissotraidis/barrelpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [BearBirdPad v0.2.2](https://github.com/chrissotraidis/bearbirdpad/releases/tag/v0.2.2) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
-| [BellPad v0.2.0](https://github.com/chrissotraidis/bellpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
+| [BellPad v0.2.1](https://github.com/chrissotraidis/bellpad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [BlueWake v0.1.0](https://github.com/chrissotraidis/bluewake/releases/tag/v0.1.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [BrawlerPad v0.2.0](https://github.com/chrissotraidis/brawlerpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [DinoPad v0.2.0](https://github.com/chrissotraidis/dinopad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
