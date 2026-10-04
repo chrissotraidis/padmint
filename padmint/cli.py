@@ -194,6 +194,11 @@ def run_process(argv, cwd, log_path, event_path, emit, before_spawn=None, append
                 before_spawn()
             group = ({"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt"
                      else {"start_new_session": True})
+            if env and argv and not os.path.dirname(argv[0]):
+                # Windows looks a bare program name up on PadMint's own PATH, not the
+                # step's, so a step's "cmake" would miss PadMint's CMake. Resolve it here.
+                found = shutil.which(argv[0], path=env.get("PATH"))
+                argv = [found, *argv[1:]] if found else argv
             process = subprocess.Popen(argv, cwd=cwd, stdout=log, env=env,
                                        stderr=subprocess.STDOUT, **group)
             last_progress = time.monotonic()

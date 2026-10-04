@@ -249,6 +249,20 @@ fi
                              lambda *a, **kw: None)
         self.assertEqual(result, (7, False))
 
+    def test_a_bare_program_is_found_on_the_steps_path(self):
+        # A step runs "cmake" from PadMint's tools folder, which is on the step's PATH only.
+        tools = self.root / "tools bin"
+        tools.mkdir()
+        if os.name == "nt":
+            (tools / "padmint-probe.cmd").write_text("@exit /b 5\r\n")
+        else:
+            (tools / "padmint-probe").write_text("#!/bin/sh\nexit 5\n")
+            (tools / "padmint-probe").chmod(0o755)
+        env = dict(os.environ, PATH=str(tools) + os.pathsep + os.environ.get("PATH", ""))
+        result = run_process(["padmint-probe"], self.root, self.root / "out.log", self.root / "events",
+                             lambda *a, **kw: None, env=env)
+        self.assertEqual(result, (5, False))
+
     def test_cancel_reaches_child(self):
         marker = self.root / "cancelled"
         ready = self.root / "ready"
