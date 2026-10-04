@@ -226,11 +226,14 @@ class Builds:
         now = next((line.strip() for line in reversed(lines)
                     if line.strip() and "build_progress:" not in line), "")
         state = {None: "running", 0: "done", 130: "cancelled"}.get(code, "failed")
+        if code is not None and "ended" not in job:
+            job["ended"] = time.time()  # the clock stops when the build does
         events = (self.events.read_text("utf-8", "replace").splitlines()
                   if self.events and self.events.exists() else [])
         found, tool_list, stage = phases(events, code)
         reply = {"state": state, "step": "done" if code == 0 else step, "now": now[-200:], "game": job["game"],
-                 "device": job.get("device", ""), "elapsed": int(time.time() - job["started"]), "tail": lines[-60:],
+                 "device": job.get("device", ""), "elapsed": int(job.get("ended", time.time()) - job["started"]),
+                 "tail": lines[-60:],
                  "lines": len(lines), "exit_code": code, "phases": found, "tools": tool_list, "stage": stage}
         if code == 0:
             reply["result"] = self.result(lang)
