@@ -3,6 +3,11 @@
   "id": "projectreach",
   "name": "HaloPad",
   "game": "Halo: Combat Evolved (PC)",
+  "plays_on": [
+    "iphone",
+    "ipad",
+    "mac"
+  ],
   "repo_url": "https://github.com/chrissotraidis/projectreach",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/projectreach#build-and-install",

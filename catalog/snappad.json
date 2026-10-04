@@ -3,6 +3,11 @@
   "id": "snappad",
   "name": "SnapPad",
   "game": "Pokémon Snap (N64)",
+  "plays_on": [
+    "iphone",
+    "ipad",
+    "mac"
+  ],
   "repo_url": "https://github.com/chrissotraidis/snappad",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/snappad",

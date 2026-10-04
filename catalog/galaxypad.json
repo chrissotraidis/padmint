@@ -3,6 +3,11 @@
   "id": "galaxypad",
   "name": "GalaxyPad",
   "game": "Super Mario Galaxy (Wii)",
+  "plays_on": [
+    "iphone",
+    "ipad",
+    "mac"
+  ],
   "repo_url": "https://github.com/chrissotraidis/galaxypad",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/galaxypad",

@@ -3,6 +3,11 @@
   "id": "ectopad",
   "name": "EctoPad",
   "game": "Metroid Prime (GameCube)",
+  "plays_on": [
+    "iphone",
+    "ipad",
+    "mac"
+  ],
   "repo_url": "https://github.com/chrissotraidis/ectopad",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/ectopad#getting-started",

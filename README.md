@@ -1,7 +1,7 @@
 # PadMint
 
 <p align="center">
-  <strong>Make your own copy of a Pad game, like KartPad, from your own disc.</strong><br>
+  <strong>Make your own copy of a game, like BlueWake or GoldenPad, from your own disc or ROM.</strong><br>
   On your Windows, Mac or Linux computer, or on an Android phone. Nothing from your disc is uploaded.
 </p>
 
@@ -25,7 +25,7 @@
 > [BlueWake's releases](https://github.com/chrissotraidis/bluewake/releases/latest).
 > PadMint makes BlueWake for Mac, iPhone and iPad.
 
-**Why you need it:** the other Pad apps contain no game code. The game part is
+**Why you need it:** the other apps contain no game code. The game part is
 made from your own copy of the game, on your own device. PadMint does that: you
 give it your disc image, it builds your copy and tells you what to do with it.
 
@@ -64,7 +64,7 @@ not something to install by itself: it has no game code, so it can't play.
 | **iPhone or iPad** | a Mac with Apple Silicon (M1 or newer) | [iPhone or iPad](#iphone-or-ipad) |
 | **iPhone or iPad** | a Windows or Linux computer | [iPhone or iPad](#iphone-or-ipad) (experimental) |
 
-Other Pad games: see [Other Pad games](#other-pad-games).
+Other games: see [Other games](#other-games).
 Check your project's [build compatibility](docs/COMPATIBILITY.md) before downloading
 tools. It lists the released recipes, host architectures and known blockers.
 
@@ -258,7 +258,7 @@ every Pad game.
 See the [per-project compatibility matrix](docs/COMPATIBILITY.md) for the exact
 public recipe versions and the evidence behind the current limitations.
 
-## Other Pad games
+## Other games
 
 **No build needed:** **CaesarPad**, **DaggerPad**, **DevilTouch**, **Emerald
 Tablet**, **KidPad**, **PeonPad** and **VaultPad** publish apps that contain no
@@ -401,7 +401,7 @@ Windows or Linux. See [STATUS.md](STATUS.md) for what has been
 verified on each.
 
 The catalog covers the Pad ports whose repositories declare a build. Only
-games listed under [Start here](#start-here) and [Other Pad games](#other-pad-games) are offered to players; the
+games listed under [Start here](#start-here) and [Other games](#other-games) are offered to players; the
 others are still being tested, and [STATUS.md](STATUS.md) lists how far each
 has got.
 

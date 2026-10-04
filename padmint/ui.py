@@ -52,13 +52,13 @@ def player_data(lang):
                                  "url": entry["ready_to_play"]["url"]} if entry.get("ready_to_play") else None),
                       "issues": entry["repo_url"] + "/issues"})
     apps = [] if cli.on_android() else [
-        {"id": app, "name": name, "about": catalog()[app].get("game", ""),
+        {"id": app, "name": name, "about": catalog()[app].get("game", ""), "plays_on": catalog()[app].get("plays_on", []),
          "intro": phrase("download_intro", lang, name=name).strip(),
          "steps": localized(catalog()[app]["download"], "steps", lang),
          "guide": catalog()[app].get("player_help") or catalog()[app]["repo_url"]}
         for app, name in cli.downloads()]
     waiting = [{"id": game, "name": name, "about": catalog()[game]["game"],
-                "text": localized(catalog()[game]["later"], "text", lang),
+                "text": localized(catalog()[game]["later"], "text", lang), "plays_on": catalog()[game].get("plays_on", []),
                 "link": catalog()[game].get("player_help") or catalog()[game]["repo_url"]}
                for game, name in cli.later()]
     return {"lang": lang, "version": __version__, "folder": str(folder),
@@ -373,6 +373,12 @@ PAGE = r"""<!doctype html><html><head><meta charset="utf-8"><title>PadMint</titl
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);line-height:1.5}
 a{color:var(--mint)}.wrap{max-width:860px;margin:0 auto;padding:1.4rem 1.2rem 3rem}
 header{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.top{display:flex;align-items:center;gap:.6rem}.gh{display:inline-flex;align-items:center;gap:.4rem;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:.42rem .7rem;font-size:.9rem;background:var(--panel)}
+.gh:hover{border-color:var(--mint)}.gh svg{width:18px;height:18px}
+.btn.back{border:0;background:none;color:var(--mint);font-weight:650;padding:.2rem 0;margin:0 0 .4rem}.btn.back:hover{text-decoration:underline}
+.backBtn{margin-top:.6rem}
+.item.later{opacity:.72}.item.later .av{filter:grayscale(.85)}.item.later .t{font-weight:600}
+.tag.soon{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--muted)}.tag.dl{background:color-mix(in srgb,#2d9cdb 18%,transparent);color:#2d9cdb}
 .brand{display:flex;align-items:center;gap:.7rem}.brand h1{margin:0;font-size:1.6rem;letter-spacing:-.02em}
 .brand .v{color:var(--muted);font-size:.85rem}.mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--mint),var(--mint2));display:grid;place-items:center}
 .mark svg{width:22px;height:22px}
@@ -434,7 +440,8 @@ footer{margin-top:2rem;color:var(--muted);font-size:.82rem;display:flex;gap:1rem
 </style></head><body><div class="wrap">
 <header><div class="brand"><div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06281a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-5-3-8-7-8-11a8 8 0 0 1 16 0c0 4-3 8-8 11z"/><path d="M12 21V9"/><path d="M12 13l3-3"/></svg></div>
 <div><h1>PadMint</h1><div class="v" id="ver"></div></div></div>
-<select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></header>
+<div class="top"><a class="gh" id="gh" href="https://github.com/chrissotraidis" target="_blank" rel="noopener" title="Chris Sotraidis on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><span>Chris Sotraidis</span></a>
+<select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></div></header>
 
 <section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div>
 <div class="flow"><div><i>1</i><b data-t="flow_1"></b><span data-t="flow_1s"></span></div><div><i>2</i><b data-t="flow_2"></b><span data-t="flow_2s"></span></div><div><i>3</i><b data-t="flow_3"></b><span data-t="flow_3s"></span></div></div>
@@ -442,14 +449,14 @@ footer{margin-top:2rem;color:var(--muted);font-size:.82rem;display:flex;gap:1rem
 <details id="whyBox"><summary data-t="why_title"></summary><p data-t="why_1"></p><p data-t="why_2"></p></details></div></section>
 
 <main id="form">
-<section class="card"><div class="row" style="justify-content:space-between"><h2 data-t="step1"></h2><button class="btn hidden" id="changeGame" data-t="change"></button></div>
+<section class="card" id="pickCard"><button class="btn back hidden" id="changeGame" data-t="change"></button><h2 data-t="step1"></h2>
 <div id="finder"><input id="search" type="search" autocomplete="off"><div class="filters" id="filters"></div></div>
-<div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span data-t="later_head"></span><span class="n"></span></button></div>
+<div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span data-t="later_head"></span><span class="n"></span></button></div>
 <p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
 
-<section class="card hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p></section>
+<section class="card hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p><button class="btn back backBtn" data-t="change"></button></section>
 
-<section class="card hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><div class="row"><a class="btn" id="laterLink" target="_blank"></a></div></section>
+<section class="card hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><div class="row"><a class="btn" id="laterLink" target="_blank"></a><button class="btn back backBtn" data-t="change"></button></div></section>
 
 <section class="card banner hidden" id="readyBox"><h2 data-t="ready_title"></h2><p id="readyText"></p><div class="row"><a class="btn main" id="readyLink" target="_blank" data-t="ready_link"></a></div><p class="muted small" data-t="ready_or"></p></section>
 
@@ -506,30 +513,36 @@ const sortKey=g=>title(g).replace(/^(The|A) /i,"").toLowerCase();
 const COLORS={"GameCube":"#6c5ce7","Wii":"#2d9cdb","N64":"#e2463a","Steam":"#2a6fb0","PC":"#d9822b"};
 const BADGES={"GameCube":"GC","Wii":"Wii","N64":"64","Steam":"PC","PC":"PC"};
 const colorOf=x=>COLORS[systemOf(x)]||"#1fa572";
-let group="build";const all=()=>[...D.games,...D.downloads,...D.later];
+let group="all";const all=()=>[...D.games,...D.downloads,...D.later];
 const groupOf=id=>D.games.some(x=>x.id==id)?"build":D.downloads.some(x=>x.id==id)?"download":"later";
+const DEVICES={ipad:"iPad",iphone:"iPhone",mac:"Mac"};
 for(const b of document.querySelectorAll(".tab"))b.onclick=()=>{group=b.dataset.g;cards()};
 function filters(){const systems=[...new Set(all().map(systemOf).filter(Boolean))].sort();
  $("filters").replaceChildren(...["",...systems].map(s=>{const b=el("button",s||S.all,"filter"+(s==system?" on":""));b.onclick=()=>{system=s;filters();cards()};return b}))}
-function row(x,kind){const b=el("button",null,"item"+(x.id==sel?" on":""));b.style.setProperty("--c",colorOf(x));
- b.append(el("span",BADGES[systemOf(x)]||(x.name||"?").charAt(0),"av"),el("span",x.about?title(x):x.name,"t"));const t=el("div",null,"tags");
- if(kind=="build"&&x.ready)t.append(el("span",S.ready_tag,"tag ready"));if(kind=="build")for(const p of x.platforms)t.append(el("span",p.short||p.label,"tag"));b.append(t);
- b.append(el("span",x.name+(systemOf(x)?" · "+systemOf(x):""),"s"));b.onclick=()=>choose(x.id);return b}
+function row(x){const kind=groupOf(x.id),b=el("button",null,"item "+kind+(x.id==sel?" on":""));b.style.setProperty("--c",colorOf(x));
+ const badge=el("span",BADGES[systemOf(x)]||(x.name||"?").charAt(0),"av");badge.title=systemOf(x)?fill("original",{system:systemOf(x)}):"";
+ b.append(badge,el("span",x.about?title(x):x.name,"t"));const t=el("div",null,"tags");
+ if(kind=="later")t.append(el("span",S.later_head,"tag soon"));if(kind=="download")t.append(el("span",S.tab_download,"tag dl"));
+ if(kind=="build"&&x.ready)t.append(el("span",S.ready_tag,"tag ready"));
+ if(kind=="build")for(const p of x.platforms)t.append(el("span",p.short||p.label,"tag"));else{const o=x.plays_on||[];const ios=o.includes("iphone")&&o.includes("ipad")?["iPhone/iPad"]:o.filter(d=>d!="mac").map(d=>DEVICES[d]);for(const d of [...ios,...(o.includes("mac")?["Mac"]:[])])t.append(el("span",d,"tag"))}b.append(t);
+ b.append(el("span",x.name+(systemOf(x)?" · "+fill("original",{system:systemOf(x)}):""),"s"));b.onclick=()=>choose(x.id);return b}
 function cards(){const q=$("search").value.trim().toLowerCase();
  const match=x=>(!q||(x.name+" "+(x.about||"")).toLowerCase().includes(q))&&(!system||systemOf(x)==system);
  const order=a=>a.sort((x,y)=>sortKey(x).localeCompare(sortKey(y)));
  const G={build:order(D.games.filter(match)),download:order(D.downloads.filter(match)),later:order(D.later.filter(match))};
- if(sel){group=groupOf(sel);G[group]=all().filter(x=>x.id==sel)}
- else if(!G[group].length){const k=["build","download","later"].find(k=>G[k].length);if(k)group=k}
+ G.all=order([...G.build,...G.download,...G.later]);
+ if(sel){group="all";G.all=all().filter(x=>x.id==sel)}
+ else if(!G[group].length){const k=["all","build","download","later"].find(k=>G[k].length);if(k)group=k}
  $("finder").classList.toggle("hidden",!!sel);$("changeGame").classList.toggle("hidden",!sel);$("tabs").classList.toggle("hidden",!!sel);
  for(const b of document.querySelectorAll(".tab")){b.classList.toggle("on",b.dataset.g==group);b.setAttribute("aria-selected",b.dataset.g==group);b.querySelector(".n").textContent=G[b.dataset.g].length}
- $("groupNote").textContent=sel?"":S[{build:"builds",download:"no_build",later:"later_note"}[group]];
- $("list").replaceChildren(...G[group].map(x=>row(x,group)));$("list").classList.toggle("hidden",!G[group].length);
+ $("groupNote").textContent=sel?"":S[{all:"all_note",build:"builds",download:"no_build",later:"later_note"}[group]];
+ $("list").replaceChildren(...G[group].map(x=>row(x)));$("list").classList.toggle("hidden",!G[group].length);
  $("noMatch").classList.toggle("hidden",!!G[group].length)}
-$("search").oninput=cards;$("changeGame").onclick=()=>{sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards()};
+function back(){sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards();$("pickCard").scrollIntoView({behavior:"smooth"})}
+$("search").oninput=cards;$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
 function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);
- if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=w.about;$("laterText").textContent=w.text;$("laterLink").href=w.link;$("laterLink").textContent=fill("later_link",{name:w.name});$("laterBox").scrollIntoView({behavior:"smooth"})}
+ if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=w.text;$("laterLink").href=w.link;$("laterLink").textContent=fill("later_link",{name:w.name});$("laterBox").scrollIntoView({behavior:"smooth"})}
  $("dlBox").classList.toggle("hidden",!a);
  $("readyBox").classList.toggle("hidden",!(g&&g.ready));if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url}
  if(a){$("dlName").textContent=a.name;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(linked));

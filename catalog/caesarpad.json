@@ -3,6 +3,9 @@
   "id": "caesarpad",
   "name": "CaesarPad",
   "game": "Caesar III (PC)",
+  "plays_on": [
+    "ipad"
+  ],
   "repo_url": "https://github.com/chrissotraidis/caesarpad",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/caesarpad/blob/main/docs/INSTALL_IPA.md",

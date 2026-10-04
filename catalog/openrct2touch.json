@@ -3,6 +3,9 @@
   "id": "openrct2touch",
   "name": "OpenRCT2 Touch",
   "game": "RollerCoaster Tycoon 2 (PC)",
+  "plays_on": [
+    "ipad"
+  ],
   "repo_url": "https://github.com/chrissotraidis/OpenRCT2Touch",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/OpenRCT2Touch",

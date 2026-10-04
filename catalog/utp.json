@@ -3,6 +3,10 @@
   "id": "utp",
   "name": "UTP",
   "game": "Unreal Tournament (PC)",
+  "plays_on": [
+    "iphone",
+    "ipad"
+  ],
   "repo_url": "https://github.com/chrissotraidis/utp",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/utp#release-status",

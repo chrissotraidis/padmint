@@ -246,6 +246,9 @@ def catalog():
                                  "and lists of steps")
         # Games listed so players can find them, with where they stand: nothing to build or
         # download through PadMint yet.
+        plays_on = entry.get("plays_on", [])
+        if not isinstance(plays_on, list) or not set(plays_on) <= {"ipad", "iphone", "mac"}:
+            raise ValueError(f"catalog/{path.name}: plays_on lists ipad, iphone or mac")
         later = entry.get("later")
         if later is not None and (not isinstance(later, dict) or targets or download is not None
                                   or not entry.get("name") or not entry.get("game")

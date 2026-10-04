@@ -3,6 +3,10 @@
   "id": "ratouch",
   "name": "RAtouch",
   "game": "Command & Conquer: Red Alert (PC)",
+  "plays_on": [
+    "iphone",
+    "ipad"
+  ],
   "repo_url": "https://github.com/chrissotraidis/ratouch",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/ratouch#install-status",

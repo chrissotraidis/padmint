@@ -3,6 +3,9 @@
   "id": "daggerpad",
   "name": "DaggerPad",
   "game": "The Elder Scrolls II: Daggerfall (PC)",
+  "plays_on": [
+    "ipad"
+  ],
   "repo_url": "https://github.com/chrissotraidis/daggerpad",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/daggerpad#get-started",

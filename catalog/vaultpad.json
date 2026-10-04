@@ -3,6 +3,9 @@
   "id": "vaultpad",
   "name": "VaultPad",
   "game": "Fallout 2 (PC)",
+  "plays_on": [
+    "ipad"
+  ],
   "repo_url": "https://github.com/chrissotraidis/vaultpad",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/vaultpad#install-on-an-ipad",

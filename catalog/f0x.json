@@ -3,6 +3,11 @@
   "id": "f0x",
   "name": "F0X",
   "game": "F-Zero X (N64)",
+  "plays_on": [
+    "iphone",
+    "ipad",
+    "mac"
+  ],
   "repo_url": "https://github.com/chrissotraidis/f0x",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/f0x",
