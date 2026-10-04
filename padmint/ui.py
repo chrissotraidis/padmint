@@ -437,6 +437,29 @@ details summary{cursor:pointer;color:var(--muted)}
 pre{background:#0a0f0d;color:#cfe3d8;border-radius:10px;padding:.8rem;white-space:pre-wrap;max-height:22rem;overflow:auto;font-size:.8rem;margin:.6rem 0}
 .big{font-size:1.25rem;margin:0}.next li{margin:.5rem 0;overflow-wrap:anywhere}.banner{border-left:4px solid var(--mint)}.banner.badb{border-left-color:var(--bad)}
 footer{margin-top:2rem;color:var(--muted);font-size:.82rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:space-between}
+
+.wrap{max-width:1000px}
+body{background:radial-gradient(1100px 480px at 0% -8%,color-mix(in srgb,var(--mint) 13%,transparent),transparent 70%),var(--bg)}
+html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent;scrollbar-width:thin}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--muted) 40%,transparent);border-radius:99px;border:2px solid var(--bg)}::-webkit-scrollbar-track{background:transparent}
+.hero{margin:1.6rem 0 1.1rem}.hero p{font-size:1.3rem;font-weight:650;letter-spacing:-.01em;margin:.2rem 0 .7rem}
+.search{position:relative}.search svg{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+#search{padding-left:2.6rem;border-radius:12px}
+.pills{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .9rem;margin:.75rem 0 .35rem}
+.tabs{display:flex;flex-wrap:wrap;gap:.35rem;margin:0;border:0;overflow:visible}
+.tab{border:1px solid var(--line);border-radius:999px;padding:.38rem .85rem;background:var(--panel2);color:var(--muted);font-size:.9rem}
+.tab:hover{color:var(--text);border-color:var(--mint)}.tab.on{background:var(--mint);border-color:var(--mint);color:#06281a}
+.tab.on .n{background:rgba(0,0,0,.14);color:#06281a}
+.filters{margin:0;gap:.3rem}.filter{font-size:.78rem;padding:.18rem .6rem}
+.note{margin:.35rem 0 .7rem}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.55rem;border:0;border-radius:0;overflow:visible}
+.item{border:1px solid var(--line);border-radius:13px;padding:.75rem .85rem;align-items:start;grid-template-rows:auto auto 1fr;transition:border-color .15s,transform .15s,background .15s}
+.item:last-child{border-bottom:1px solid var(--line)}
+.item:hover{padding-left:.85rem;transform:translateY(-1px);border-color:color-mix(in srgb,var(--c) 70%,var(--line));background:color-mix(in srgb,var(--c) 7%,var(--panel2))}
+.item.on{grid-column:1/-1;box-shadow:inset 3px 0 0 var(--mint)}
+.item .av{grid-row:1/span 3}.item .tags{grid-row:3;grid-column:2;justify-content:flex-start;margin-top:.4rem}
+.about{margin-top:2.2rem}.about h2{font-size:1.05rem;margin:0 0 .2rem;color:var(--muted);font-weight:650}
+#progress:not(.hidden)~.about{display:none}
 </style></head><body><div class="wrap">
 <header><div class="brand"><div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06281a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-5-3-8-7-8-11a8 8 0 0 1 16 0c0 4-3 8-8 11z"/><path d="M12 21V9"/><path d="M12 13l3-3"/></svg></div>
 <div><h1>PadMint</h1><div class="v" id="ver"></div></div></div>
@@ -444,14 +467,12 @@ footer{margin-top:2rem;color:var(--muted);font-size:.82rem;display:flex;gap:1rem
 <select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></div></header>
 
 <section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div>
-<div class="flow"><div><i>1</i><b data-t="flow_1"></b><span data-t="flow_1s"></span></div><div><i>2</i><b data-t="flow_2"></b><span data-t="flow_2s"></span></div><div><i>3</i><b data-t="flow_3"></b><span data-t="flow_3s"></span></div></div>
-<div class="explain"><details id="howBox"><summary data-t="how_title"></summary><ol><li data-t="how_1"></li><li data-t="how_2"></li><li data-t="how_3"></li><li data-t="how_4"></li><li data-t="how_5"></li></ol></details>
-<details id="whyBox"><summary data-t="why_title"></summary><p data-t="why_1"></p><p data-t="why_2"></p></details></div></section>
+</section>
 
 <main id="form">
 <section class="card" id="pickCard"><button class="btn back hidden" id="changeGame" data-t="change"></button><h2 data-t="step1"></h2>
-<div id="finder"><input id="search" type="search" autocomplete="off"><div class="filters" id="filters"></div></div>
-<div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span data-t="later_head"></span><span class="n"></span></button></div>
+<div id="finder"><div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="search" type="search" autocomplete="off"></div></div>
+<div class="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span data-t="later_head"></span><span class="n"></span></button></div><div class="filters" id="filters"></div></div>
 <p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
 
 <section class="card hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p><button class="btn back backBtn" data-t="change"></button></section>
@@ -484,6 +505,9 @@ footer{margin-top:2rem;color:var(--muted);font-size:.82rem;display:flex;gap:1rem
 <section class="card"><details id="logBox"><summary><span data-t="log"></span> <span class="muted" id="lineCount"></span></summary>
 <pre id="tail"></pre><button class="btn" id="copy" data-t="copy_log"></button></details></section>
 </main>
+<section class="about" id="about"><h2 data-t="about_title"></h2><div class="flow"><div><i>1</i><b data-t="flow_1"></b><span data-t="flow_1s"></span></div><div><i>2</i><b data-t="flow_2"></b><span data-t="flow_2s"></span></div><div><i>3</i><b data-t="flow_3"></b><span data-t="flow_3s"></span></div></div>
+<div class="explain"><details id="howBox"><summary data-t="how_title"></summary><ol><li data-t="how_1"></li><li data-t="how_2"></li><li data-t="how_3"></li><li data-t="how_4"></li><li data-t="how_5"></li></ol></details>
+<details id="whyBox"><summary data-t="why_title"></summary><p data-t="why_1"></p><p data-t="why_2"></p></details></div></section>
 <footer><span data-t="local_note"></span><span><a href="https://github.com/chrissotraidis/padmint" target="_blank" data-t="source"></a> · <a id="reportLink" href="https://github.com/chrissotraidis/padmint/issues" target="_blank" data-t="report"></a></span></footer>
 </div>
 <script>

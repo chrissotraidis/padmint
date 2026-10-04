@@ -337,6 +337,7 @@ MESSAGES = {
                    "pt": "Nenhum jogo encontrado. Tente outro nome."},
     "w_change": {"en": "← All games", "es": "← Todos los juegos", "pt": "← Todos os jogos"},
     "w_tab_all": {"en": "All games", "es": "Todos los juegos", "pt": "Todos os jogos"},
+    "w_about_title": {"en": "How it works", "es": "Cómo funciona", "pt": "Como funciona"},
     "w_all_note": {"en": "Every game, by name. Dimmed ones aren't available yet: choose one to see why.",
                    "es": "Todos los juegos, por nombre. Los atenuados todavía no están disponibles: elige uno para ver por qué.",
                    "pt": "Todos os jogos, por nome. Os esmaecidos ainda não estão disponíveis: escolha um para ver por quê."},
