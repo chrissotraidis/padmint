@@ -36,6 +36,10 @@ class WindowTests(unittest.TestCase):
         patcher = mock.patch.object(cli, "player_games", return_value=GAMES)
         patcher.start()
         self.addCleanup(patcher.stop)
+        # The plan reads the latest release recipe over the network; tests use the catalog's copy.
+        offline = mock.patch("padmint.ui.release_recipe", return_value=None)
+        offline.start()
+        self.addCleanup(offline.stop)
 
     def request(self, path, body=None, headers=None):
         data = None if body is None else json.dumps(body).encode()

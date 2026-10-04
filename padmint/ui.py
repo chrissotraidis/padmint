@@ -50,7 +50,7 @@ def player_data(lang):
                       "files": [str(path) for path in files[:8]],
                       "ready": ({"text": localized(entry["ready_to_play"], "text", lang),
                                  "url": entry["ready_to_play"]["url"]} if entry.get("ready_to_play") else None),
-                      "issues": entry["repo_url"] + "/issues"})
+                      "page": entry.get("player_help") or entry["repo_url"], "issues": entry["repo_url"] + "/issues"})
     apps = [] if cli.on_android() else [
         {"id": app, "name": name, "about": catalog()[app].get("game", ""), "plays_on": catalog()[app].get("plays_on", []),
          "intro": phrase("download_intro", lang, name=name).strip(),
@@ -349,6 +349,9 @@ def serve(port=0, open_browser=True):
     server = ThreadingHTTPServer(("127.0.0.1", port), make_handler(token, builds))
     url = f"http://127.0.0.1:{server.server_address[1]}/?token={token}"
     print(phrase("w_open", language(), version=__version__, url=url), flush=True)
+    # Read every game's latest recipe in the background, so the plan shows at once.
+    threading.Thread(target=lambda: [release_recipe(game) for game, _name, _targets in cli.player_games()],
+                     daemon=True).start()
     if open_browser:
         if cli.on_android():  # the phone's browser, through Termux
             subprocess.run([str(cli.TERMUX_OPEN_URL), url], check=False)
@@ -373,8 +376,8 @@ PAGE = r"""<!doctype html><html><head><meta charset="utf-8"><title>PadMint</titl
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);line-height:1.5}
 a{color:var(--mint)}.wrap{max-width:860px;margin:0 auto;padding:1.4rem 1.2rem 3rem}
 header{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
-.top{display:flex;align-items:center;gap:.6rem}.gh{display:inline-flex;align-items:center;gap:.4rem;color:var(--text);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:.42rem .7rem;font-size:.9rem;background:var(--panel)}
-.gh:hover{border-color:var(--mint)}.gh svg{width:18px;height:18px}
+.top{display:flex;align-items:center;gap:.6rem}.gh{display:inline-grid;place-items:center;width:2.4rem;height:2.4rem;color:var(--text);border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.gh:hover{border-color:var(--mint);color:var(--mint)}.gh svg{width:20px;height:20px}
 .btn.back{border:0;background:none;color:var(--mint);font-weight:650;padding:.2rem 0;margin:0 0 .4rem}.btn.back:hover{text-decoration:underline}
 .backBtn{margin-top:.6rem}
 .item.later{opacity:.72}.item.later .av{filter:grayscale(.85)}.item.later .t{font-weight:600}
@@ -460,10 +463,17 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 .item .av{grid-row:1/span 3}.item .tags{grid-row:3;grid-column:2;justify-content:flex-start;margin-top:.4rem}
 .about{margin-top:2.2rem}.about h2{font-size:1.05rem;margin:0 0 .2rem;color:var(--muted);font-weight:650}
 #progress:not(.hidden)~.about{display:none}
+
+.item.on{padding:.95rem 1rem}.item.on .av{width:3.1rem;height:3.1rem;font-size:.95rem;border-radius:14px}.item.on .t{font-size:1.2rem}
+#pickCard h2{margin-bottom:.5rem}#gamePage{margin:.6rem 0 0}#gamePage a{font-weight:600;text-decoration:none}#gamePage a:hover{text-decoration:underline}
+#fileBox h2,#deviceBox h2,#planBox h2{display:flex;align-items:center;gap:.5rem}
+.card{box-shadow:0 1px 0 color-mix(in srgb,var(--text) 4%,transparent),0 8px 24px -18px rgba(0,0,0,.5)}
+
+.loading{display:flex;align-items:center;gap:.6rem}.loading:before{content:"";width:1rem;height:1rem;border-radius:50%;border:2px solid var(--line);border-top-color:var(--mint);animation:spin 1s linear infinite}
 </style></head><body><div class="wrap">
 <header><div class="brand"><div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06281a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-5-3-8-7-8-11a8 8 0 0 1 16 0c0 4-3 8-8 11z"/><path d="M12 21V9"/><path d="M12 13l3-3"/></svg></div>
 <div><h1>PadMint</h1><div class="v" id="ver"></div></div></div>
-<div class="top"><a class="gh" id="gh" href="https://github.com/chrissotraidis" target="_blank" rel="noopener" title="Chris Sotraidis on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><span>Chris Sotraidis</span></a>
+<div class="top"><a class="gh" id="gh" href="https://github.com/chrissotraidis" target="_blank" rel="noopener" title="Chris Sotraidis on GitHub" aria-label="Chris Sotraidis on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
 <select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></div></header>
 
 <section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div>
@@ -472,8 +482,8 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 <main id="form">
 <section class="card" id="pickCard"><button class="btn back hidden" id="changeGame" data-t="change"></button><h2 data-t="step1"></h2>
 <div id="finder"><div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="search" type="search" autocomplete="off"></div></div>
-<div class="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span data-t="later_head"></span><span class="n"></span></button></div><div class="filters" id="filters"></div></div>
-<p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
+<div class="pills" id="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span data-t="later_head"></span><span class="n"></span></button></div><div class="filters" id="filters"></div></div>
+<p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="small hidden" id="gamePage"><a target="_blank" rel="noopener" id="gamePageLink"></a></p><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
 
 <section class="card hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p><button class="btn back backBtn" data-t="change"></button></section>
 
@@ -557,7 +567,7 @@ function cards(){const q=$("search").value.trim().toLowerCase();
  G.all=order([...G.build,...G.download,...G.later]);
  if(sel){group="all";G.all=all().filter(x=>x.id==sel)}
  else if(!G[group].length){const k=["all","build","download","later"].find(k=>G[k].length);if(k)group=k}
- $("finder").classList.toggle("hidden",!!sel);$("changeGame").classList.toggle("hidden",!sel);$("tabs").classList.toggle("hidden",!!sel);
+ $("finder").classList.toggle("hidden",!!sel);$("changeGame").classList.toggle("hidden",!sel);$("tabs").classList.toggle("hidden",!!sel);$("pills").classList.toggle("hidden",!!sel);const one=sel&&all().find(x=>x.id==sel);$("gamePage").classList.toggle("hidden",!(one&&one.page));if(one&&one.page){$("gamePageLink").href=one.page;$("gamePageLink").textContent=fill("game_page",{name:one.name})+" ↗"}
  for(const b of document.querySelectorAll(".tab")){b.classList.toggle("on",b.dataset.g==group);b.setAttribute("aria-selected",b.dataset.g==group);b.querySelector(".n").textContent=G[b.dataset.g].length}
  $("groupNote").textContent=sel?"":S[{all:"all_note",build:"builds",download:"no_build",later:"later_note"}[group]];
  $("list").replaceChildren(...G[group].map(x=>row(x)));$("list").classList.toggle("hidden",!G[group].length);
@@ -580,7 +590,7 @@ function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("p
  else{$("inApp").textContent=fill("file_in_app",{name:g.name});$("inApp").classList.remove("hidden")}
  $("deviceBox").classList.remove("hidden");$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}));
  if(g.platforms.length==1)pickDevice(g.platforms[0].id);($("fileBox").classList.contains("hidden")?$("deviceBox"):$("fileBox")).scrollIntoView({behavior:"smooth"});ready()}
-async function pickDevice(id){dev=id;for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p","…","muted"));
+async function pickDevice(id){dev=id;for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
  const r=await (await fetch("/api/plan?game="+sel+"&platform="+id+"&lang="+D.lang,{headers:H})).json();if(dev!=id)return;showPlan(r);ready()}
 let blocked=false;
 function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.error){box.append(el("p",p.error,"bad"));return}

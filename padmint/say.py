@@ -337,6 +337,8 @@ MESSAGES = {
                    "pt": "Nenhum jogo encontrado. Tente outro nome."},
     "w_change": {"en": "← All games", "es": "← Todos los juegos", "pt": "← Todos os jogos"},
     "w_tab_all": {"en": "All games", "es": "Todos los juegos", "pt": "Todos os jogos"},
+    "w_plan_loading": {"en": "Reading {name}'s latest release…", "es": "Leyendo la última versión de {name}…", "pt": "Lendo a versão mais recente de {name}…"},
+    "w_game_page": {"en": "About {name}: install guide and updates", "es": "Sobre {name}: guía de instalación y novedades", "pt": "Sobre {name}: guia de instalação e novidades"},
     "w_about_title": {"en": "How it works", "es": "Cómo funciona", "pt": "Como funciona"},
     "w_all_note": {"en": "Every game, by name. Dimmed ones aren't available yet: choose one to see why.",
                    "es": "Todos los juegos, por nombre. Los atenuados todavía no están disponibles: elige uno para ver por qué.",
