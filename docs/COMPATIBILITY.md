@@ -152,31 +152,31 @@ per game: add scene startup, as SpaghettiPad v0.2.1, StarshipPad
 recipe. From 0.3.7, PadMint's finish screen tells the player when their copy is
 at risk.
 
-**Fixed in source, 4 October (evening).** Each game now starts through UIKit
-scenes on its default branch, and its next version is staged as a draft release
-that waits on its audit row:
+**Fixed and released, 4 October.** Each game now starts through UIKit scenes,
+and the version below is its latest release, so PadMint builds it:
 
-| Game | Fix | Next version (draft) | iOS 27.0 Simulator |
+| Game | Fix | Release | iOS 27.0 Simulator |
 |---|---|---|---|
-| AnnePad | [#17](https://github.com/chrissotraidis/annepad/pull/17) | 0.2.2 | Opens (Choose ROM) |
-| BananaPad | [#20](https://github.com/chrissotraidis/bananapad/pull/20) | 0.2.2 | Opens (Choose ROM) |
-| BarrelPad | [#20](https://github.com/chrissotraidis/barrelpad/pull/20) | 0.2.1 | Opens (Game ROM) |
-| BearBirdPad | [#25](https://github.com/chrissotraidis/bearbirdpad/pull/25) | 0.2.3 | Opens (title menu) |
-| BrawlerPad | [#16](https://github.com/chrissotraidis/brawlerpad/pull/16) | 0.2.1 | Opens (first-run setup) |
-| DinoPad | [#14](https://github.com/chrissotraidis/dinopad/pull/14) | 0.2.1 | Not run (no input on the build Mac) |
-| HarkinianPad | already on main (pinned forks) | 0.2.1 | Opens (first-run dialog) |
-| MaskPad | [#17](https://github.com/chrissotraidis/maskpad/pull/17) | 0.2.1 | Opens (ROM prompt) |
-| MeleePad | [#42](https://github.com/chrissotraidis/meleepad/pull/42) | 0.2.2 (with the app) | Opens (home screen) |
-| PaperPad | [#19](https://github.com/chrissotraidis/paperpad/pull/19) | 0.2.2 | Opens (Choose ROM) |
-| StarshipPad | [#22](https://github.com/chrissotraidis/starshippad/pull/22) | 0.2.1 | Opens (setup) |
-| SunPad | [#55](https://github.com/chrissotraidis/sunpad/pull/55) | 0.2.1 (with the app) | Opens (game screen) |
+| AnnePad | [#17](https://github.com/chrissotraidis/annepad/pull/17) | [0.2.2](https://github.com/chrissotraidis/annepad/releases/tag/v0.2.2) | Opens (Choose ROM) |
+| BananaPad | [#20](https://github.com/chrissotraidis/bananapad/pull/20) | [0.2.2](https://github.com/chrissotraidis/bananapad/releases/tag/v0.2.2) | Opens (Choose ROM) |
+| BarrelPad | [#20](https://github.com/chrissotraidis/barrelpad/pull/20) | [0.2.1](https://github.com/chrissotraidis/barrelpad/releases/tag/v0.2.1) | Opens (Game ROM) |
+| BearBirdPad | [#25](https://github.com/chrissotraidis/bearbirdpad/pull/25) | [0.2.3](https://github.com/chrissotraidis/bearbirdpad/releases/tag/v0.2.3) | Opens (title menu) |
+| BrawlerPad | [#16](https://github.com/chrissotraidis/brawlerpad/pull/16) | [0.2.1](https://github.com/chrissotraidis/brawlerpad/releases/tag/v0.2.1) | Opens (first-run setup) |
+| DinoPad | [#14](https://github.com/chrissotraidis/dinopad/pull/14) | [0.2.1](https://github.com/chrissotraidis/dinopad/releases/tag/v0.2.1) | Not run (no input on the build Mac) |
+| HarkinianPad | already on main (pinned forks) | [0.2.1](https://github.com/chrissotraidis/harkinianpad/releases/tag/v0.2.1) | Opens (first-run dialog) |
+| MaskPad | [#17](https://github.com/chrissotraidis/maskpad/pull/17) | [0.2.1](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.1) | Opens (ROM prompt) |
+| MeleePad | [#42](https://github.com/chrissotraidis/meleepad/pull/42) | [0.2.2](https://github.com/chrissotraidis/meleepad/releases/tag/v0.2.2) (with the app) | Opens (home screen) |
+| PaperPad | [#19](https://github.com/chrissotraidis/paperpad/pull/19) | [0.2.2](https://github.com/chrissotraidis/paperpad/releases/tag/v0.2.2) | Opens (Choose ROM) |
+| StarshipPad | [#22](https://github.com/chrissotraidis/starshippad/pull/22) | [0.2.1](https://github.com/chrissotraidis/starshippad/releases/tag/v0.2.1) | Opens (setup) |
+| SunPad | [#55](https://github.com/chrissotraidis/sunpad/pull/55) | [0.2.1](https://github.com/chrissotraidis/sunpad/releases/tag/v0.2.1) (with the app) | Opens (game screen) |
 
 The SDL-based games share one SDL 2.32.10 backport ([fork commit](https://github.com/chrissotraidis/SDL/commit/c6756fcd3de8090a8f72ac1a0b6fb6e50f0021d1));
 MeleePad and SunPad use their own scene delegates. "Opens" means a Simulator build
 of the merged source keeps running on iOS 27.0 and shows its first screen, where an
-app with the old startup stops at launch. No physical iOS 27 device was used. Until
-a draft is published, PadMint still builds the game's current release, and its
-finish screen warns when that copy may not open on iOS 27.
+app with the old startup stops at launch. No physical iOS 27 device was used. A copy
+built before these releases may not open on iOS 27: build the game again with
+PadMint and install it over the old one. PadMint's finish screen still warns if a
+copy may not open on iOS 27.
 
 ## Recorded KartPad builds on x64
 
@@ -228,9 +228,9 @@ observations from different environments, not a performance comparison.
 | KartPad iOS folder import | [Reporter confirmed the app-folder workaround](https://github.com/chrissotraidis/kartpad/issues/380#issuecomment-5945178374) on an M2 iPad Air | The disabled Files-picker Open button remains an app bug |
 | SpaghettiPad v0.2.1 | [Reporter confirmed both iPhone and iPad work](https://github.com/chrissotraidis/spaghettipad/issues/26#issuecomment-5955452885) after the SDK 27 startup fix | This validates those reported devices, not every host or device |
 | SpaghettiPad off-Mac work | [Draft #29](https://github.com/chrissotraidis/spaghettipad/pull/29): native Windows/Linux x64 and ARM64 module builds, resource generation and portable package fixtures | Complete released PadMint recipe, matching runtime delivery and target-device acceptance of each host's output |
-| HarkinianPad | [Merged #35](https://github.com/chrissotraidis/harkinianpad/pull/35): resources on five native hosts and full Mac-hosted iOS CI at the reviewed candidate | Portable resources do not establish complete off-Mac apps; published v0.2.0 still uses its old prerequisites |
-| StarshipPad | Public v0.2.0 builds through PadMint 0.3.5 with Xcode 27 (4 October, 12.5 minutes); the earlier SDK-selection failure no longer happens. That app has no scene startup (iOS 27 risk); [merged #22](https://github.com/chrissotraidis/starshippad/pull/22) adds it | A release with #22, which waits on its tracker row |
-| SunPad | Public v0.2.0 SDK 27 app lacks required scene startup for iOS/iPadOS 27; [merged #55](https://github.com/chrissotraidis/sunpad/pull/55) passes full iOS/tvOS compilation and a UIKit lifecycle probe with a stub controller | Public app update and physical iOS 27/game/save acceptance; [#54](https://github.com/chrissotraidis/sunpad/issues/54) reporter OS and crash cause are unconfirmed |
+| HarkinianPad | [Merged #35](https://github.com/chrissotraidis/harkinianpad/pull/35): resources on five native hosts and full Mac-hosted iOS CI at the reviewed candidate | Portable resources do not establish complete off-Mac apps. Released in v0.2.1 (4 October) |
+| StarshipPad | Public v0.2.0 builds through PadMint 0.3.5 with Xcode 27 (4 October, 12.5 minutes); the earlier SDK-selection failure no longer happens. That app has no scene startup (iOS 27 risk); [merged #22](https://github.com/chrissotraidis/starshippad/pull/22) adds it | Released in v0.2.1 (4 October); no physical iOS 27 check |
+| SunPad | v0.2.0's SDK 27 app lacked the scene startup iOS/iPadOS 27 requires; [merged #55](https://github.com/chrissotraidis/sunpad/pull/55) adds it, and v0.2.1 (4 October) ships the updated app, which opens to the game screen on the iOS 27.0 Simulator | Physical iOS 27/game/save acceptance; [#54](https://github.com/chrissotraidis/sunpad/issues/54) reporter OS and crash cause are unconfirmed |
 | AgePad | Packages a matching supported Mac Steam installation without Xcode | Updated Steam client was rejected in prior checks; exact-profile support required. Do not bypass fingerprint checks |
 | Other Mac recipes | Release manifests declare experimental Mac ARM64 iOS builds | Per-project tools, source/input requirements and device acceptance still apply; no blanket fresh-host or gameplay claim |
 
