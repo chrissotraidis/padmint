@@ -4,6 +4,10 @@ import struct
 
 PLATFORMS = {2: "ios", 3: "tvos", 11: "visionos"}
 SCENE_CALLBACK = b"application:configurationForConnectingSceneSession:options:"
+# An imported SwiftUI App.main() is the entry point of a SwiftUI App, whose lifecycle is
+# scene-based (checked: a SwiftUI App without a scene manifest opens on iOS 27). Linking
+# SwiftUI alone, or an app-delegate adaptor, is not this evidence.
+SWIFTUI_APP_MAIN = b"_$s7SwiftUI3AppPAAE4mainyyFZ"
 
 
 def version(value):
@@ -73,21 +77,25 @@ def linked_sdks(stream, size):
         platform, minimum, sdk = found[0]
         if platform not in PLATFORMS:
             raise ValueError("IPA executable targets a simulator or unsupported Apple platform; build for a physical device")
-        scene_method = False
+        scene_method = swiftui_app = False
         if symtab is not None:
             symbol_offset, symbol_count, string_offset, string_size = symtab
             symbols = read(start + symbol_offset, symbol_count * 16, end)
             strings = read(start + string_offset, string_size, end)
             for index in range(symbol_count):
                 name_offset, kind, section, _, address = struct.unpack_from(endian + "IBBHQ", symbols, index * 16)
-                if kind & 0xE0 or (kind & 0x0E) != 0x0E:
-                    continue  # Only defined section symbols, never imports/debug records.
+                imported = not kind & 0xE0 and (kind & 0x0F) == 0x01  # undefined external
+                if not imported and (kind & 0xE0 or (kind & 0x0E) != 0x0E):
+                    continue  # Only defined section symbols and imports, never debug records.
                 if name_offset >= len(strings):
                     raise ValueError("Mach-O symbol name exceeds the string table")
                 name_end = strings.find(b"\0", name_offset)
                 if name_end < 0:
                     raise ValueError("Mach-O symbol name is unterminated")
                 name = strings[name_offset:name_end]
+                if imported:
+                    swiftui_app = swiftui_app or name == SWIFTUI_APP_MAIN
+                    continue  # An imported scene callback is not an implemented one.
                 if name.startswith(b"-[") and name.endswith(b" " + SCENE_CALLBACK + b"]"):
                     if not 1 <= section <= len(sections):
                         raise ValueError("Mach-O scene callback refers to an invalid section")
@@ -96,7 +104,7 @@ def linked_sdks(stream, size):
                         raise ValueError("Mach-O scene callback address exceeds its section")
                     scene_method = True
         return {"platform": PLATFORMS[platform], "minimum_os": version(minimum), "sdk": version(sdk),
-                "defined_scene_callback": scene_method}
+                "defined_scene_callback": scene_method, "swiftui_app": swiftui_app}
 
     magic = read(0, 4, size)
     fats = {b"\xca\xfe\xba\xbe": (">", False), b"\xbe\xba\xfe\xca": ("<", False),
@@ -134,6 +142,6 @@ def validate_scene_startup(info, slices):
     # Framework-provided/inherited/stripped methods cannot be ruled out from the
     # main binary alone. Lack of positive evidence is not proof of legacy startup.
     states = ["declared" if declared else "defined-configuration-callback" if item["defined_scene_callback"]
-              else "unverified" for item in slices]
+              else "swiftui-app-lifecycle" if item.get("swiftui_app") else "unverified" for item in slices]
     return {"linked_slices": slices, "scene_startup": states[0] if len(set(states)) == 1 else "unverified",
             "runtime_launch": "not-tested"}

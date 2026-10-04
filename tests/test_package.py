@@ -143,6 +143,20 @@ class PackageTests(unittest.TestCase):
             self.assertEqual(result["scene_startup"], "unverified")
             self.assertEqual(result["runtime_launch"], "not-tested")
 
+    def test_a_swiftui_app_entry_point_is_scene_based(self):
+        # GoldenPad: a SwiftUI App (imports SwiftUI.App.main) with no scene manifest.
+        app_main = (b"_$s7SwiftUI3AppPAAE4mainyyFZ", 0x01, 0)
+        members = entries()
+        members["Payload/Synthetic.app/Synthetic"] = macho(27, swiftui=True, symbols=(app_main,))
+        write_ipa(self.path, members)
+        result = self.check(None)["apple_compatibility"]
+        self.assertEqual(result["scene_startup"], "swiftui-app-lifecycle")
+        self.assertEqual(result["runtime_launch"], "not-tested")
+        # Defined (not imported) under that name is not the SwiftUI entry point.
+        members["Payload/Synthetic.app/Synthetic"] = macho(27, swiftui=True, symbols=((app_main[0], 0x0F, 1),))
+        write_ipa(self.path, members)
+        self.assertEqual(self.check(None)["apple_compatibility"]["scene_startup"], "unverified")
+
     def test_symbol_tables_are_bounded_and_names_are_terminated(self):
         binary = legacy_macho()
         symtab = 32 + 24 + 152
