@@ -268,8 +268,12 @@ game's releases page, check its checksum, sign and sideload it with your own
 Apple ID, then add your own game files inside the app. These are preview
 releases, not App Store builds.
 
-**SnapPad:** public downloads remain paused. Its `see repo` catalog entry is
-not an available PadMint build recipe or a playable download.
+**Not available yet:** **EctoPad** (Metroid Prime), **F0X** (F-Zero X),
+**GalaxyPad** (Super Mario Galaxy), **HaloPad** (Halo: Combat Evolved),
+**OpenRCT2 Touch** (RollerCoaster Tycoon 2), **RAtouch** (Command & Conquer: Red
+Alert), **SnapPad** (Pokémon Snap) and **UTP** (Unreal Tournament) are listed in
+PadMint under **Not available yet**, each with where it stands and a link to its
+page. There is nothing to build or download through PadMint for them yet.
 
 On a Mac with Apple Silicon and Xcode, PadMint also offers iPhone and iPad build
 recipes for **AnnePad**, **BallPad**, **BananaPad**, **BarrelPad**, **BearBirdPad**,

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "id": "projectreach",
+  "name": "HaloPad",
+  "game": "Halo: Combat Evolved (PC)",
+  "repo_url": "https://github.com/chrissotraidis/projectreach",
+  "reviewed_revision": null,
+  "player_help": "https://github.com/chrissotraidis/projectreach#build-and-install",
+  "notes": "Listed so players can find it: nothing to build or download through PadMint yet.",
+  "later": {
+    "text": "No download yet. You can build it yourself from source on a Mac with your own game files; a PadMint build is in progress.",
+    "translations": {
+      "es": {
+        "text": "Todavía no hay descarga. Puedes crearlo tú mismo desde el código fuente en una Mac con tus propios archivos del juego; se está preparando la versión para PadMint."
+      },
+      "pt": {
+        "text": "Ainda não há download. Você pode criá-lo a partir do código-fonte em um Mac com os seus próprios arquivos do jogo; a versão para o PadMint está em andamento."
+      }
+    }
+  },
+  "manifest": null
+}

@@ -244,6 +244,15 @@ def catalog():
                     for steps in lists):
                 raise ValueError(f"catalog/{path.name}: download needs a name, no player_targets "
                                  "and lists of steps")
+        # Games listed so players can find them, with where they stand: nothing to build or
+        # download through PadMint yet.
+        later = entry.get("later")
+        if later is not None and (not isinstance(later, dict) or targets or download is not None
+                                  or not entry.get("name") or not entry.get("game")
+                                  or not all(isinstance(text.get("text", later.get("text")), str)
+                                             for text in [later] + list((later.get("translations") or {}).values()))):
+            raise ValueError(f"catalog/{path.name}: later needs a name, a game, text, "
+                             "and no player_targets or download")
         # Games offered to players must say how much space their first build needs, or doctor
         # Games that also publish ready-to-play downloads: where they are and one line saying so.
         ready = entry.get("ready_to_play")

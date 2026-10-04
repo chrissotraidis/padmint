@@ -56,8 +56,12 @@ def player_data(lang):
          "steps": localized(catalog()[app]["download"], "steps", lang),
          "guide": catalog()[app].get("player_help") or catalog()[app]["repo_url"]}
         for app, name in cli.downloads()]
+    waiting = [{"id": game, "name": name, "about": catalog()[game]["game"],
+                "text": localized(catalog()[game]["later"], "text", lang),
+                "link": catalog()[game].get("player_help") or catalog()[game]["repo_url"]}
+               for game, name in cli.later()]
     return {"lang": lang, "version": __version__, "folder": str(folder),
-            "saved_in": phrase("saved_in", lang, folder=folder), "games": games, "downloads": apps,
+            "saved_in": phrase("saved_in", lang, folder=folder), "games": games, "downloads": apps, "later": waiting,
             "text": strings(lang), "picker": not cli.on_android(), "reveal": not cli.on_android()}
 
 
@@ -380,7 +384,8 @@ select,input{font:inherit;color:var(--text);background:var(--panel2);border:1px 
 #search{width:100%;max-width:none;font-size:1rem;padding:.65rem .8rem}
 button.btn{font:inherit;border-radius:10px;padding:.6rem 1.1rem;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer}
 button.btn:hover{border-color:var(--mint)}button.main{background:var(--mint);border-color:var(--mint);color:#06281a;font-weight:700;font-size:1.05rem;padding:.75rem 1.4rem}
-a.btn{display:inline-block;text-decoration:none;border-radius:10px;padding:.65rem 1.2rem}a.main{background:var(--mint);color:#06281a;font-weight:700}
+a.btn{display:inline-block;text-decoration:none;border-radius:10px;padding:.6rem 1.1rem;border:1px solid var(--line);background:var(--panel2);color:var(--text)}a.btn:hover{border-color:var(--mint)}
+a.main{background:var(--mint);border-color:var(--mint);color:#06281a;font-weight:700}
 .tag.ready{background:var(--mint);color:#06281a;font-weight:600}
 button:disabled{opacity:.45;cursor:default}.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
 .file{display:flex;justify-content:space-between;gap:.6rem;width:100%;margin:.3rem 0}.file b{overflow-wrap:anywhere}
@@ -412,9 +417,12 @@ footer{margin-top:2rem;color:var(--muted);font-size:.82rem;display:flex;gap:1rem
 <section class="card"><div class="row" style="justify-content:space-between"><h2 data-t="step1"></h2><button class="btn hidden" id="changeGame" data-t="change"></button></div>
 <div id="finder"><input id="search" type="search" autocomplete="off"><div class="filters" id="filters"></div></div>
 <div class="sub" id="buildsHead"><span data-t="builds"></span> <span class="muted" id="count"></span></div><div class="list" id="games"></div><p class="muted hidden" id="noMatch" data-t="no_match"></p>
-<div id="dlHead" class="sub" data-t="no_build"></div><div class="list" id="apps"></div></section>
+<div id="dlHead" class="sub" data-t="no_build"></div><div class="list" id="apps"></div>
+<div id="laterHead" class="sub" data-t="later_head"></div><div class="list" id="laterList"></div></section>
 
 <section class="card hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p></section>
+
+<section class="card hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><div class="row"><a class="btn" id="laterLink" target="_blank"></a></div></section>
 
 <section class="card banner hidden" id="readyBox"><h2 data-t="ready_title"></h2><p id="readyText"></p><div class="row"><a class="btn main" id="readyLink" target="_blank" data-t="ready_link"></a></div><p class="muted small" data-t="ready_or"></p></section>
 
@@ -455,7 +463,7 @@ let last=null;
 function texts(){for(const e of document.querySelectorAll("[data-t]"))e.textContent=S[e.dataset.t]||"";document.documentElement.lang=D.lang;$("search").placeholder=S.search}
 $("lang").onchange=async()=>{const lang=$("lang").value,r=await (await fetch("/api/player?lang="+lang,{headers:H})).json();
  if(r.error)return;D=r;S=D.text;texts();history.replaceState(null,"","?token="+T+"&lang="+lang);filters();cards();
- if(sel){const keep={file,dev};const g=game();if(g||app())redraw(keep)}
+ if(sel){const keep={file,dev};const g=game();if(g||app()||waiting())redraw(keep)}
  if(last){shown=false;$("finished").replaceChildren();const r2=await (await fetch("/api/build?lang="+lang,{headers:H})).json();show(r2)}};
 function redraw(keep){const was=keep.file,state=$("fileState").textContent;choose(sel);if(was){file=was;$("path").value=was;$("fileState").className="state ok";$("fileState").textContent="✓ "+fill("file_ok",{file:base(was)})}
  if(keep.dev&&game())pickDevice(keep.dev);ready()}
@@ -463,17 +471,17 @@ async function post(p,b){const r=await fetch(p,{method:"POST",headers:H,body:JSO
 const base=p=>p.split(/[\\/]/).pop();
 function el(tag,text,cls){const e=document.createElement(tag);if(text!=null&&text!=="")e.textContent=text;if(cls)e.className=cls;return e}
 const gb=b=>b?(b>=1e9?(b/1e9).toFixed(1)+" GB":Math.max(1,Math.round(b/1e6))+" MB"):"";
-const game=()=>D.games.find(g=>g.id==sel),app=()=>D.downloads.find(a=>a.id==sel);
+const game=()=>D.games.find(g=>g.id==sel),app=()=>D.downloads.find(a=>a.id==sel),waiting=()=>D.later.find(l=>l.id==sel);
 let system="";
 const title=g=>(g.about||g.name).replace(/\s*\([^)]*\)\s*$/,"");
 const systemOf=g=>{const m=(g.about||"").match(/\(([^),]+)/);return m?m[1].replace(/ prototype$/,""):""};
 const sortKey=g=>title(g).replace(/^(The|A) /i,"").toLowerCase();
 function filters(){const systems=[...new Set(D.games.map(systemOf).filter(Boolean))].sort();
  $("filters").replaceChildren(...["",...systems].map(s=>{const b=el("button",s||S.all,"filter"+(s==system?" on":""));b.onclick=()=>{system=s;filters();cards()};return b}))}
-function row(x,isGame){const b=el("button",null,"item"+(x.id==sel?" on":""));
- b.append(el("span",isGame?title(x):x.name,"t"));const t=el("div",null,"tags");
+function row(x,isGame,waiting){const b=el("button",null,"item"+(x.id==sel?" on":""));
+ b.append(el("span",isGame||waiting?title(x):x.name,"t"));const t=el("div",null,"tags");
  if(isGame&&x.ready)t.append(el("span",S.ready_tag,"tag ready"));if(isGame)for(const p of x.platforms)t.append(el("span",p.short||p.label,"tag"));b.append(t);
- if(isGame)b.append(el("span",x.name+(systemOf(x)?" · "+systemOf(x):""),"s"));b.onclick=()=>choose(x.id);return b}
+ if(isGame||waiting)b.append(el("span",x.name+(systemOf(x)?" · "+systemOf(x):""),"s"));b.onclick=()=>choose(x.id);return b}
 function cards(){const q=$("search").value.trim().toLowerCase();
  const m=x=>sel?x.id==sel:(!q||(x.name+" "+(x.about||"")).toLowerCase().includes(q));
  $("finder").classList.toggle("hidden",!!sel);$("changeGame").classList.toggle("hidden",!sel);
@@ -482,9 +490,13 @@ function cards(){const q=$("search").value.trim().toLowerCase();
  $("buildsHead").classList.toggle("hidden",!!sel||!games.length);$("count").textContent="("+fill("count",{count:games.length})+")";
  const as=sel||system?D.downloads.filter(a=>a.id==sel):D.downloads.filter(m);
  $("dlHead").classList.toggle("hidden",!as.length||!!sel);$("apps").replaceChildren(...as.map(a=>row(a,false)));$("apps").classList.toggle("hidden",!as.length);
- $("noMatch").classList.toggle("hidden",!!(games.length||as.length))}
-$("search").oninput=cards;$("changeGame").onclick=()=>{sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","inApp"])$(id).classList.add("hidden");cards()};
-function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app();
+ const ls=D.later.filter(l=>sel?l.id==sel:(m(l)&&(!system||systemOf(l)==system))).sort((a,b)=>sortKey(a).localeCompare(sortKey(b)));
+ $("laterHead").classList.toggle("hidden",!ls.length||!!sel);$("laterList").replaceChildren(...ls.map(l=>row(l,false,true)));$("laterList").classList.toggle("hidden",!ls.length);
+ $("noMatch").classList.toggle("hidden",!!(games.length||as.length||ls.length))}
+$("search").oninput=cards;$("changeGame").onclick=()=>{sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards()};
+function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
+ $("laterBox").classList.toggle("hidden",!w);
+ if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=w.about;$("laterText").textContent=w.text;$("laterLink").href=w.link;$("laterLink").textContent=fill("later_link",{name:w.name});$("laterBox").scrollIntoView({behavior:"smooth"})}
  $("dlBox").classList.toggle("hidden",!a);
  $("readyBox").classList.toggle("hidden",!(g&&g.ready));if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url}
  if(a){$("dlName").textContent=a.name;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(linked));

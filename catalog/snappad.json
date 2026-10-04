@@ -1,8 +1,22 @@
 {
   "schema_version": 1,
   "id": "snappad",
+  "name": "SnapPad",
+  "game": "Pokémon Snap (N64)",
   "repo_url": "https://github.com/chrissotraidis/snappad",
   "reviewed_revision": null,
-  "notes": "padmint.json is on an open PR branch until merged. Manifest owned by the game repository (steps around its existing scripts).",
+  "player_help": "https://github.com/chrissotraidis/snappad",
+  "notes": "padmint.json is on an open PR branch until merged. Public downloads are paused; listed so players can find it.",
+  "later": {
+    "text": "Public downloads are paused. If you already have it installed, keep it: your saves stay.",
+    "translations": {
+      "es": {
+        "text": "Las descargas públicas están en pausa. Si ya lo tienes instalado, consérvalo: tus partidas se quedan."
+      },
+      "pt": {
+        "text": "Os downloads públicos estão pausados. Se você já o tem instalado, mantenha-o: seus saves ficam."
+      }
+    }
+  },
   "manifest": null
 }

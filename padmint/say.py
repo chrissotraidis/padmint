@@ -202,6 +202,8 @@ MESSAGES = {
     "w_no_build": {"en": "No build needed: download the app, add your own files",
                    "es": "No hace falta crearlos: descarga la app y añade tus archivos",
                    "pt": "Não precisam ser criados: baixe o app e adicione seus arquivos"},
+    "w_later_head": {"en": "Not available yet", "es": "Todavía no disponibles", "pt": "Ainda não disponíveis"},
+    "w_later_link": {"en": "Read about {name}", "es": "Más sobre {name}", "pt": "Saiba mais sobre {name}"},
     "w_file": {"en": "Your own game file", "es": "Tu propio archivo del juego", "pt": "O seu próprio arquivo do jogo"},
     "w_file_in_app": {
         "en": "{name} asks for your game file inside the app, after you install it. Nothing to choose here.",

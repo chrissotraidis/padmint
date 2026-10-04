@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "id": "f0x",
+  "name": "F0X",
+  "game": "F-Zero X (N64)",
+  "repo_url": "https://github.com/chrissotraidis/f0x",
+  "reviewed_revision": null,
+  "player_help": "https://github.com/chrissotraidis/f0x",
+  "notes": "Listed so players can find it: nothing to build or download through PadMint yet.",
+  "later": {
+    "text": "Its previews aren't public right now. Its page has the latest news.",
+    "translations": {
+      "es": {
+        "text": "Sus versiones de prueba no están publicadas por ahora. Su página tiene las últimas novedades."
+      },
+      "pt": {
+        "text": "As versões de prévia não estão públicas no momento. A página dele tem as últimas novidades."
+      }
+    }
+  },
+  "manifest": null
+}

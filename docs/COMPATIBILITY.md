@@ -94,16 +94,19 @@ Games are grouped by family: one game proves a family, and the rest follow it.
 | MaskPad, StarshipPad, PaperPad, BrawlerPad, BarrelPad, BellPad, BallPad | Mac only | Follow SpaghettiPad #29. StarshipPad's merged recipe fix (#22) waits on its tracker row |
 | AgePad | Mac only by design: it packages the Mac edition from Steam | None planned off a Mac |
 
-**Not yet in PadMint:** GalaxyPad (118 address-named references need a decision),
-F0x (decompiled-context patch lines need a decision), ProjectReach (public and
-release status need a decision), EctoPad (needs a bootstrap script first).
+**Listed, not available yet** (the page's "Not available yet" section, with
+where each stands and a link): GalaxyPad (118 address-named references need a
+decision), F0X (decompiled-context patch lines need a decision), HaloPad /
+ProjectReach (public and release status need a decision), EctoPad (needs a
+bootstrap script first), RAtouch (license-notice review before PadMint lists its
+install steps), UTP (owner decision on official builds), OpenRCT2 Touch (no iPad
+download) and SnapPad (downloads paused).
 
 **No build needed:** CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad,
 PeonPad and VaultPad appear in the PadMint page with download and data-import
-steps. RATouch (license-notice review), UTP (owner decision on official builds)
-and OpenRCT2Touch (no iPad download) are not listed yet.
+steps.
 
-**Excluded:** SnapPad stays paused; CTRPad stays out while private.
+**Excluded:** CTRPad stays out while private.
 
 ## Recorded KartPad builds on x64
 

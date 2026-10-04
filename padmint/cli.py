@@ -1219,6 +1219,12 @@ def downloads():
     return [(app, entry["name"]) for app, entry in sorted(catalog().items()) if entry.get("download")]
 
 
+def later():
+    """[(game, name)]: games listed so players can find them, with nothing to build or
+    download through PadMint yet (catalog "later")."""
+    return [(game, entry["name"]) for game, entry in sorted(catalog().items()) if entry.get("later")]
+
+
 def download_steps(app, stream, lang=None):
     """How to get an app that needs no build, in the player's words."""
     entry = catalog()[app]
@@ -1481,7 +1487,7 @@ def list_games(stream=None):
     stream = stream or sys.stdout
     for game, entry in sorted(catalog().items()):
         targets = ", ".join(entry.get("player_targets") or []) or (
-            "no build needed" if entry.get("download") else "see repo")
+            "no build needed" if entry.get("download") else "not yet" if entry.get("later") else "see repo")
         print(f"{game:12} {targets:12} {entry['repo_url']}", file=stream)
     return 0
 
