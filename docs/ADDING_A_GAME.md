@@ -108,6 +108,47 @@ app or the device's C and C++ libraries, strips it, names it `@rpath/<file>` and
 `into` inside a copy of the published app. `scripts/ios-module-probe.py` runs the whole
 pipeline with a small probe library and no game code.
 
+### One recipe for Windows, Linux and Mac
+
+A step with `"on"` runs only on the systems it lists (`macos`, `linux`, `windows`);
+a step without it runs everywhere. Keep the game's shell script for Macs and Linux, add
+a Python step for Windows (Windows has no bash), and share everything else. Two steps
+may use the same stage name when they run on different systems, so the player sees
+the same stages on every computer:
+
+```json
+"steps": [
+  {"stage": "translate", "on": ["macos", "linux"],
+   "command": ["/bin/bash", "{repo}/scripts/build.sh", "{disc}", "--out", "{work}", "--source-only"]},
+  {"stage": "translate", "on": ["windows"],
+   "command": ["{python}", "{repo}/scripts/windows/build.py", "{disc}", "--out", "{work}", "--source-only"]},
+  {"stage": "configure", "command": ["cmake", "-S", "{repo}/module", "-B", "{work}/module", "-G", "Ninja",
+                                     "-DCMAKE_TOOLCHAIN_FILE={ios_toolchain}"]},
+  {"stage": "compile", "command": ["cmake", "--build", "{work}/module", "-j", "{jobs}"]}
+]
+```
+
+Every host the target lists as runnable must have at least one step. Give the
+per-system variants of a step the same stage name: PadMint 0.3.9 and older refuse such
+a recipe instead of running every system's steps.
+
+**Making a game buildable off a Mac** takes the same four things for every game:
+
+1. **A published app with no game code** that loads the game from a library inside
+   the app (BlueWake: `Frameworks/gGZLE01_recomp.dylib`). It must pass
+   `padmint audit`. Publishing it is the owner's decision.
+2. **Source steps that run on each host**: shell on Macs and Linux, Python (or another
+   program PadMint supplies) on Windows, selected with `"on"`. They turn the player's
+   game file into the library's C/C++ sources.
+3. **A library build with `{ios_toolchain}`**, PadMint's open-source iPhone SDK, the
+   same on every host. Add `libcxx` to `tools`.
+4. **`ios_module`** naming the library and where it goes in the app. PadMint checks its
+   imports against the published app and inserts it.
+
+Until a host has a recorded end-to-end build and a device check, mark it
+`experimental`. Games without step 1 stay Mac only, and PadMint lists them on other
+computers with the reason.
+
 ## 2. Add a catalog entry to PadMint
 
 `catalog/examplepad.json`:

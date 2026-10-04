@@ -27,7 +27,7 @@ from . import __version__, awake, game_file, gate, ios_module, tools
 from .say import MESSAGES, localized, phrase, t
 from .manifest import (RUNNABLE_STATES, NeedsNewerPadMint, catalog, expand, host_id, load_manifest,
                        manifest_for, manifest_sha256, needs_build_input, on_android,
-                       repository_manifest)
+                       repository_manifest, steps_here)
 from .package import validate_ipa
 
 
@@ -121,7 +121,7 @@ def validate(args):
     elif getattr(args, "disc", None) is not None:
         raise ValueError(f"{manifest['name']} does not read game files during the build; "
                          "import them in the app instead of passing --disc")
-    templates = [target["command"]] if "command" in target else [step["command"] for step in target["steps"]]
+    templates = [target["command"]] if "command" in target else [step["command"] for step in steps_here(target)]
     for template in templates:
         # Only the program being run must already exist; other paths may be build outputs.
         interpreters = {"bash", "sh", "zsh", "python", "python3"}
@@ -141,7 +141,7 @@ def command(args, repo, disc, work, output):
     _manifest, _name, target = selection(args, repo)
     values = placeholder_values(args, repo, disc, work, output)
     if "steps" in target:
-        return [expand(step["command"], values) for step in target["steps"]]
+        return [expand(step["command"], values) for step in steps_here(target)]
     mode = "source-only" if args.source_only else "full"
     argv = expand(target["command"], values) + expand(target.get("modes", {}).get(mode, []), values)
     if args.no_mods:
@@ -194,6 +194,11 @@ def run_process(argv, cwd, log_path, event_path, emit, before_spawn=None, append
                 before_spawn()
             group = ({"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP} if os.name == "nt"
                      else {"start_new_session": True})
+            if env and argv and not os.path.dirname(argv[0]):
+                # Windows looks a bare program name up on PadMint's own PATH, not the
+                # step's, so a step's "cmake" would miss PadMint's CMake. Resolve it here.
+                found = shutil.which(argv[0], path=env.get("PATH"))
+                argv = [found, *argv[1:]] if found else argv
             process = subprocess.Popen(argv, cwd=cwd, stdout=log, env=env,
                                        stderr=subprocess.STDOUT, **group)
             last_progress = time.monotonic()
@@ -499,7 +504,7 @@ def execute(args, repo, disc):
             argv = command(args, repo, disc, work, output)
             events = work / "logs/progress.jsonl"
             if "steps" in target:
-                code, cancelled = run_steps(target["steps"], argv, repo, attempt / "backend.log",
+                code, cancelled = run_steps(steps_here(target), argv, repo, attempt / "backend.log",
                                             events, emit, lambda: recheck("before-launch"),
                                             values=placeholder_values(args, repo, disc, work, output),
                                             tool_names=target.get("tools", []), target_name=target_name,
