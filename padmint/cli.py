@@ -975,6 +975,21 @@ def check_program(tool):
             f"{detail} (need {tool['min_version']}+)" if text else tool.get("note") or "not installed")
 
 
+def before_build(game):
+    """On a Mac: the Terminal lines a game's README asks players to run once (catalog
+    "before_build"), and whether Homebrew and each package they install are already here.
+    None elsewhere, or for games that need nothing."""
+    before = catalog()[game].get("before_build")
+    if not before or not host_id().startswith("macos-"):
+        return None
+    brew = shutil.which("brew")
+    opt = Path(brew).resolve().parent.parent / "opt" if brew else None
+    names = [name for line in before["commands"] if line.startswith("brew install ")
+             for name in line.split()[2:] if not name.startswith("-")]
+    return {"commands": before["commands"], "homebrew": bool(brew),
+            "packages": [{"name": name, "ok": bool(opt and (opt / name).exists())} for name in names]}
+
+
 def published_recipe(game, release=None):
     """(recipe, where it came from): the one the game's latest release publishes, checked
     against the release's SHA256SUMS, or PadMint's built-in copy when that can't be had."""

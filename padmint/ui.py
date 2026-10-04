@@ -96,7 +96,7 @@ def plan(game, platform_name, lang):
     key = f"w_output_{platform_name}"
     return {"repo": entry["repo_url"], "tools": items, "tools_folder": str(tools.tools_root()),
             "app": bool(target.get("published_app")), "space_gb": entry.get("free_space_gb"),
-            "folder": str(cli.player_folder()), "needs": needs,
+            "folder": str(cli.player_folder()), "needs": needs, "before": cli.before_build(game),
             "output": phrase(key, lang, name=name) if key in MESSAGES else ""}
 
 
@@ -482,6 +482,11 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 .card{box-shadow:0 1px 0 color-mix(in srgb,var(--text) 4%,transparent),0 8px 24px -18px rgba(0,0,0,.5)}
 
 .loading{display:flex;align-items:center;gap:.6rem}.loading:before{content:"";width:1rem;height:1rem;border-radius:50%;border:2px solid var(--line);border-top-color:var(--mint);animation:spin 1s linear infinite}
+.cmd{display:flex;gap:.5rem;align-items:center;background:#0a0f0d;color:#cfe3d8;border-radius:9px;padding:.4rem .45rem .4rem .7rem;margin:.35rem 0}
+.cmd code{flex:1;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.8rem}
+.cmd button{font:inherit;font-size:.78rem;border-radius:7px;padding:.2rem .6rem;border:1px solid #2a3c35;background:#16211d;color:#cfe3d8;cursor:pointer}.cmd button:hover{border-color:var(--mint)}
+.pks{display:flex;flex-wrap:wrap;gap:.3rem;margin:.3rem 0 .2rem}.pk{font-size:.76rem;border-radius:6px;padding:.05rem .45rem;background:color-mix(in srgb,var(--mint) 15%,transparent);color:var(--mint)}
+.pk.no{background:color-mix(in srgb,var(--bad) 13%,transparent);color:var(--bad)}
 
 #headCard .big{font-size:1.45rem;font-weight:750;letter-spacing:-.01em}
 #headCard.okb{background:linear-gradient(135deg,color-mix(in srgb,var(--mint) 16%,var(--panel)),var(--panel))}
@@ -613,6 +618,10 @@ function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.err
  if(p.output)box.append(el("div",p.output,"out"));
  blocked=p.needs.some(n=>!n.ok);
  if(p.needs.length){box.append(el("p",S.plan_needs,"state"));const u=el("ul",null,"tools");for(const n of p.needs){const li=el("li");li.append(el("span",n.label),el("span",n.ok?S.needs_ok:S.needs_missing,n.ok?"ok":"bad"));u.append(li);if(!n.ok)u.append(el("li",n.note,"detail"))}box.append(u)}
+ if(p.before){const b=p.before;box.append(el("p",S.before_title,"state"),linked(b.homebrew?S.before_hint:S.before_brew,"p"));
+  if(b.homebrew&&b.packages.length){const k=el("div",null,"pks");for(const x of b.packages)k.append(el("span",(x.ok?"✓ ":"✗ ")+x.name,"pk"+(x.ok?"":" no")));box.append(k)}
+  for(const line of b.commands){const c=el("div",null,"cmd"),btn=el("button",S.copy);c.append(el("code",line),btn);
+   btn.onclick=async()=>{try{await navigator.clipboard.writeText(line);btn.textContent=S.copied;setTimeout(()=>btn.textContent=S.copy,1500)}catch(e){getSelection().selectAllChildren(c.firstChild)}};box.append(c)}}
  const o=el("ol");const repo=p.repo.replace("https://","");o.append(el("li",fill("plan_source",{name:g.name,repo})));
   if(p.tools.length){const li=el("li",fill("plan_tools",{folder:p.tools_folder}));const u=el("ul",null,"tools");
   for(const t of p.tools){const r=el("li");r.append(el("span",t.name+" "+t.version+" · "+fill("from",{host:t.source})),el("span",t.here?S.tool_here:gb(t.size),t.here?"ok":"muted"));u.append(r)}
@@ -633,7 +642,7 @@ $("again").onclick=()=>{location.search="?token="+T+"&lang="+D.lang};
 $("copy").onclick=async()=>{const text="PadMint "+D.version+" ("+navigator.platform+")\n"+$("tail").textContent;
  try{await navigator.clipboard.writeText(text);$("copy").textContent=S.copied}catch(e){getSelection().selectAllChildren($("tail"))}};
 const clock=s=>[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map((n,i)=>i?String(n).padStart(2,"0"):n).join(":");
-function linked(text){const li=el("li");for(const part of text.split(/(https:\/\/[^\s)]*[^\s).,;:])/)){if(/^https:\/\//.test(part)){const a=el("a",part);a.href=part;a.target="_blank";li.append(a)}else li.append(part)}return li}
+function linked(text,tag){const li=el(tag||"li",null,tag?"muted small":null);for(const part of text.split(/(https:\/\/[^\s)]*[^\s).,;:])/)){if(/^https:\/\//.test(part)){const a=el("a",part);a.href=part;a.target="_blank";li.append(a)}else li.append(part)}return li}
 function bar(pct){const b=el("div",null,"bar"),i=el("i");i.style.width=Math.max(0,Math.min(100,pct))+"%";b.append(i);return b}
 function phaseRow(p,r,g){const li=el("li",null,p.state||"pending"),ico=el("div",p.state=="done"?"✓":p.state=="failed"?"✕":p.state=="cancelled"?"–":"","ico"),body=el("div");
  const name=g?g.name:r.game;body.append(el("div",fill("ph_"+p.id,{name})));

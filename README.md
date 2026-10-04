@@ -80,7 +80,9 @@ need. For each game's exact versions, hosts and known problems, see
 4. **What PadMint will do on this computer** lists everything before it starts:
    anything you need to install yourself first (it says **found** or **not found**),
    the source code and free build tools it downloads, and the free space needed.
-   Click **Make my copy**.
+   On a Mac, most games also show **Install these once, in Terminal:** the
+   Homebrew line from the game's README, with a **Copy** button and a ✓ beside
+   each package already installed. Run it once, then click **Make my copy**.
 
 The page then shows a checklist: finding the latest release, downloading the
 source, each tool with its progress, the build with its current step, and saving
