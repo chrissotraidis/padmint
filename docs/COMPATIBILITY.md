@@ -152,6 +152,32 @@ per game: add scene startup, as SpaghettiPad v0.2.1, StarshipPad
 recipe. From 0.3.7, PadMint's finish screen tells the player when their copy is
 at risk.
 
+**Fixed in source, 4 October (evening).** Each game now starts through UIKit
+scenes on its default branch, and its next version is staged as a draft release
+that waits on its audit row:
+
+| Game | Fix | Next version (draft) | iOS 27.0 Simulator |
+|---|---|---|---|
+| AnnePad | [#17](https://github.com/chrissotraidis/annepad/pull/17) | 0.2.2 | Opens (Choose ROM) |
+| BananaPad | [#20](https://github.com/chrissotraidis/bananapad/pull/20) | 0.2.2 | Opens (Choose ROM) |
+| BarrelPad | [#20](https://github.com/chrissotraidis/barrelpad/pull/20) | 0.2.1 | Opens (Game ROM) |
+| BearBirdPad | [#25](https://github.com/chrissotraidis/bearbirdpad/pull/25) | 0.2.3 | Opens (title menu) |
+| BrawlerPad | [#16](https://github.com/chrissotraidis/brawlerpad/pull/16) | 0.2.1 | Opens (first-run setup) |
+| DinoPad | [#14](https://github.com/chrissotraidis/dinopad/pull/14) | 0.2.1 | Not run (no input on the build Mac) |
+| HarkinianPad | already on main (pinned forks) | 0.2.1 | Opens (first-run dialog) |
+| MaskPad | [#17](https://github.com/chrissotraidis/maskpad/pull/17) | 0.2.1 | Opens (ROM prompt) |
+| MeleePad | [#42](https://github.com/chrissotraidis/meleepad/pull/42) | 0.2.2 (with the app) | Opens (home screen) |
+| PaperPad | [#19](https://github.com/chrissotraidis/paperpad/pull/19) | 0.2.2 | Opens (Choose ROM) |
+| StarshipPad | [#22](https://github.com/chrissotraidis/starshippad/pull/22) | 0.2.1 | Opens (setup) |
+| SunPad | [#55](https://github.com/chrissotraidis/sunpad/pull/55) | 0.2.1 (with the app) | Opens (game screen) |
+
+The SDL-based games share one SDL 2.32.10 backport ([fork commit](https://github.com/chrissotraidis/SDL/commit/c6756fcd3de8090a8f72ac1a0b6fb6e50f0021d1));
+MeleePad and SunPad use their own scene delegates. "Opens" means a Simulator build
+of the merged source keeps running on iOS 27.0 and shows its first screen, where an
+app with the old startup stops at launch. No physical iOS 27 device was used. Until
+a draft is published, PadMint still builds the game's current release, and its
+finish screen warns when that copy may not open on iOS 27.
+
 ## Recorded KartPad builds on x64
 
 On 3 October, public PadMint **v0.3.1** made both KartPad **v0.7.4** outputs on
