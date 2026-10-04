@@ -124,7 +124,7 @@ that already had each README's Homebrew packages; some games reused earlier work
 | BearBirdPad v0.2.2 | Not run: the test cartridge file on this Mac is half size, and PadMint refused it with the right message | — | — |
 | BellPad v0.2.1 | Completed (cached) | 1.7 | Scene callback in code |
 | BrawlerPad v0.2.0 | Completed | 13.8 | At risk |
-| GoldenPad v0.2.2 | Completed | 6.6 | At risk |
+| GoldenPad v0.2.2 | Completed | 6.6 | SwiftUI app (scene-based) |
 | HarkinianPad v0.2.0 | Completed | 22.8 | At risk |
 | KartPad v0.7.9 | Completed (cached): IPA and game data folder | 0.9 | Declared |
 | MaskPad v0.2.0 | Completed | 21.5 | At risk |
