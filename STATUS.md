@@ -28,6 +28,9 @@ compatibility work resumes.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.3**: a game's Mac copy is offered only on Apple Silicon Macs, where it
+  runs, and the choice reads **This Mac**. CTRPad gets Mac finishing steps and a
+  PlayStation badge.
 - **v0.4.2**: CTRPad is back: PadMint builds Crash Team Racing for iPhone, iPad
   and Apple Silicon Mac from CTRPad's public source, and players choose their own
   disc image in the app. CTRPad's releases publish the recipe only.
