@@ -7,15 +7,27 @@
   "player_targets": [
     "ios"
   ],
-  "free_space_gb": 10,
+  "free_space_gb": 15,
   "player_help": "https://github.com/chrissotraidis/projectreach#build-and-install",
   "reviewed_revision": null,
-  "notes": "HaloPad owns padmint.json; the iOS target runs scripts/builder/build.sh with the player's HaloCESetup.exe (the 1.10 update and an optional product-key.txt beside it). Complete PadMint build recorded 4 Oct; device acceptance of a builder-made app is still open. The game package (Halo-CE.halopad.zip) is written next to the IPA in the backend folder.",
+  "notes": "HaloPad owns padmint.json; the iOS target runs scripts/builder/build.sh with the player's HaloCESetup.exe and product-key.txt beside it. The 1.10 update is downloaded by hash and applied with Wine. The game package is handed over as HaloPad game data. The optional Xbox edition is a manual build (README).",
   "manifest": null,
   "before_build": {
     "commands": [
-      "brew install sevenzip winetricks",
+      "brew install sevenzip winetricks llvm lld",
       "brew install --cask wine-stable"
     ]
+  },
+  "game_data_import": {
+    "ios": "Choose Prepared Package… on HaloPad's first screen"
+  },
+  "player_next": {
+    "ios": {
+      "steps": [
+        "Install {file} on your iPhone or iPad, signed with your own Apple developer profile that allows Extended Virtual Addressing and Increased Memory Limit (the guide below shows how).",
+        "Updating? Install it over your current HaloPad with the same signing to keep your profiles and saves.",
+        "First time only: copy Halo-CE.halopad.zip from the HaloPad game data folder in {folder} to the device (Files, iCloud Drive or AirDrop). Open HaloPad, tap Choose Prepared Package… and pick it."
+      ]
+    }
   }
 }
