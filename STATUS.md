@@ -1,6 +1,6 @@
 # PadMint status
 
-Updated **5 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
+Updated **6 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
 the per-game detail, including **Status by game**, which is where the
 compatibility work resumes.
 
@@ -36,6 +36,9 @@ work and when to revisit it.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.9**: HaloPad's setup opens its Wine installation guide instead of asking
+  Homebrew to install the disabled `wine-stable` cask. Existing working Wine installs
+  can still be used. HaloPad 0.3.6 supplies the matching recipe guidance.
 - **v0.4.8**: HaloPad builds both editions: Custom Edition and the Xbox edition
   (its engine fetched from upstream and built on your Mac), for iPhone, iPad and Mac.
 - **v0.4.7**: every iPhone build made with Xcode checks Xcode's iOS platform before

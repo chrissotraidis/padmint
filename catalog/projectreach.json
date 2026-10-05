@@ -16,7 +16,7 @@
   "before_build": {
     "commands": [
       "brew install sevenzip winetricks llvm lld cmake ninja",
-      "brew install --cask wine-stable"
+      "open https://github.com/chrissotraidis/projectreach/blob/main/docs/INSTALL-WINE.md"
     ]
   },
   "game_data_import": {
