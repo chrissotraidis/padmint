@@ -104,9 +104,10 @@ bootstrap script first), RAtouch (license-notice review before PadMint lists its
 install steps), UTP (owner decision on official builds), OpenRCT2 Touch (no iPad
 download) and SnapPad (downloads paused).
 
-**HaloPad** (ProjectReach) builds on Apple silicon Macs from the player's own Halo
-Custom Edition installer and product key, experimental: Mac only by design, since it
-translates the player's own game. The optional Xbox edition stays a manual build.
+**HaloPad** (ProjectReach) builds for iPhone, iPad and Mac on Apple silicon Macs from
+the player's own Halo Custom Edition installer and product key, experimental: Mac only by
+design, since it translates the player's own game. The optional Xbox edition stays a
+manual iPhone/iPad build.
 
 **No build needed:** CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad,
 PeonPad and VaultPad appear in the PadMint page with download and data-import
