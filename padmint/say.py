@@ -72,20 +72,20 @@ MESSAGES = {
     "plan": {
         "en": ("\nWhat happens now. Keep this window open; you can use your computer meanwhile.\n"
                "  1. PadMint downloads the free build tools it needs. First time only.\n"
-               "  2. It builds your copy from your game file. The first time usually takes\n"
-               "     30 minutes to a few hours, depending on the computer.\n"
+               "  2. It builds your copy on this computer. The first time usually takes\n"
+               "     a few minutes to a few hours, depending on the computer.\n"
                "  3. When it finishes, this window tells you exactly what to do next.\n"
                "Lots of text will scroll by. That is normal.\n"),
         "es": ("\nQué pasa ahora. Deja esta ventana abierta; puedes usar tu computadora mientras tanto.\n"
                "  1. PadMint descarga las herramientas gratuitas que necesita. Solo la primera vez.\n"
-               "  2. Crea tu copia a partir de tu archivo del juego. La primera vez suele tardar\n"
-               "     de 30 minutos a unas horas, según la computadora.\n"
+               "  2. Crea tu copia en esta computadora. La primera vez suele tardar\n"
+               "     de unos minutos a unas horas, según la computadora.\n"
                "  3. Al terminar, esta ventana te dice exactamente qué hacer.\n"
                "Verás pasar mucho texto. Es normal.\n"),
         "pt": ("\nO que acontece agora. Deixe esta janela aberta; você pode usar o computador enquanto isso.\n"
                "  1. O PadMint baixa as ferramentas gratuitas de que precisa. Só na primeira vez.\n"
-               "  2. Ele cria sua cópia a partir do seu arquivo do jogo. Na primeira vez costuma levar\n"
-               "     de 30 minutos a algumas horas, dependendo do computador.\n"
+               "  2. Ele cria sua cópia neste computador. Na primeira vez costuma levar\n"
+               "     de alguns minutos a algumas horas, dependendo do computador.\n"
                "  3. Ao terminar, esta janela mostra exatamente o que fazer.\n"
                "Muito texto vai passar na tela. Isso é normal.\n"),
     },
@@ -117,11 +117,11 @@ MESSAGES = {
     },
     "step_build": {
         "en": ("\nStep 2 of 3: building your copy with {jobs} parallel jobs. The first build usually\n"
-               "takes 30 minutes to a few hours; later builds reuse finished work. Keep this window open."),
+               "takes a few minutes to a few hours; later builds reuse finished work. Keep this window open."),
         "es": ("\nPaso 2 de 3: creando tu copia con {jobs} tareas en paralelo. La primera vez suele\n"
-               "tardar de 30 minutos a unas horas; las siguientes reutilizan lo ya hecho. Deja esta ventana abierta."),
+               "tardar de unos minutos a unas horas; las siguientes reutilizan lo ya hecho. Deja esta ventana abierta."),
         "pt": ("\nEtapa 2 de 3: criando sua cópia com {jobs} tarefas em paralelo. A primeira vez costuma\n"
-               "levar de 30 minutos a algumas horas; as seguintes reaproveitam o que já foi feito. Deixe esta janela aberta."),
+               "levar de alguns minutos a algumas horas; as seguintes reaproveitam o que já foi feito. Deixe esta janela aberta."),
     },
     "step_next": {
         "en": "\nStep 3 of 3: done! What to do next:",
@@ -243,11 +243,11 @@ MESSAGES = {
     "w_device": {"en": "Make it for", "es": "Crear para", "pt": "Criar para"},
     "w_make": {"en": "Make my copy", "es": "Crear mi copia", "pt": "Criar minha cópia"},
     "w_time": {
-        "en": ("The first build usually takes 30 minutes to a few hours. Keep this page and PadMint open "
+        "en": ("The first build usually takes a few minutes to a few hours. Keep this page and PadMint open "
                "(its window, or Termux on a phone); you can do other things meanwhile."),
-        "es": ("La primera vez suele tardar de 30 minutos a unas horas. Deja abiertos esta página y PadMint "
+        "es": ("La primera vez suele tardar de unos minutos a unas horas. Deja abiertos esta página y PadMint "
                "(su ventana, o Termux en un teléfono); mientras tanto puedes hacer otras cosas."),
-        "pt": ("A primeira vez costuma levar de 30 minutos a algumas horas. Deixe esta página e o PadMint "
+        "pt": ("A primeira vez costuma levar de alguns minutos a algumas horas. Deixe esta página e o PadMint "
                "abertos (a janela dele, ou o Termux no celular); enquanto isso, você pode fazer outras coisas."),
     },
     "w_step_tools": {"en": "Step 1 of 3: getting the free build tools (first time only)",
@@ -399,13 +399,13 @@ MESSAGES = {
     "w_plan_app": {"en": "Download {name}'s published app, which has no game code in it",
                    "es": "Descargar la app publicada de {name}, que no contiene código del juego",
                    "pt": "Baixar o app publicado de {name}, que não contém código do jogo"},
-    "w_plan_build": {"en": "Build your copy here from your game file: the first time takes 30 minutes to a few hours, later builds reuse finished work",
-                     "es": "Crear tu copia aquí con tu archivo del juego: la primera vez tarda de 30 minutos a unas horas; después se reutiliza lo hecho",
-                     "pt": "Criar sua cópia aqui com o seu arquivo do jogo: a primeira vez leva de 30 minutos a algumas horas; depois o que foi feito é reaproveitado"},
+    "w_plan_build": {"en": "Build your copy here from your game file: the first time takes a few minutes to a few hours, later builds reuse finished work",
+                     "es": "Crear tu copia aquí con tu archivo del juego: la primera vez tarda de unos minutos a unas horas; después se reutiliza lo hecho",
+                     "pt": "Criar sua cópia aqui com o seu arquivo do jogo: a primeira vez leva de alguns minutos a algumas horas; depois o que foi feito é reaproveitado"},
     "w_plan_save": {"en": "Save your copy in {folder}", "es": "Guardar tu copia en {folder}", "pt": "Salvar sua cópia em {folder}"},
-    "w_plan_build_app": {"en": "Build the app here (you add your game file inside the app afterwards): the first time takes 30 minutes to a few hours, later builds reuse finished work",
-                         "es": "Crear la app aquí (añades tu archivo del juego dentro de la app después): la primera vez tarda de 30 minutos a unas horas; después se reutiliza lo hecho",
-                         "pt": "Criar o app aqui (você adiciona o seu arquivo do jogo dentro do app depois): a primeira vez leva de 30 minutos a algumas horas; depois o que foi feito é reaproveitado"},
+    "w_plan_build_app": {"en": "Build the app here (you add your game file inside the app afterwards): the first time takes a few minutes to a few hours, later builds reuse finished work",
+                         "es": "Crear la app aquí (añades tu archivo del juego dentro de la app después): la primera vez tarda de unos minutos a unas horas; después se reutiliza lo hecho",
+                         "pt": "Criar o app aqui (você adiciona o seu arquivo do jogo dentro do app depois): a primeira vez leva de alguns minutos a algumas horas; depois o que foi feito é reaproveitado"},
     "w_plan_space": {"en": "Free space needed: about {gb} GB", "es": "Espacio libre necesario: unos {gb} GB",
                      "pt": "Espaço livre necessário: cerca de {gb} GB"},
     "w_plan_needs": {"en": "Install this yourself first:", "es": "Instala esto antes por tu cuenta:",
