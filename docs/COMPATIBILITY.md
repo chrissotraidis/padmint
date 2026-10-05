@@ -109,8 +109,9 @@ download) and SnapPad (downloads paused).
 
 **HaloPad** (ProjectReach) builds for iPhone, iPad and Mac on Apple silicon Macs from
 the player's own Halo Custom Edition installer and product key, experimental: Mac only by
-design, since it translates the player's own game. The optional Xbox edition stays a
-manual iPhone/iPad build.
+design, since it translates the player's own game. Its Xbox edition is built in the same
+run from the upstream halo-ce-universal engine, fetched on the player's Mac; the player
+adds their own disc image in the app.
 
 **No build needed:** CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad,
 PeonPad and VaultPad appear in the PadMint page with download and data-import
