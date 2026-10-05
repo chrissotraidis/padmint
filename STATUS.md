@@ -28,6 +28,8 @@ compatibility work resumes.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.6**: HaloPad builds for Mac too: the same app on Apple Silicon Macs, with
+  keyboard and mouse and no Apple account needed.
 - **v0.4.5**: build-time wording matches reality: the first build takes "a few
   minutes to a few hours" (CTRPad takes about a minute), and the terminal plan no
   longer says the copy is built from your game file when the game asks for it in
