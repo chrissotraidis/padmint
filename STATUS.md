@@ -28,6 +28,11 @@ compatibility work resumes.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.7**: every iPhone build made with Xcode checks Xcode's iOS platform before
+  it starts (12 games had no check), and a missing program now stops PadMint before
+  it downloads the game's source instead of after. PaperPad no longer asks for the
+  ROM before building (the app asks for it). `scripts/audit-catalog.py` checks the
+  whole catalog against each game's published recipe; it reports no problems.
 - **v0.4.6**: HaloPad builds for Mac too: the same app on Apple Silicon Macs, with
   keyboard and mouse and no Apple account needed.
 - **v0.4.5**: build-time wording matches reality: the first build takes "a few

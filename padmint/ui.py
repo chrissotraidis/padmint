@@ -91,7 +91,7 @@ def plan(game, platform_name, lang):
             items.append({"name": name, "version": tools.version(table[name], host), "size": download.get("size"),
                           "source": urlparse(download["url"]).hostname, "here": tools.installed(name, host)})
     needs = [{"label": cli.label(tool), "ok": cli.check_program(tool)[0], "note": tool.get("note", "")}
-             for tool in cli.player_requirements(manifest)]
+             for tool in cli.player_requirements(manifest, platform_name)]
     name = manifest.get("name") or entry.get("name", game)
     key = f"w_output_{platform_name}"
     return {"repo": entry["repo_url"], "tools": items, "tools_folder": str(tools.tools_root()),
