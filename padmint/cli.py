@@ -1234,11 +1234,11 @@ def player_games():
     """[(game, name, platforms)] a player can make on this computer. iPhone builds need Xcode
     on Apple Silicon, except games marked ios_off_mac, which also build on Windows and Linux
     computers. An Intel Mac and a phone make Android copies. A Windows copy is made on the
-    Windows PC it runs on."""
+    Windows PC it runs on, and a Mac copy on the Apple Silicon Mac it runs on."""
     host = host_id()
     apple_silicon = host == "macos-arm64"
     computer_off_mac = host.startswith(("windows-", "linux-")) and not on_android()
-    here = {"ios": None, "windows": host.startswith("windows-")}
+    here = {"ios": None, "windows": host.startswith("windows-"), "macos": apple_silicon and not on_android()}
     games = []
     for game, entry in sorted(catalog().items()):
         ios_here = apple_silicon or (computer_off_mac and entry.get("ios_off_mac", False))
@@ -1261,7 +1261,7 @@ def elsewhere():
 def platform_label(platform_name, lang=None):
     """How the menu names a device: an iPhone copy needs this Mac, or is experimental elsewhere."""
     key = {"android": "android", "ios": "ios_mac" if host_id() == "macos-arm64" else "ios_off_mac",
-           "windows": "windows_here"}
+           "windows": "windows_here", "macos": "mac_here"}
     if platform_name not in key:
         return platform_name
     return phrase(key[platform_name], lang) if lang else t(key[platform_name])

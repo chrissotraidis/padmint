@@ -13,10 +13,35 @@
   "player_help": "https://github.com/chrissotraidis/ctrpad#get-ctrpad",
   "reviewed_revision": null,
   "notes": "CTRPad owns padmint.json in its repository. The build needs no game file; players choose their own NTSC-U BIN in the app. Releases publish the recipe only.",
-  "manifest": null,
   "before_build": {
     "commands": [
       "brew install cmake ninja"
     ]
-  }
+  },
+  "player_next": {
+    "macos": {
+      "steps": [
+        "Open {file} and move CTRPad.app to your Applications folder.",
+        "Open CTRPad and choose your own Crash Team Racing disc image (the BIN) when it asks; the full guide below shows how.",
+        "Updating? Replace the old CTRPad.app with the new one. Your saves and disc choice are kept."
+      ],
+      "translations": {
+        "es": {
+          "steps": [
+            "Abre {file} y mueve CTRPad.app a tu carpeta Aplicaciones.",
+            "Abre CTRPad y elige tu propia imagen de disco de Crash Team Racing (el BIN) cuando te la pida; la guía completa de abajo explica cómo.",
+            "¿Actualizando? Reemplaza el CTRPad.app anterior por el nuevo. Tus partidas guardadas y el disco elegido se conservan."
+          ]
+        },
+        "pt": {
+          "steps": [
+            "Abra {file} e mova o CTRPad.app para a sua pasta Aplicativos.",
+            "Abra o CTRPad e escolha a sua própria imagem de disco do Crash Team Racing (o BIN) quando ele pedir; o guia completo abaixo mostra como.",
+            "Atualizando? Substitua o CTRPad.app antigo pelo novo. Seus saves e o disco escolhido são mantidos."
+          ]
+        }
+      }
+    }
+  },
+  "manifest": null
 }

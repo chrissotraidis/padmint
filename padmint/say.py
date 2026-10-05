@@ -45,6 +45,7 @@ MESSAGES = {
                     "pt": "iPhone ou iPad (experimental)"},
     "windows_here": {"en": "This Windows PC (experimental)", "es": "Este PC con Windows (experimental)",
                      "pt": "Este PC com Windows (experimental)"},
+    "mac_here": {"en": "This Mac", "es": "Este Mac", "pt": "Este Mac"},
     "drag_game_file": {
         "en": "Drag your own {name} game file into this window, then press Enter: ",
         "es": "Arrastra tu propio archivo del juego {name} a esta ventana y pulsa Enter: ",

@@ -196,3 +196,21 @@ class WindowsCopyTests(unittest.TestCase):
                 with mock.patch.object(cli, "host_id", return_value=host), \
                         mock.patch.object(cli, "on_android", return_value=False):
                     self.assertEqual(cli.player_games(), [("examplepad", "ExamplePad", platforms)], host)
+
+
+class MacCopyTests(unittest.TestCase):
+    """A Mac copy is offered on Apple Silicon Macs only: it runs on the Mac that makes it."""
+    def test_mac_is_offered_only_on_apple_silicon(self):
+        entries = {"examplepad": {"id": "examplepad", "name": "ExamplePad", "player_targets": ["ios", "macos"]}}
+        with mock.patch.object(cli, "catalog", return_value=entries):
+            for host, platforms in (("macos-arm64", ["ios", "macos"]), ("macos-x86_64", []),
+                                    ("windows-x86_64", []), ("linux-x86_64", [])):
+                with mock.patch.object(cli, "host_id", return_value=host), \
+                        mock.patch.object(cli, "on_android", return_value=False):
+                    expected = [("examplepad", "ExamplePad", platforms)] if platforms else []
+                    self.assertEqual(cli.player_games(), expected, host)
+
+    def test_the_menu_names_the_mac(self):
+        with mock.patch.object(cli, "host_id", return_value="macos-arm64"):
+            self.assertEqual(cli.platform_label("macos", "en"), "This Mac")
+            self.assertEqual(cli.platform_label("macos", "es"), "Este Mac")
