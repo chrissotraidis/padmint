@@ -172,6 +172,12 @@ on the recipe requirement. Probe the tool or SDK the backend actually uses;
 finding an unrelated Python executable or Xcode's command-line tools is not
 enough. PadMint-supplied tools belong in the target's `tools` list instead.
 
+An `ios` target whose recipe requires `xcodebuild` gets one check for free: PadMint
+also checks Xcode's iOS platform (`xcrun --sdk iphoneos`), which Xcode installs
+separately, unless the recipe already probes `iphoneos` itself. Mac copies don't
+get this check. PadMint checks every program the player installs right after
+reading the release recipe, before it downloads the game's source.
+
 ## 3. Promote it
 
 1. Run `python3 -m padmint build` from a clean checkout. The record shows each
@@ -180,3 +186,7 @@ enough. PadMint-supplied tools belong in the target's `tools` list instead.
    accepted on a device, mark the host `verified` and pin `reviewed_revision`.
 3. Before anything is published, every public file must pass
    `python3 -m padmint audit`. Personal builds are never published.
+4. Run `PADMINT_HOME=$(mktemp -d) python3 scripts/audit-catalog.py` after changing a
+   catalog entry, a recipe or PadMint itself. It reads every game's latest release
+   recipe the way a player's PadMint does and lists what would confuse or stop a
+   player, plus where each target builds.

@@ -227,3 +227,55 @@ class PrivateNoteTests(unittest.TestCase):
                        {"kind": "emulator-shell", "inputs": [{"type": "steam-mac-install", "when": "in-app"}]},
                        None):
             self.assertEqual(cli.private_note(recipe), "keep_private")
+
+
+class IosPlatformTests(unittest.TestCase):
+    """An iPhone copy built with Xcode also needs Xcode's iOS platform, which Xcode installs separately."""
+    XCODE = {"name": "xcodebuild", "version_args": ["-version"]}
+
+    def recipe(self, *tools):
+        return {"requirements": {"tools": list(tools)}}
+
+    def names(self, recipe, platform_name):
+        with mock.patch.object(cli, "host_id", return_value="macos-arm64"):
+            return [cli.label(tool) for tool in cli.player_requirements(recipe, platform_name)]
+
+    def test_an_xcode_iphone_build_checks_the_ios_platform(self):
+        self.assertIn("Xcode iOS platform", self.names(self.recipe(self.XCODE), "ios"))
+
+    def test_a_mac_copy_does_not_need_the_ios_platform(self):
+        self.assertNotIn("Xcode iOS platform", self.names(self.recipe(self.XCODE), "macos"))
+
+    def test_a_recipe_that_already_checks_the_sdk_is_not_asked_twice(self):
+        own = {"name": "xcrun", "version_args": ["--sdk", "iphoneos", "--show-sdk-path"], "player": True,
+               "label": "Xcode iOS SDK", "note": "Add iOS in Xcode"}
+        self.assertEqual(self.names(self.recipe(self.XCODE, own), "ios"), ["Xcode iOS SDK"])
+
+    def test_an_iphone_copy_without_xcode_needs_no_ios_platform(self):
+        self.assertEqual(self.names(self.recipe({"name": "python3"}), "ios"), [])
+
+    def test_off_a_mac_xcode_requirements_do_not_apply(self):
+        xcode_on_mac = dict(self.XCODE, hosts=["macos-arm64"])
+        with mock.patch.object(cli, "host_id", return_value="windows-x86_64"):
+            self.assertEqual(cli.player_requirements(self.recipe(xcode_on_mac), "ios"), [])
+
+
+class MissingProgramBeforeDownloadTests(unittest.TestCase):
+    """A missing program the player installs stops the build before the game's source downloads."""
+    def test_missing_program_stops_before_the_source_download(self):
+        recipe = {"name": "ExamplePad", "inputs": [{"type": "rom", "when": "in-app"}],
+                  "targets": {"ios": {"hosts": {"macos-arm64": "experimental"}}},
+                  "requirements": {"tools": [{"name": "xcodebuild", "version_args": ["-version"], "player": True,
+                                              "note": "Install Xcode"}]}}
+        entries = {"examplepad": {"id": "examplepad", "repo_url": "https://github.com/example/examplepad"}}
+        with mock.patch.object(cli, "catalog", return_value=entries), \
+                mock.patch.object(cli, "host_id", return_value="macos-arm64"), \
+                mock.patch.object(cli, "latest_release", return_value=("v1.0.0", {})), \
+                mock.patch.object(cli, "published_recipe", return_value=(recipe, "examplepad v1.0.0 release")), \
+                mock.patch.object(cli, "player_target", return_value=recipe["targets"]["ios"]), \
+                mock.patch.object(cli, "check_program", return_value=(False, "not found")), \
+                mock.patch.object(cli, "release_source") as download, \
+                mock.patch.object(cli, "report"):
+            with self.assertRaisesRegex(ValueError, "needs these installed first"):
+                cli._make("examplepad", "ios", None, Path(tempfile.gettempdir()))
+            download.assert_not_called()

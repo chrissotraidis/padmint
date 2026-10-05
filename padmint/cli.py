@@ -826,6 +826,7 @@ def _make(game, platform_name, disc, out, ref=None, app=None, jobs=None, results
         release = latest_release(entry["repo_url"])
         manifest, _source = published_recipe(game, release=release)
         player_target(manifest, platform_name)
+        require_programs(manifest, platform_name)  # before the source download, not after it
     report("release", state="done", repo=entry["repo_url"], version=release[0] if release else ref)
     home = tools.tools_root().parent
     source, ref, assets = release_source(game, ref, release=release)
@@ -838,12 +839,7 @@ def _make(game, platform_name, disc, out, ref=None, app=None, jobs=None, results
         disc = None  # the game file is added in the app, not read by the build
     elif disc is None:
         raise ValueError(f"{manifest['name']} needs your own game file (--disc)")
-    missing_programs = [(tool, detail) for tool in player_requirements(manifest)
-                        for ok, detail in [check_program(tool)] if not ok]
-    if missing_programs:
-        raise ValueError(f"{manifest['name']} needs these installed first:\n"
-                         + "".join(f"  {label(tool)}: {tool['note']}\n" for tool, _ in missing_programs)
-                         + "Then run PadMint again.")
+    require_programs(manifest, platform_name)
     missing = tools.missing_system_library(target.get("tools", []), host_id())
     if missing:
         raise ValueError(missing[1])
@@ -951,9 +947,32 @@ def version_tuple(text):
     return tuple(int(part) for part in match.group().split(".")) if match else None
 
 
-def player_requirements(manifest):
-    """Programs the recipe says the player installs themselves (requirements.tools with "player")."""
-    return [tool for tool in host_requirements(manifest) if tool.get("player")]
+# An iPhone build with Xcode also needs Xcode's iOS platform, which Xcode installs separately.
+# Without it the build fails deep inside CMake or xcodebuild, so check it with Xcode itself.
+IOS_PLATFORM = {"name": "xcrun", "version_args": ["--sdk", "iphoneos", "--show-sdk-version"],
+                "label": "Xcode iOS platform", "player": True,
+                "note": "Open Xcode, choose Settings > Components, add iOS and wait for it to finish, "
+                        "then run PadMint again."}
+
+
+def require_programs(manifest, platform_name):
+    """Stop before any download or build when a program the player installs is missing."""
+    missing = [tool for tool in player_requirements(manifest, platform_name) if not check_program(tool)[0]]
+    if missing:
+        raise ValueError(f"{manifest['name']} needs these installed first:\n"
+                         + "".join(f"  {label(tool)}: {tool['note']}\n" for tool in missing)
+                         + "Then run PadMint again.")
+
+
+def player_requirements(manifest, platform_name=None):
+    """Programs the recipe says the player installs themselves (requirements.tools with "player").
+    For an iPhone copy built with Xcode, also Xcode's iOS platform unless the recipe checks it."""
+    here = host_requirements(manifest)
+    tools_ = [tool for tool in here if tool.get("player")]
+    if platform_name == "ios" and any(tool["name"] == "xcodebuild" for tool in here) \
+            and not any("iphoneos" in tool.get("version_args", []) for tool in here):
+        tools_.append(IOS_PLATFORM)
+    return tools_
 
 
 def host_requirements(manifest):
@@ -1075,7 +1094,7 @@ def doctor(game, target_name, repo=None, stream=None):
         if missing:
             report(False, missing[0], missing[1])
     if repo is None:
-        for tool in player_requirements(manifest):  # the player installs these; PadMint can't
+        for tool in player_requirements(manifest, target_name):  # the player installs these; PadMint can't
             ok, detail = check_program(tool)
             report(ok, label(tool), detail if ok or detail == tool["note"] else f"{detail}; {tool['note']}")
         needed = catalog()[game].get("free_space_gb", 0)

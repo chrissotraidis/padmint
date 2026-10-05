@@ -10,6 +10,7 @@
   "game_ids": [
     "NMQE"
   ],
+  "player_game_file": "in-app",
   "free_space_gb": 3,
   "player_help": "https://github.com/chrissotraidis/paperpad#get-paperpad",
   "reviewed_revision": null,
