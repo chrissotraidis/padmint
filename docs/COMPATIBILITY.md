@@ -69,6 +69,9 @@ PadMint recipe is available.
 
 Where each tracker app stands on the shared pipeline, and the smallest next step.
 Games are grouped by family: one game proves a family, and the rest follow it.
+Off-Mac work is paused by owner decision
+([D15](DECISIONS.md#d15-any-device-from-any-computer-is-the-goal-off-mac-work-is-paused-owner-decision-5-oct-2026));
+the next steps below are kept for when it resumes.
 **Off-Mac** means a build on a Windows or Linux computer, as recorded below.
 
 **GameCube and Wii recompilations** (reference: BlueWake)

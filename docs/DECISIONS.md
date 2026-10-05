@@ -378,3 +378,61 @@ cross-platform). Requires the same module split as S1.
 2. Next: host-neutral Android builds (Linux, then Windows via WSL2).
 3. Then, owner decision: runtime-only public apps plus player-built modules,
    starting with BlueWake (already split), then KartPad after a module refactor.
+
+## D15. Any device from any computer is the goal; off-Mac work is paused (owner decision, 5 Oct 2026)
+
+**The goal.** PadMint lets anyone mint their own copy of a game on the hardware they
+have, for the device they play on: an iPhone/iPad IPA from Windows or Linux, an
+Android APK from a Mac or Linux, and so on, for every game in the catalog.
+
+**Now: paused, by choice.** Players mostly ask for KartPad and BlueWake, and both
+already ship ready-to-play downloads (KartPad: Android, iPhone/iPad, Mac; BlueWake:
+Windows). Players rarely want a multi-hour build on a PC, and building every route
+first would not create demand for it. Until that changes, PadMint's job is to make
+the builds that exist work well:
+
+- iPhone/iPad copies on an Apple Silicon Mac, for every buildable game.
+- Mac copies where a game offers one (CTRPad, HaloPad).
+- KartPad's existing routes: Android game data on Windows, Linux and Mac; iPhone
+  builds on Windows and Linux (experimental).
+- Windows players: the game's ready-to-play download where one is published
+  (BlueWake). PadMint does not build Windows copies for them.
+
+`scripts/audit-catalog.py` keeps these routes honest: it checks every game's
+published recipe the way a player's PadMint reads it. Run it after any catalog,
+recipe or PadMint change.
+
+**Why the goal is large (technical debt).** Apple's iPhone SDK, which the
+iPhone-specific parts of every app need (UIKit, Metal or GLES, audio, controllers,
+the file picker), may only be used on Apple computers. Game code itself is plain
+C/C++, and PadMint already compiles it for iPhone on Windows, Linux and Macs with
+open-source parts (D12, D13). So an iPhone copy made off a Mac needs each game split
+into a published app with no game code, built once on a Mac, plus a game library
+compiled on the player's computer and inserted by PadMint (D14). PadMint's half
+exists, and KartPad uses it end to end. The other half is in each game's code;
+today most games build as one combined app. Families share the work:
+
+| Family | Games | State on 5 Oct 2026 | Rough work |
+|---|---|---|---|
+| Harbour Masters engine (libultraship) | SpaghettiPad, HarkinianPad, MaskPad, StarshipPad, BrawlerPad, PaperPad | SpaghettiPad draft #29 builds the game library on Windows and Linux; a test copy reached its race demo on an iPhone | 2–3 days to finish SpaghettiPad, then 1–2 days per game |
+| N64 recompilations | GoldenPad, AnnePad, BananaPad, BearBirdPad, DinoPad | Not split; the translator must also run on Windows and Linux (these read the ROM during the build) | 2–4 days for GoldenPad and the translator, then ½–1 day each |
+| GameCube/Wii recompilations | BlueWake, SunPad, MeleePad (KartPad done) | BlueWake (#42) and SunPad (#57) build their library off a Mac in drafts | About a day for those two; MeleePad 2–3 days (Rust, extra files) |
+| One-off engines | CTRPad, BellPad, BallPad, BarrelPad | Not split; CTRPad compiles everything as one unit (`main.c`) | 2–4 days each |
+| Mac only by design | AgePad, HaloPad | Package or translate the player's own Mac/PC game | Not planned |
+
+PadMint itself would also need: inserting several files into an app (MeleePad), a
+release step that publishes each game's app without game code next to its recipe
+and checks the pair, Windows install steps (Sideloadly), and an audit column for
+off-Mac readiness. That is about 2–3 days. The whole catalog is roughly 4–8 weeks of
+focused work, plus a device check per game. Android copies of games other than
+KartPad need an Android port first, which none has. Publishing the apps without game
+code for the decompilation ports changes D5 (recipe only) and needs an owner
+decision.
+
+Rejected shortcuts: building on a cloud Mac uploads players' game files and breaks
+"nothing is uploaded"; extracting Apple's SDK to use on a PC breaks Apple's license.
+
+**Revisit when** players ask for a specific game off a Mac, or a family's reference
+port gets finished for other reasons. Start with the family that unlocks the most
+games (the Harbour Masters engine, via SpaghettiPad #29). Tracking issue: #75. The
+drafts stay open as they are.

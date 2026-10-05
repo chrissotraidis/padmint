@@ -4,6 +4,14 @@ Updated **5 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
 the per-game detail, including **Status by game**, which is where the
 compatibility work resumes.
 
+**Scope today ([D15](docs/DECISIONS.md#d15-any-device-from-any-computer-is-the-goal-off-mac-work-is-paused-owner-decision-5-oct-2026)):**
+PadMint makes the builds that exist work well: iPhone/iPad copies on an Apple
+Silicon Mac for every buildable game, Mac copies for CTRPad and HaloPad, and
+KartPad's existing Android and off-Mac routes. Windows players use ready-to-play
+downloads where a game publishes them (BlueWake). Building any game for any device
+from any computer is the long-term goal and is paused; D15 records the remaining
+work and when to revisit it.
+
 ## Which games use PadMint
 
 - **KartPad ships ready-to-play builds again from v0.7.9**: an Android APK with

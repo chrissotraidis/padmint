@@ -207,6 +207,9 @@ PadMint yet; the game's page has the latest.
 
 Only KartPad, and that is experimental. Every other iPhone/iPad game needs a Mac
 with Apple Silicon and Xcode today.
+Making every game buildable on any computer is the long-term goal, but it is
+paused for now ([why](docs/DECISIONS.md#d15-any-device-from-any-computer-is-the-goal-off-mac-work-is-paused-owner-decision-5-oct-2026)). On Windows, use a game's
+ready-to-play download where it has one, such as BlueWake.
 
 </details>
 <details>
