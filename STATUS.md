@@ -1,6 +1,6 @@
 # PadMint status
 
-Updated **4 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
+Updated **5 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
 the per-game detail, including **Status by game**, which is where the
 compatibility work resumes.
 
@@ -28,6 +28,9 @@ compatibility work resumes.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.2**: CTRPad is back: PadMint builds Crash Team Racing for iPhone, iPad
+  and Apple Silicon Mac from CTRPad's public source, and players choose their own
+  disc image in the app. CTRPad's releases publish the recipe only.
 - **v0.4.1**: HaloPad can be built: your own Halo Custom Edition installer and
   product key make HaloPad for iPhone and iPad, with your game package handed over
   beside it.

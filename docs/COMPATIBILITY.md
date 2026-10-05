@@ -35,6 +35,8 @@ guided setup offers its Android and iOS targets only.
 | [BellPad v0.2.1](https://github.com/chrissotraidis/bellpad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [BlueWake v0.1.0](https://github.com/chrissotraidis/bluewake/releases/tag/v0.1.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [BrawlerPad v0.2.0](https://github.com/chrissotraidis/brawlerpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
+| [CTRPad v0.2.0](https://github.com/chrissotraidis/ctrpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
+| [CTRPad v0.2.0](https://github.com/chrissotraidis/ctrpad/releases/tag/v0.2.0) | macOS app | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [DinoPad v0.2.0](https://github.com/chrissotraidis/dinopad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [GoldenPad v0.2.2](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.2.2) | iOS IPA | Experimental | Planned / Unavailable | Planned / Unavailable |
 | [HarkinianPad v0.2.0](https://github.com/chrissotraidis/harkinianpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
@@ -92,6 +94,7 @@ Games are grouped by family: one game proves a family, and the rest follow it.
 | SpaghettiPad | [Draft #29](https://github.com/chrissotraidis/spaghettipad/pull/29) builds iPhone modules on Windows and Linux x64/ARM64 | A complete released recipe with matching runtime delivery |
 | HarkinianPad | Resources build on five hosts ([#35](https://github.com/chrissotraidis/harkinianpad/pull/35)); app is Mac only | Follow SpaghettiPad #29 |
 | MaskPad, StarshipPad, PaperPad, BrawlerPad, BarrelPad, BellPad, BallPad | Mac only | Follow SpaghettiPad #29. StarshipPad's merged recipe fix (#22) waits on its tracker row |
+| CTRPad | Mac only (iPhone/iPad app and Mac app) | Follow SpaghettiPad #29 |
 | AgePad | Mac only by design: it packages the Mac edition from Steam | None planned off a Mac |
 
 **Listed, not available yet** (the page's "Not available yet" section, with
@@ -109,7 +112,13 @@ translates the player's own game. The optional Xbox edition stays a manual build
 PeonPad and VaultPad appear in the PadMint page with download and data-import
 steps.
 
-**Excluded:** CTRPad stays out while private.
+**CTRPad** (from PadMint 0.4.2) builds the whole app on an Apple Silicon Mac from
+its public source: an unsigned IPA for iPhone and iPad, or a ZIP of the Mac app.
+Players choose their own NTSC-U disc image in the app; the build does not read it.
+Its releases publish the recipe only. On 5 October, with Xcode 27, PadMint built
+both targets from a clean checkout in about a minute each, both outputs passed
+`padmint audit`, and the IPA opened to its disc prompt on the iOS 27.0 Simulator.
+No physical device or gameplay check was part of that run.
 
 ## Recorded Mac builds, 4 October
 
