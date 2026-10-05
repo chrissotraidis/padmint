@@ -31,7 +31,7 @@ compatibility work resumes.
 - **v0.4.5**: build-time wording matches reality: the first build takes "a few
   minutes to a few hours" (CTRPad takes about a minute), and the terminal plan no
   longer says the copy is built from your game file when the game asks for it in
-  the app. CTRPad v0.2.1 from PadMint ran on an iPhone 14 (iOS 26.6.2).
+  the app. CTRPad v0.2.1 and v0.2.2 from PadMint ran on an iPhone 14 (iOS 26.6.2).
 - **v0.4.4**: a release recipe that couldn't be read is tried again on the next
   plan instead of leaving an empty plan for the rest of the window. Copies from
   decompilation ports built without the player's game say only that they hold
