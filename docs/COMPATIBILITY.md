@@ -120,8 +120,11 @@ both targets from a clean checkout in about a minute each, both outputs passed
 `padmint audit`, and the IPA opened to its disc prompt on the iOS 27.0 Simulator.
 The Mac copy from released PadMint 0.4.3 started the game from the owner's disc
 image and ran its demo race. From v0.2.1, an iPhone/iPad build first checks for
-Xcode's iOS platform and says how to add it. No iPhone or iPad has run a PadMint
-copy yet.
+Xcode's iOS platform and says how to add it. On an iPhone 14 (iOS 26.6.2), the
+v0.2.1 app PadMint built, signed with a development profile and installed over
+CTRPad 0.1.0, kept the imported disc and touch layout and ran the title menu,
+intro and Crash Cove demo race at 30 fps with sound. Touch input was not driven
+in that run.
 
 ## Recorded Mac builds, 4 October
 
