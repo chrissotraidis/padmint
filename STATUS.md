@@ -36,6 +36,8 @@ work and when to revisit it.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.8**: HaloPad builds both editions: Custom Edition and the Xbox edition
+  (its engine fetched from upstream and built on your Mac), for iPhone, iPad and Mac.
 - **v0.4.7**: every iPhone build made with Xcode checks Xcode's iOS platform before
   it starts (12 games had no check), and a missing program now stops PadMint before
   it downloads the game's source instead of after. PaperPad no longer asks for the
