@@ -28,6 +28,10 @@ compatibility work resumes.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.4**: a release recipe that couldn't be read is tried again on the next
+  plan instead of leaving an empty plan for the rest of the window. Copies from
+  decompilation ports built without the player's game say only that they hold
+  game code. README covers Mac copies.
 - **v0.4.3**: a game's Mac copy is offered only on Apple Silicon Macs, where it
   runs, and the choice reads **This Mac**. CTRPad gets Mac finishing steps and a
   PlayStation badge.

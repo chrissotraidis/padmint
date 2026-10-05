@@ -35,8 +35,8 @@ guided setup offers its Android and iOS targets only.
 | [BellPad v0.2.1](https://github.com/chrissotraidis/bellpad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [BlueWake v0.1.0](https://github.com/chrissotraidis/bluewake/releases/tag/v0.1.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [BrawlerPad v0.2.0](https://github.com/chrissotraidis/brawlerpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
-| [CTRPad v0.2.0](https://github.com/chrissotraidis/ctrpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
-| [CTRPad v0.2.0](https://github.com/chrissotraidis/ctrpad/releases/tag/v0.2.0) | macOS app | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
+| [CTRPad v0.2.1](https://github.com/chrissotraidis/ctrpad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
+| [CTRPad v0.2.1](https://github.com/chrissotraidis/ctrpad/releases/tag/v0.2.1) | macOS app | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [DinoPad v0.2.0](https://github.com/chrissotraidis/dinopad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [GoldenPad v0.2.2](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.2.2) | iOS IPA | Experimental | Planned / Unavailable | Planned / Unavailable |
 | [HarkinianPad v0.2.0](https://github.com/chrissotraidis/harkinianpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
@@ -118,7 +118,10 @@ Players choose their own NTSC-U disc image in the app; the build does not read i
 Its releases publish the recipe only. On 5 October, with Xcode 27, PadMint built
 both targets from a clean checkout in about a minute each, both outputs passed
 `padmint audit`, and the IPA opened to its disc prompt on the iOS 27.0 Simulator.
-No physical device or gameplay check was part of that run.
+The Mac copy from released PadMint 0.4.3 started the game from the owner's disc
+image and ran its demo race. From v0.2.1, an iPhone/iPad build first checks for
+Xcode's iOS platform and says how to add it. No iPhone or iPad has run a PadMint
+copy yet.
 
 ## Recorded Mac builds, 4 October
 

@@ -211,3 +211,34 @@ class PhaseTests(unittest.TestCase):
             with mock.patch.dict("os.environ", {}, clear=True):
                 cli.report("release", state="done")  # no window: nothing written, no error
             self.assertEqual(len(path.read_text().splitlines()), 1)
+
+
+class ReleaseRecipeTests(unittest.TestCase):
+    """The plan keeps a recipe read from the release; a failed read is tried again next time."""
+    def setUp(self):
+        from padmint import ui
+        self.ui = ui
+        ui.RECIPES.clear()
+        self.addCleanup(ui.RECIPES.clear)
+
+    def test_a_failed_read_is_tried_again(self):
+        recipe = {"name": "ExamplePad"}
+        reads = [RuntimeError("offline"), (recipe, "examplepad v1.0.0 release")]
+
+        def published(game):
+            result = reads.pop(0)
+            if isinstance(result, Exception):
+                raise result
+            return result
+        with mock.patch.object(cli, "published_recipe", side_effect=published):
+            self.assertIsNone(self.ui.release_recipe("examplepad"))
+            self.assertEqual(self.ui.release_recipe("examplepad"), recipe)
+            self.assertEqual(self.ui.release_recipe("examplepad"), recipe)  # kept: no third read
+
+    def test_the_built_in_copy_is_used_but_not_kept(self):
+        built_in = {"name": "ExamplePad (built in)"}
+        with mock.patch.object(cli, "published_recipe",
+                               return_value=(built_in, "PadMint's built-in copy; could not reach the release")) as read:
+            self.assertEqual(self.ui.release_recipe("examplepad"), built_in)
+            self.ui.release_recipe("examplepad")
+            self.assertEqual(read.call_count, 2)
