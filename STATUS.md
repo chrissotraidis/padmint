@@ -28,6 +28,9 @@ compatibility work resumes.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.1**: HaloPad can be built: your own Halo Custom Edition installer and
+  product key make HaloPad for iPhone and iPad, with your game package handed over
+  beside it.
 - **v0.4.0**: the unzipped folder shows only the launcher, **Start here.txt**
   (English, Spanish, Portuguese) and an **app** folder. On the page, **How it
   works** is at the top, the PadMint logo takes you back to the game list, and
