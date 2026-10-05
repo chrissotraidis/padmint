@@ -105,12 +105,16 @@ RECIPES = {}
 
 def release_recipe(game):
     """The game's latest release recipe, fetched once per PadMint window; None when it can't
-    be read (the plan then falls back to the catalog's copy)."""
+    be read (the plan then falls back to the catalog's copy). Only a recipe read from the
+    release is kept: after a failed read, the next plan tries the release again."""
     if game not in RECIPES:
         try:
-            RECIPES[game] = cli.published_recipe(game)[0]
+            recipe, source = cli.published_recipe(game)
         except Exception:  # an offline or too-old PadMint still shows the catalog's plan
-            RECIPES[game] = None
+            return None
+        if source.startswith("PadMint's built-in copy"):
+            return recipe
+        RECIPES[game] = recipe
     return RECIPES[game]
 
 
@@ -262,7 +266,9 @@ class Builds:
             name = (entry.get("manifest") or {}).get("name") or entry.get("name", job["game"])
             key = f"w_output_{job['platform']}"
             job["results"][lang] = {"file": str(built) if built else None, "steps": steps, "note": note,
-                                    "guide": guide, "private": phrase("keep_private", lang),
+                                    "guide": guide,
+                                    "private": phrase(cli.private_note(release_recipe(job["game"])
+                                                                       or entry.get("manifest")), lang),
                                     "warning": (phrase("w_ios27", lang, name=name, issues=entry["repo_url"] + "/issues")
                                                 if built and built.suffix.lower() == ".ipa"
                                                 and cli.ios27_launch_risk(built) else ""),

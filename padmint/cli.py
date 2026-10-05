@@ -896,8 +896,16 @@ def _make(game, platform_name, disc, out, ref=None, app=None, jobs=None, results
     save_game_data(args.output_path, out, manifest["name"],
                    import_label=(entry.get("game_data_import") or {}).get(platform_name))
     report("save", state="done", folder=str(out), file=str(result))
-    print(t("keep_private"))
+    print(t(private_note(manifest)))
     return 0
+
+
+def private_note(manifest):
+    """What the finish line says about sharing the copy. A decompilation port's build never reads
+    the player's game, so its copy holds game code compiled from public source, not from theirs."""
+    if manifest and manifest.get("kind") == "decomp-patches" and not needs_build_input(manifest):
+        return "keep_private_compiled"
+    return "keep_private"
 
 
 def save_game_data(built, out, name, stream=None, import_label=None):

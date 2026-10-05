@@ -214,3 +214,16 @@ class MacCopyTests(unittest.TestCase):
         with mock.patch.object(cli, "host_id", return_value="macos-arm64"):
             self.assertEqual(cli.platform_label("macos", "en"), "This Mac")
             self.assertEqual(cli.platform_label("macos", "es"), "Este Mac")
+
+
+class PrivateNoteTests(unittest.TestCase):
+    """The finish line says the copy came from the player's game only when the build read it."""
+    def test_a_decompilation_built_without_the_game_file_says_only_that_it_holds_game_code(self):
+        recipe = {"kind": "decomp-patches", "inputs": [{"type": "psx-disc", "when": "in-app"}]}
+        self.assertEqual(cli.private_note(recipe), "keep_private_compiled")
+
+    def test_a_build_that_reads_the_players_game_says_it_was_made_from_their_copy(self):
+        for recipe in ({"kind": "disc-translation", "inputs": [{"type": "wii-disc"}]},
+                       {"kind": "emulator-shell", "inputs": [{"type": "steam-mac-install", "when": "in-app"}]},
+                       None):
+            self.assertEqual(cli.private_note(recipe), "keep_private")

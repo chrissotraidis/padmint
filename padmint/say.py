@@ -140,6 +140,11 @@ MESSAGES = {
         "es": "Contiene código del juego hecho a partir de tu propia copia: no lo compartas.",
         "pt": "Contém código do jogo feito a partir da sua própria cópia: não compartilhe.",
     },
+    "keep_private_compiled": {
+        "en": "It contains game code: keep it to yourself.",
+        "es": "Contiene código del juego: no lo compartas.",
+        "pt": "Contém código do jogo: não compartilhe.",
+    },
     "data_exists": {
         "en": "Your {name} game data folder is already at {path}",
         "es": "Tu carpeta de datos del juego de {name} ya está en {path}",

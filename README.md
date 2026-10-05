@@ -94,7 +94,7 @@ them all, or the tabs to narrow the list.
 
 | Group on the page | What it means | What you need |
 |---|---|---|
-| **Build with PadMint** | PadMint builds the game on your computer from your game file, then tells you how to install it | For iPhone and iPad: a **Mac with Apple Silicon (M1 or newer)** with [Xcode](https://apps.apple.com/app/xcode/id497799835). KartPad also builds for Android on any Windows, Mac or Linux computer |
+| **Build with PadMint** | PadMint builds the game on your computer from your game file, then tells you how to install it | For iPhone and iPad, and for Mac copies (CTRPad): a **Mac with Apple Silicon (M1 or newer)** with [Xcode](https://apps.apple.com/app/xcode/id497799835). KartPad also builds for Android on any Windows, Mac or Linux computer |
 | **Download** | The game's app has no game files in it, so there is nothing to build: download it and add your own files in the app | Any computer to sideload an iPad or iPhone app with your own Apple ID |
 | **Not available yet** | Listed so you can find it. Choosing it says why it isn't available and links to the game's page | — |
 
@@ -106,7 +106,7 @@ need. For each game's exact versions, hosts and known problems, see
 ## Using the page
 
 1. **1. Choose a game.** Search or scroll; each card shows the original game,
-   where it plays (iPhone/iPad, Android) and its group. **← All games**, or the
+   where it plays (iPhone/iPad, Android, Mac) and its group. **← All games**, or the
    PadMint logo at the top, takes you back to the full list. **About …: install guide and updates** opens the game's own page.
 2. **2. Your own game file.** Click **Choose file…** and pick your disc image or
    ROM. Game files already in your Downloads folder are listed, so you can click
@@ -114,7 +114,8 @@ need. For each game's exact versions, hosts and known problems, see
    wrong (wrong region, wrong version, incomplete file). Some games ask for the
    file inside the app instead; the page says so.
 3. **3. Where will you play?** Choose the device you will play on, whichever
-   computer you are using.
+   computer you are using. **This Mac** appears for games with a Mac copy, on an
+   Apple Silicon Mac: that copy plays on the Mac that builds it.
 4. **What PadMint will do on this computer** lists everything before it starts:
    anything you need to install yourself first (it says **found** or **not found**),
    the source code and free build tools it downloads, and the free space needed.
@@ -139,6 +140,10 @@ with your game inside. Install it with [Sideloadly](https://sideloadly.io),
 [AltStore](https://altstore.io) or [SideStore](https://sidestore.io) and your own
 Apple ID. To update, build the new version with PadMint and install it over the
 old one with the same tool and Apple ID; your saves stay.
+
+**Mac (CTRPad):** PadMint saves `<Game>-v…-macos-personal.zip`. Open it, move the
+app to Applications and open it; the game asks for your own game file. To update,
+build the new version and replace the old app; your saves stay.
 
 The `…-ios-unsigned.ipa` on a game's release page is PadMint's starting point:
 it has no game code, so it can't play by itself.
