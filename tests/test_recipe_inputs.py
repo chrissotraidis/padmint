@@ -36,6 +36,10 @@ class RecipeInputTests(unittest.TestCase):
         plan = ui.plan('examplepad', 'ios', 'en')
         self.assertEqual(plan['inputs'], self.recipe['inputs'][:1])
 
+    def test_plan_passes_selected_file_to_prerequisite_checks(self):
+        ui.plan('examplepad', 'ios', 'en', str(self.file))
+        cli.player_requirements.assert_called_once_with(self.recipe, 'ios', str(self.file))
+
     def test_release_recipe_refuses_wrong_extension_even_without_catalog_manifest(self):
         app = self.file.with_suffix('.ipa')
         app.write_bytes(b'synthetic app')

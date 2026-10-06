@@ -186,6 +186,11 @@ def validate_manifest(data):
         _require("hosts" not in tool or (isinstance(tool["hosts"], list) and tool["hosts"]
                                          and all(isinstance(host, str) for host in tool["hosts"])),
                  f"tool {tool['name']}.hosts must be a list of build hosts")
+        if "input_formats" in tool:
+            formats = tool["input_formats"]
+            _require(isinstance(formats, list) and formats and
+                     all(isinstance(value, str) and re.fullmatch(r"[a-z0-9]+", value) for value in formats),
+                     f"tool {tool['name']}.input_formats must be a non-empty list of lowercase extensions")
     disk = requirements.get("disk_gb", 0)
     _require(isinstance(disk, (int, float)) and disk >= 0, "requirements.disk_gb must be a number")
     publication = data.get("publication")

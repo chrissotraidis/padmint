@@ -49,6 +49,26 @@ class ManifestFieldTests(unittest.TestCase):
             validate_manifest(recipe(dict(xcode, hosts="macos-arm64")))
 
 
+class InputToolTests(unittest.TestCase):
+    def test_selected_file_controls_requirements_without_affecting_other_games(self):
+        wine = {"name": "wine", "player": True, "note": "Install Wine for the PC edition", "input_formats": ["exe"]}
+        data = recipe(wine, SDL2)
+        validate_manifest(data)
+        for path, expected in ((None, ['wine', 'sdl2-config']),
+                               (Path('Halo.XISO'), ['sdl2-config']),
+                               (Path('HaloCESetup.EXE'), ['wine', 'sdl2-config'])):
+            self.assertEqual([t['name'] for t in cli.player_requirements(data, disc=path)], expected)
+        with tempfile.TemporaryDirectory() as folder:
+            self.assertEqual(cli.host_requirements(data, Path(folder)), data['requirements']['tools'])
+        with mock.patch.object(cli, 'check_program', side_effect=lambda t: (t['name'] != 'wine', 'missing')):
+            cli.require_programs(data, 'macos', Path('Halo.iso'))
+            with self.assertRaisesRegex(ValueError, 'Install Wine'):
+                cli.require_programs(data, 'macos', Path('HaloCESetup.exe'))
+        for formats in ([], 'exe', ['EXE'], [None]):
+            with self.assertRaisesRegex(ValueError, 'input_formats'):
+                validate_manifest(recipe(dict(wine, input_formats=formats)))
+
+
 class DoctorTests(unittest.TestCase):
     def doctor(self, data, missing):
         stream = io.StringIO()

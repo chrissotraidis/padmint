@@ -27,6 +27,8 @@ function scrollTo(){}
 cards=()=>{};
 D.games=['a','b'].map(id=>({id,name:id,needs_file:true,formats:[],files:[],ids:[],
   platforms:[{id:'ios',label:'iOS'},{id:'macos',label:'Mac'}]}));
+const goodPlan={repo:'https://example.invalid',needs:[],tools:[],inputs:[]};
+global.fetch=async()=>({json:async()=>goodPlan});
 const pending=[];
 post=(url,body)=>new Promise(resolve=>pending.push({url,body,resolve}));
 function select(id){choose(id);dev='ios';ready()}
@@ -83,6 +85,26 @@ assert.match($('fileHint').textContent,/Or another original file/);
 assert.doesNotMatch($('fileHint').textContent,/Accepted:/);
 plan.inputs.pop();showPlan(plan);
 assert.match($('fileHint').textContent,/Accepted: EXE/);
+''')
+
+    def test_stale_prerequisites_cannot_block_new_input(self):
+        self.run_case(r'''
+select('a');const plans=[];
+fetch=(url)=>new Promise(resolve=>plans.push({url,resolve}));
+file='/old.exe';const old=pickDevice('ios');
+file='/Halo.XISO';const current=pickDevice('ios');
+assert.equal($('make').disabled,true);
+assert.match(plans[1].url,/disc=%2FHalo.XISO/);
+plans[1].resolve({json:async()=>goodPlan});await current;
+plans[0].resolve({json:async()=>({...goodPlan,needs:[{label:'Wine',ok:false,note:'PC only'}]})});await old;
+assert.equal(blocked,false);assert.equal($('make').disabled,false);
+''')
+
+    def test_failed_plan_keeps_build_disabled(self):
+        self.run_case(r'''
+select('a');file='/Halo.iso';fetch=async()=>{throw new Error('connection failed')};
+await pickDevice('ios');assert.equal($('make').disabled,true);
+assert.match($('plan').textContent,/connection failed/);
 ''')
 
     def test_file_picker_response_is_discarded_after_switching_games(self):

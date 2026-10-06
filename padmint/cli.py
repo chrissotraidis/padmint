@@ -826,7 +826,7 @@ def _make(game, platform_name, disc, out, ref=None, app=None, jobs=None, results
         release = latest_release(entry["repo_url"])
         manifest, _source = published_recipe(game, release=release)
         player_target(manifest, platform_name)
-        require_programs(manifest, platform_name)  # before the source download, not after it
+        require_programs(manifest, platform_name, disc)  # before the source download, not after it
     report("release", state="done", repo=entry["repo_url"], version=release[0] if release else ref)
     home = tools.tools_root().parent
     source, ref, assets = release_source(game, ref, release=release)
@@ -839,7 +839,7 @@ def _make(game, platform_name, disc, out, ref=None, app=None, jobs=None, results
         disc = None  # the game file is added in the app, not read by the build
     elif disc is None:
         raise ValueError(f"{manifest['name']} needs your own game file (--disc)")
-    require_programs(manifest, platform_name)
+    require_programs(manifest, platform_name, disc)
     missing = tools.missing_system_library(target.get("tools", []), host_id())
     if missing:
         raise ValueError(missing[1])
@@ -955,19 +955,19 @@ IOS_PLATFORM = {"name": "xcrun", "version_args": ["--sdk", "iphoneos", "--show-s
                         "then run PadMint again."}
 
 
-def require_programs(manifest, platform_name):
+def require_programs(manifest, platform_name, disc=None):
     """Stop before any download or build when a program the player installs is missing."""
-    missing = [tool for tool in player_requirements(manifest, platform_name) if not check_program(tool)[0]]
+    missing = [tool for tool in player_requirements(manifest, platform_name, disc) if not check_program(tool)[0]]
     if missing:
         raise ValueError(f"{manifest['name']} needs these installed first:\n"
                          + "".join(f"  {label(tool)}: {tool['note']}\n" for tool in missing)
                          + "Then run PadMint again.")
 
 
-def player_requirements(manifest, platform_name=None):
+def player_requirements(manifest, platform_name=None, disc=None):
     """Programs the recipe says the player installs themselves (requirements.tools with "player").
     For an iPhone copy built with Xcode, also Xcode's iOS platform unless the recipe checks it."""
-    here = host_requirements(manifest)
+    here = host_requirements(manifest, disc)
     tools_ = [tool for tool in here if tool.get("player")]
     if platform_name == "ios" and any(tool["name"] == "xcodebuild" for tool in here) \
             and not any("iphoneos" in tool.get("version_args", []) for tool in here):
@@ -975,11 +975,14 @@ def player_requirements(manifest, platform_name=None):
     return tools_
 
 
-def host_requirements(manifest):
+def host_requirements(manifest, disc=None):
     """The recipe's requirements.tools that apply on this computer: all, except those whose
-    "hosts" name other build hosts."""
+    "hosts" name other build hosts or whose input formats exclude the selected file.
+    With no selected file, or a folder input, retain every host prerequisite."""
     return [tool for tool in manifest.get("requirements", {}).get("tools", [])
-            if host_id() in tool.get("hosts", [host_id()])]
+            if host_id() in tool.get("hosts", [host_id()])
+            and (disc is None or not tool.get("input_formats") or Path(disc).is_dir()
+                 or Path(disc).suffix.lower().lstrip(".") in tool["input_formats"])]
 
 
 def label(tool):

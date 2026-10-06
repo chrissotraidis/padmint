@@ -81,7 +81,7 @@ def player_data(lang):
             "text": strings(lang), "picker": not cli.on_android(), "reveal": not cli.on_android()}
 
 
-def plan(game, platform_name, lang):
+def plan(game, platform_name, lang, disc=None):
     """What a build will do on this computer, before it starts: what it downloads and from
     where, how big, what the player installs first, and where the copy goes. Read from the
     recipe the game's latest release publishes (as doctor does), so the tools and the programs
@@ -98,7 +98,7 @@ def plan(game, platform_name, lang):
             items.append({"name": name, "version": tools.version(table[name], host), "size": download.get("size"),
                           "source": urlparse(download["url"]).hostname, "here": tools.installed(name, host)})
     needs = [{"label": cli.label(tool), "ok": cli.check_program(tool)[0], "note": tool.get("note", "")}
-             for tool in cli.player_requirements(manifest, platform_name)]
+             for tool in cli.player_requirements(manifest, platform_name, disc)]
     name = manifest.get("name") or entry.get("name", game)
     key = f"w_output_{platform_name}"
     return {"repo": entry["repo_url"], "tools": items, "tools_folder": str(tools.tools_root()),
@@ -343,7 +343,7 @@ def make_handler(token, builds):
                 if not any(id_ == game and platform_name in platforms
                            for id_, _name, platforms in cli.player_games()):
                     return self.reply(400, {"error": "That game cannot be made for that device on this computer"})
-                return self.reply(200, plan(game, platform_name, self.lang()))
+                return self.reply(200, plan(game, platform_name, self.lang(), query.get("disc", [None])[0]))
             return self.reply(404, {"error": "not found"})
 
         def do_POST(self):
@@ -643,8 +643,9 @@ function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;$("fil
  else{$("inAppText").textContent=fill("file_in_app",{name:g.name});$("inApp").classList.remove("hidden")}
  $("deviceBox").classList.remove("hidden");$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}));
  if(g.platforms.length==1)pickDevice(g.platforms[0].id);($("fileBox").classList.contains("hidden")?$("deviceBox"):$("fileBox")).scrollIntoView({behavior:"smooth"});ready()}
-async function pickDevice(id){dev=id;for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
- const selected=sel,r=await (await fetch("/api/plan?game="+selected+"&platform="+id+"&lang="+D.lang,{headers:H})).json();if(dev!=id||sel!=selected)return;showPlan(r);ready()}
+let planRequest=0;
+async function pickDevice(id){const request=++planRequest;blocked=true;dev=id;ready();for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
+ const selected=sel;try{const r=await (await fetch("/api/plan?game="+selected+"&platform="+id+"&lang="+D.lang+(file?"&disc="+encodeURIComponent(file):""),{headers:H})).json();if(request!=planRequest||dev!=id||sel!=selected)return;showPlan(r);ready()}catch(e){if(request!=planRequest||dev!=id||sel!=selected)return;$("plan").replaceChildren(el("p",String(e),"bad"));ready()}}
 let blocked=false;
 function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.error){box.append(el("p",p.error,"bad"));return}
  if(g.needs_file&&p.inputs){const h=$("fileHint");h.replaceChildren(el("b",fill("file_hint",{game:g.about||g.name})));
@@ -668,7 +669,7 @@ function ready(){const g=game();$("make").disabled=!g||!dev||reading||blocked||(
 async function useFile(path){if(!path)return;const request=++fileRequest,selected=sel;$("path").value=path;reading=true;file=null;ready();$("fileState").className="state";
  $("fileState").textContent="…";const r=await post("/api/file",{game:selected,path});if(request!=fileRequest||sel!=selected)return;reading=false;
  if(r.problem||r.error){$("fileState").className="state bad";$("fileState").textContent=r.problem||r.error}
- else{file=path;$("fileState").className="state ok";$("fileState").textContent="✓ "+fill("file_ok",{file:base(path)})}ready()}
+ else{file=path;$("fileState").className="state ok";$("fileState").textContent="✓ "+fill("file_ok",{file:base(path)});if(dev)await pickDevice(dev)}ready()}
 $("choose").onclick=async()=>{const request=fileRequest,selected=sel,r=await post("/api/pick");if(request!=fileRequest||sel!=selected)return;if(r.path)useFile(r.path);else if(!r.available){$("typeBox").open=true;$("path").focus()}};
 $("use").onclick=()=>useFile($("path").value.trim().replace(/^["']|["']$/g,""));
 $("make").onclick=async()=>{$("make").disabled=true;const r=await post("/api/make",{game:sel,platform:dev,path:file});

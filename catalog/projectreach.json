@@ -11,31 +11,30 @@
   "free_space_gb": 35,
   "player_help": "https://github.com/chrissotraidis/projectreach#build-and-install",
   "reviewed_revision": null,
-  "notes": "HaloPad owns padmint.json; the ios and macos targets run scripts/builder/build.sh --xbox with the player's HaloCESetup.exe and product-key.txt beside it (macos: --mac, a zipped Mac Catalyst app that needs no Apple account). The 1.10 update is downloaded by hash and applied with Wine. The Xbox edition's engine (halo-ce-universal) and ANGLE are fetched from upstream and built on the player's Mac; the player adds their own Xbox disc image in the app. The game package is handed over as HaloPad game data.",
+  "notes": "HaloPad owns its release recipe. The updated source chooses Xbox-only from ISO/XISO, or both editions from the PC installer. Xbox-only skips Wine and PC translation; both editions need HaloCESetup.exe and product-key.txt. Xbox maps are imported in the app. Personal builds are never published.",
   "manifest": null,
   "before_build": {
     "commands": [
-      "brew install sevenzip winetricks llvm lld cmake ninja",
-      "open https://github.com/chrissotraidis/projectreach/blob/main/docs/INSTALL-WINE.md"
+      "brew install cmake ninja lld"
     ]
   },
   "game_data_import": {
-    "ios": "Choose Prepared Package… on HaloPad's first screen",
-    "macos": "Choose Prepared Package… on HaloPad's first screen"
+    "ios": "Choose Custom Edition, then Choose Prepared Package\u2026 (combined builds only)",
+    "macos": "Choose Custom Edition, then Choose Prepared Package\u2026 (combined builds only)"
   },
   "player_next": {
     "ios": {
       "steps": [
         "Install {file} on your iPhone or iPad, signed with your own Apple developer profile that allows Extended Virtual Addressing and Increased Memory Limit (the guide below shows how).",
         "Updating? Install it over your current HaloPad with the same signing to keep your profiles and saves.",
-        "First time only: copy Halo-CE.halopad.zip from the HaloPad game data folder in {folder} to the device (Files, iCloud Drive or AirDrop). Open HaloPad: for Custom Edition tap Choose Prepared Package… and pick it; for the Xbox edition tap Add Your Xbox Disc and pick your own disc image."
+        "Open HaloPad to choose your edition. Xbox: choose Add Your Xbox Disc and select your own ISO/XISO (transfer it to Files on iPhone/iPad). If your build includes Custom Edition, copy Halo-CE.halopad.zip from the HaloPad game data folder in {folder}, choose Custom Edition and then Choose Prepared Package\u2026."
       ]
     },
     "macos": {
       "steps": [
         "Unzip {file}, move HaloPad to your Applications folder and open it. It needs no Apple account.",
         "Updating? Replace the old HaloPad in Applications; your profiles and saves stay.",
-        "Open HaloPad. For Custom Edition (first time only): choose Choose Prepared Package… and pick Halo-CE.halopad.zip from the HaloPad game data folder in {folder}. For the Xbox edition: choose Add Your Xbox Disc and pick your own Halo: Combat Evolved disc image."
+        "Open HaloPad to choose your edition. Xbox: choose Add Your Xbox Disc and select your own ISO/XISO (transfer it to Files on iPhone/iPad). If your build includes Custom Edition, copy Halo-CE.halopad.zip from the HaloPad game data folder in {folder}, choose Custom Edition and then Choose Prepared Package\u2026."
       ]
     }
   }

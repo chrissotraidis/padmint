@@ -188,6 +188,13 @@ separately, unless the recipe already probes `iphoneos` itself. Mac copies don't
 get this check. PadMint checks every program the player installs right after
 reading the release recipe, before it downloads the game's source.
 
+A prerequisite may specify `"input_formats": ["exe"]` when only those selected input
+formats need it. PadMint refreshes the prerequisite list after file selection and checks
+it again before downloading source or running the build. Without a selected file, or
+when selecting a folder, all host prerequisites are shown. Omit this field for tools
+needed by every input. The game backend must still check its own tools; this metadata
+does not validate file contents or replace input hashes.
+
 ## 3. Promote it
 
 1. Run `python3 -m padmint build` from a clean checkout. The record shows each
