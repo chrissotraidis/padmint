@@ -67,6 +67,11 @@ def validate_manifest(data):
         for digest in item.get("verified_sha256", []):
             _require(isinstance(digest, str) and re.fullmatch(r"[0-9a-f]{64}", digest),
                      "verified_sha256 entries must be lowercase SHA-256 digests")
+        if "accepted_sha256" in item:
+            accepted = item["accepted_sha256"]
+            _require(isinstance(accepted, list) and accepted and
+                     all(isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) for value in accepted),
+                     "input accepted_sha256 must be a non-empty list of lowercase SHA-256 digests")
         game_ids = item.get("game_ids", [])
         _require(isinstance(game_ids, list) and all(isinstance(gid, str) and re.fullmatch(r"[0-9A-Z]{6}", gid)
                                                     for gid in game_ids),

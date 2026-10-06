@@ -69,7 +69,7 @@ def player_data(lang):
                  "plays_on": ["iphone", "ipad"] if "ios" in targets else [],
                  "link": catalog()[game].get("player_help") or catalog()[game]["repo_url"]}
                 for game, name, targets in cli.elsewhere()]
-    return {"lang": lang, "version": __version__, "folder": str(folder),
+    return {"lang": lang, "version": __version__, "host": cli.host_id(), "folder": str(folder),
             "saved_in": phrase("saved_in", lang, folder=folder), "games": games, "downloads": apps, "later": waiting,
             "text": strings(lang), "picker": not cli.on_android(), "reveal": not cli.on_android()}
 
@@ -97,7 +97,8 @@ def plan(game, platform_name, lang):
     return {"repo": entry["repo_url"], "tools": items, "tools_folder": str(tools.tools_root()),
             "app": bool(target.get("published_app")), "space_gb": entry.get("free_space_gb"),
             "folder": str(cli.player_folder()), "needs": needs, "before": cli.before_build(game),
-            "output": phrase(key, lang, name=name) if key in MESSAGES else ""}
+            "output": phrase(key, lang, name=name) if key in MESSAGES else "",
+            "inputs": [item for item in manifest.get("inputs", []) if item.get("when", "build") == "build"]}
 
 
 RECIPES = {}
@@ -181,15 +182,23 @@ def check_file(game, path, lang):
     if problem:
         return problem
     # A player may pick the game's app (an APK or IPA) or a ZIP instead of the game file.
-    manifest = catalog()[game].get("manifest") or {}
-    formats = sorted({name for item in manifest.get("inputs", []) for name in item.get("formats", [])})
+    manifest = release_recipe(game) or catalog()[game].get("manifest") or {}
+    inputs = [item for item in manifest.get("inputs", []) if item.get("when", "build") == "build"]
+    formats = sorted({name for item in inputs for name in item.get("formats", [])})
     if formats and disc.suffix.lower().lstrip(".") not in formats:
         return phrase("w_not_game_file", lang, file=disc.name, name=manifest.get("name", game),
                       formats=", ".join(name.upper() for name in formats))
+    try:
+        cli.game_file.check_file_hash(manifest, disc)
+    except (OSError, ValueError) as error:
+        return str(error)
+    # Installers and other non-disc inputs must not trigger a disc-tool download.
+    if inputs and not any(item.get("type") in cli.game_file.DISC_TYPES or item.get("type") == "n64-rom"
+                          for item in inputs):
+        return None
     found = cli.game_from_file(disc, cli.player_games(), io.StringIO())
     if found and game not in found:
-        name = (catalog()[game].get("manifest") or {}).get("name", game)
-        return phrase("w_wrong_game", lang, name=name)
+        return phrase("w_wrong_game", lang, name=manifest.get("name", game))
     return None
 
 
@@ -628,9 +637,13 @@ function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("p
  $("deviceBox").classList.remove("hidden");$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}));
  if(g.platforms.length==1)pickDevice(g.platforms[0].id);($("fileBox").classList.contains("hidden")?$("deviceBox"):$("fileBox")).scrollIntoView({behavior:"smooth"});ready()}
 async function pickDevice(id){dev=id;for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
- const r=await (await fetch("/api/plan?game="+sel+"&platform="+id+"&lang="+D.lang,{headers:H})).json();if(dev!=id)return;showPlan(r);ready()}
+ const selected=sel,r=await (await fetch("/api/plan?game="+selected+"&platform="+id+"&lang="+D.lang,{headers:H})).json();if(dev!=id||sel!=selected)return;showPlan(r);ready()}
 let blocked=false;
 function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.error){box.append(el("p",p.error,"bad"));return}
+ if(g.needs_file&&p.inputs){const h=$("fileHint");h.replaceChildren(el("b",fill("file_hint",{game:g.about||g.name})));
+  for(const i of p.inputs){if(i.description)h.append(" ",el("span",i.description));}
+  const formats=[...new Set(p.inputs.flatMap(i=>i.formats||[]))];if(formats.length)h.append(" ",el("span",fill("file_formats",{formats:formats.map(f=>f.toUpperCase()).join(", ")}),"muted"));
+  if(g.ids.length)h.append(" · ",el("span",fill(g.ids[0].length==4?"file_code":"file_ids",{ids:g.ids.join(", ")}),"muted"));}
  if(p.output)box.append(el("div",p.output,"out"));
  blocked=p.needs.some(n=>!n.ok);
  if(p.needs.length){box.append(el("p",S.plan_needs,"state"));const u=el("ul",null,"tools");for(const n of p.needs){const li=el("li");li.append(el("span",n.label),el("span",n.ok?S.needs_ok:S.needs_missing,n.ok?"ok":"bad"));u.append(li);if(!n.ok)u.append(el("li",n.note,"detail"))}box.append(u)}
@@ -655,7 +668,7 @@ $("make").onclick=async()=>{$("make").disabled=true;const r=await post("/api/mak
  if(r.error){$("makeError").textContent=r.error;ready();return}show(r);poll()};
 $("cancel").onclick=async()=>{$("cancel").disabled=true;await post("/api/cancel")};
 $("again").onclick=home;
-$("copy").onclick=async()=>{const text="PadMint "+D.version+" ("+navigator.platform+")\n"+$("tail").textContent;
+$("copy").onclick=async()=>{const text="PadMint "+D.version+" ("+D.host+")\n"+$("tail").textContent;
  try{await navigator.clipboard.writeText(text);$("copy").textContent=S.copied}catch(e){getSelection().selectAllChildren($("tail"))}};
 const clock=s=>[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map((n,i)=>i?String(n).padStart(2,"0"):n).join(":");
 function linked(text,tag){tag=typeof tag=="string"?tag:null;const li=el(tag||"li",null,tag?"muted small":null);for(const part of text.split(/(https:\/\/[^\s)]*[^\s).,;:])/)){if(/^https:\/\//.test(part)){const a=el("a",part);a.href=part;a.target="_blank";li.append(a)}else li.append(part)}return li}
