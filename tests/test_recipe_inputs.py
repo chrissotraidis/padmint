@@ -45,6 +45,14 @@ class RecipeInputTests(unittest.TestCase):
         self.assertIn('ExamplePad', problem)
         probe.assert_not_called()
 
+    def test_source_recipe_unrestricted_format_alternative_remains_selectable(self):
+        self.recipe['inputs'].append({'type': 'game-file', 'description': 'Another original game file.'})
+        alternative = self.file.with_suffix('.data')
+        alternative.write_bytes(b'synthetic alternative')
+        with mock.patch.object(cli, 'game_from_file') as probe:
+            self.assertIsNone(ui.check_file('examplepad', str(alternative), 'en'))
+        probe.assert_not_called()
+
     def test_patch_and_renamed_patch_fail_but_original_never_downloads_disc_tools(self):
         with mock.patch.object(cli, 'game_from_file') as probe, \
                 mock.patch.object(cli.tools, 'install', side_effect=AssertionError('tool download')):
@@ -53,6 +61,11 @@ class RecipeInputTests(unittest.TestCase):
             problem = ui.check_file('examplepad', str(self.file), 'en')
         self.assertIn('Choose Original.exe, not the patch.', problem)
         probe.assert_not_called()
+
+    def test_format_hint_does_not_claim_unrestricted_alternatives_are_exhaustive(self):
+        self.assertEqual(ui.input_formats(self.recipe['inputs'][:1]), ['exe'])
+        self.assertEqual(ui.input_formats(self.recipe['inputs'][:1] + [{'type': 'game-file'}]), [])
+        self.assertEqual(ui.input_formats(self.recipe['inputs'][:1] + [{'type': 'game-file', 'formats': []}]), [])
 
     def test_catalog_recipe_is_used_offline(self):
         self.entry['manifest'] = self.recipe

@@ -11,12 +11,14 @@ from padmint.ui import PAGE
 class FileResponseTests(unittest.TestCase):
     def run_case(self, case):
         page = PAGE.split('<script>')[1].split('</script>')[0]
-        data = {'games': [], 'downloads': [], 'later': [], 'text': {'file_ok': 'Selected: {file}'}}
+        data = {'games': [], 'downloads': [], 'later': [], 'text': {'file_ok': 'Selected: {file}', 'file_formats': 'Accepted: {formats}'}}
         script = r'''
 const assert = require('node:assert/strict');
 const element = () => ({value:'',textContent:'',children:[],dataset:{},style:{},
   classList:{add(){},remove(){},toggle(){},contains(){return false}},
-  setAttribute(){},scrollIntoView(){},focus(){},append(){},replaceChildren(){}});
+  setAttribute(){},scrollIntoView(){},focus(){},
+  append(...args){this.textContent+=args.map(x=>typeof x==='string'?x:x.textContent).join('')},
+  replaceChildren(...args){this.textContent='';this.append(...args)}});
 const elements = new Map();
 const document = {documentElement:{},querySelectorAll:()=>[],createElement:element,
   getElementById:id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id)}};
@@ -69,6 +71,18 @@ select('a');const checking=useFile('/current.exe'), picking=$('choose').onclick(
 pending[1].resolve({path:null,available:true});await picking;
 pending[0].resolve({});await checking;
 assert.equal(reading,false);assert.equal(file,'/current.exe');assert.equal($('make').disabled,false);
+''')
+
+    def test_unrestricted_input_guidance_does_not_show_a_restrictive_format_list(self):
+        self.run_case(r'''
+select('a');
+const plan={repo:'https://example.invalid',needs:[],tools:[],inputs:[
+  {formats:['exe'],description:'Original installer.'},{description:'Or another original file.'}]};
+showPlan(plan);
+assert.match($('fileHint').textContent,/Or another original file/);
+assert.doesNotMatch($('fileHint').textContent,/Accepted:/);
+plan.inputs.pop();showPlan(plan);
+assert.match($('fileHint').textContent,/Accepted: EXE/);
 ''')
 
     def test_file_picker_response_is_discarded_after_switching_games(self):

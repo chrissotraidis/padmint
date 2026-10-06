@@ -31,6 +31,13 @@ def strings(lang):
     return {key[2:]: value.get(lang, value["en"]) for key, value in MESSAGES.items() if key.startswith("w_")}
 
 
+def input_formats(inputs):
+    """An exhaustive format list only when every input alternative supplies one."""
+    if any(not item.get("formats") for item in inputs):
+        return []
+    return sorted({name for item in inputs for name in item["formats"]})
+
+
 def player_data(lang):
     """Everything the page shows before a build: games, devices and game files found."""
     folder = cli.player_folder()
@@ -41,8 +48,8 @@ def player_data(lang):
         files = cli.game_files(folder, entry.get("manifest")) if needs_file else []
         games.append({"id": game, "name": name, "needs_file": needs_file,
                       "about": entry.get("game") or (entry.get("manifest") or {}).get("game", ""),
-                      "formats": sorted({f.upper() for item in (entry.get("manifest") or {}).get("inputs", [])
-                                         for f in item.get("formats", [])}),
+                      "formats": [f.upper() for f in input_formats([item for item in (entry.get("manifest") or {}).get("inputs", [])
+                                                                 if item.get("when", "build") == "build"])],
                       "ids": entry.get("game_ids") or [],
                       "platforms": [{"id": p, "label": cli.platform_label(p, lang),
                                      "short": phrase(f"w_short_{p}", lang) if f"w_short_{p}" in MESSAGES else p}
@@ -184,7 +191,7 @@ def check_file(game, path, lang):
     # A player may pick the game's app (an APK or IPA) or a ZIP instead of the game file.
     manifest = release_recipe(game) or catalog()[game].get("manifest") or {}
     inputs = [item for item in manifest.get("inputs", []) if item.get("when", "build") == "build"]
-    formats = sorted({name for item in inputs for name in item.get("formats", [])})
+    formats = input_formats(inputs)
     if formats and disc.suffix.lower().lstrip(".") not in formats:
         return phrase("w_not_game_file", lang, file=disc.name, name=manifest.get("name", game),
                       formats=", ".join(name.upper() for name in formats))
@@ -642,7 +649,7 @@ let blocked=false;
 function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.error){box.append(el("p",p.error,"bad"));return}
  if(g.needs_file&&p.inputs){const h=$("fileHint");h.replaceChildren(el("b",fill("file_hint",{game:g.about||g.name})));
   for(const i of p.inputs){if(i.description)h.append(" ",el("span",i.description));}
-  const formats=[...new Set(p.inputs.flatMap(i=>i.formats||[]))];if(formats.length)h.append(" ",el("span",fill("file_formats",{formats:formats.map(f=>f.toUpperCase()).join(", ")}),"muted"));
+  const formats=p.inputs.every(i=>(i.formats||[]).length)?[...new Set(p.inputs.flatMap(i=>i.formats))]:[];if(formats.length)h.append(" ",el("span",fill("file_formats",{formats:formats.map(f=>f.toUpperCase()).join(", ")}),"muted"));
   if(g.ids.length)h.append(" · ",el("span",fill(g.ids[0].length==4?"file_code":"file_ids",{ids:g.ids.join(", ")}),"muted"));}
  if(p.output)box.append(el("div",p.output,"out"));
  blocked=p.needs.some(n=>!n.ok);
