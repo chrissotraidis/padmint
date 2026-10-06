@@ -102,11 +102,23 @@ class AcceptedInputTests(unittest.TestCase):
                 game_file.check_before_tools(self.manifest, {'tools': ['nodtool']}, self.file, 'macos-arm64')
         install.assert_not_called()
 
+    def test_renaming_wrong_input_to_an_undeclared_extension_cannot_bypass_preflight(self):
+        renamed = self.file.with_suffix('.zip')
+        renamed.write_bytes(b'synthetic patch')
+        with mock.patch.object(game_file.tools, 'install') as install:
+            with self.assertRaisesRegex(ValueError, 'Choose Original.exe'):
+                game_file.check_before_tools(self.manifest, {'tools': ['nodtool']}, renamed, 'macos-arm64')
+        install.assert_not_called()
+
     def test_folders_and_unrestricted_alternatives_remain_backend_inputs(self):
         self.assertIsNone(game_file.check_file_hash(self.manifest, self.file.parent))
         self.manifest['inputs'].append({'type': 'other-installer', 'formats': ['exe']})
         self.file.write_bytes(b'another supported installer')
         self.assertIsNone(game_file.check_file_hash(self.manifest, self.file))
+        self.manifest['inputs'].append({'type': 'archive', 'formats': ['zip']})
+        archive = self.file.with_suffix('.zip')
+        archive.write_bytes(b'an unrestricted archive')
+        self.assertIsNone(game_file.check_file_hash(self.manifest, archive))
 
     def test_other_formats_and_in_app_alternatives_do_not_bypass_hash(self):
         self.manifest['inputs'] += [{'type': 'archive', 'formats': ['zip']},

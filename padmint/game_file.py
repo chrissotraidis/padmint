@@ -134,19 +134,24 @@ def check_file_hash(manifest, disc):
     """
     if disc is None or not disc.is_file():
         return None
-    inputs = [item for item in manifest.get("inputs", [])
-              if item.get("when", "build") == "build" and
-              (not item.get("formats") or disc.suffix.lower().lstrip(".") in item["formats"])]
-    if not inputs or any(not item.get("accepted_sha256") for item in inputs):
+    declared = [item for item in manifest.get("inputs", []) if item.get("when", "build") == "build"]
+    if not any(item.get("accepted_sha256") for item in declared):
         return None
-    require_local(disc)
-    digest = hashlib.sha256()
-    with disc.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    if any(digest.hexdigest() in item["accepted_sha256"] for item in inputs):
-        return f"{disc.name} (SHA-256 verified)"
-    descriptions = " ".join(dict.fromkeys(item["description"] for item in inputs if item.get("description")))
+    inputs = [item for item in declared
+              if not item.get("formats") or disc.suffix.lower().lstrip(".") in item["formats"]]
+    if inputs and any(not item.get("accepted_sha256") for item in inputs):
+        return None
+    if inputs:
+        require_local(disc)
+        digest = hashlib.sha256()
+        with disc.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(chunk)
+        if any(digest.hexdigest() in item["accepted_sha256"] for item in inputs):
+            return f"{disc.name} (SHA-256 verified)"
+    # No matching format is not permission to skip an exclusive input check.
+    descriptions = " ".join(dict.fromkeys(item["description"] for item in (inputs or declared)
+                                         if item.get("description")))
     raise ValueError(f"{disc.name} does not match a supported input file for {manifest['name']}. "
                      + (descriptions or "Choose the original game file required by this game's build guide.")
                      + " Renaming a different file will not make it compatible.")

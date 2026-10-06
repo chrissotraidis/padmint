@@ -562,7 +562,7 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 </div>
 <script>
 const T="__TOKEN__";let D=__DATA__,S=D.text;const H={"Content-Type":"application/json","X-PadMint-Token":T};
-const $=id=>document.getElementById(id);let file=null,reading=false,sel=null,dev=null,shown=false;
+const $=id=>document.getElementById(id);let file=null,reading=false,sel=null,dev=null,shown=false,fileRequest=0;
 const fill=(k,v)=>Object.entries(v||{}).reduce((s,[a,b])=>s.split("{"+a+"}").join(b),S[k]||"");
 for(const e of document.querySelectorAll("[data-t]"))e.textContent=S[e.dataset.t]||"";
 document.documentElement.lang=D.lang;$("lang").value=D.lang;$("ver").textContent="v"+D.version;$("search").placeholder=S.search;
@@ -612,7 +612,7 @@ function cards(){const q=$("search").value.trim().toLowerCase();
  $("groupNote").textContent=sel?"":S[{all:"all_note",build:"builds",download:"no_build",later:"later_note"}[group]];
  $("list").replaceChildren(...G[group].map(x=>row(x)));$("list").classList.toggle("hidden",!G[group].length);
  $("noMatch").classList.toggle("hidden",!!G[group].length);layout()}
-function back(top){sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards();if(top)scrollTo({top:0,behavior:"smooth"});else $("pickCard").scrollIntoView({behavior:"smooth"})}
+function back(top){++fileRequest;reading=false;sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards();if(top)scrollTo({top:0,behavior:"smooth"});else $("pickCard").scrollIntoView({behavior:"smooth"})}
 function layout(){$("about").classList.toggle("hidden",!!sel||!$("progress").classList.contains("hidden"))}
 function home(){if(last&&last.state=="running"){scrollTo({top:0,behavior:"smooth"});return}
  last=null;shown=false;$("progress").classList.add("hidden");$("form").classList.remove("hidden");$("finished").replaceChildren();$("finished").classList.add("hidden");
@@ -620,7 +620,7 @@ function home(){if(last&&last.state=="running"){scrollTo({top:0,behavior:"smooth
  $("search").value="";system="";group="all";filters();back(true)}
 $("home").onclick=e=>{e.preventDefault();home()};$("home").setAttribute("aria-label",S.home||"PadMint");
 $("search").oninput=cards;$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
-function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
+function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);
  if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=w.text;$("laterLink").href=w.link;$("laterLink").textContent=fill("later_link",{name:w.name});$("laterBox").scrollIntoView({behavior:"smooth"})}
  $("dlBox").classList.toggle("hidden",!a);
@@ -658,11 +658,11 @@ function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.err
  o.append(el("li",g.needs_file?S.plan_build:S.plan_build_app),el("li",fill("plan_save",{folder:p.folder})));box.append(o);
  if(p.space_gb)box.append(el("p",fill("plan_space",{gb:p.space_gb}),"muted small"))}
 function ready(){const g=game();$("make").disabled=!g||!dev||reading||blocked||(g.needs_file&&!file)}
-async function useFile(path){if(!path)return;$("path").value=path;reading=true;file=null;ready();$("fileState").className="state";
- $("fileState").textContent="…";const r=await post("/api/file",{game:sel,path});reading=false;
+async function useFile(path){if(!path)return;const request=++fileRequest,selected=sel;$("path").value=path;reading=true;file=null;ready();$("fileState").className="state";
+ $("fileState").textContent="…";const r=await post("/api/file",{game:selected,path});if(request!=fileRequest||sel!=selected)return;reading=false;
  if(r.problem||r.error){$("fileState").className="state bad";$("fileState").textContent=r.problem||r.error}
  else{file=path;$("fileState").className="state ok";$("fileState").textContent="✓ "+fill("file_ok",{file:base(path)})}ready()}
-$("choose").onclick=async()=>{const r=await post("/api/pick");if(r.path)useFile(r.path);else if(!r.available){$("typeBox").open=true;$("path").focus()}};
+$("choose").onclick=async()=>{const request=fileRequest,selected=sel,r=await post("/api/pick");if(request!=fileRequest||sel!=selected)return;if(r.path)useFile(r.path);else if(!r.available){$("typeBox").open=true;$("path").focus()}};
 $("use").onclick=()=>useFile($("path").value.trim().replace(/^["']|["']$/g,""));
 $("make").onclick=async()=>{$("make").disabled=true;const r=await post("/api/make",{game:sel,platform:dev,path:file});
  if(r.error){$("makeError").textContent=r.error;ready();return}show(r);poll()};
