@@ -259,6 +259,13 @@ class IosPlatformTests(unittest.TestCase):
         with mock.patch.object(cli, "host_id", return_value="windows-x86_64"):
             self.assertEqual(cli.player_requirements(self.recipe(xcode_on_mac), "ios"), [])
 
+    def test_off_a_mac_the_ios_platform_is_never_asked_for(self):
+        # KartPad 0.7.14 lists Xcode with no hosts; Windows and Linux build its iPhone copy
+        # with PadMint's LLVM, so they must not be told to install Xcode's iOS platform.
+        for host in ("windows-x86_64", "windows-arm64", "linux-x86_64", "linux-arm64"):
+            with mock.patch.object(cli, "host_id", return_value=host):
+                self.assertEqual(cli.player_requirements(self.recipe(self.XCODE), "ios"), [], host)
+
 
 class MissingProgramBeforeDownloadTests(unittest.TestCase):
     """A missing program the player installs stops the build before the game's source downloads."""

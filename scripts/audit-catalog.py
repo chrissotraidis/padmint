@@ -72,6 +72,14 @@ def audit():
                 xcode = any(tool["name"] == "xcodebuild" for tool in cli.host_requirements(recipe))
             if name == "ios" and xcode and not any("iphoneos" in tool.get("version_args", []) for tool in checks):
                 found("an Xcode iPhone build without an iOS platform check")
+            for host, state in target.get("hosts", {}).items():
+                if state not in cli.RUNNABLE_STATES or host.startswith("macos"):
+                    continue
+                with mock.patch.object(cli, "host_id", return_value=host):
+                    asks = [cli.label(tool) for tool in cli.player_requirements(recipe, name)
+                            if tool["name"] in ("xcodebuild", "xcrun")]
+                if asks:
+                    found(f"{name} on {SHORT.get(host, host)} asks for {', '.join(asks)}")
         if (entry.get("player_game_file", "build") == "in-app") == needs_build_input(recipe):
             when = "reads" if needs_build_input(recipe) else "does not read"
             found(f"catalog player_game_file is {entry.get('player_game_file', 'build')}, "
