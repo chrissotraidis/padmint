@@ -36,6 +36,10 @@ work and when to revisit it.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.10**: KartPad's iPhone build on Windows and Linux works again. Since v0.4.7
+  PadMint asked those computers for Xcode's iOS platform, which only exists on a Mac,
+  and stopped before building. The check now runs on Macs only, and
+  `scripts/audit-catalog.py` reports any Windows or Linux route that asks for Xcode.
 - **v0.4.9**: HaloPad's setup opens its Wine installation guide instead of asking
   Homebrew to install the disabled `wine-stable` cask. Existing working Wine installs
   can still be used. HaloPad 0.3.6 supplies the matching recipe guidance.
