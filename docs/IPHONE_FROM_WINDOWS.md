@@ -73,8 +73,20 @@ decompilation ports, which changes D5 for them (D16).
 - [x] Runs on an iPad: that IPA, signed on the Mac and installed as a separate test app
   on an iPad Pro (M2, iPadOS 27.0.1), loaded the Windows-built module and ran the title
   sequence at 30 FPS and full speed with no audio drops.
-- [ ] The same build for 0.6.0 (#100 on today's `main`) against 0.6.0's app without
-  game code (running).
+- [x] The same build for 0.6.0 (#100 at `43a8bd8`) against 0.6.0's app without game code:
+  built on Windows on ARM in 285 minutes, passed PadMint's checks and ran on the iPad Pro.
+- [ ] **Mods.** The Windows and Linux route stops before the mods step, so its copies have
+  no Widescreen or Better Wind Waker options (`[mods] available=0`; a Mac copy has 3). The
+  builders need a stop after the mods step for PadMint.
+- [ ] **Speed.** In the title's automatic demo on the iPad Pro (M2), the game thread is 69–82%
+  busy in the Windows-built 0.6.0 copy and 48–55% in the Mac-built one, both at 30 FPS. The
+  bundled optimization profile made no measurable difference with PadMint's LLVM; find out
+  whether it applies at all and which of the Mac build's compile flags matter. An A13 device
+  has much less headroom.
+- [ ] **Mac copies through the same recipe.** PadMint's insert step left Xcode-built modules
+  unloadable on iOS 27 (`mis-aligned LINKEDIT string pool`); PadMint 0.4.11 aligns them
+  ([#136](https://github.com/chrissotraidis/padmint/pull/136)). Players on older PadMint would
+  still get a broken Mac-built copy, so the Mac step must not change until that is solved.
 - [ ] Played: file select, a save, relaunch, sound, controller and touch; installed
   from Windows with Sideloadly.
 - [ ] Speed against the Mac build. The Windows build compiles without the Mac build's
