@@ -257,5 +257,45 @@ class BuildFlowTests(unittest.TestCase):
         self.assertIn("does not export", record["failure_message"])
 
 
+def linkedit_module(path, signed=False):
+    """A minimal arm64 dylib whose string table starts 4 bytes past an 8-byte boundary,
+    at the end of __LINKEDIT, as LLVM's strip and install-name-tool leave it."""
+    import struct
+    commands = 3 if signed else 2
+    size = 72 + 24 + (16 if signed else 0)
+    stroff, strings = 32 + size + 4, b"\0_game\0"
+    header = struct.pack("<IiiIIIII", 0xFEEDFACF, 0x0100000C, 0, 6, commands, size, 0, 0)
+    segment = struct.pack("<II16sQQQQiiII", 0x19, 72, b"__LINKEDIT", 0x4000, 0x4000, 32 + size,
+                          4 + len(strings), 1, 1, 0, 0)
+    symtab = struct.pack("<6I", 0x2, 24, 32 + size, 0, stroff, len(strings))
+    signature = struct.pack("<4I", 0x1D, 16, 0, 0) if signed else b""
+    path.write_bytes(header + segment + symtab + signature + b"\xaa" * 4 + strings)
+    return stroff, strings
+
+
+class StringPoolAlignmentTests(unittest.TestCase):
+    def test_moves_the_string_table_to_an_eight_byte_boundary(self):
+        import struct
+        with tempfile.TemporaryDirectory() as folder:
+            module = Path(folder) / "game.dylib"
+            stroff, strings = linkedit_module(module)
+            self.assertTrue(ios_module.align_string_pool(module))
+            data = module.read_bytes()
+            new_stroff, strsize = struct.unpack_from("<2I", data, 32 + 72 + 16)
+            self.assertEqual((new_stroff % 8, strsize), (0, len(strings)))
+            self.assertEqual(data[new_stroff:], strings)
+            self.assertEqual(data[stroff - 4:stroff], b"\xaa" * 4)
+            filesize = struct.unpack_from("<Q", data, 32 + 48)[0]
+            self.assertEqual(filesize, len(data) - (32 + 72 + 24))
+            self.assertFalse(ios_module.align_string_pool(module))
+
+    def test_refuses_a_signed_module(self):
+        with tempfile.TemporaryDirectory() as folder:
+            module = Path(folder) / "game.dylib"
+            linkedit_module(module, signed=True)
+            with self.assertRaisesRegex(ios_module.ModuleError, "signed"):
+                ios_module.align_string_pool(module)
+
+
 if __name__ == "__main__":
     unittest.main()
