@@ -69,9 +69,10 @@ PadMint recipe is available.
 
 Where each tracker app stands on the shared pipeline, and the smallest next step.
 Games are grouped by family: one game proves a family, and the rest follow it.
-Off-Mac work is paused by owner decision
-([D15](DECISIONS.md#d15-any-device-from-any-computer-is-the-goal-off-mac-work-is-paused-owner-decision-5-oct-2026));
-the next steps below are kept for when it resumes.
+Off-Mac work resumed on 7 October
+([D16](DECISIONS.md#d16-iphone-and-ipad-copies-from-windows-bluewake-first-owner-decision-7-oct-2026)),
+BlueWake first; the order of work is in
+[iPhone and iPad copies from a Windows PC](IPHONE_FROM_WINDOWS.md).
 **Off-Mac** means a build on a Windows or Linux computer, as recorded below.
 
 **GameCube and Wii recompilations** (reference: BlueWake)
@@ -79,7 +80,7 @@ the next steps below are kept for when it resumes.
 | Game | Status | Smallest next step |
 |---|---|---|
 | KartPad | **Ships ready-to-play builds from v0.7.9** (Android, iPhone/iPad, Mac) on [its releases](https://github.com/chrissotraidis/kartpad/releases/latest); PadMint is optional. The v0.7.9 APK includes the game code, so on Android PadMint's useful output is the `KartPad game data` folder. Earlier: Android packs built on Mac, Windows and Linux raced on an Android 16 emulator; iPhone off a Mac is experimental | A data-only Android target in KartPad's recipe, so PadMint skips the 1 GB NDK and the unused pack |
-| BlueWake | iPhone module built through PadMint's open-source SDK on Linux x64 and on an Apple Silicon Mac, inserted into the v0.1.0 app, IPA check passed ([draft #42](https://github.com/chrissotraidis/bluewake/pull/42); Mac: 757 units in 57 minutes). **Windows** downloads come from BlueWake's own releases as ready-to-play builds, outside PadMint; PadMint's Windows route ([draft #46](https://github.com/chrissotraidis/bluewake/pull/46)) stays experimental and unused | A device check of the module, then a release under its tracker row |
+| BlueWake | **First game for iPhone/iPad from Windows** ([draft #100](https://github.com/chrissotraidis/bluewake/pull/100), which includes #42). Its iPhone module built through PadMint's open-source SDK on Linux x64 and on an Apple Silicon Mac (Mac: 757 units in 57 minutes), and on Windows on ARM its Windows step made the same verified source. Windows players' ready-to-play Windows builds come from BlueWake's own releases | Finish the Windows module build and play it on an iPad ([checklist](IPHONE_FROM_WINDOWS.md#bluewake-first)) |
 | SunPad | iPhone module built on Linux ARM64 through PadMint's open-source SDK and inserted into the v0.2.0 app, IPA check passed ([draft #57](https://github.com/chrissotraidis/sunpad/pull/57)) | A device check, then a release under its tracker row (releases are paused) |
 | MeleePad | Mac only. Its game module also carries Slippi's native code: `build-slippi-dependencies.py` builds open-vcdiff, semver and Slippi's Rust library for iOS with `xcrun`, and `package-ios.sh` adds Slippi's settings, bootloader and game files to the app (with `ditto` and `codesign`, which are Mac-only) | Three parts: a pinned Rust toolchain for `aarch64-apple-ios` in PadMint, the Slippi C++ libraries through `{ios_toolchain}`, and module insertion that can add several files (or a portable packager). Then SunPad's [#57](https://github.com/chrissotraidis/sunpad/pull/57) changes apply |
 

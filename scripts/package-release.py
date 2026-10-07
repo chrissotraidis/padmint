@@ -28,6 +28,7 @@ def payload():
     files = [ROOT / name for name in (
         "README.md", "STATUS.md", "STATUS-HISTORY.md",
         "docs/COMPATIBILITY.md", "docs/ADDING_A_GAME.md", "docs/DECISIONS.md",
+        "docs/IPHONE_FROM_WINDOWS.md",
     )]
     # Sorted by name as text: Windows compares paths ignoring case, which would
     # put TargetConditionals.h elsewhere and change the ZIP's bytes.

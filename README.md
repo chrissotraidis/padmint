@@ -205,11 +205,11 @@ PadMint yet; the game's page has the latest.
 <details>
 <summary><strong>Can I build iPhone apps on Windows or Linux?</strong></summary>
 
-Only KartPad, and that is experimental. Every other iPhone/iPad game needs a Mac
-with Apple Silicon and Xcode today.
-Making every game buildable on any computer is the long-term goal, but it is
-paused for now ([why](docs/DECISIONS.md#d15-any-device-from-any-computer-is-the-goal-off-mac-work-is-paused-owner-decision-5-oct-2026)). On Windows, use a game's
-ready-to-play download where it has one, such as BlueWake.
+Only KartPad today, and that is experimental. BlueWake is next, then the rest of
+the catalog, family by family ([the plan](docs/IPHONE_FROM_WINDOWS.md)). Until a
+game's route is ready, its iPhone/iPad copy needs a Mac with Apple Silicon and
+Xcode. On Windows, use a game's ready-to-play download where it has one, such as
+BlueWake's Windows build.
 
 </details>
 <details>
@@ -331,8 +331,9 @@ Builds run on the platforms each game marks *verified* or *experimental*;
 `list` shows the rest as *planned*. KartPad's Android game data builds on
 Windows, Linux and macOS (x64 and ARM64) and, experimentally, on an Android
 phone; iPhone/iPad builds need an Apple Silicon Mac, except KartPad, which
-also builds experimentally on Windows or Linux. See [STATUS.md](STATUS.md)
-for what has been verified on each.
+also builds experimentally on Windows or Linux
+([plan for the other games](docs/IPHONE_FROM_WINDOWS.md)). See
+[STATUS.md](STATUS.md) for what has been verified on each.
 
 The [catalog](catalog/) lists every public game: the ones PadMint builds, the
 apps with nothing to build (`download`) and the ones not available yet

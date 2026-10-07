@@ -4,13 +4,13 @@ Updated **6 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
 the per-game detail, including **Status by game**, which is where the
 compatibility work resumes.
 
-**Scope today ([D15](docs/DECISIONS.md#d15-any-device-from-any-computer-is-the-goal-off-mac-work-is-paused-owner-decision-5-oct-2026)):**
-PadMint makes the builds that exist work well: iPhone/iPad copies on an Apple
-Silicon Mac for every buildable game, Mac copies for CTRPad and HaloPad, and
-KartPad's existing Android and off-Mac routes. Windows players use ready-to-play
-downloads where a game publishes them (BlueWake). Building any game for any device
-from any computer is the long-term goal and is paused; D15 records the remaining
-work and when to revisit it.
+**Priority ([D16](docs/DECISIONS.md#d16-iphone-and-ipad-copies-from-windows-bluewake-first-owner-decision-7-oct-2026)):**
+iPhone and iPad copies from a Windows PC, for every game PadMint builds, starting
+with BlueWake. Today they need an Apple Silicon Mac, except KartPad.
+[The plan](docs/IPHONE_FROM_WINDOWS.md) has the order of work and BlueWake's
+checklist. PadMint also keeps the existing builds working: iPhone/iPad copies on an
+Apple Silicon Mac, Mac copies for CTRPad and HaloPad, and KartPad's Android and
+off-Mac routes.
 
 ## Which games use PadMint
 
