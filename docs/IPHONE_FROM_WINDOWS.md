@@ -67,10 +67,16 @@ decompilation ports, which changes D5 for them (D16).
 - [x] Windows source: on a Windows 11 ARM64 VM with the owner's disc, PadMint's Windows
   step produced composite digest `54f54434…`, the same verified source the Mac and
   Linux builds produce (4 October).
-- [ ] Module compile on Windows with PadMint's LLVM 21.1.8 (757 files; running).
-- [ ] PadMint's import check, insertion and IPA check on Windows.
-- [ ] Install from Windows with Sideloadly; play on an A13 or newer iPad: title, file
-  select, a save, relaunch, sound, controller and touch.
+- [x] Module compile on Windows with PadMint's LLVM 21.1.8: all 757 files, then
+  PadMint's import check, insertion, IPA check and publication gate passed (7 October;
+  #100 as of 4 October with the v0.2.0 app, in a Windows 11 ARM64 VM on a busy Mac).
+- [x] Runs on an iPad: that IPA, signed on the Mac and installed as a separate test app
+  on an iPad Pro (M2, iPadOS 27.0.1), loaded the Windows-built module and ran the title
+  sequence at 30 FPS and full speed with no audio drops.
+- [ ] The same build for 0.6.0 (#100 on today's `main`) against 0.6.0's app without
+  game code (running).
+- [ ] Played: file select, a save, relaunch, sound, controller and touch; installed
+  from Windows with Sideloadly.
 - [ ] Speed against the Mac build. The Windows build compiles without the Mac build's
   training run; try BlueWake's committed `composite-rt.profdata` if it is slower.
 - [ ] A native Windows x64 PC (so far only Windows on ARM in a VM).
