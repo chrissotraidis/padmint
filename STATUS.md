@@ -36,6 +36,9 @@ work and when to revisit it.
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.11**: BlueWake for iPhone and iPad on Windows and Linux PCs, experimental. Needs
+  BlueWake 0.6.0 or newer, whose recipe builds the game on the PC and adds it to the published
+  app; on a Mac BlueWake builds as before.
 - **v0.4.10**: KartPad's iPhone build on Windows and Linux works again. Since v0.4.7
   PadMint asked those computers for Xcode's iOS platform, which only exists on a Mac,
   and stopped before building. The check now runs on Macs only, and
