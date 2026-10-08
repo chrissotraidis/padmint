@@ -33,6 +33,7 @@ work and when to revisit it.
 - **v0.4.11**: SquirrelPad joins the catalog for experimental iPhone/iPad personal
   builds on Apple Silicon Macs. Supply your own supported US Conker ROM; full
   Xcode and Metal Toolchain are required. Source and recipe only, no public IPA.
+  BlueWake’s setup link now follows its current Install section.
 
 - **v0.3.6**: one directory of every game (tabs for Build with PadMint, Download
   and Not available yet, console badges, search, back buttons). Games this
