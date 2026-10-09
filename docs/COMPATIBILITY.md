@@ -67,8 +67,11 @@ and [PadMint #138](https://github.com/chrissotraidis/padmint/pull/138) add an
 experimental Xcode route. A native GitHub Intel Mac on macOS 15 with Xcode 16.4
 passed pinned x64 tool setup, two translator code-generation tests and the
 production iPhone pack build with synthetic inputs (ARM64 iOS 16 library,
-symbol check, strip and IPA insertion). This is compiler/package evidence,
-not a full game build or device gameplay check. The published KartPad 0.7.15
+symbol check, strip and IPA insertion). A separate full private-disc build
+passed locally with x64 tools under Rosetta and Xcode 27 in 350.53 seconds;
+the app and ARM64 iOS 16 library have matching interface fingerprints and the
+IPA passes structure validation. Neither run establishes device gameplay or
+a complete disc build on physical Intel hardware. The published KartPad 0.7.15
 recipe still excludes Intel Macs; publish the matching recipe before the
 PadMint catalog update. Native Mac gameplay still requires Apple Silicon.
 
