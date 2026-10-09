@@ -12,6 +12,7 @@ import unittest
 from unittest.mock import patch
 
 from padmint.cli import command, digest, execute, run_process, validate, workspace_lock
+from padmint.manifest import catalog
 from fixtures import entries, write_ipa
 
 
@@ -39,6 +40,16 @@ while [ $# -gt 0 ]; do
 done
 exit 2
 '''.replace("FIXTURE", shlex.quote(str(self.ipa))))
+        # This fixture exercises the command runner, independently of KartPad's
+        # current production recipe (which now uses multiple game-pack steps).
+        manifest = catalog()["kartpad"]["manifest"]
+        target = manifest["targets"]["ios"]
+        target.pop("steps", None)
+        target.pop("tools", None)
+        target["command"] = ["/bin/bash", "{repo}/scripts/build-user-ipa.sh", "build",
+                             "{disc}", "--work-root", "{work}", "--output", "{output}",
+                             "--jobs", "{jobs}"]
+        (self.repo / "padmint.json").write_text(json.dumps(manifest))
         self.git("add", ".")
         self.git("commit", "-qm", "Synthetic test backend")
         self.args = argparse.Namespace(game="kartpad", repo=self.repo, disc=self.disc,
@@ -63,6 +74,7 @@ exit 2
         self.assertIn("--work-root", argv)
 
     def test_bluewake_requires_local_training(self):
+        (self.repo / "padmint.json").unlink()  # Use BlueWake's catalog recipe for this command test.
         self.args.game = "bluewake"
         argv = command(self.args, self.repo, self.disc, self.root, self.root / "test.ipa")
         self.assertIn("--train-pgo", argv)

@@ -63,6 +63,9 @@ def audit():
             where.append(f"{name}: {', '.join(hosts) or 'nowhere'}")
             if not hosts:
                 found(f"{name} has no host it can build on")
+            if name == "ios" and entry.get("ios_intel_mac") \
+                    and target.get("hosts", {}).get("macos-x86_64") not in cli.RUNNABLE_STATES:
+                found("catalog offers iPhone on Intel Mac but the published recipe does not")
             if cli.platform_label(name, "en") == name:
                 found(f"the menu would show the raw target name {name}")
             if name != "ios" and not (entry.get("player_next") or {}).get(name):

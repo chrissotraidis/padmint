@@ -62,6 +62,16 @@ does not establish Android/Termux acceptance.
 **Intel Mac:** KartPad's Android recipe declares it experimental. The other
 Mac build routes in this snapshot require Apple Silicon.
 
+**Intel Mac iPhone candidate (9 October 2026):** [KartPad #443](https://github.com/chrissotraidis/kartpad/pull/443)
+and [PadMint #138](https://github.com/chrissotraidis/padmint/pull/138) add an
+experimental Xcode route. A native GitHub Intel Mac on macOS 15 with Xcode 16.4
+passed pinned x64 tool setup, two translator code-generation tests and the
+production iPhone pack build with synthetic inputs (ARM64 iOS 16 library,
+symbol check, strip and IPA insertion). This is compiler/package evidence,
+not a full game build or device gameplay check. The published KartPad 0.7.15
+recipe still excludes Intel Macs; publish the matching recipe before the
+PadMint catalog update. Native Mac gameplay still requires Apple Silicon.
+
 **No build needed:** CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad,
 PeonPad and VaultPad publish apps without game files; PadMint lists them with
 download and data-import steps. **SnapPad** downloads remain paused and no public

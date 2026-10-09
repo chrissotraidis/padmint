@@ -217,6 +217,17 @@ class MacCopyTests(unittest.TestCase):
 
 
 class IntelIphoneTests(unittest.TestCase):
+    def test_intel_catalog_flag_requires_boolean_and_ios_target(self):
+        from padmint import manifest
+        for changes in ({"ios_intel_mac": "yes"}, {"player_targets": ["android"]}):
+            with self.subTest(changes=changes), tempfile.TemporaryDirectory() as folder:
+                entry = {"id": "example", "repo_url": "https://example.com/game",
+                         "player_targets": ["ios"], "ios_intel_mac": True, **changes}
+                Path(folder, "example.json").write_text(json.dumps(entry))
+                with mock.patch.object(manifest, "CATALOG", Path(folder)):
+                    with self.assertRaisesRegex(ValueError, "ios_intel_mac"):
+                        manifest.catalog()
+
     def test_intel_iphone_support_is_opt_in_and_does_not_enable_mac_apps(self):
         entries = {
             "enabled": {"name": "Enabled", "player_targets": ["android", "ios", "macos"],
