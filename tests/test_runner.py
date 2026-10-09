@@ -132,6 +132,7 @@ exit 2
 
     def test_source_preflight_then_full_build_reuses_backend_outputs(self):
         self.args.game = "bluewake"
+        (self.repo / "padmint.json").write_text(json.dumps(catalog()["bluewake"]["manifest"]))
         script = self.repo / "scripts/builder/build.sh"
         script.parent.mkdir()
         script.write_text('''#!/bin/bash
@@ -153,7 +154,7 @@ else
   cp FIXTURE "$ipa"
 fi
 '''.replace("FIXTURE", shlex.quote(str(self.ipa))))
-        self.git("add", "scripts/builder/build.sh")
+        self.git("add", "scripts/builder/build.sh", "padmint.json")
         self.git("commit", "-qm", "Synthetic two-step backend")
         self.args.revision = self.git("rev-parse", "HEAD")
         write_ipa(self.ipa, entries("bluewake", revision=self.args.revision))
