@@ -8,13 +8,13 @@
   ],
   "ready_to_play": {
     "url": "https://github.com/chrissotraidis/kartpad/releases/latest",
-    "text": "KartPad has ready-to-play downloads for Android, iPhone, iPad and Mac: install one and add your own game data. You don't need PadMint for that. Use PadMint if you'd rather build your own copy, or to make the KartPad game data folder from your disc.",
+    "text": "KartPad has a ready-to-play Android download: install it and add your own game data. iPhone, iPad and Mac copies are built with PadMint from your own Mario Kart Wii disc image. The ios-for-padmint.ipa download is a component PadMint uses, not an app to install directly.",
     "translations": {
       "es": {
-        "text": "KartPad tiene descargas listas para jugar en Android, iPhone, iPad y Mac: instala una y añade tus propios datos del juego. Para eso no necesitas PadMint. Usa PadMint si prefieres crear tu propia copia, o para crear la carpeta KartPad game data a partir de tu disco."
+        "text": "KartPad tiene una descarga lista para Android: instálala y añade tus propios datos del juego. Las copias para iPhone, iPad y Mac se crean con PadMint a partir de tu propia imagen de disco de Mario Kart Wii. El archivo ios-for-padmint.ipa es un componente que usa PadMint, no una app para instalar directamente."
       },
       "pt": {
-        "text": "O KartPad tem downloads prontos para jogar no Android, iPhone, iPad e Mac: instale um e adicione seus próprios dados do jogo. Para isso você não precisa do PadMint. Use o PadMint se preferir criar a sua própria cópia, ou para criar a pasta KartPad game data a partir do seu disco."
+        "text": "O KartPad tem um download pronto para Android: instale e adicione seus próprios dados do jogo. As cópias para iPhone, iPad e Mac são criadas com PadMint a partir da sua própria imagem de disco de Mario Kart Wii. O arquivo ios-for-padmint.ipa é um componente usado pelo PadMint, não um app para instalar diretamente."
       }
     }
   },
@@ -24,7 +24,7 @@
   "free_space_gb": 16,
   "ios_off_mac": true,
   "reviewed_revision": null,
-  "notes": "Players: padmint make kartpad android|ios (the manifest in KartPad's repository is used). This embedded manifest is the fallback when the release or an older checkout has none; its android target is KartPad v0.7.2's.",
+  "notes": "Players: padmint make kartpad android|ios (the published or repository recipe is authoritative). The fallback iOS target uses KartPad 0.7.15's game-pack builder with experimental Intel Mac support; its Android target remains KartPad 0.7.2's.",
   "player_next": {
     "android": {
       "steps": [
@@ -119,25 +119,64 @@
     "targets": {
       "ios": {
         "hosts": {
-          "macos-arm64": "experimental"
+          "macos-arm64": "experimental",
+          "macos-x86_64": "experimental",
+          "windows-arm64": "experimental",
+          "windows-x86_64": "experimental",
+          "linux-x86_64": "experimental",
+          "linux-arm64": "experimental"
         },
-        "command": [
-          "/bin/bash",
-          "{repo}/scripts/build-user-ipa.sh",
-          "build",
-          "{disc}",
-          "--work-root",
-          "{work}",
-          "--output",
-          "{output}",
-          "--jobs",
-          "{jobs}"
+        "tools": [
+          "git",
+          "dotnet",
+          "cmake",
+          "ninja",
+          "nodtool",
+          "libcxx"
         ],
-        "modes": {
-          "full": []
-        },
+        "published_app": "KartPad-v{version}-ios-for-padmint.ipa",
         "output": "ipa",
-        "check": "kartpad-ipa"
+        "check": "none",
+        "steps": [
+          {
+            "stage": "preflight",
+            "command": [
+              "{python}",
+              "-m",
+              "kartpad_builder.cli",
+              "bootstrap",
+              "--target",
+              "ios-pack"
+            ],
+            "env": {
+              "PYTHONPATH": "{repo}/builder"
+            }
+          },
+          {
+            "stage": "build",
+            "command": [
+              "{python}",
+              "-m",
+              "kartpad_builder.cli",
+              "build-pack",
+              "ios",
+              "{disc}",
+              "--app",
+              "{app}",
+              "--work-root",
+              "{work}",
+              "--output",
+              "{output}",
+              "--jobs",
+              "{jobs}",
+              "--game-data",
+              "{output}.data"
+            ],
+            "env": {
+              "PYTHONPATH": "{repo}/builder"
+            }
+          }
+        ]
       },
       "macos": {
         "hosts": {
@@ -319,5 +358,6 @@
       "reason": "Personal builds contain translated game code; public releases are source only."
     }
   },
-  "game": "Mario Kart Wii (Wii)"
+  "game": "Mario Kart Wii (Wii)",
+  "ios_intel_mac": true
 }

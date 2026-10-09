@@ -216,6 +216,29 @@ class MacCopyTests(unittest.TestCase):
             self.assertEqual(cli.platform_label("macos", "es"), "Este Mac")
 
 
+class IntelIphoneTests(unittest.TestCase):
+    def test_intel_iphone_support_is_opt_in_and_does_not_enable_mac_apps(self):
+        entries = {
+            "enabled": {"name": "Enabled", "player_targets": ["android", "ios", "macos"],
+                        "ios_intel_mac": True},
+            "other": {"name": "Other", "player_targets": ["ios"], "ios_off_mac": True},
+        }
+        with mock.patch.object(cli, "catalog", return_value=entries), \
+                mock.patch.object(cli, "host_id", return_value="macos-x86_64"):
+            self.assertEqual(cli.player_games(), [("enabled", "Enabled", ["android", "ios"])])
+            self.assertEqual(cli.elsewhere(), [("other", "Other", ["ios"])])
+
+    def test_kartpad_is_offered_on_intel_and_checks_the_ios_sdk(self):
+        with mock.patch.object(cli, "host_id", return_value="macos-x86_64"):
+            platforms = next(p for game, _, p in cli.player_games() if game == "kartpad")
+            self.assertIn("ios", platforms)
+            manifest = catalog()["kartpad"]["manifest"]
+            cli.player_target(manifest, "ios")
+            self.assertIn("Xcode iOS platform",
+                          [cli.label(t) for t in cli.player_requirements(manifest, "ios")])
+            self.assertNotIn("macos", platforms)
+
+
 class PrivateNoteTests(unittest.TestCase):
     """The finish line says the copy came from the player's game only when the build read it."""
     def test_a_decompilation_built_without_the_game_file_says_only_that_it_holds_game_code(self):

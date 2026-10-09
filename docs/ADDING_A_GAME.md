@@ -190,3 +190,12 @@ reading the release recipe, before it downloads the game's source.
    catalog entry, a recipe or PadMint itself. It reads every game's latest release
    recipe the way a player's PadMint does and lists what would confuse or stop a
    player, plus where each target builds.
+
+## Intel Mac iPhone builds
+
+Set catalog `ios_intel_mac: true` only for a game whose published iOS
+recipe declares `macos-x86_64` as experimental or verified. This is separate
+from `ios_off_mac` (Windows/Linux) and does not enable a native Mac app.
+The Intel route uses Xcode and its iOS platform. Publish the matching game
+recipe before releasing the catalog change; the release recipe still decides
+whether a build can start.

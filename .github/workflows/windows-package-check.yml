@@ -8,6 +8,18 @@ permissions:
   contents: read
 
 jobs:
+  intel-mac-player-flow:
+    runs-on: macos-15-intel
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Intel target selection, requirements and existing player flows
+        run: |
+          python -c 'from padmint.manifest import host_id; assert host_id() == "macos-x86_64", host_id()'
+          python -B -m unittest discover -s tests -v
   phone-bootstrap:
     runs-on: ubuntu-latest
     timeout-minutes: 5

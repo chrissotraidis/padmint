@@ -1262,7 +1262,8 @@ def game_from_file(disc, games, stream):
 def player_games():
     """[(game, name, platforms)] a player can make on this computer. iPhone builds need Xcode
     on Apple Silicon, except games marked ios_off_mac, which also build on Windows and Linux
-    computers. An Intel Mac and a phone make Android copies. A Windows copy is made on the
+    computers. Games marked ios_intel_mac also build iPhone copies on Intel Macs with Xcode.
+    An Android phone makes Android copies. A Windows copy is made on the
     Windows PC it runs on, and a Mac copy on the Apple Silicon Mac it runs on."""
     host = host_id()
     apple_silicon = host == "macos-arm64"
@@ -1270,7 +1271,8 @@ def player_games():
     here = {"ios": None, "windows": host.startswith("windows-"), "macos": apple_silicon and not on_android()}
     games = []
     for game, entry in sorted(catalog().items()):
-        ios_here = apple_silicon or (computer_off_mac and entry.get("ios_off_mac", False))
+        ios_here = (apple_silicon or (computer_off_mac and entry.get("ios_off_mac", False))
+                    or (host == "macos-x86_64" and entry.get("ios_intel_mac", False)))
         here["ios"] = ios_here
         platforms = [name for name in entry.get("player_targets", []) if here.get(name, True)]
         if platforms:

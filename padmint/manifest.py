@@ -221,9 +221,9 @@ def catalog():
             raise ValueError(f"catalog/{path.name}: player_targets lists android, ios, macos or windows")
         if entry.get("player_game_file", "build") not in ("build", "in-app"):
             raise ValueError(f"catalog/{path.name}: player_game_file is build or in-app")
-        if not isinstance(entry.get("ios_off_mac", False), bool) \
-                or (entry.get("ios_off_mac") and "ios" not in targets):
-            raise ValueError(f"catalog/{path.name}: ios_off_mac is true or false, for an ios player target")
+        for flag in ("ios_off_mac", "ios_intel_mac"):
+            if not isinstance(entry.get(flag, False), bool) or (entry.get(flag) and "ios" not in targets):
+                raise ValueError(f"catalog/{path.name}: {flag} is true or false, for an ios player target")
         for platform, steps in (entry.get("player_next") or {}).items():
             if platform not in targets or not isinstance(steps, dict) or not steps.get("steps") \
                     or not all(isinstance(step, str) for step in steps["steps"]):
