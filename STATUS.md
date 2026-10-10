@@ -1,6 +1,6 @@
 # PadMint status
 
-Updated **8 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
+Updated **10 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
 the per-game detail, including **Status by game**, which is where the
 compatibility work resumes.
 
@@ -14,12 +14,15 @@ work and when to revisit it.
 
 ## Which games use PadMint
 
-- **KartPad ships ready-to-play builds again from v0.7.9**: an Android APK with
-  the game code built in, a full iPhone/iPad IPA and a Mac app, on
-  [KartPad's releases](https://github.com/chrissotraidis/kartpad/releases/latest).
-  PadMint is optional for KartPad. The page and terminal say so when KartPad is
-  chosen, and the Android phone setup says so before it downloads anything.
-  On Android, PadMint's useful output is now the `KartPad game data` folder.
+- **KartPad for Android is a ready-to-play download** (the APK has the game code
+  built in) on [KartPad's releases](https://github.com/chrissotraidis/kartpad/releases/latest).
+  On Android, PadMint makes the `KartPad game data` folder. KartPad for iPhone and
+  iPad is built with PadMint; the release's `ios-for-padmint.ipa` has no game in it
+  and is only for PadMint. The 0.7.9–0.7.13 ready-to-play iPhone/iPad and Mac
+  downloads won't get updates.
+- **HaloPad's Xbox edition** can also be built without a Mac, on GitHub's free Mac
+  runner ([steps](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer)).
+  On Windows and Linux PadMint points there instead of saying it needs a Mac.
 - **BlueWake on Windows** downloads its ready-to-play build from
   [BlueWake's releases](https://github.com/chrissotraidis/bluewake/releases/latest).
   PadMint's Windows route for BlueWake
@@ -30,6 +33,13 @@ work and when to revisit it.
 
 ## PadMint itself
 
+- **v0.4.12**: clearer downloads. KartPad's card says its ready-to-play download is
+  for Android ("Android: ready-to-play app"), and the download note appears only when
+  you choose Android, with a **Download the Android app** button. It no longer
+  suggests ready-to-play iPhone, iPad or Mac downloads. The Android plan says you get
+  a game data folder. On Windows and Linux, HaloPad points to its Xbox edition's
+  GitHub build instead of "Needs an M1+ Mac". README FAQs answer "Can I play KartPad
+  on my Mac?" and building iPhone apps without a Mac.
 - **v0.4.11**: SquirrelPad joins the catalog for experimental iPhone/iPad personal
   builds on Apple Silicon Macs. Supply your own supported US Conker ROM; full
   Xcode and Metal Toolchain are required. Source and recipe only, no public IPA.
