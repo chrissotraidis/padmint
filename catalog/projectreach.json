@@ -15,7 +15,7 @@
   "manifest": null,
   "before_build": {
     "commands": [
-      "brew install cmake ninja lld"
+      "brew install cmake ninja lld llvm sdl3"
     ]
   },
   "game_data_import": {
