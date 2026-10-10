@@ -826,7 +826,7 @@ def _make(game, platform_name, disc, out, ref=None, app=None, jobs=None, results
         release = latest_release(entry["repo_url"])
         manifest, _source = published_recipe(game, release=release)
         player_target(manifest, platform_name)
-        require_programs(manifest, platform_name)  # before the source download, not after it
+        require_programs(manifest, platform_name, disc)  # before the source download, not after it
     report("release", state="done", repo=entry["repo_url"], version=release[0] if release else ref)
     home = tools.tools_root().parent
     source, ref, assets = release_source(game, ref, release=release)
@@ -839,7 +839,7 @@ def _make(game, platform_name, disc, out, ref=None, app=None, jobs=None, results
         disc = None  # the game file is added in the app, not read by the build
     elif disc is None:
         raise ValueError(f"{manifest['name']} needs your own game file (--disc)")
-    require_programs(manifest, platform_name)
+    require_programs(manifest, platform_name, disc)
     missing = tools.missing_system_library(target.get("tools", []), host_id())
     if missing:
         raise ValueError(missing[1])
@@ -956,19 +956,19 @@ IOS_PLATFORM = {"name": "xcrun", "version_args": ["--sdk", "iphoneos", "--show-s
                         "then run PadMint again."}
 
 
-def require_programs(manifest, platform_name):
+def require_programs(manifest, platform_name, disc=None):
     """Stop before any download or build when a program the player installs is missing."""
-    missing = [tool for tool in player_requirements(manifest, platform_name) if not check_program(tool)[0]]
+    missing = [tool for tool in player_requirements(manifest, platform_name, disc) if not check_program(tool)[0]]
     if missing:
         raise ValueError(f"{manifest['name']} needs these installed first:\n"
                          + "".join(f"  {label(tool)}: {tool['note']}\n" for tool in missing)
                          + "Then run PadMint again.")
 
 
-def player_requirements(manifest, platform_name=None):
+def player_requirements(manifest, platform_name=None, disc=None):
     """Programs the recipe says the player installs themselves (requirements.tools with "player").
     For an iPhone copy built with Xcode, also Xcode's iOS platform unless the recipe checks it."""
-    here = host_requirements(manifest, platform_name)
+    here = host_requirements(manifest, disc, platform_name)
     tools_ = [tool for tool in here if tool.get("player")]
     if platform_name == "ios" and host_id().startswith("macos") \
             and any(tool["name"] == "xcodebuild" for tool in here) \
@@ -977,13 +977,17 @@ def player_requirements(manifest, platform_name=None):
     return tools_
 
 
-def host_requirements(manifest, platform_name=None):
+def host_requirements(manifest, disc=None, platform_name=None):
     """The recipe's requirements.tools that apply on this computer: all, except those whose
-    "hosts" name other build hosts or whose "targets" name other targets (Xcode for an
-    iPhone or Mac copy, not for an Android game pack built on the same Mac)."""
+    "hosts" name other build hosts, whose "targets" name other targets (Xcode for an iPhone
+    or Mac copy, not for an Android game pack built on the same Mac), or whose input formats
+    exclude the selected file. With no selected file, or a folder input, retain every host
+    prerequisite."""
     return [tool for tool in manifest.get("requirements", {}).get("tools", [])
             if host_id() in tool.get("hosts", [host_id()])
-            and (platform_name is None or platform_name in tool.get("targets", [platform_name]))]
+            and (platform_name is None or platform_name in tool.get("targets", [platform_name]))
+            and (disc is None or not tool.get("input_formats") or Path(disc).is_dir()
+                 or Path(disc).suffix.lower().lstrip(".") in tool["input_formats"])]
 
 
 def label(tool):
@@ -1108,7 +1112,7 @@ def doctor(game, target_name, repo=None, stream=None):
         report(free >= needed, "free disk space", f"{free:.0f} GB free, {needed} GB needed")
         print(f"{problems} item(s) to fix" if problems else "Ready", file=stream)
         return 1 if problems else 0
-    for tool in host_requirements(manifest, target_name):
+    for tool in host_requirements(manifest, platform_name=target_name):
         ok, detail = check_program(tool)
         report(ok, label(tool), detail)
     needed = manifest.get("requirements", {}).get("disk_gb", 0)
@@ -1375,11 +1379,11 @@ def start(ask=input, stream=None):
         game = choose(t("game"), [(game, name) for game, name, _ in offered] + extra, ask, stream)
         if game in dict(downloads()):
             return download_steps(game, stream)
-    if catalog()[game].get("ready_to_play"):
-        ready = catalog()[game]["ready_to_play"]
-        print(f"\n{localized(ready, 'text')}\n  {ready['url']}\n", file=stream, flush=True)
     name, platforms = next((name, platforms) for id_, name, platforms in games if id_ == game)
     target = choose(t("make_it_for"), [(p, platform_label(p)) for p in platforms], ask, stream)
+    ready = catalog()[game].get("ready_to_play")
+    if ready and target in ready.get("platforms", platforms):
+        print(f"\n{localized(ready, 'text')}\n  {ready['url']}\n", file=stream, flush=True)
     if catalog()[game].get("player_game_file", "build") == "in-app":
         disc = None
         print(f"{name} asks for your own game file inside the app, after you install it.", file=stream)

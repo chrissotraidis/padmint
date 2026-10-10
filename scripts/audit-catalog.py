@@ -4,11 +4,14 @@
 Usage: PADMINT_HOME=$(mktemp -d) python3 scripts/audit-catalog.py
 
 Reads each recipe the way a player's PadMint does, then reports what would confuse or stop
-a player: a target the recipe lacks, a menu showing a raw target name, a copy with no
-finishing steps, an Xcode iPhone build that does not check Xcode's iOS platform, a game file
-asked for at the wrong time, a player tool without install steps, a help link to a missing
+a player: a target the recipe lacks, a target the recipe builds that PadMint silently hides,
+a ready-to-play download the release doesn't publish, a menu showing a raw target name, a copy
+with no finishing steps, an Xcode iPhone build that does not check Xcode's iOS platform, a game
+file asked for at the wrong time, a player tool without install steps, a help link to a missing
 README heading, or a game-code recipe that allows public binaries. It also prints where each
 target builds. Needs the network; changes nothing. Exit status 1 when it finds a problem.
+The catalog-check workflow runs it every day, so a game release that changes what it publishes
+fails here instead of confusing players.
 """
 import re
 import sys
@@ -23,6 +26,23 @@ from padmint.manifest import catalog, needs_build_input  # noqa: E402
 
 SHORT = {"macos-arm64": "Mac", "macos-x86_64": "Intel Mac", "windows-x86_64": "Windows",
          "windows-arm64": "Windows ARM", "linux-x86_64": "Linux", "linux-arm64": "Linux ARM"}
+
+
+def ready_asset(platform, names):
+    """A release file a player installs directly on this platform, if the release has one.
+    An IPA made for PadMint (no game code in it) is not a ready-to-play iPhone app."""
+    def match(name):
+        lower = name.lower()
+        if platform == "android":
+            return lower.endswith(".apk")
+        if platform == "ios":
+            return lower.endswith(".ipa") and "for-padmint" not in lower
+        if platform == "macos":
+            return "mac" in lower and lower.endswith((".zip", ".dmg"))
+        if platform == "windows":
+            return "windows" in lower and lower.endswith(".zip")
+        return False
+    return next((name for name in names if match(name)), None)
 
 
 def readme(repo_url, tag):
@@ -46,13 +66,28 @@ def audit():
             continue
         found = lambda message: problems.append(f"{game}: {message}")  # noqa: E731
         try:
-            recipe, source = cli.published_recipe(game)
+            release = cli.latest_release(entry["repo_url"])
+            recipe, source = cli.published_recipe(game, release=release)
         except Exception as error:  # an unreadable recipe is itself the finding
             found(f"recipe unreadable ({error})")
             continue
         if "built-in" in source:
             found(f"recipe not read from a release ({source})")
         tag = source.split()[1] if source.endswith(" release") else "HEAD"
+        ready = entry.get("ready_to_play")
+        if ready:
+            for name in ready.get("platforms", targets):
+                if not ready_asset(name, release[1]):
+                    found(f"catalog says {name} has a ready-to-play download, but {release[0]} publishes "
+                          "none (fix ready_to_play.platforms and its text)")
+        held = entry.get("unoffered_targets") or {}
+        for name, target in (recipe.get("targets") or {}).items():
+            runnable = any(s in cli.RUNNABLE_STATES for s in target.get("hosts", {}).values())
+            if runnable and name not in targets and name not in held:
+                found(f"the recipe builds {name} but PadMint doesn't offer it; add it to player_targets, "
+                      "or to unoffered_targets with the reason")
+            if name in held and name in targets:
+                found(f"{name} is both offered and listed in unoffered_targets")
         where = []
         for name in targets:
             target = (recipe.get("targets") or {}).get(name)

@@ -67,6 +67,11 @@ def validate_manifest(data):
         for digest in item.get("verified_sha256", []):
             _require(isinstance(digest, str) and re.fullmatch(r"[0-9a-f]{64}", digest),
                      "verified_sha256 entries must be lowercase SHA-256 digests")
+        if "accepted_sha256" in item:
+            accepted = item["accepted_sha256"]
+            _require(isinstance(accepted, list) and accepted and
+                     all(isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) for value in accepted),
+                     "input accepted_sha256 must be a non-empty list of lowercase SHA-256 digests")
         game_ids = item.get("game_ids", [])
         _require(isinstance(game_ids, list) and all(isinstance(gid, str) and re.fullmatch(r"[0-9A-Z]{6}", gid)
                                                     for gid in game_ids),
@@ -185,6 +190,11 @@ def validate_manifest(data):
         _require("targets" not in tool or (isinstance(tool["targets"], list) and tool["targets"]
                                            and set(tool["targets"]) <= set(TARGETS)),
                  f"tool {tool['name']}.targets must be a list of targets")
+        if "input_formats" in tool:
+            formats = tool["input_formats"]
+            _require(isinstance(formats, list) and formats and
+                     all(isinstance(value, str) and re.fullmatch(r"[a-z0-9]+", value) for value in formats),
+                     f"tool {tool['name']}.input_formats must be a non-empty list of lowercase extensions")
     disk = requirements.get("disk_gb", 0)
     _require(isinstance(disk, (int, float)) and disk >= 0, "requirements.disk_gb must be a number")
     publication = data.get("publication")
@@ -270,13 +280,31 @@ def catalog():
                                              for text in [later] + list((later.get("translations") or {}).values()))):
             raise ValueError(f"catalog/{path.name}: later needs a name, a game, text, "
                              "and no player_targets or download")
-        # Games that also publish ready-to-play downloads: where they are and one line saying so.
+        # Games PadMint builds only on an Apple Silicon Mac that the game itself can also make
+        # another way (HaloPad's Xbox edition on GitHub's Mac runner): shown off the Mac instead
+        # of "Needs an M1+ Mac", with a link to those steps.
+        off_mac = entry.get("off_mac")
+        if off_mac is not None and (not isinstance(off_mac, dict) or not targets
+                                    or not str(off_mac.get("url", "")).startswith("https://")
+                                    or not all(isinstance(text.get("text", off_mac.get("text")), str)
+                                               for text in [off_mac] + list((off_mac.get("translations") or {}).values()))):
+            raise ValueError(f"catalog/{path.name}: off_mac needs player_targets, an https url and text")
+        # Targets the game's recipe can build that PadMint deliberately doesn't offer yet, each
+        # with the reason; scripts/audit-catalog.py reports any other hidden target.
+        held = entry.get("unoffered_targets")
+        if held is not None and (not isinstance(held, dict) or not set(held) <= TARGETS
+                                 or not all(isinstance(why, str) and why.strip() for why in held.values())):
+            raise ValueError(f"catalog/{path.name}: unoffered_targets maps targets to a reason")
+        # Games that also publish ready-to-play downloads: where they are, one line saying so and,
+        # optionally, the player_targets they cover (default: all of them).
         ready = entry.get("ready_to_play")
         if ready is not None and (not isinstance(ready, dict) or not targets
                                   or not str(ready.get("url", "")).startswith("https://")
+                                  or not set(ready.get("platforms", targets)) <= set(targets)
                                   or not all(isinstance(text.get("text", ready.get("text")), str)
                                              for text in [ready] + list((ready.get("translations") or {}).values()))):
-            raise ValueError(f"catalog/{path.name}: ready_to_play needs player_targets, an https url and text")
+            raise ValueError(f"catalog/{path.name}: ready_to_play needs player_targets, an https url, text "
+                             "and platforms from player_targets")
         # Programs the game's README asks Mac players to install once (Homebrew and the like),
         # shown on the page before the build: Terminal lines, copied from the README.
         before = entry.get("before_build")

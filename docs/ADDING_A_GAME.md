@@ -46,6 +46,16 @@ as a stage, shows progress, stops at the first failure and audits the result.
 - **Inputs:** use `"when": "build"` when a script reads the player's disc or ROM
   (then `--disc` is required and passed as `{disc}`), or `"in-app"` when the
   player chooses it after installing (then `--disc` is refused).
+- **Input guidance:** describe the required original file in `inputs[].description`.
+  The window uses the latest release recipe for guidance and extension checks,
+  falling back to the catalog when that recipe is unavailable.
+- **Exact input files:** an optional `inputs[].accepted_sha256` lists the accepted
+  full-file SHA-256 digests. PadMint checks the selected file before downloading
+  build tools and repeats the check when making the copy. Include every supported
+  file variant; do not use a trimmed-disc hash for a full-disc input. A matching
+  alternative input without this field remains unrestricted. Folder inputs stay
+  with the game's backend. `verified_sha256` remains a record of tested inputs,
+  not a restriction. Backends must still validate their own inputs.
 - **Kinds:** `disc-translation`, `emulator-shell`, `decomp-patches`,
   `upstream-engine`, `clean-engine`.
 - **Hosts and states:** `verified` (a recorded complete build from that host,
@@ -178,6 +188,13 @@ separately, unless the recipe already probes `iphoneos` itself. Mac copies don't
 get this check. PadMint checks every program the player installs right after
 reading the release recipe, before it downloads the game's source.
 
+A prerequisite may specify `"input_formats": ["exe"]` when only those selected input
+formats need it. PadMint refreshes the prerequisite list after file selection and checks
+it again before downloading source or running the build. Without a selected file, or
+when selecting a folder, all host prerequisites are shown. Omit this field for tools
+needed by every input. The game backend must still check its own tools; this metadata
+does not validate file contents or replace input hashes.
+
 ## 3. Promote it
 
 1. Run `python3 -m padmint build` from a clean checkout. The record shows each
@@ -199,3 +216,27 @@ from `ios_off_mac` (Windows/Linux) and does not enable a native Mac app.
 The Intel route uses Xcode and its iOS platform. Publish the matching game
 recipe before releasing the catalog change; the release recipe still decides
 whether a build can start.
+
+## 4. When a game's release changes what it publishes
+
+PadMint describes each game from two places: the game's latest release (its recipe
+and its files) and the catalog entry here. When a release adds or drops a
+ready-to-play download, or a target or build computer, update the catalog in the
+same change:
+
+- `player_targets`: every target the recipe builds for players. A target the
+  recipe builds but PadMint should not offer yet goes in `unoffered_targets`
+  with the reason, for example `{"macos": "needs Homebrew tools until 0.8.0"}`.
+- `ready_to_play`: only for platforms whose release has a file players install
+  directly, listed in `platforms`. An IPA made for PadMint (`…-for-padmint.ipa`)
+  has no game in it and does not count.
+- `off_mac`: a message and link for Windows, Linux and Intel Mac players when
+  the game has its own route without an Apple Silicon Mac (HaloPad's Xbox edition
+  builds on GitHub's Mac runner).
+- README and STATUS.md say the same thing as the catalog.
+
+The **Catalog check** workflow runs `scripts/audit-catalog.py` every day and on
+every catalog change. It fails when the catalog promises a download the latest
+release doesn't publish, offers a target or computer the recipe lacks, or hides a
+target the recipe builds. A failing run means a game's release and PadMint
+disagree: fix the catalog (or the game's release) before players notice.

@@ -24,13 +24,11 @@
   </picture>
 </p>
 
-> **Two games don't need PadMint:**
-> **KartPad** has ready-to-play downloads for Android, iPhone, iPad and Mac:
-> get them from the [latest KartPad](https://github.com/chrissotraidis/kartpad/releases/latest)
-> and follow [KartPad's guide](https://github.com/chrissotraidis/kartpad#get-kartpad).
-> **BlueWake on Windows** has a ready-to-play build on
-> [BlueWake's releases](https://github.com/chrissotraidis/bluewake/releases/latest).
-> PadMint stays available for both if you'd rather build your own copy.
+> **Two ready-to-play downloads skip the build:**
+> **KartPad for Android** from the [latest KartPad](https://github.com/chrissotraidis/kartpad/releases/latest)
+> (the app has the game code; you add your own game data, which PadMint can make from your disc), and
+> **BlueWake for Windows** from [BlueWake's releases](https://github.com/chrissotraidis/bluewake/releases/latest).
+> Everything else, including KartPad for iPhone and iPad, is built with PadMint from your own game file.
 
 ## Why PadMint exists
 
@@ -203,13 +201,24 @@ PadMint yet; the game's page has the latest.
 
 </details>
 <details>
+<summary><strong>Can I play KartPad on my Mac?</strong></summary>
+
+Yes, on a Mac with Apple Silicon (M1 or newer) with Xcode: choose KartPad and
+**This Mac**. PadMint builds KartPad from your disc and saves the app in your
+Downloads folder. On an Intel Mac, PadMint builds KartPad for iPhone and iPad
+(experimental), but the Mac app itself needs Apple Silicon.
+
+</details>
+<details>
 <summary><strong>Can I build iPhone apps on Windows or Linux?</strong></summary>
 
-Only KartPad, and that is experimental. Every other iPhone/iPad game needs a Mac
-with Apple Silicon and Xcode today.
-Making every game buildable on any computer is the long-term goal, but it is
-paused for now ([why](docs/DECISIONS.md#d15-any-device-from-any-computer-is-the-goal-off-mac-work-is-paused-owner-decision-5-oct-2026)). On Windows, use a game's
-ready-to-play download where it has one, such as BlueWake.
+In PadMint, only KartPad today, and that is experimental. HaloPad's Xbox
+edition has its own route without a Mac:
+[GitHub's free Mac runner builds it](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer)
+in your own copy of HaloPad's repository. Every other iPhone/iPad game needs a
+Mac with Apple Silicon and Xcode for now. Building them on Windows is the next
+priority, BlueWake first; PadMint will offer each one on Windows once that
+game's release supports it.
 
 </details>
 <details>
