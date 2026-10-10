@@ -1,0 +1,22 @@
+name: Mac player Python
+
+# Mac players start PadMint.command, which runs Apple's /usr/bin/python3 (3.9). Other jobs
+# use a newer Python, so code that only works there would pass them and fail for players.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run every test on Apple's Python
+        run: |
+          /usr/bin/python3 --version
+          /usr/bin/python3 -B -m unittest discover -s tests

@@ -202,8 +202,13 @@ does not validate file contents or replace input hashes.
 
 ## 3. Promote it
 
-1. Run `python3 -m padmint build` from a clean checkout. The record shows each
-   stage, the output check and the release gate result.
+1. On an Apple Silicon Mac, run `scripts/player-check.sh GAME PLATFORM GAME_FILE CHECKOUT`
+   before tagging, and `scripts/player-check.sh GAME PLATFORM GAME_FILE` after publishing
+   and before announcing. It builds the way a player's PadMint does: Apple's Python 3.9
+   (what `PadMint.command` runs), an empty PadMint folder and a fresh copy of the source.
+   `python3 -m padmint build` from your own checkout usually runs a newer Python with
+   warm caches, so its success does not show that players can build. The record shows
+   each stage, the output check and the release gate result.
 2. After a complete build, set `status` to `experimental`; after a build is
    accepted on a device, mark the host `verified` and pin `reviewed_revision`.
 3. Before anything is published, every public file must pass

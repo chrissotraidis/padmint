@@ -7,6 +7,9 @@
   "player_targets": [
     "ios"
   ],
+  "unoffered_targets": {
+    "linux": "BlueWake 0.7.0's Linux recipe has not been built through PadMint yet; Linux players build from BlueWake's docs/LINUX.md."
+  },
   "game_ids": [
     "GZLE01"
   ],

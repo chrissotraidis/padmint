@@ -13,7 +13,7 @@
   "free_space_gb": 30,
   "player_game_file": "build",
   "player_help": "https://github.com/chrissotraidis/squirrelpad#get-started",
-  "reviewed_revision": "744686f03a0274139efab806e10c3be29d43dec2",
+  "reviewed_revision": "19db910236b8fadbba580a88ecc457956b439436",
   "notes": "Experimental Conker personal build for iPhone and iPad on Apple Silicon with full Xcode and Metal Toolchain. Requires the supported US big-endian ROM at build time and again in the app. Recipe-only release; no prebuilt game app. Full-story compatibility, physical rumble and HDMI remain unverified. Incomplete broader HD textures are excluded.",
   "manifest": null,
   "before_build": {
