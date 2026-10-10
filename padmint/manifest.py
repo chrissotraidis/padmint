@@ -266,13 +266,16 @@ def catalog():
                                              for text in [later] + list((later.get("translations") or {}).values()))):
             raise ValueError(f"catalog/{path.name}: later needs a name, a game, text, "
                              "and no player_targets or download")
-        # Games that also publish ready-to-play downloads: where they are and one line saying so.
+        # Games that also publish ready-to-play downloads: where they are, one line saying so and,
+        # optionally, the player_targets they cover (default: all of them).
         ready = entry.get("ready_to_play")
         if ready is not None and (not isinstance(ready, dict) or not targets
                                   or not str(ready.get("url", "")).startswith("https://")
+                                  or not set(ready.get("platforms", targets)) <= set(targets)
                                   or not all(isinstance(text.get("text", ready.get("text")), str)
                                              for text in [ready] + list((ready.get("translations") or {}).values()))):
-            raise ValueError(f"catalog/{path.name}: ready_to_play needs player_targets, an https url and text")
+            raise ValueError(f"catalog/{path.name}: ready_to_play needs player_targets, an https url, text "
+                             "and platforms from player_targets")
         # Programs the game's README asks Mac players to install once (Homebrew and the like),
         # shown on the page before the build: Terminal lines, copied from the README.
         before = entry.get("before_build")
