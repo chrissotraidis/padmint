@@ -1,6 +1,6 @@
 # PadMint status
 
-Updated **8 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
+Updated **10 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
 the per-game detail, including **Status by game**, which is where the
 compatibility work resumes.
 
@@ -29,6 +29,12 @@ work and when to revisit it.
   listed in PadMint.
 
 ## PadMint itself
+
+- **v0.4.12**: PadMint checks the file you choose against the game's recipe before it
+  builds: HaloPad says when you picked Bungie's 1.10 patch instead of the original
+  installer, and choosing an Xbox ISO/XISO asks only for the Xbox tools (no Wine or
+  PC tools). HaloPad 0.3.8's install line adds `llvm` and `sdl3`. Answers that arrive
+  late from an older file choice no longer overwrite a newer one.
 
 - **v0.4.11**: SquirrelPad joins the catalog for experimental iPhone/iPad personal
   builds on Apple Silicon Macs. Supply your own supported US Conker ROM; full
