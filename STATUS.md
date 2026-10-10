@@ -1,6 +1,6 @@
 # PadMint status
 
-Updated **6 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
+Updated **8 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
 the per-game detail, including **Status by game**, which is where the
 compatibility work resumes.
 
@@ -30,12 +30,21 @@ work and when to revisit it.
 
 ## PadMint itself
 
+- **v0.4.11**: SquirrelPad joins the catalog for experimental iPhone/iPad personal
+  builds on Apple Silicon Macs. Supply your own supported US Conker ROM; full
+  Xcode and Metal Toolchain are required. Source and recipe only, no public IPA.
+  BlueWake’s setup link now follows its current Install section.
+
 - **v0.3.6**: one directory of every game (tabs for Build with PadMint, Download
   and Not available yet, console badges, search, back buttons). Games this
   computer can't build stay listed with the reason (**Needs an M1+ Mac**) instead
   of disappearing ([bellpad#20](https://github.com/chrissotraidis/bellpad/issues/20)).
   On a Mac the plan shows each game's install-once Homebrew line with a Copy
   button. README rewritten for every game.
+- **v0.4.10**: KartPad's iPhone build on Windows and Linux works again. Since v0.4.7
+  PadMint asked those computers for Xcode's iOS platform, which only exists on a Mac,
+  and stopped before building. The check now runs on Macs only, and
+  `scripts/audit-catalog.py` reports any Windows or Linux route that asks for Xcode.
 - **v0.4.9**: HaloPad's setup opens its Wine installation guide instead of asking
   Homebrew to install the disabled `wine-stable` cask. Existing working Wine installs
   can still be used. HaloPad 0.3.6 supplies the matching recipe guidance.

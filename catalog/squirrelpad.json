@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "squirrelpad",
+  "repo_url": "https://github.com/chrissotraidis/squirrelpad",
+  "name": "SquirrelPad",
+  "game": "Conker's Bad Fur Day (N64)",
+  "player_targets": [
+    "ios"
+  ],
+  "game_ids": [
+    "NFUE"
+  ],
+  "free_space_gb": 30,
+  "player_game_file": "build",
+  "player_help": "https://github.com/chrissotraidis/squirrelpad#get-started",
+  "reviewed_revision": "744686f03a0274139efab806e10c3be29d43dec2",
+  "notes": "Experimental Conker personal build for iPhone and iPad on Apple Silicon with full Xcode and Metal Toolchain. Requires the supported US big-endian ROM at build time and again in the app. Recipe-only release; no prebuilt game app. Full-story compatibility, physical rumble and HDMI remain unverified. Incomplete broader HD textures are excluded.",
+  "manifest": null,
+  "before_build": {
+    "commands": [
+      "brew install cmake ninja python pkgconf sdl2 freetype ripgrep"
+    ]
+  }
+}

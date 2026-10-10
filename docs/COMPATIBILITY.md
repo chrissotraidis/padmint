@@ -2,6 +2,7 @@
 
 Public recipe snapshot: **4 October 2026**, rechecked against each game's latest release
 recipe with PadMint **v0.3.5** (KartPad rechecked at v0.7.9: same hosts as v0.7.8).
+SquirrelPad v0.1.0 was added on **8 October 2026** for PadMint **v0.4.11**.
 The table describes the recipe shipped with each game's latest public release.
 It does not promote a declared host to tested gameplay support. See
 [catalog-wide compatibility work](https://github.com/chrissotraidis/padmint/issues/75)
@@ -48,6 +49,7 @@ guided setup offers its Android and iOS targets only.
 | [PaperPad v0.2.1](https://github.com/chrissotraidis/paperpad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [SpaghettiPad v0.2.1](https://github.com/chrissotraidis/spaghettipad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [StarshipPad v0.2.0](https://github.com/chrissotraidis/starshippad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
+| [SquirrelPad v0.1.0](https://github.com/chrissotraidis/squirrelpad/releases/tag/v0.1.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [SunPad v0.2.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 
 **Android as the build host:** only KartPad's phone route is offered, through

@@ -949,6 +949,7 @@ def version_tuple(text):
 
 # An iPhone build with Xcode also needs Xcode's iOS platform, which Xcode installs separately.
 # Without it the build fails deep inside CMake or xcodebuild, so check it with Xcode itself.
+# Only on a Mac: Xcode exists nowhere else, and off a Mac an iPhone build uses PadMint's LLVM.
 IOS_PLATFORM = {"name": "xcrun", "version_args": ["--sdk", "iphoneos", "--show-sdk-version"],
                 "label": "Xcode iOS platform", "player": True,
                 "note": "Open Xcode, choose Settings > Components, add iOS and wait for it to finish, "
@@ -969,7 +970,8 @@ def player_requirements(manifest, platform_name=None, disc=None):
     For an iPhone copy built with Xcode, also Xcode's iOS platform unless the recipe checks it."""
     here = host_requirements(manifest, disc)
     tools_ = [tool for tool in here if tool.get("player")]
-    if platform_name == "ios" and any(tool["name"] == "xcodebuild" for tool in here) \
+    if platform_name == "ios" and host_id().startswith("macos") \
+            and any(tool["name"] == "xcodebuild" for tool in here) \
             and not any("iphoneos" in tool.get("version_args", []) for tool in here):
         tools_.append(IOS_PLATFORM)
     return tools_
