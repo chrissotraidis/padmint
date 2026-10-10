@@ -33,13 +33,20 @@ work and when to revisit it.
 
 ## PadMint itself
 
-- **v0.4.12**: clearer downloads. KartPad's card says its ready-to-play download is
+- **v0.4.13**: clearer downloads. KartPad's card says its ready-to-play download is
   for Android ("Android: ready-to-play app"), and the download note appears only when
   you choose Android, with a **Download the Android app** button. It no longer
   suggests ready-to-play iPhone, iPad or Mac downloads. The Android plan says you get
   a game data folder. On Windows and Linux, HaloPad points to its Xbox edition's
   GitHub build instead of "Needs an M1+ Mac". README FAQs answer "Can I play KartPad
   on my Mac?" and building iPhone apps without a Mac.
+
+- **v0.4.12**: PadMint checks the file you choose against the game's recipe before it
+  builds: HaloPad says when you picked Bungie's 1.10 patch instead of the original
+  installer, and choosing an Xbox ISO/XISO asks only for the Xbox tools (no Wine or
+  PC tools). HaloPad 0.3.8's install line adds `llvm` and `sdl3`. Answers that arrive
+  late from an older file choice no longer overwrite a newer one.
+
 - **v0.4.11**: SquirrelPad joins the catalog for experimental iPhone/iPad personal
   builds on Apple Silicon Macs. Supply your own supported US Conker ROM; full
   Xcode and Metal Toolchain are required. Source and recipe only, no public IPA.

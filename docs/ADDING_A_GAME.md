@@ -46,6 +46,16 @@ as a stage, shows progress, stops at the first failure and audits the result.
 - **Inputs:** use `"when": "build"` when a script reads the player's disc or ROM
   (then `--disc` is required and passed as `{disc}`), or `"in-app"` when the
   player chooses it after installing (then `--disc` is refused).
+- **Input guidance:** describe the required original file in `inputs[].description`.
+  The window uses the latest release recipe for guidance and extension checks,
+  falling back to the catalog when that recipe is unavailable.
+- **Exact input files:** an optional `inputs[].accepted_sha256` lists the accepted
+  full-file SHA-256 digests. PadMint checks the selected file before downloading
+  build tools and repeats the check when making the copy. Include every supported
+  file variant; do not use a trimmed-disc hash for a full-disc input. A matching
+  alternative input without this field remains unrestricted. Folder inputs stay
+  with the game's backend. `verified_sha256` remains a record of tested inputs,
+  not a restriction. Backends must still validate their own inputs.
 - **Kinds:** `disc-translation`, `emulator-shell`, `decomp-patches`,
   `upstream-engine`, `clean-engine`.
 - **Hosts and states:** `verified` (a recorded complete build from that host,
@@ -177,6 +187,13 @@ also checks Xcode's iOS platform (`xcrun --sdk iphoneos`), which Xcode installs
 separately, unless the recipe already probes `iphoneos` itself. Mac copies don't
 get this check. PadMint checks every program the player installs right after
 reading the release recipe, before it downloads the game's source.
+
+A prerequisite may specify `"input_formats": ["exe"]` when only those selected input
+formats need it. PadMint refreshes the prerequisite list after file selection and checks
+it again before downloading source or running the build. Without a selected file, or
+when selecting a folder, all host prerequisites are shown. Omit this field for tools
+needed by every input. The game backend must still check its own tools; this metadata
+does not validate file contents or replace input hashes.
 
 ## 3. Promote it
 

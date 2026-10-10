@@ -77,5 +77,76 @@ class GameFileTests(unittest.TestCase):
                 validate_manifest(dict(base, inputs=[dict({"type": "wii-disc"}, **bad)]))
 
 
+class AcceptedInputTests(unittest.TestCase):
+    def setUp(self):
+        import hashlib
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.file = Path(self.temp.name) / 'Original.exe'
+        self.file.write_bytes(b'synthetic original')
+        self.accepted = hashlib.sha256(self.file.read_bytes()).hexdigest()
+        self.input = {'type': 'pc-game-installer', 'formats': ['exe'],
+                      'accepted_sha256': [self.accepted],
+                      'description': 'Choose Original.exe, not the update patch.'}
+        self.manifest = {'name': 'ExamplePad', 'inputs': [self.input]}
+
+    def test_accepts_original_independent_of_filename(self):
+        renamed = self.file.with_name('renamed.EXE')
+        self.file.rename(renamed)
+        self.assertIn('SHA-256 verified', game_file.check_file_hash(self.manifest, renamed))
+
+    def test_patch_is_rejected_before_tools_with_recipe_guidance(self):
+        self.file.write_bytes(b'synthetic update patch')
+        with mock.patch.object(game_file.tools, 'install') as install:
+            with self.assertRaisesRegex(ValueError, 'not the update patch.*Renaming'):
+                game_file.check_before_tools(self.manifest, {'tools': ['nodtool']}, self.file, 'macos-arm64')
+        install.assert_not_called()
+
+    def test_renaming_wrong_input_to_an_undeclared_extension_cannot_bypass_preflight(self):
+        renamed = self.file.with_suffix('.zip')
+        renamed.write_bytes(b'synthetic patch')
+        with mock.patch.object(game_file.tools, 'install') as install:
+            with self.assertRaisesRegex(ValueError, 'Choose Original.exe'):
+                game_file.check_before_tools(self.manifest, {'tools': ['nodtool']}, renamed, 'macos-arm64')
+        install.assert_not_called()
+
+    def test_folders_and_unrestricted_alternatives_remain_backend_inputs(self):
+        self.assertIsNone(game_file.check_file_hash(self.manifest, self.file.parent))
+        self.manifest['inputs'].append({'type': 'other-installer', 'formats': ['exe']})
+        self.file.write_bytes(b'another supported installer')
+        self.assertIsNone(game_file.check_file_hash(self.manifest, self.file))
+        self.manifest['inputs'].append({'type': 'archive', 'formats': ['zip']})
+        archive = self.file.with_suffix('.zip')
+        archive.write_bytes(b'an unrestricted archive')
+        self.assertIsNone(game_file.check_file_hash(self.manifest, archive))
+
+    def test_other_formats_and_in_app_alternatives_do_not_bypass_hash(self):
+        self.manifest['inputs'] += [{'type': 'archive', 'formats': ['zip']},
+                                    {'type': 'rom', 'formats': ['exe'], 'when': 'in-app'}]
+        self.file.write_bytes(b'synthetic update patch')
+        with self.assertRaises(ValueError):
+            game_file.check_file_hash(self.manifest, self.file)
+
+    def test_verified_hashes_stay_informational_and_cloud_files_are_not_read(self):
+        self.input['verified_sha256'] = self.input.pop('accepted_sha256')
+        self.file.write_bytes(b'another supported original')
+        self.assertIsNone(game_file.check_file_hash(self.manifest, self.file))
+        self.input['accepted_sha256'] = [self.accepted]
+        with mock.patch.object(game_file, 'cloud_only', return_value=True):
+            with self.assertRaisesRegex(ValueError, 'Download Now'):
+                game_file.check_file_hash(self.manifest, self.file)
+
+    def test_manifest_accepts_only_nonempty_digest_lists(self):
+        base = {'schema_version': 1, 'id': 'examplepad', 'name': 'ExamplePad', 'game': 'Example',
+                'kind': 'disc-translation', 'status': 'experimental', 'publication': {'public_binaries': False},
+                'targets': {'ios': {'hosts': {'macos-arm64': 'planned'}}}, 'inputs': [self.input]}
+        validate_manifest(base)
+        for bad in ([], self.accepted, [None], ['A' * 64], ['short']):
+            with self.subTest(bad=bad):
+                self.input['accepted_sha256'] = bad
+                with self.assertRaisesRegex(ValueError, 'accepted_sha256'):
+                    validate_manifest(base)
+
+
 if __name__ == "__main__":
     unittest.main()

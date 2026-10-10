@@ -67,6 +67,11 @@ def validate_manifest(data):
         for digest in item.get("verified_sha256", []):
             _require(isinstance(digest, str) and re.fullmatch(r"[0-9a-f]{64}", digest),
                      "verified_sha256 entries must be lowercase SHA-256 digests")
+        if "accepted_sha256" in item:
+            accepted = item["accepted_sha256"]
+            _require(isinstance(accepted, list) and accepted and
+                     all(isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) for value in accepted),
+                     "input accepted_sha256 must be a non-empty list of lowercase SHA-256 digests")
         game_ids = item.get("game_ids", [])
         _require(isinstance(game_ids, list) and all(isinstance(gid, str) and re.fullmatch(r"[0-9A-Z]{6}", gid)
                                                     for gid in game_ids),
@@ -181,6 +186,11 @@ def validate_manifest(data):
         _require("hosts" not in tool or (isinstance(tool["hosts"], list) and tool["hosts"]
                                          and all(isinstance(host, str) for host in tool["hosts"])),
                  f"tool {tool['name']}.hosts must be a list of build hosts")
+        if "input_formats" in tool:
+            formats = tool["input_formats"]
+            _require(isinstance(formats, list) and formats and
+                     all(isinstance(value, str) and re.fullmatch(r"[a-z0-9]+", value) for value in formats),
+                     f"tool {tool['name']}.input_formats must be a non-empty list of lowercase extensions")
     disk = requirements.get("disk_gb", 0)
     _require(isinstance(disk, (int, float)) and disk >= 0, "requirements.disk_gb must be a number")
     publication = data.get("publication")

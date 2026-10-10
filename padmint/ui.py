@@ -31,6 +31,13 @@ def strings(lang):
     return {key[2:]: value.get(lang, value["en"]) for key, value in MESSAGES.items() if key.startswith("w_")}
 
 
+def input_formats(inputs):
+    """An exhaustive format list only when every input alternative supplies one."""
+    if any(not item.get("formats") for item in inputs):
+        return []
+    return sorted({name for item in inputs for name in item["formats"]})
+
+
 def player_data(lang):
     """Everything the page shows before a build: games, devices and game files found."""
     folder = cli.player_folder()
@@ -41,8 +48,8 @@ def player_data(lang):
         files = cli.game_files(folder, entry.get("manifest")) if needs_file else []
         games.append({"id": game, "name": name, "needs_file": needs_file,
                       "about": entry.get("game") or (entry.get("manifest") or {}).get("game", ""),
-                      "formats": sorted({f.upper() for item in (entry.get("manifest") or {}).get("inputs", [])
-                                         for f in item.get("formats", [])}),
+                      "formats": [f.upper() for f in input_formats([item for item in (entry.get("manifest") or {}).get("inputs", [])
+                                                                 if item.get("when", "build") == "build"])],
                       "ids": entry.get("game_ids") or [],
                       "platforms": [{"id": p, "label": cli.platform_label(p, lang),
                                      "short": phrase(f"w_short_{p}", lang) if f"w_short_{p}" in MESSAGES else p}
@@ -74,12 +81,12 @@ def player_data(lang):
                  "link": ((catalog()[game].get("off_mac") or {}).get("url")
                           or catalog()[game].get("player_help") or catalog()[game]["repo_url"])}
                 for game, name, targets in cli.elsewhere()]
-    return {"lang": lang, "version": __version__, "folder": str(folder),
+    return {"lang": lang, "version": __version__, "host": cli.host_id(), "folder": str(folder),
             "saved_in": phrase("saved_in", lang, folder=folder), "games": games, "downloads": apps, "later": waiting,
             "text": strings(lang), "picker": not cli.on_android(), "reveal": not cli.on_android()}
 
 
-def plan(game, platform_name, lang):
+def plan(game, platform_name, lang, disc=None):
     """What a build will do on this computer, before it starts: what it downloads and from
     where, how big, what the player installs first, and where the copy goes. Read from the
     recipe the game's latest release publishes (as doctor does), so the tools and the programs
@@ -96,13 +103,14 @@ def plan(game, platform_name, lang):
             items.append({"name": name, "version": tools.version(table[name], host), "size": download.get("size"),
                           "source": urlparse(download["url"]).hostname, "here": tools.installed(name, host)})
     needs = [{"label": cli.label(tool), "ok": cli.check_program(tool)[0], "note": tool.get("note", "")}
-             for tool in cli.player_requirements(manifest, platform_name)]
+             for tool in cli.player_requirements(manifest, platform_name, disc)]
     name = manifest.get("name") or entry.get("name", game)
     key = f"w_output_{platform_name}"
     return {"repo": entry["repo_url"], "tools": items, "tools_folder": str(tools.tools_root()),
             "app": bool(target.get("published_app")), "space_gb": entry.get("free_space_gb"),
             "folder": str(cli.player_folder()), "needs": needs, "before": cli.before_build(game),
-            "output": phrase(key, lang, name=name) if key in MESSAGES else ""}
+            "output": phrase(key, lang, name=name) if key in MESSAGES else "",
+            "inputs": [item for item in manifest.get("inputs", []) if item.get("when", "build") == "build"]}
 
 
 RECIPES = {}
@@ -186,15 +194,23 @@ def check_file(game, path, lang):
     if problem:
         return problem
     # A player may pick the game's app (an APK or IPA) or a ZIP instead of the game file.
-    manifest = catalog()[game].get("manifest") or {}
-    formats = sorted({name for item in manifest.get("inputs", []) for name in item.get("formats", [])})
+    manifest = release_recipe(game) or catalog()[game].get("manifest") or {}
+    inputs = [item for item in manifest.get("inputs", []) if item.get("when", "build") == "build"]
+    formats = input_formats(inputs)
     if formats and disc.suffix.lower().lstrip(".") not in formats:
         return phrase("w_not_game_file", lang, file=disc.name, name=manifest.get("name", game),
                       formats=", ".join(name.upper() for name in formats))
+    try:
+        cli.game_file.check_file_hash(manifest, disc)
+    except (OSError, ValueError) as error:
+        return str(error)
+    # Installers and other non-disc inputs must not trigger a disc-tool download.
+    if inputs and not any(item.get("type") in cli.game_file.DISC_TYPES or item.get("type") == "n64-rom"
+                          for item in inputs):
+        return None
     found = cli.game_from_file(disc, cli.player_games(), io.StringIO())
     if found and game not in found:
-        name = (catalog()[game].get("manifest") or {}).get("name", game)
-        return phrase("w_wrong_game", lang, name=name)
+        return phrase("w_wrong_game", lang, name=manifest.get("name", game))
     return None
 
 
@@ -332,7 +348,7 @@ def make_handler(token, builds):
                 if not any(id_ == game and platform_name in platforms
                            for id_, _name, platforms in cli.player_games()):
                     return self.reply(400, {"error": "That game cannot be made for that device on this computer"})
-                return self.reply(200, plan(game, platform_name, self.lang()))
+                return self.reply(200, plan(game, platform_name, self.lang(), query.get("disc", [None])[0]))
             return self.reply(404, {"error": "not found"})
 
         def do_POST(self):
@@ -558,7 +574,7 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 </div>
 <script>
 const T="__TOKEN__";let D=__DATA__,S=D.text;const H={"Content-Type":"application/json","X-PadMint-Token":T};
-const $=id=>document.getElementById(id);let file=null,reading=false,sel=null,dev=null,shown=false;
+const $=id=>document.getElementById(id);let file=null,reading=false,sel=null,dev=null,shown=false,fileRequest=0;
 const fill=(k,v)=>Object.entries(v||{}).reduce((s,[a,b])=>s.split("{"+a+"}").join(b),S[k]||"");
 for(const e of document.querySelectorAll("[data-t]"))e.textContent=S[e.dataset.t]||"";
 document.documentElement.lang=D.lang;$("lang").value=D.lang;$("ver").textContent="v"+D.version;$("search").placeholder=S.search;
@@ -608,7 +624,7 @@ function cards(){const q=$("search").value.trim().toLowerCase();
  $("groupNote").textContent=sel?"":S[{all:"all_note",build:"builds",download:"no_build",later:"later_note"}[group]];
  $("list").replaceChildren(...G[group].map(x=>row(x)));$("list").classList.toggle("hidden",!G[group].length);
  $("noMatch").classList.toggle("hidden",!!G[group].length);layout()}
-function back(top){sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards();if(top)scrollTo({top:0,behavior:"smooth"});else $("pickCard").scrollIntoView({behavior:"smooth"})}
+function back(top){++fileRequest;reading=false;sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards();if(top)scrollTo({top:0,behavior:"smooth"});else $("pickCard").scrollIntoView({behavior:"smooth"})}
 function layout(){$("about").classList.toggle("hidden",!!sel||!$("progress").classList.contains("hidden"))}
 function home(){if(last&&last.state=="running"){scrollTo({top:0,behavior:"smooth"});return}
  last=null;shown=false;$("progress").classList.add("hidden");$("form").classList.remove("hidden");$("finished").replaceChildren();$("finished").classList.add("hidden");
@@ -616,7 +632,7 @@ function home(){if(last&&last.state=="running"){scrollTo({top:0,behavior:"smooth
  $("search").value="";system="";group="all";filters();back(true)}
 $("home").onclick=e=>{e.preventDefault();home()};$("home").setAttribute("aria-label",S.home||"PadMint");
 $("search").oninput=cards;$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
-function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
+function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);
  if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=w.text;$("laterLink").href=w.link;$("laterLink").textContent=fill("later_link",{name:w.name});$("laterBox").scrollIntoView({behavior:"smooth"})}
  $("dlBox").classList.toggle("hidden",!a);
@@ -632,10 +648,15 @@ function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("p
  else{$("inAppText").textContent=fill("file_in_app",{name:g.name});$("inApp").classList.remove("hidden")}
  $("deviceBox").classList.remove("hidden");$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}));
  if(g.platforms.length==1)pickDevice(g.platforms[0].id);($("fileBox").classList.contains("hidden")?$("deviceBox"):$("fileBox")).scrollIntoView({behavior:"smooth"});ready()}
-async function pickDevice(id){dev=id;for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);const rg=game();$("readyBox").classList.toggle("hidden",!(rg&&rg.ready&&rg.ready.platforms.includes(id)));$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
- const r=await (await fetch("/api/plan?game="+sel+"&platform="+id+"&lang="+D.lang,{headers:H})).json();if(dev!=id)return;showPlan(r);ready()}
+let planRequest=0;
+async function pickDevice(id){const request=++planRequest;blocked=true;dev=id;ready();for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);const rg=game();$("readyBox").classList.toggle("hidden",!(rg&&rg.ready&&rg.ready.platforms.includes(id)));$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
+ const selected=sel;try{const r=await (await fetch("/api/plan?game="+selected+"&platform="+id+"&lang="+D.lang+(file?"&disc="+encodeURIComponent(file):""),{headers:H})).json();if(request!=planRequest||dev!=id||sel!=selected)return;showPlan(r);ready()}catch(e){if(request!=planRequest||dev!=id||sel!=selected)return;$("plan").replaceChildren(el("p",String(e),"bad"));ready()}}
 let blocked=false;
 function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.error){box.append(el("p",p.error,"bad"));return}
+ if(g.needs_file&&p.inputs){const h=$("fileHint");h.replaceChildren(el("b",fill("file_hint",{game:g.about||g.name})));
+  for(const i of p.inputs){if(i.description)h.append(" ",el("span",i.description));}
+  const formats=p.inputs.every(i=>(i.formats||[]).length)?[...new Set(p.inputs.flatMap(i=>i.formats))]:[];if(formats.length)h.append(" ",el("span",fill("file_formats",{formats:formats.map(f=>f.toUpperCase()).join(", ")}),"muted"));
+  if(g.ids.length)h.append(" · ",el("span",fill(g.ids[0].length==4?"file_code":"file_ids",{ids:g.ids.join(", ")}),"muted"));}
  if(p.output)box.append(el("div",p.output,"out"));
  blocked=p.needs.some(n=>!n.ok);
  if(p.needs.length){box.append(el("p",S.plan_needs,"state"));const u=el("ul",null,"tools");for(const n of p.needs){const li=el("li");li.append(el("span",n.label),el("span",n.ok?S.needs_ok:S.needs_missing,n.ok?"ok":"bad"));u.append(li);if(!n.ok)u.append(el("li",n.note,"detail"))}box.append(u)}
@@ -650,17 +671,17 @@ function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.err
  o.append(el("li",g.needs_file?S.plan_build:S.plan_build_app),el("li",fill("plan_save",{folder:p.folder})));box.append(o);
  if(p.space_gb)box.append(el("p",fill("plan_space",{gb:p.space_gb}),"muted small"))}
 function ready(){const g=game();$("make").disabled=!g||!dev||reading||blocked||(g.needs_file&&!file)}
-async function useFile(path){if(!path)return;$("path").value=path;reading=true;file=null;ready();$("fileState").className="state";
- $("fileState").textContent="…";const r=await post("/api/file",{game:sel,path});reading=false;
+async function useFile(path){if(!path)return;const request=++fileRequest,selected=sel;$("path").value=path;reading=true;file=null;ready();$("fileState").className="state";
+ $("fileState").textContent="…";const r=await post("/api/file",{game:selected,path});if(request!=fileRequest||sel!=selected)return;reading=false;
  if(r.problem||r.error){$("fileState").className="state bad";$("fileState").textContent=r.problem||r.error}
- else{file=path;$("fileState").className="state ok";$("fileState").textContent="✓ "+fill("file_ok",{file:base(path)})}ready()}
-$("choose").onclick=async()=>{const r=await post("/api/pick");if(r.path)useFile(r.path);else if(!r.available){$("typeBox").open=true;$("path").focus()}};
+ else{file=path;$("fileState").className="state ok";$("fileState").textContent="✓ "+fill("file_ok",{file:base(path)});if(dev)await pickDevice(dev)}ready()}
+$("choose").onclick=async()=>{const request=fileRequest,selected=sel,r=await post("/api/pick");if(request!=fileRequest||sel!=selected)return;if(r.path)useFile(r.path);else if(!r.available){$("typeBox").open=true;$("path").focus()}};
 $("use").onclick=()=>useFile($("path").value.trim().replace(/^["']|["']$/g,""));
 $("make").onclick=async()=>{$("make").disabled=true;const r=await post("/api/make",{game:sel,platform:dev,path:file});
  if(r.error){$("makeError").textContent=r.error;ready();return}show(r);poll()};
 $("cancel").onclick=async()=>{$("cancel").disabled=true;await post("/api/cancel")};
 $("again").onclick=home;
-$("copy").onclick=async()=>{const text="PadMint "+D.version+" ("+navigator.platform+")\n"+$("tail").textContent;
+$("copy").onclick=async()=>{const text="PadMint "+D.version+" ("+D.host+")\n"+$("tail").textContent;
  try{await navigator.clipboard.writeText(text);$("copy").textContent=S.copied}catch(e){getSelection().selectAllChildren($("tail"))}};
 const clock=s=>[Math.floor(s/3600),Math.floor(s/60)%60,s%60].map((n,i)=>i?String(n).padStart(2,"0"):n).join(":");
 function linked(text,tag){tag=typeof tag=="string"?tag:null;const li=el(tag||"li",null,tag?"muted small":null);for(const part of text.split(/(https:\/\/[^\s)]*[^\s).,;:])/)){if(/^https:\/\//.test(part)){const a=el("a",part);a.href=part;a.target="_blank";li.append(a)}else li.append(part)}return li}

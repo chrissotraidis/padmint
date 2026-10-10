@@ -232,7 +232,7 @@ MESSAGES = {
     "w_type": {"en": "Or type or paste the file's full path:", "es": "O escribe o pega la ruta completa del archivo:",
                "pt": "Ou digite ou cole o caminho completo do arquivo:"},
     "w_use": {"en": "Use", "es": "Usar", "pt": "Usar"},
-    "w_file_ok": {"en": "Ready: {file}", "es": "Listo: {file}", "pt": "Pronto: {file}"},
+    "w_file_ok": {"en": "Selected: {file}", "es": "Seleccionado: {file}", "pt": "Selecionado: {file}"},
     "w_wrong_game": {"en": "This file is not a {name} game file.", "es": "Este archivo no es del juego {name}.",
                      "pt": "Este arquivo não é do jogo {name}."},
     "w_not_game_file": {
