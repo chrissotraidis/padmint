@@ -7,8 +7,9 @@ Reads each recipe the way a player's PadMint does, then reports what would confu
 a player: a target the recipe lacks, a target the recipe builds that PadMint silently hides,
 a ready-to-play download the release doesn't publish, a menu showing a raw target name, a copy
 with no finishing steps, an Xcode iPhone build that does not check Xcode's iOS platform, a game
-file asked for at the wrong time, a player tool without install steps, a help link to a missing
-README heading, or a game-code recipe that allows public binaries. It also prints where each
+file asked for at the wrong time, a player tool without install steps, a step run with {python}
+that needs a newer Python than PadMint's own, a help link to a missing README heading, or a
+game-code recipe that allows public binaries. It also prints where each
 target builds. Needs the network; changes nothing. Exit status 1 when it finds a problem.
 The catalog-check workflow runs it every day, so a game release that changes what it publishes
 fails here instead of confusing players.
@@ -122,6 +123,15 @@ def audit():
         for tool in cli.player_requirements(recipe):
             if not tool.get("note"):
                 found(f"player tool {tool['name']} has no install note")
+        # {python} is the Python running PadMint: Apple's 3.9 when PadMint.command starts it.
+        newer = [tool["min_version"] for tool in recipe.get("requirements", {}).get("tools", [])
+                 if tool["name"] in ("python", "python3")
+                 and cli.version_tuple(str(tool.get("min_version", "0"))) > (3, 9)]
+        steps = [step for target in (recipe.get("targets") or {}).values()
+                 for step in ([target] if "command" in target else target.get("steps", []))]
+        if newer and any(step["command"][:1] == ["{python}"] for step in steps):
+            found(f"a step runs {{python}} (PadMint's Python, 3.9 on a Mac) but the recipe checks for "
+                  f"Python {newer[0]}+; run python3, the program that check finds")
         help_url = entry.get("player_help") or ""
         if "#" in help_url:
             text = readme(entry["repo_url"], tag) or readme(entry["repo_url"], "HEAD")

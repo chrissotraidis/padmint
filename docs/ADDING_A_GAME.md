@@ -39,6 +39,11 @@ as a stage, shows progress, stops at the first failure and audits the result.
   `{output}`, `{jobs}`. Values never become shell text. A step may also set
   `"env": {"NAME": "{output}"}` when a script reads its output path from the
   environment.
+- **`{python}`** is the Python running PadMint: Apple's Python 3.9 on a Mac and
+  PadMint's bundled Python on Windows. Scripts it runs must work on 3.9. A
+  script that needs a newer Python should run as `python3` and list `python3`
+  with that `min_version` in `requirements.tools`, so the check and the build use
+  the same program.
 - **Job cap:** every step runs with `CMAKE_BUILD_PARALLEL_LEVEL` set to
   `--jobs`, which `cmake --build` honors. Scripts that call `ninja`, `make`
   or `xcodebuild` directly should pass `{jobs}` themselves. Check the actual
