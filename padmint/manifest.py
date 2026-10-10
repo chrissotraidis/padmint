@@ -186,6 +186,10 @@ def validate_manifest(data):
         _require("hosts" not in tool or (isinstance(tool["hosts"], list) and tool["hosts"]
                                          and all(isinstance(host, str) for host in tool["hosts"])),
                  f"tool {tool['name']}.hosts must be a list of build hosts")
+        # targets: the targets it is needed for (Xcode for iOS and macOS, not Android).
+        _require("targets" not in tool or (isinstance(tool["targets"], list) and tool["targets"]
+                                           and set(tool["targets"]) <= set(TARGETS)),
+                 f"tool {tool['name']}.targets must be a list of targets")
         if "input_formats" in tool:
             formats = tool["input_formats"]
             _require(isinstance(formats, list) and formats and
@@ -231,9 +235,9 @@ def catalog():
             raise ValueError(f"catalog/{path.name}: player_targets lists android, ios, macos or windows")
         if entry.get("player_game_file", "build") not in ("build", "in-app"):
             raise ValueError(f"catalog/{path.name}: player_game_file is build or in-app")
-        if not isinstance(entry.get("ios_off_mac", False), bool) \
-                or (entry.get("ios_off_mac") and "ios" not in targets):
-            raise ValueError(f"catalog/{path.name}: ios_off_mac is true or false, for an ios player target")
+        for flag in ("ios_off_mac", "ios_intel_mac"):
+            if not isinstance(entry.get(flag, False), bool) or (entry.get(flag) and "ios" not in targets):
+                raise ValueError(f"catalog/{path.name}: {flag} is true or false, for an ios player target")
         for platform, steps in (entry.get("player_next") or {}).items():
             if platform not in targets or not isinstance(steps, dict) or not steps.get("steps") \
                     or not all(isinstance(step, str) for step in steps["steps"]):

@@ -968,7 +968,7 @@ def require_programs(manifest, platform_name, disc=None):
 def player_requirements(manifest, platform_name=None, disc=None):
     """Programs the recipe says the player installs themselves (requirements.tools with "player").
     For an iPhone copy built with Xcode, also Xcode's iOS platform unless the recipe checks it."""
-    here = host_requirements(manifest, disc)
+    here = host_requirements(manifest, disc, platform_name)
     tools_ = [tool for tool in here if tool.get("player")]
     if platform_name == "ios" and host_id().startswith("macos") \
             and any(tool["name"] == "xcodebuild" for tool in here) \
@@ -977,12 +977,15 @@ def player_requirements(manifest, platform_name=None, disc=None):
     return tools_
 
 
-def host_requirements(manifest, disc=None):
+def host_requirements(manifest, disc=None, platform_name=None):
     """The recipe's requirements.tools that apply on this computer: all, except those whose
-    "hosts" name other build hosts or whose input formats exclude the selected file.
-    With no selected file, or a folder input, retain every host prerequisite."""
+    "hosts" name other build hosts, whose "targets" name other targets (Xcode for an iPhone
+    or Mac copy, not for an Android game pack built on the same Mac), or whose input formats
+    exclude the selected file. With no selected file, or a folder input, retain every host
+    prerequisite."""
     return [tool for tool in manifest.get("requirements", {}).get("tools", [])
             if host_id() in tool.get("hosts", [host_id()])
+            and (platform_name is None or platform_name in tool.get("targets", [platform_name]))
             and (disc is None or not tool.get("input_formats") or Path(disc).is_dir()
                  or Path(disc).suffix.lower().lstrip(".") in tool["input_formats"])]
 
@@ -1109,7 +1112,7 @@ def doctor(game, target_name, repo=None, stream=None):
         report(free >= needed, "free disk space", f"{free:.0f} GB free, {needed} GB needed")
         print(f"{problems} item(s) to fix" if problems else "Ready", file=stream)
         return 1 if problems else 0
-    for tool in host_requirements(manifest):
+    for tool in host_requirements(manifest, platform_name=target_name):
         ok, detail = check_program(tool)
         report(ok, label(tool), detail)
     needed = manifest.get("requirements", {}).get("disk_gb", 0)
@@ -1265,7 +1268,8 @@ def game_from_file(disc, games, stream):
 def player_games():
     """[(game, name, platforms)] a player can make on this computer. iPhone builds need Xcode
     on Apple Silicon, except games marked ios_off_mac, which also build on Windows and Linux
-    computers. An Intel Mac and a phone make Android copies. A Windows copy is made on the
+    computers. Games marked ios_intel_mac also build iPhone copies on Intel Macs with Xcode.
+    An Android phone makes Android copies. A Windows copy is made on the
     Windows PC it runs on, and a Mac copy on the Apple Silicon Mac it runs on."""
     host = host_id()
     apple_silicon = host == "macos-arm64"
@@ -1273,7 +1277,8 @@ def player_games():
     here = {"ios": None, "windows": host.startswith("windows-"), "macos": apple_silicon and not on_android()}
     games = []
     for game, entry in sorted(catalog().items()):
-        ios_here = apple_silicon or (computer_off_mac and entry.get("ios_off_mac", False))
+        ios_here = (apple_silicon or (computer_off_mac and entry.get("ios_off_mac", False))
+                    or (host == "macos-x86_64" and entry.get("ios_intel_mac", False)))
         here["ios"] = ios_here
         platforms = [name for name in entry.get("player_targets", []) if here.get(name, True)]
         if platforms:

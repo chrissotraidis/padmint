@@ -208,6 +208,15 @@ does not validate file contents or replace input hashes.
    recipe the way a player's PadMint does and lists what would confuse or stop a
    player, plus where each target builds.
 
+## Intel Mac iPhone builds
+
+Set catalog `ios_intel_mac: true` only for a game whose published iOS
+recipe declares `macos-x86_64` as experimental or verified. This is separate
+from `ios_off_mac` (Windows/Linux) and does not enable a native Mac app.
+The Intel route uses Xcode and its iOS platform. Publish the matching game
+recipe before releasing the catalog change; the release recipe still decides
+whether a build can start.
+
 ## 4. When a game's release changes what it publishes
 
 PadMint describes each game from two places: the game's latest release (its recipe

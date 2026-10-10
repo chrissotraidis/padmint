@@ -236,6 +236,40 @@ class MacCopyTests(unittest.TestCase):
             self.assertEqual(cli.platform_label("macos", "es"), "Este Mac")
 
 
+class IntelIphoneTests(unittest.TestCase):
+    def test_intel_catalog_flag_requires_boolean_and_ios_target(self):
+        from padmint import manifest
+        for changes in ({"ios_intel_mac": "yes"}, {"player_targets": ["android"]}):
+            with self.subTest(changes=changes), tempfile.TemporaryDirectory() as folder:
+                entry = {"id": "example", "repo_url": "https://example.com/game",
+                         "player_targets": ["ios"], "ios_intel_mac": True, **changes}
+                Path(folder, "example.json").write_text(json.dumps(entry))
+                with mock.patch.object(manifest, "CATALOG", Path(folder)):
+                    with self.assertRaisesRegex(ValueError, "ios_intel_mac"):
+                        manifest.catalog()
+
+    def test_intel_iphone_support_is_opt_in_and_does_not_enable_mac_apps(self):
+        entries = {
+            "enabled": {"name": "Enabled", "player_targets": ["android", "ios", "macos"],
+                        "ios_intel_mac": True},
+            "other": {"name": "Other", "player_targets": ["ios"], "ios_off_mac": True},
+        }
+        with mock.patch.object(cli, "catalog", return_value=entries), \
+                mock.patch.object(cli, "host_id", return_value="macos-x86_64"):
+            self.assertEqual(cli.player_games(), [("enabled", "Enabled", ["android", "ios"])])
+            self.assertEqual(cli.elsewhere(), [("other", "Other", ["ios"])])
+
+    def test_kartpad_is_offered_on_intel_and_checks_the_ios_sdk(self):
+        with mock.patch.object(cli, "host_id", return_value="macos-x86_64"):
+            platforms = next(p for game, _, p in cli.player_games() if game == "kartpad")
+            self.assertIn("ios", platforms)
+            manifest = catalog()["kartpad"]["manifest"]
+            cli.player_target(manifest, "ios")
+            self.assertIn("Xcode iOS platform",
+                          [cli.label(t) for t in cli.player_requirements(manifest, "ios")])
+            self.assertNotIn("macos", platforms)
+
+
 class PrivateNoteTests(unittest.TestCase):
     """The finish line says the copy came from the player's game only when the build read it."""
     def test_a_decompilation_built_without_the_game_file_says_only_that_it_holds_game_code(self):
@@ -278,6 +312,12 @@ class IosPlatformTests(unittest.TestCase):
         xcode_on_mac = dict(self.XCODE, hosts=["macos-arm64"])
         with mock.patch.object(cli, "host_id", return_value="windows-x86_64"):
             self.assertEqual(cli.player_requirements(self.recipe(xcode_on_mac), "ios"), [])
+
+    def test_xcode_for_apple_targets_is_not_asked_for_an_android_pack(self):
+        xcode = dict(self.XCODE, player=True, note="Install Xcode", targets=["ios", "macos"])
+        self.assertIn("Xcode", self.names(self.recipe(xcode), "macos"))
+        self.assertIn("Xcode iOS platform", self.names(self.recipe(xcode), "ios"))
+        self.assertEqual(self.names(self.recipe(xcode), "android"), [])
 
     def test_off_a_mac_the_ios_platform_is_never_asked_for(self):
         # KartPad 0.7.14 lists Xcode with no hosts; Windows and Linux build its iPhone copy

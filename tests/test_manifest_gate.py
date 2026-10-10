@@ -67,7 +67,8 @@ class ManifestTests(unittest.TestCase):
 
     def test_runnable_host_requires_command_and_publication_flag(self):
         data = minimal()
-        del data["targets"]["ios"]["command"]
+        data["targets"]["ios"].pop("command", None)
+        data["targets"]["ios"].pop("steps", None)
         with self.assertRaisesRegex(ValueError, "no command"):
             validate_manifest(data)
         data = minimal()

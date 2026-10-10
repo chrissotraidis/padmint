@@ -33,6 +33,12 @@ work and when to revisit it.
 
 ## PadMint itself
 
+- **v0.4.14**: with KartPad 0.8.0, PadMint builds KartPad for iPhone and iPad on Intel
+  Macs (with Xcode and its iOS platform), and offers KartPad's Mac copy again on Apple
+  Silicon Macs, using PadMint's own build tools (no Homebrew). A recipe can say a
+  program is needed only for some targets, so building KartPad for Android on a Mac
+  doesn't ask for Xcode.
+
 - **v0.4.13**: clearer downloads. KartPad's card says its ready-to-play download is
   for Android ("Android: ready-to-play app"), and the download note appears only when
   you choose Android, with a **Download the Android app** button. It no longer

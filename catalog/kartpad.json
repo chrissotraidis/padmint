@@ -4,11 +4,9 @@
   "repo_url": "https://github.com/chrissotraidis/kartpad",
   "player_targets": [
     "android",
-    "ios"
+    "ios",
+    "macos"
   ],
-  "unoffered_targets": {
-    "macos": "KartPad 0.7.15's Mac recipe needs Homebrew tools most players don't have; PadMint offers it once KartPad 0.8.0 fixes that (#138)."
-  },
   "ready_to_play": {
     "url": "https://github.com/chrissotraidis/kartpad/releases/latest",
     "platforms": [
@@ -30,7 +28,7 @@
   "free_space_gb": 16,
   "ios_off_mac": true,
   "reviewed_revision": null,
-  "notes": "Players: padmint make kartpad android|ios (the manifest in KartPad's repository is used). This embedded manifest is the fallback when the release or an older checkout has none; its android target is KartPad v0.7.2's.",
+  "notes": "Players: padmint make kartpad android|ios (the published or repository recipe is authoritative). The fallback iOS target uses KartPad 0.7.15's game-pack builder with experimental Intel Mac support; its Android target remains KartPad 0.7.2's.",
   "player_next": {
     "android": {
       "steps": [
@@ -95,6 +93,29 @@
           ]
         }
       }
+    },
+    "macos": {
+      "steps": [
+        "Open {file}, move the KartPad app to your Applications folder and open it. The first time, macOS says it can't check the app: choose Done, then System Settings → Privacy & Security → Open Anyway.",
+        "Updating? Quit KartPad and replace the app in Applications; your settings and saves stay.",
+        "First time only: when KartPad asks for game data, choose your extracted Mario Kart Wii DATA folder (in Dolphin: right-click the game, Properties → Filesystem, right-click the disc, Extract Entire Disc). For Retro Rewind, see the full guide below."
+      ],
+      "translations": {
+        "es": {
+          "steps": [
+            "Abre {file}, mueve la app KartPad a tu carpeta Aplicaciones y ábrela. La primera vez, macOS dice que no puede comprobar la app: elige OK y luego Ajustes del Sistema → Privacidad y seguridad → Abrir igualmente.",
+            "¿Actualizas? Cierra KartPad y reemplaza la app en Aplicaciones; tus ajustes y partidas se conservan.",
+            "Solo la primera vez: cuando KartPad pida los datos del juego, elige la carpeta DATA extraída de tu Mario Kart Wii (en Dolphin: clic derecho en el juego, Propiedades → Sistema de archivos, clic derecho en el disco, Extraer todo el disco). Para Retro Rewind, consulta la guía completa de abajo."
+          ]
+        },
+        "pt": {
+          "steps": [
+            "Abra {file}, mova o app KartPad para a pasta Aplicativos e abra-o. Na primeira vez, o macOS diz que não pode verificar o app: escolha OK e depois Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim.",
+            "Atualizando? Feche o KartPad e substitua o app em Aplicativos; seus ajustes e saves ficam.",
+            "Só na primeira vez: quando o KartPad pedir os dados do jogo, escolha a pasta DATA extraída do seu Mario Kart Wii (no Dolphin: clique direito no jogo, Propriedades → Sistema de Arquivos, clique direito no disco, Extrair Disco Inteiro). Para o Retro Rewind, veja o guia completo abaixo."
+          ]
+        }
+      }
     }
   },
   "game_data_import": {
@@ -125,25 +146,64 @@
     "targets": {
       "ios": {
         "hosts": {
-          "macos-arm64": "experimental"
+          "macos-arm64": "experimental",
+          "macos-x86_64": "experimental",
+          "windows-arm64": "experimental",
+          "windows-x86_64": "experimental",
+          "linux-x86_64": "experimental",
+          "linux-arm64": "experimental"
         },
-        "command": [
-          "/bin/bash",
-          "{repo}/scripts/build-user-ipa.sh",
-          "build",
-          "{disc}",
-          "--work-root",
-          "{work}",
-          "--output",
-          "{output}",
-          "--jobs",
-          "{jobs}"
+        "tools": [
+          "git",
+          "dotnet",
+          "cmake",
+          "ninja",
+          "nodtool",
+          "libcxx"
         ],
-        "modes": {
-          "full": []
-        },
+        "published_app": "KartPad-v{version}-ios-for-padmint.ipa",
         "output": "ipa",
-        "check": "kartpad-ipa"
+        "check": "none",
+        "steps": [
+          {
+            "stage": "preflight",
+            "command": [
+              "{python}",
+              "-m",
+              "kartpad_builder.cli",
+              "bootstrap",
+              "--target",
+              "ios-pack"
+            ],
+            "env": {
+              "PYTHONPATH": "{repo}/builder"
+            }
+          },
+          {
+            "stage": "build",
+            "command": [
+              "{python}",
+              "-m",
+              "kartpad_builder.cli",
+              "build-pack",
+              "ios",
+              "{disc}",
+              "--app",
+              "{app}",
+              "--work-root",
+              "{work}",
+              "--output",
+              "{output}",
+              "--jobs",
+              "{jobs}",
+              "--game-data",
+              "{output}.data"
+            ],
+            "env": {
+              "PYTHONPATH": "{repo}/builder"
+            }
+          }
+        ]
       },
       "macos": {
         "hosts": {
@@ -325,5 +385,6 @@
       "reason": "Personal builds contain translated game code; public releases are source only."
     }
   },
-  "game": "Mario Kart Wii (Wii)"
+  "game": "Mario Kart Wii (Wii)",
+  "ios_intel_mac": true
 }

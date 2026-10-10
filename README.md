@@ -203,12 +203,10 @@ PadMint yet; the game's page has the latest.
 <details>
 <summary><strong>Can I play KartPad on my Mac?</strong></summary>
 
-Not through PadMint yet: it offers KartPad for Android and iPhone/iPad only.
-KartPad's Mac copy is coming back to PadMint with the next KartPad and PadMint
-releases. On an Apple Silicon Mac, KartPad's last Mac download,
-[0.7.13](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.13), still
-plays the original game but won't get updates, so it can't use newer Retro
-Rewind versions.
+Yes, on a Mac with Apple Silicon (M1 or newer) with Xcode: choose KartPad and
+**This Mac**. PadMint builds KartPad from your disc and saves the app in your
+Downloads folder. On an Intel Mac, PadMint builds KartPad for iPhone and iPad
+(experimental), but the Mac app itself needs Apple Silicon.
 
 </details>
 <details>
