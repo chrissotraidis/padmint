@@ -5,6 +5,7 @@ supports. `nodtool info` reads the disc header in milliseconds, so a player
 with another region or another game hears why at once, in plain words, instead
 of after gigabytes of tools and minutes of extraction.
 """
+import hashlib
 import re
 import os
 import shutil
@@ -125,10 +126,42 @@ def check(manifest, disc, nodtool=None):
     return f"{title or game_id} ({game_id}, {region(game_id)}, revision {revision})"
 
 
+def check_file_hash(manifest, disc):
+    """Check explicitly accepted full-file hashes; folders stay with the game backend.
+
+    verified_sha256 records known test inputs, not an exclusive acceptance list.
+    Only accepted_sha256 opts a recipe into rejecting other file contents.
+    """
+    if disc is None or not disc.is_file():
+        return None
+    declared = [item for item in manifest.get("inputs", []) if item.get("when", "build") == "build"]
+    if not any(item.get("accepted_sha256") for item in declared):
+        return None
+    inputs = [item for item in declared
+              if not item.get("formats") or disc.suffix.lower().lstrip(".") in item["formats"]]
+    if inputs and any(not item.get("accepted_sha256") for item in inputs):
+        return None
+    if inputs:
+        require_local(disc)
+        digest = hashlib.sha256()
+        with disc.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(chunk)
+        if any(digest.hexdigest() in item["accepted_sha256"] for item in inputs):
+            return f"{disc.name} (SHA-256 verified)"
+    # No matching format is not permission to skip an exclusive input check.
+    descriptions = " ".join(dict.fromkeys(item["description"] for item in (inputs or declared)
+                                         if item.get("description")))
+    raise ValueError(f"{disc.name} does not match a supported input file for {manifest['name']}. "
+                     + (descriptions or "Choose the original game file required by this game's build guide.")
+                     + " Renaming a different file will not make it compatible.")
+
+
 def check_before_tools(manifest, target, disc, host):
     """Install only nodtool (a few MB) and check the disc before the large tools."""
+    accepted = check_file_hash(manifest, disc)
     if expected_input(manifest) is None or disc is None:
-        return None
+        return accepted
     if "nodtool" in target.get("tools", []):
         tools.install(["nodtool"], host)
         return check(manifest, disc, tools.executable("nodtool", host))
