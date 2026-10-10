@@ -214,12 +214,13 @@ Rewind versions.
 <details>
 <summary><strong>Can I build iPhone apps on Windows or Linux?</strong></summary>
 
-Only KartPad today, and that is experimental. Every other iPhone/iPad game,
-including BlueWake and HaloPad, needs a Mac with Apple Silicon and Xcode for now.
-Building them on Windows is the next priority, BlueWake first; PadMint will
-offer each one on Windows once that game's release supports it. Until then, on
-Windows use a game's ready-to-play download where it has one, such as BlueWake
-for Windows.
+In PadMint, only KartPad today, and that is experimental. HaloPad's Xbox
+edition has its own route without a Mac:
+[GitHub's free Mac runner builds it](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer)
+in your own copy of HaloPad's repository. Every other iPhone/iPad game needs a
+Mac with Apple Silicon and Xcode for now. Building them on Windows is the next
+priority, BlueWake first; PadMint will offer each one on Windows once that
+game's release supports it.
 
 </details>
 <details>

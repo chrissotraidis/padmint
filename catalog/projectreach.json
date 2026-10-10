@@ -38,5 +38,17 @@
         "Open HaloPad. For Custom Edition (first time only): choose Choose Prepared Package… and pick Halo-CE.halopad.zip from the HaloPad game data folder in {folder}. For the Xbox edition: choose Add Your Xbox Disc and pick your own Halo: Combat Evolved disc image."
       ]
     }
+  },
+  "off_mac": {
+    "url": "https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer",
+    "text": "PadMint builds HaloPad on a Mac with Apple Silicon (M1 or newer). Without one, you can still get the Xbox edition for iPhone and iPad: GitHub's free Mac runner builds it in your own copy of HaloPad's repository, then you install it with Sideloadly and add your own Xbox disc in the app. Custom Edition needs an Apple Silicon Mac.",
+    "translations": {
+      "es": {
+        "text": "PadMint crea HaloPad en un Mac con Apple Silicon (M1 o posterior). Sin uno, igual puedes tener la edición de Xbox para iPhone y iPad: el Mac gratuito de GitHub la crea en tu propia copia del repositorio de HaloPad; luego la instalas con Sideloadly y añades tu propio disco de Xbox en la app. Custom Edition necesita un Mac con Apple Silicon."
+      },
+      "pt": {
+        "text": "O PadMint cria o HaloPad num Mac com Apple Silicon (M1 ou mais novo). Sem um, você ainda pode ter a edição de Xbox para iPhone e iPad: o Mac gratuito do GitHub a cria na sua própria cópia do repositório do HaloPad; depois você a instala com o Sideloadly e adiciona o seu próprio disco de Xbox no app. O Custom Edition precisa de um Mac com Apple Silicon."
+      }
+    }
   }
 }

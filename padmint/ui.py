@@ -66,10 +66,13 @@ def player_data(lang):
     # Games PadMint builds, but not here: listed with the reason, never silently left out.
     waiting += [{"id": game, "name": name,
                  "about": catalog()[game].get("game") or (catalog()[game].get("manifest") or {}).get("game", ""),
-                 "text": phrase("w_needs_mac" if "ios" in targets else "w_needs_windows", lang, name=name),
-                 "tag": phrase("w_needs_mac_tag", lang) if "ios" in targets else None,
+                 "text": (localized(catalog()[game]["off_mac"], "text", lang) if catalog()[game].get("off_mac")
+                          else phrase("w_needs_mac" if "ios" in targets else "w_needs_windows", lang, name=name)),
+                 "tag": (None if catalog()[game].get("off_mac")
+                         else phrase("w_needs_mac_tag", lang) if "ios" in targets else None),
                  "plays_on": ["iphone", "ipad"] if "ios" in targets else [],
-                 "link": catalog()[game].get("player_help") or catalog()[game]["repo_url"]}
+                 "link": ((catalog()[game].get("off_mac") or {}).get("url")
+                          or catalog()[game].get("player_help") or catalog()[game]["repo_url"])}
                 for game, name, targets in cli.elsewhere()]
     return {"lang": lang, "version": __version__, "folder": str(folder),
             "saved_in": phrase("saved_in", lang, folder=folder), "games": games, "downloads": apps, "later": waiting,
@@ -535,7 +538,7 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 
 <section class="card hidden" id="deviceBox"><h2 data-t="step3"></h2><div class="grid" id="devices"></div></section>
 
-<section class="card banner hidden" id="readyBox"><h2 data-t="ready_title"></h2><p id="readyText"></p><div class="row"><a class="btn main" id="readyLink" target="_blank" data-t="ready_link"></a></div><p class="muted small" data-t="ready_or"></p></section>
+<section class="card banner hidden" id="readyBox"><h2 data-t="ready_title"></h2><p id="readyText"></p><div class="row"><a class="btn main" id="readyLink" target="_blank"></a></div><p class="muted small" data-t="ready_or"></p></section>
 
 <section class="card plan hidden" id="planBox"><h2 data-t="plan_title"></h2><div id="plan"></div>
 <div class="row" style="margin-top:.8rem"><button class="btn main" id="make" data-t="make" disabled></button></div>
@@ -617,7 +620,7 @@ function choose(id){sel=id;file=null;dev=null;$("fileState").textContent="";$("p
  $("laterBox").classList.toggle("hidden",!w);
  if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=w.text;$("laterLink").href=w.link;$("laterLink").textContent=fill("later_link",{name:w.name});$("laterBox").scrollIntoView({behavior:"smooth"})}
  $("dlBox").classList.toggle("hidden",!a);
- $("readyBox").classList.add("hidden");if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url}
+ $("readyBox").classList.add("hidden");if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url;$("readyLink").textContent=fill("ready_link",{devices:g.platforms.filter(p=>g.ready.platforms.includes(p.id)).map(p=>p.short||p.label).join(", ")})}
  if(a){$("dlName").textContent=a.name;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(s=>linked(s)));
   const l=el("a",a.guide);l.href=a.guide;l.target="_blank";$("dlGuide").replaceChildren(S.guide+": ",l);$("dlBox").scrollIntoView({behavior:"smooth"})}
  for(const id of ["fileBox","deviceBox","planBox"])$(id).classList.add("hidden");$("inApp").classList.add("hidden");if(!g)return;
