@@ -6,6 +6,9 @@
     "android",
     "ios"
   ],
+  "unoffered_targets": {
+    "macos": "KartPad 0.7.15's Mac recipe needs Homebrew tools most players don't have; PadMint offers it once KartPad 0.8.0 fixes that (#138)."
+  },
   "ready_to_play": {
     "url": "https://github.com/chrissotraidis/kartpad/releases/latest",
     "platforms": [

@@ -285,6 +285,12 @@ def catalog():
                                     or not all(isinstance(text.get("text", off_mac.get("text")), str)
                                                for text in [off_mac] + list((off_mac.get("translations") or {}).values()))):
             raise ValueError(f"catalog/{path.name}: off_mac needs player_targets, an https url and text")
+        # Targets the game's recipe can build that PadMint deliberately doesn't offer yet, each
+        # with the reason; scripts/audit-catalog.py reports any other hidden target.
+        held = entry.get("unoffered_targets")
+        if held is not None and (not isinstance(held, dict) or not set(held) <= TARGETS
+                                 or not all(isinstance(why, str) and why.strip() for why in held.values())):
+            raise ValueError(f"catalog/{path.name}: unoffered_targets maps targets to a reason")
         # Games that also publish ready-to-play downloads: where they are, one line saying so and,
         # optionally, the player_targets they cover (default: all of them).
         ready = entry.get("ready_to_play")
