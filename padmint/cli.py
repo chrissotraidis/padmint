@@ -968,7 +968,7 @@ def require_programs(manifest, platform_name):
 def player_requirements(manifest, platform_name=None):
     """Programs the recipe says the player installs themselves (requirements.tools with "player").
     For an iPhone copy built with Xcode, also Xcode's iOS platform unless the recipe checks it."""
-    here = host_requirements(manifest)
+    here = host_requirements(manifest, platform_name)
     tools_ = [tool for tool in here if tool.get("player")]
     if platform_name == "ios" and host_id().startswith("macos") \
             and any(tool["name"] == "xcodebuild" for tool in here) \
@@ -977,11 +977,13 @@ def player_requirements(manifest, platform_name=None):
     return tools_
 
 
-def host_requirements(manifest):
+def host_requirements(manifest, platform_name=None):
     """The recipe's requirements.tools that apply on this computer: all, except those whose
-    "hosts" name other build hosts."""
+    "hosts" name other build hosts or whose "targets" name other targets (Xcode for an
+    iPhone or Mac copy, not for an Android game pack built on the same Mac)."""
     return [tool for tool in manifest.get("requirements", {}).get("tools", [])
-            if host_id() in tool.get("hosts", [host_id()])]
+            if host_id() in tool.get("hosts", [host_id()])
+            and (platform_name is None or platform_name in tool.get("targets", [platform_name]))]
 
 
 def label(tool):
@@ -1106,7 +1108,7 @@ def doctor(game, target_name, repo=None, stream=None):
         report(free >= needed, "free disk space", f"{free:.0f} GB free, {needed} GB needed")
         print(f"{problems} item(s) to fix" if problems else "Ready", file=stream)
         return 1 if problems else 0
-    for tool in host_requirements(manifest):
+    for tool in host_requirements(manifest, target_name):
         ok, detail = check_program(tool)
         report(ok, label(tool), detail)
     needed = manifest.get("requirements", {}).get("disk_gb", 0)

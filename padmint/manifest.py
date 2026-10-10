@@ -181,6 +181,10 @@ def validate_manifest(data):
         _require("hosts" not in tool or (isinstance(tool["hosts"], list) and tool["hosts"]
                                          and all(isinstance(host, str) for host in tool["hosts"])),
                  f"tool {tool['name']}.hosts must be a list of build hosts")
+        # targets: the targets it is needed for (Xcode for iOS and macOS, not Android).
+        _require("targets" not in tool or (isinstance(tool["targets"], list) and tool["targets"]
+                                           and set(tool["targets"]) <= set(TARGETS)),
+                 f"tool {tool['name']}.targets must be a list of targets")
     disk = requirements.get("disk_gb", 0)
     _require(isinstance(disk, (int, float)) and disk >= 0, "requirements.disk_gb must be a number")
     publication = data.get("publication")

@@ -293,6 +293,12 @@ class IosPlatformTests(unittest.TestCase):
         with mock.patch.object(cli, "host_id", return_value="windows-x86_64"):
             self.assertEqual(cli.player_requirements(self.recipe(xcode_on_mac), "ios"), [])
 
+    def test_xcode_for_apple_targets_is_not_asked_for_an_android_pack(self):
+        xcode = dict(self.XCODE, player=True, note="Install Xcode", targets=["ios", "macos"])
+        self.assertIn("Xcode", self.names(self.recipe(xcode), "macos"))
+        self.assertIn("Xcode iOS platform", self.names(self.recipe(xcode), "ios"))
+        self.assertEqual(self.names(self.recipe(xcode), "android"), [])
+
     def test_off_a_mac_the_ios_platform_is_never_asked_for(self):
         # KartPad 0.7.14 lists Xcode with no hosts; Windows and Linux build its iPhone copy
         # with PadMint's LLVM, so they must not be told to install Xcode's iOS platform.

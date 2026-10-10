@@ -4,17 +4,21 @@
   "repo_url": "https://github.com/chrissotraidis/kartpad",
   "player_targets": [
     "android",
-    "ios"
+    "ios",
+    "macos"
   ],
   "ready_to_play": {
     "url": "https://github.com/chrissotraidis/kartpad/releases/latest",
-    "text": "KartPad has a ready-to-play Android download: install it and add your own game data. iPhone, iPad and Mac copies are built with PadMint from your own Mario Kart Wii disc image. The ios-for-padmint.ipa download is a component PadMint uses, not an app to install directly.",
+    "platforms": [
+      "android"
+    ],
+    "text": "KartPad for Android is a ready-to-play download: the app already has the game code. Install it from KartPad's latest release, then add your own game data when it asks. PadMint makes that game data folder from your disc.",
     "translations": {
       "es": {
-        "text": "KartPad tiene una descarga lista para Android: instálala y añade tus propios datos del juego. Las copias para iPhone, iPad y Mac se crean con PadMint a partir de tu propia imagen de disco de Mario Kart Wii. El archivo ios-for-padmint.ipa es un componente que usa PadMint, no una app para instalar directamente."
+        "text": "KartPad para Android es una descarga lista para jugar: la app ya trae el código del juego. Instálala desde la última versión de KartPad y añade tus propios datos del juego cuando te los pida. PadMint crea esa carpeta de datos del juego a partir de tu disco."
       },
       "pt": {
-        "text": "O KartPad tem um download pronto para Android: instale e adicione seus próprios dados do jogo. As cópias para iPhone, iPad e Mac são criadas com PadMint a partir da sua própria imagem de disco de Mario Kart Wii. O arquivo ios-for-padmint.ipa é um componente usado pelo PadMint, não um app para instalar diretamente."
+        "text": "O KartPad para Android é um download pronto para jogar: o app já traz o código do jogo. Instale-o a partir da versão mais recente do KartPad e adicione seus próprios dados do jogo quando ele pedir. O PadMint cria essa pasta de dados do jogo a partir do seu disco."
       }
     }
   },
@@ -86,6 +90,29 @@
             "Instale {file} no seu iPhone ou iPad com AltStore, SideStore ou Sideloadly.",
             "Atualizando? Instale sobre o seu KartPad atual com a mesma ferramenta e o mesmo Apple ID para manter seus saves. Seus dados do jogo também ficam: se o KartPad não pedir, já pode jogar.",
             "Só na primeira vez: coloque a pasta KartPad game data de {folder} no aparelho (iCloud Drive, um pendrive ou um app de nuvem). No KartPad, toque em Import Game ao lado de Mario Kart Wii, depois em Import from Extracted Folder…, e escolha essa pasta."
+          ]
+        }
+      }
+    },
+    "macos": {
+      "steps": [
+        "Open {file}, move the KartPad app to your Applications folder and open it. The first time, macOS says it can't check the app: choose Done, then System Settings → Privacy & Security → Open Anyway.",
+        "Updating? Quit KartPad and replace the app in Applications; your settings and saves stay.",
+        "First time only: when KartPad asks for game data, choose your extracted Mario Kart Wii DATA folder (in Dolphin: right-click the game, Properties → Filesystem, right-click the disc, Extract Entire Disc). For Retro Rewind, see the full guide below."
+      ],
+      "translations": {
+        "es": {
+          "steps": [
+            "Abre {file}, mueve la app KartPad a tu carpeta Aplicaciones y ábrela. La primera vez, macOS dice que no puede comprobar la app: elige OK y luego Ajustes del Sistema → Privacidad y seguridad → Abrir igualmente.",
+            "¿Actualizas? Cierra KartPad y reemplaza la app en Aplicaciones; tus ajustes y partidas se conservan.",
+            "Solo la primera vez: cuando KartPad pida los datos del juego, elige la carpeta DATA extraída de tu Mario Kart Wii (en Dolphin: clic derecho en el juego, Propiedades → Sistema de archivos, clic derecho en el disco, Extraer todo el disco). Para Retro Rewind, consulta la guía completa de abajo."
+          ]
+        },
+        "pt": {
+          "steps": [
+            "Abra {file}, mova o app KartPad para a pasta Aplicativos e abra-o. Na primeira vez, o macOS diz que não pode verificar o app: escolha OK e depois Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim.",
+            "Atualizando? Feche o KartPad e substitua o app em Aplicativos; seus ajustes e saves ficam.",
+            "Só na primeira vez: quando o KartPad pedir os dados do jogo, escolha a pasta DATA extraída do seu Mario Kart Wii (no Dolphin: clique direito no jogo, Propriedades → Sistema de Arquivos, clique direito no disco, Extrair Disco Inteiro). Para o Retro Rewind, veja o guia completo abaixo."
           ]
         }
       }
