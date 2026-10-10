@@ -3,7 +3,7 @@
 Public recipe snapshot: **4 October 2026**, rechecked against each game's latest release
 recipe with PadMint **v0.3.5** (KartPad rechecked at v0.7.9: same hosts as v0.7.8).
 SquirrelPad v0.1.0 was added on **8 October 2026** for PadMint **v0.4.11**.
-KartPad rows were refreshed on **10 October 2026** against KartPad **v0.7.15**. The
+KartPad rows describe KartPad **v0.8.0** with PadMint **v0.4.14**. The
 daily Catalog check (`scripts/audit-catalog.py`) compares the live catalog with each
 latest release; trust its output over this table when they differ.
 The table describes the recipe shipped with each game's latest public release.
@@ -44,9 +44,9 @@ guided setup offers its Android and iOS targets only.
 | [DinoPad v0.2.0](https://github.com/chrissotraidis/dinopad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [GoldenPad v0.2.2](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.2.2) | iOS IPA | Experimental | Planned / Unavailable | Planned / Unavailable |
 | [HarkinianPad v0.2.0](https://github.com/chrissotraidis/harkinianpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
-| [KartPad v0.7.15](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.15) | iOS IPA | Experimental | Experimental / Experimental | Experimental / Experimental |
-| [KartPad v0.7.15](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.15) | macOS app | Not offered until KartPad 0.8.0 (its recipe needs Homebrew tools) | Unavailable / Unavailable | Unavailable / Unavailable |
-| [KartPad v0.7.15](https://github.com/chrissotraidis/kartpad/releases/tag/v0.7.15) | Android game pack | Experimental | Experimental / Experimental | Experimental / Experimental |
+| [KartPad v0.8.0](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.0) | iOS IPA | Experimental | Experimental / Experimental | Experimental / Experimental |
+| [KartPad v0.8.0](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.0) | macOS app | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
+| [KartPad v0.8.0](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.0) | Android game pack | Experimental | Experimental / Experimental | Experimental / Experimental |
 | [MaskPad v0.2.0](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.0) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [MeleePad v0.2.1](https://github.com/chrissotraidis/meleepad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
 | [PaperPad v0.2.1](https://github.com/chrissotraidis/paperpad/releases/tag/v0.2.1) | iOS IPA | Experimental | Unavailable / Unavailable | Unavailable / Unavailable |
@@ -62,8 +62,8 @@ hardware or verified racing. Allow about 25 GB free and 8 GB RAM; follow the
 [phone guide](../README.md#android-phone-only-experimental). Linux ARM64 CI
 does not establish Android/Termux acceptance.
 
-**Intel Mac:** KartPad's Android recipe declares it experimental. KartPad's iPhone/iPad
-build on Intel Macs arrives with KartPad 0.8.0 and PadMint 0.4.14. The other Mac build
+**Intel Mac:** KartPad's Android recipe declares it experimental. From KartPad 0.8.0 and
+PadMint 0.4.14 its iPhone/iPad build is also experimental on Intel Macs (Xcode). The other Mac build
 routes require Apple Silicon. HaloPad's Xbox edition can be built without a Mac on
 GitHub's free Mac runner ([steps](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer)).
 
@@ -76,9 +76,8 @@ symbol check, strip and IPA insertion). A separate full private-disc build
 passed locally with x64 tools under Rosetta and Xcode 27 in 350.53 seconds;
 the app and ARM64 iOS 16 library have matching interface fingerprints and the
 IPA passes structure validation. Neither run establishes device gameplay or
-a complete disc build on physical Intel hardware. The published KartPad 0.7.15
-recipe still excludes Intel Macs; publish the matching recipe before the
-PadMint catalog update. Native Mac gameplay still requires Apple Silicon.
+a complete disc build on physical Intel hardware. KartPad 0.8.0 publishes the
+matching recipe, and PadMint 0.4.14 offers the route. Native Mac gameplay still requires Apple Silicon.
 
 **No build needed:** CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad,
 PeonPad and VaultPad publish apps without game files; PadMint lists them with
@@ -98,7 +97,7 @@ the next steps below are kept for when it resumes.
 
 | Game | Status | Smallest next step |
 |---|---|---|
-| KartPad | **Android is a ready-to-play download** on [its releases](https://github.com/chrissotraidis/kartpad/releases/latest): the APK includes the game code, so on Android PadMint's useful output is the `KartPad game data` folder. iPhone/iPad is built through PadMint (the release's `ios-for-padmint.ipa` has no game code). The Mac copy returns with KartPad 0.8.0. The 0.7.9–0.7.13 ready-to-play Apple downloads won't get updates. Earlier: Android packs built on Mac, Windows and Linux raced on an Android 16 emulator; iPhone off a Mac is experimental | A data-only Android target in KartPad's recipe, so PadMint skips the 1 GB NDK and the unused pack |
+| KartPad | **Android is a ready-to-play download** on [its releases](https://github.com/chrissotraidis/kartpad/releases/latest): the APK includes the game code, so on Android PadMint's useful output is the `KartPad game data` folder. iPhone/iPad is built through PadMint (the release's `ios-for-padmint.ipa` has no game code). The Mac copy builds through PadMint on Apple Silicon Macs. The 0.7.9–0.7.13 ready-to-play Apple downloads won't get updates. Earlier: Android packs built on Mac, Windows and Linux raced on an Android 16 emulator; iPhone off a Mac is experimental | A data-only Android target in KartPad's recipe, so PadMint skips the 1 GB NDK and the unused pack |
 | BlueWake | iPhone module built through PadMint's open-source SDK on Linux x64 and on an Apple Silicon Mac, inserted into the v0.1.0 app, IPA check passed ([draft #42](https://github.com/chrissotraidis/bluewake/pull/42); Mac: 757 units in 57 minutes). **Windows** downloads come from BlueWake's own releases as ready-to-play builds, outside PadMint; PadMint's Windows route ([draft #46](https://github.com/chrissotraidis/bluewake/pull/46)) stays experimental and unused | A device check of the module, then a release under its tracker row |
 | SunPad | iPhone module built on Linux ARM64 through PadMint's open-source SDK and inserted into the v0.2.0 app, IPA check passed ([draft #57](https://github.com/chrissotraidis/sunpad/pull/57)) | A device check, then a release under its tracker row (releases are paused) |
 | MeleePad | Mac only. Its game module also carries Slippi's native code: `build-slippi-dependencies.py` builds open-vcdiff, semver and Slippi's Rust library for iOS with `xcrun`, and `package-ios.sh` adds Slippi's settings, bootloader and game files to the app (with `ditto` and `codesign`, which are Mac-only) | Three parts: a pinned Rust toolchain for `aarch64-apple-ios` in PadMint, the Slippi C++ libraries through `{ios_toolchain}`, and module insertion that can add several files (or a portable packager). Then SunPad's [#57](https://github.com/chrissotraidis/sunpad/pull/57) changes apply |
