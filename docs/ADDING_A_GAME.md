@@ -207,3 +207,27 @@ does not validate file contents or replace input hashes.
    catalog entry, a recipe or PadMint itself. It reads every game's latest release
    recipe the way a player's PadMint does and lists what would confuse or stop a
    player, plus where each target builds.
+
+## 4. When a game's release changes what it publishes
+
+PadMint describes each game from two places: the game's latest release (its recipe
+and its files) and the catalog entry here. When a release adds or drops a
+ready-to-play download, or a target or build computer, update the catalog in the
+same change:
+
+- `player_targets`: every target the recipe builds for players. A target the
+  recipe builds but PadMint should not offer yet goes in `unoffered_targets`
+  with the reason, for example `{"macos": "needs Homebrew tools until 0.8.0"}`.
+- `ready_to_play`: only for platforms whose release has a file players install
+  directly, listed in `platforms`. An IPA made for PadMint (`…-for-padmint.ipa`)
+  has no game in it and does not count.
+- `off_mac`: a message and link for Windows, Linux and Intel Mac players when
+  the game has its own route without an Apple Silicon Mac (HaloPad's Xbox edition
+  builds on GitHub's Mac runner).
+- README and STATUS.md say the same thing as the catalog.
+
+The **Catalog check** workflow runs `scripts/audit-catalog.py` every day and on
+every catalog change. It fails when the catalog promises a download the latest
+release doesn't publish, offers a target or computer the recipe lacks, or hides a
+target the recipe builds. A failing run means a game's release and PadMint
+disagree: fix the catalog (or the game's release) before players notice.

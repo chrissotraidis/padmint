@@ -6,15 +6,21 @@
     "android",
     "ios"
   ],
+  "unoffered_targets": {
+    "macos": "KartPad 0.7.15's Mac recipe needs Homebrew tools most players don't have; PadMint offers it once KartPad 0.8.0 fixes that (#138)."
+  },
   "ready_to_play": {
     "url": "https://github.com/chrissotraidis/kartpad/releases/latest",
-    "text": "KartPad has ready-to-play downloads for Android, iPhone, iPad and Mac: install one and add your own game data. You don't need PadMint for that. Use PadMint if you'd rather build your own copy, or to make the KartPad game data folder from your disc.",
+    "platforms": [
+      "android"
+    ],
+    "text": "KartPad for Android is a ready-to-play download: the app already has the game code. Install it from KartPad's latest release, then add your own game data when it asks. PadMint makes that game data folder from your disc.",
     "translations": {
       "es": {
-        "text": "KartPad tiene descargas listas para jugar en Android, iPhone, iPad y Mac: instala una y añade tus propios datos del juego. Para eso no necesitas PadMint. Usa PadMint si prefieres crear tu propia copia, o para crear la carpeta KartPad game data a partir de tu disco."
+        "text": "KartPad para Android es una descarga lista para jugar: la app ya trae el código del juego. Instálala desde la última versión de KartPad y añade tus propios datos del juego cuando te los pida. PadMint crea esa carpeta de datos del juego a partir de tu disco."
       },
       "pt": {
-        "text": "O KartPad tem downloads prontos para jogar no Android, iPhone, iPad e Mac: instale um e adicione seus próprios dados do jogo. Para isso você não precisa do PadMint. Use o PadMint se preferir criar a sua própria cópia, ou para criar a pasta KartPad game data a partir do seu disco."
+        "text": "O KartPad para Android é um download pronto para jogar: o app já traz o código do jogo. Instale-o a partir da versão mais recente do KartPad e adicione seus próprios dados do jogo quando ele pedir. O PadMint cria essa pasta de dados do jogo a partir do seu disco."
       }
     }
   },

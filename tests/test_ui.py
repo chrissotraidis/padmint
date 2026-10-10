@@ -56,7 +56,7 @@ class WindowTests(unittest.TestCase):
         self.assertEqual(plan["repo"], "https://github.com/chrissotraidis/kartpad")
         self.assertIn("android-ndk", [tool["name"] for tool in plan["tools"]])
         self.assertTrue(all(tool["source"] for tool in plan["tools"]))
-        self.assertIn(".so", plan["output"])
+        self.assertIn("game data folder", plan["output"])
         with self.assertRaises(urllib.error.HTTPError) as context:
             self.request("/api/plan?game=kartpad&platform=ios", headers=headers)
         self.assertEqual(context.exception.code, 400)

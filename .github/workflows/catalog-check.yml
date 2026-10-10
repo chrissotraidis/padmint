@@ -1,0 +1,30 @@
+name: Catalog check
+
+# Compares every game PadMint offers with what its latest release publishes, so a game
+# release that adds or drops a download, target or build computer fails here instead of
+# confusing players.
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'catalog/**'
+      - 'padmint/**'
+      - 'scripts/audit-catalog.py'
+      - '.github/workflows/catalog-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Audit the catalog against each game's latest release
+        run: PADMINT_HOME="$(mktemp -d)" python -B scripts/audit-catalog.py

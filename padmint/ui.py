@@ -56,7 +56,9 @@ def player_data(lang):
                                     for p in platforms],
                       "files": [str(path) for path in files[:8]],
                       "ready": ({"text": localized(entry["ready_to_play"], "text", lang),
-                                 "url": entry["ready_to_play"]["url"]} if entry.get("ready_to_play") else None),
+                                 "url": entry["ready_to_play"]["url"],
+                                 "platforms": entry["ready_to_play"].get("platforms", platforms)}
+                                if entry.get("ready_to_play") else None),
                       "page": entry.get("player_help") or entry["repo_url"], "issues": entry["repo_url"] + "/issues"})
     apps = [] if cli.on_android() else [
         {"id": app, "name": name, "about": catalog()[app].get("game", ""), "plays_on": catalog()[app].get("plays_on", []),
@@ -71,10 +73,13 @@ def player_data(lang):
     # Games PadMint builds, but not here: listed with the reason, never silently left out.
     waiting += [{"id": game, "name": name,
                  "about": catalog()[game].get("game") or (catalog()[game].get("manifest") or {}).get("game", ""),
-                 "text": phrase("w_needs_mac" if "ios" in targets else "w_needs_windows", lang, name=name),
-                 "tag": phrase("w_needs_mac_tag", lang) if "ios" in targets else None,
+                 "text": (localized(catalog()[game]["off_mac"], "text", lang) if catalog()[game].get("off_mac")
+                          else phrase("w_needs_mac" if "ios" in targets else "w_needs_windows", lang, name=name)),
+                 "tag": (None if catalog()[game].get("off_mac")
+                         else phrase("w_needs_mac_tag", lang) if "ios" in targets else None),
                  "plays_on": ["iphone", "ipad"] if "ios" in targets else [],
-                 "link": catalog()[game].get("player_help") or catalog()[game]["repo_url"]}
+                 "link": ((catalog()[game].get("off_mac") or {}).get("url")
+                          or catalog()[game].get("player_help") or catalog()[game]["repo_url"])}
                 for game, name, targets in cli.elsewhere()]
     return {"lang": lang, "version": __version__, "host": cli.host_id(), "folder": str(folder),
             "saved_in": phrase("saved_in", lang, folder=folder), "games": games, "downloads": apps, "later": waiting,
@@ -539,8 +544,6 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 
 <section class="card hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><div class="row"><a class="btn" id="laterLink" target="_blank"></a><button class="btn back backBtn" data-t="change"></button></div></section>
 
-<section class="card banner hidden" id="readyBox"><h2 data-t="ready_title"></h2><p id="readyText"></p><div class="row"><a class="btn main" id="readyLink" target="_blank" data-t="ready_link"></a></div><p class="muted small" data-t="ready_or"></p></section>
-
 <section class="card hidden" id="fileBox"><h2 data-t="step2"></h2><p id="fileHint" class="small"></p>
 <div class="row"><button class="btn" id="choose" data-t="choose"></button></div>
 <div id="foundBox"><p class="muted small" id="found"></p><div id="files"></div></div>
@@ -550,6 +553,8 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 <section class="card hidden" id="inApp"><h2 data-t="step2"></h2><p id="inAppText" class="muted"></p></section>
 
 <section class="card hidden" id="deviceBox"><h2 data-t="step3"></h2><div class="grid" id="devices"></div></section>
+
+<section class="card banner hidden" id="readyBox"><h2 data-t="ready_title"></h2><p id="readyText"></p><div class="row"><a class="btn main" id="readyLink" target="_blank"></a></div><p class="muted small" data-t="ready_or"></p></section>
 
 <section class="card plan hidden" id="planBox"><h2 data-t="plan_title"></h2><div id="plan"></div>
 <div class="row" style="margin-top:.8rem"><button class="btn main" id="make" data-t="make" disabled></button></div>
@@ -604,7 +609,7 @@ function row(x){const kind=groupOf(x.id),b=el("button",null,"item "+kind+(x.id==
  const badge=el("span",BADGES[systemOf(x)]||(x.name||"?").charAt(0),"av");badge.title=systemOf(x)?fill("original",{system:systemOf(x)}):"";
  b.append(badge,el("span",x.about?title(x):x.name,"t"));const t=el("div",null,"tags");
  if(kind=="later")t.append(el("span",x.tag||S.later_head,"tag soon"));if(kind=="download")t.append(el("span",S.dl_tag,"tag dl"));
- if(kind=="build"&&x.ready)t.append(el("span",S.ready_tag,"tag ready"));
+ if(kind=="build"&&x.ready){const on=x.platforms.filter(p=>x.ready.platforms.includes(p.id)).map(p=>p.short||p.label);if(on.length)t.append(el("span",fill("ready_tag",{devices:on.join(", ")}),"tag ready"))}
  if(kind=="build")for(const p of x.platforms)t.append(el("span",p.short||p.label,"tag"));else{const o=x.plays_on||[];const ios=o.includes("iphone")&&o.includes("ipad")?["iPhone/iPad"]:o.filter(d=>d!="mac").map(d=>DEVICES[d]);for(const d of [...ios,...(o.includes("mac")?["Mac"]:[])])t.append(el("span",d,"tag"))}b.append(t);
  b.append(el("span",x.name+(systemOf(x)?" · "+fill("original",{system:systemOf(x)}):""),"s"));b.onclick=()=>choose(x.id);return b}
 function cards(){const q=$("search").value.trim().toLowerCase();
@@ -631,7 +636,7 @@ function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;$("fil
  $("laterBox").classList.toggle("hidden",!w);
  if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=w.text;$("laterLink").href=w.link;$("laterLink").textContent=fill("later_link",{name:w.name});$("laterBox").scrollIntoView({behavior:"smooth"})}
  $("dlBox").classList.toggle("hidden",!a);
- $("readyBox").classList.toggle("hidden",!(g&&g.ready));if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url}
+ $("readyBox").classList.add("hidden");if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url;$("readyLink").textContent=fill("ready_link",{devices:g.platforms.filter(p=>g.ready.platforms.includes(p.id)).map(p=>p.short||p.label).join(", ")})}
  if(a){$("dlName").textContent=a.name;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(s=>linked(s)));
   const l=el("a",a.guide);l.href=a.guide;l.target="_blank";$("dlGuide").replaceChildren(S.guide+": ",l);$("dlBox").scrollIntoView({behavior:"smooth"})}
  for(const id of ["fileBox","deviceBox","planBox"])$(id).classList.add("hidden");$("inApp").classList.add("hidden");if(!g)return;
@@ -644,7 +649,7 @@ function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;$("fil
  $("deviceBox").classList.remove("hidden");$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}));
  if(g.platforms.length==1)pickDevice(g.platforms[0].id);($("fileBox").classList.contains("hidden")?$("deviceBox"):$("fileBox")).scrollIntoView({behavior:"smooth"});ready()}
 let planRequest=0;
-async function pickDevice(id){const request=++planRequest;blocked=true;dev=id;ready();for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
+async function pickDevice(id){const request=++planRequest;blocked=true;dev=id;ready();for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);const rg=game();$("readyBox").classList.toggle("hidden",!(rg&&rg.ready&&rg.ready.platforms.includes(id)));$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
  const selected=sel;try{const r=await (await fetch("/api/plan?game="+selected+"&platform="+id+"&lang="+D.lang+(file?"&disc="+encodeURIComponent(file):""),{headers:H})).json();if(request!=planRequest||dev!=id||sel!=selected)return;showPlan(r);ready()}catch(e){if(request!=planRequest||dev!=id||sel!=selected)return;$("plan").replaceChildren(el("p",String(e),"bad"));ready()}}
 let blocked=false;
 function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.error){box.append(el("p",p.error,"bad"));return}
