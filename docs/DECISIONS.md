@@ -381,6 +381,8 @@ cross-platform). Requires the same module split as S1.
 
 ## D15. Any device from any computer is the goal; off-Mac work is paused (owner decision, 5 Oct 2026)
 
+**Update 7 Oct 2026:** resumed by D16, for iPhone and iPad copies from Windows.
+
 **The goal.** PadMint lets anyone mint their own copy of a game on the hardware they
 have, for the device they play on: an iPhone/iPad IPA from Windows or Linux, an
 Android APK from a Mac or Linux, and so on, for every game in the catalog.
@@ -436,3 +438,18 @@ Rejected shortcuts: building on a cloud Mac uploads players' game files and brea
 port gets finished for other reasons. Start with the family that unlocks the most
 games (the Harbour Masters engine, via SpaghettiPad #29). Tracking issue: #75. The
 drafts stay open as they are.
+
+## D16. iPhone and iPad copies from Windows, BlueWake first (owner decision, 7 Oct 2026)
+
+D15's pause ends. Players with a Windows PC can't make iPhone or iPad copies of nearly
+any game, so that is now the priority for the whole catalog, starting with BlueWake.
+The route is D13 and D14's split: each game publishes its app without game code, and
+PadMint builds the game module on the player's computer. That includes the
+decompilation and N64 ports, so for them D5's "recipe only" becomes "app without game
+code plus recipe"; each game's first such release stays the owner's call. Linux comes
+with the same steps. Android stays with KartPad, the only Android port.
+
+Why: it is the one route that works for every game without uploading players' game
+files or using Apple's SDK off a Mac. PadMint's half exists and KartPad uses it; the
+remaining work is in each game, shared by family. The plan, its order and BlueWake's
+checklist are in [IPHONE_FROM_WINDOWS.md](IPHONE_FROM_WINDOWS.md).
