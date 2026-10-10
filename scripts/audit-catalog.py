@@ -123,6 +123,15 @@ def audit():
         for tool in cli.player_requirements(recipe):
             if not tool.get("note"):
                 found(f"player tool {tool['name']} has no install note")
+        # A Mac card says "Needs Xcode" when the catalog has no Homebrew line (before_build) and
+        # no ready-to-play app; then Xcode must really be all the player installs.
+        if {"ios", "macos"} & set(targets) and not entry.get("before_build") and not entry.get("ready_to_play"):
+            with mock.patch.object(cli, "host_id", return_value="macos-arm64"):
+                extra = sorted({tool["name"] for name in set(targets) & {"ios", "macos"}
+                                for tool in cli.player_requirements(recipe, name)} - {"xcodebuild", "xcrun", "git"})
+            if extra:
+                found(f"its card says Needs Xcode, but the recipe also asks for {', '.join(extra)}; "
+                      "add their install line to before_build")
         # {python} is the Python running PadMint: Apple's 3.9 when PadMint.command starts it.
         newer = [tool["min_version"] for tool in recipe.get("requirements", {}).get("tools", [])
                  if tool["name"] in ("python", "python3")

@@ -82,8 +82,7 @@ class ReleaseChecksumTests(unittest.TestCase):
                 mock.patch.object(package_release.gate, "audit", return_value=0) as audit, \
                 contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(package_release.main(), 0)
-        paths = [self.root / f"PadMint-v{package_release.__version__}-{host}.zip"
-                 for host in ("windows", "macos", "linux")]
+        paths = [self.root / f"PadMint-{host}.zip" for host in ("windows", "macos", "linux")]
         audit.assert_called_once_with(paths, None)
         return paths
 

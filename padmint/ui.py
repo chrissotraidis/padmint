@@ -8,6 +8,7 @@ import io
 import json
 import os
 from pathlib import Path
+import re
 import secrets
 import shutil
 import signal
@@ -38,6 +39,17 @@ def input_formats(inputs):
     return sorted({name for item in inputs for name in item["formats"]})
 
 
+def setup_level(entry, platforms):
+    """How much a player sets up before this game, for its card: "easy" when a ready-to-play
+    app exists, otherwise on a Mac "xcode" (Xcode only) or "brew" (Xcode and Homebrew
+    packages, the catalog's before_build line). None elsewhere."""
+    if entry.get("ready_to_play"):
+        return "easy"
+    if not cli.host_id().startswith("macos") or not set(platforms) & {"ios", "macos"}:
+        return None
+    return "brew" if entry.get("before_build") else "xcode"
+
+
 def player_data(lang):
     """Everything the page shows before a build: games, devices and game files found."""
     folder = cli.player_folder()
@@ -55,6 +67,7 @@ def player_data(lang):
                                      "short": phrase(f"w_short_{p}", lang) if f"w_short_{p}" in MESSAGES else p}
                                     for p in platforms],
                       "files": [str(path) for path in files[:8]],
+                      "setup": setup_level(entry, platforms),
                       "ready": ({"text": localized(entry["ready_to_play"], "text", lang),
                                  "url": entry["ready_to_play"]["url"],
                                  "platforms": entry["ready_to_play"].get("platforms", platforms)}
@@ -102,13 +115,33 @@ def plan(game, platform_name, lang, disc=None):
         if download:
             items.append({"name": name, "version": tools.version(table[name], host), "size": download.get("size"),
                           "source": urlparse(download["url"]).hostname, "here": tools.installed(name, host)})
-    needs = [{"label": cli.label(tool), "ok": cli.check_program(tool)[0], "note": tool.get("note", "")}
-             for tool in cli.player_requirements(manifest, platform_name, disc)]
+    needs = cli.requirement_checks(manifest, platform_name, disc, lang)
+    before = cli.before_build(game)
+    # One Homebrew line for everything still missing: the game's README packages that aren't
+    # here, and every missing program whose note says "brew install ...".
+    brew = [package["name"] for package in (before or {}).get("packages", []) if not package["ok"]]
+    for need in needs:
+        match = None if need["ok"] else re.match(r"brew install ((?:[\w@.+-]+ ?)+)", need["note"])
+        if match:
+            need["brew"] = True
+            brew += match.group(1).split()
+    brew = list(dict.fromkeys(brew))
+    mac_setup = None
+    if before or brew:
+        mac_setup = {"homebrew": bool(shutil.which("brew")),
+                     "brew_line": "brew install " + " ".join(brew) if brew else "",
+                     "other": [line for line in (before or {}).get("commands", []) if not line.startswith("brew install ")],
+                     "packages": (before or {}).get("packages", [])}
     name = manifest.get("name") or entry.get("name", game)
     key = f"w_output_{platform_name}"
+    # The same steps the finished page shows, so nobody meets the phone part for the first time
+    # after a build of an hour or more.
+    preview = Path(cli.player_folder()) / phrase("w_the_ipa" if platform_name == "ios" else "w_your_copy", lang)
+    steps, note, _guide = cli.next_step_text({"id": game, **entry}, platform_name, preview, lang)
+    install = {"steps": steps, "note": note} if steps else None
     return {"repo": entry["repo_url"], "tools": items, "tools_folder": str(tools.tools_root()),
             "app": bool(target.get("published_app")), "space_gb": entry.get("free_space_gb"),
-            "folder": str(cli.player_folder()), "needs": needs, "before": cli.before_build(game),
+            "folder": str(cli.player_folder()), "needs": needs, "mac_setup": mac_setup, "install": install,
             "output": phrase(key, lang, name=name) if key in MESSAGES else "",
             "inputs": [item for item in manifest.get("inputs", []) if item.get("when", "build") == "build"]}
 
@@ -161,7 +194,8 @@ def pick_file(title, folder):
     """The system's own Open dialog: the chosen path, None if cancelled, False if there is none."""
     env = dict(os.environ, PADMINT_PICK_TITLE=title, PADMINT_PICK_FOLDER=str(folder))
     if sys.platform == "darwin":
-        argv = ["osascript", "-e", 'POSIX path of (choose file with prompt (system attribute '
+        # "activate" first, so the dialog comes to the front instead of opening behind the browser.
+        argv = ["osascript", "-e", "activate", "-e", 'POSIX path of (choose file with prompt (system attribute '
                 '"PADMINT_PICK_TITLE") default location (POSIX file (system attribute "PADMINT_PICK_FOLDER")))']
     elif os.name == "nt":
         argv = ["powershell", "-NoProfile", "-STA", "-Command",
@@ -466,6 +500,8 @@ a.btn{display:inline-block;text-decoration:none;border-radius:10px;padding:.6rem
 a.main{background:var(--mint);border-color:var(--mint);color:#06281a;font-weight:700}
 .tag.ready{background:var(--mint);color:#06281a;font-weight:600}
 button:disabled{opacity:.45;cursor:default}.row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.tag.setup{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}.tag.setup.xcode{background:color-mix(in srgb,var(--mint) 16%,transparent);color:var(--mint)}.tag.setup.easy{background:var(--mint);color:#06281a;font-weight:600}
+.why{margin:.5rem 0 0;color:var(--muted);font-size:.9rem}.setup-box{background:var(--panel2);border-radius:10px;padding:.6rem .8rem;margin:.6rem 0}.setup-box .tools li.detail{display:block;border-bottom:0;padding-top:0}
 .file{display:flex;justify-content:space-between;gap:.6rem;width:100%;margin:.3rem 0}.file b{overflow-wrap:anywhere}
 .state{margin:.6rem 0 0;font-weight:600}.ok{color:var(--mint)}.bad{color:var(--bad)}.warn{color:var(--warn)}
 details summary{cursor:pointer;color:var(--muted)}
@@ -544,7 +580,7 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 
 <section class="card hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><div class="row"><a class="btn" id="laterLink" target="_blank"></a><button class="btn back backBtn" data-t="change"></button></div></section>
 
-<section class="card hidden" id="fileBox"><h2 data-t="step2"></h2><p id="fileHint" class="small"></p>
+<section class="card hidden" id="fileBox"><h2 data-t="step2"></h2><div id="fileHint" class="small"></div>
 <div class="row"><button class="btn" id="choose" data-t="choose"></button></div>
 <div id="foundBox"><p class="muted small" id="found"></p><div id="files"></div></div>
 <details id="typeBox"><summary data-t="type_toggle"></summary><p class="muted small" data-t="type"></p>
@@ -557,7 +593,7 @@ html{scrollbar-color:color-mix(in srgb,var(--muted) 45%,transparent) transparent
 <section class="card banner hidden" id="readyBox"><h2 data-t="ready_title"></h2><p id="readyText"></p><div class="row"><a class="btn main" id="readyLink" target="_blank"></a></div><p class="muted small" data-t="ready_or"></p></section>
 
 <section class="card plan hidden" id="planBox"><h2 data-t="plan_title"></h2><div id="plan"></div>
-<div class="row" style="margin-top:.8rem"><button class="btn main" id="make" data-t="make" disabled></button></div>
+<div class="row" style="margin-top:.8rem"><button class="btn main" id="make" data-t="make" disabled></button></div><p class="why" id="makeWhy"></p>
 <p class="bad" id="makeError"></p></section>
 </main>
 
@@ -596,8 +632,19 @@ let system="";
 const title=g=>(g.about||g.name).replace(/\s*\([^)]*\)\s*$/,"");
 const systemOf=g=>{const m=(g.about||"").match(/\(([^),]+)/);return m?m[1].replace(/ prototype$/,""):""};
 const sortKey=g=>title(g).replace(/^(The|A) /i,"").toLowerCase();
-const COLORS={"GameCube":"#6c5ce7","Wii":"#2d9cdb","N64":"#e2463a","PlayStation":"#4b5a6b","Steam":"#2a6fb0","PC":"#d9822b"};
-const BADGES={"GameCube":"GC","Wii":"Wii","N64":"64","PlayStation":"PS","Steam":"PC","PC":"PC"};
+const COLORS={"GameCube":"#6c5ce7","Wii":"#2d9cdb","N64":"#e2463a","PlayStation":"#4b5a6b","Steam":"#2a6fb0","PC":"#d9822b","Xbox":"#2f8f2f"};
+const BADGES={"GameCube":"GC","Wii":"Wii","N64":"64","PlayStation":"PS","Steam":"PC","PC":"PC","Xbox":"X"};
+// The disc ID's fourth letter is its region: E North America, P Europe, J Japan.
+const REGIONS={E:"us",P:"eu",J:"jp"};
+function fileHint(g,inputs){const h=$("fileHint");h.replaceChildren(el("b",fill("file_hint",{game:g.about||g.name})));
+ const id=g.ids[0]||"",region=id.length>=4&&REGIONS[id[3]];
+ if(region)h.append(" ",fill("file_region",{region:S["region_"+region]}));
+ const formats=inputs?(inputs.every(i=>(i.formats||[]).length)?[...new Set(inputs.flatMap(i=>i.formats))].map(f=>f.toUpperCase()):[]):g.formats;
+ const facts=[formats.length?fill("file_formats",{formats:formats.join(", ")}):"",g.ids.length?fill(id.length==4?"file_code":"file_ids",{ids:g.ids.join(", ")}):""].filter(Boolean);
+ if(facts.length)h.append(el("div",facts.join(" · "),"muted"));
+ const notes=(inputs||[]).filter(i=>i.description);
+ if(notes.length>1){h.append(el("p",S.which_file,"state"));const u=el("ul");for(const i of notes)u.append(el("li",i.description));h.append(u)}
+ else if(notes.length){const d=el("details");d.append(el("summary",S.more_file),el("p",notes[0].description,"muted"));h.append(d)}}
 const colorOf=x=>COLORS[systemOf(x)]||"#1fa572";
 let group="all";const all=()=>[...D.games,...D.downloads,...D.later];
 const groupOf=id=>D.games.some(x=>x.id==id)?"build":D.downloads.some(x=>x.id==id)?"download":"later";
@@ -609,6 +656,7 @@ function row(x){const kind=groupOf(x.id),b=el("button",null,"item "+kind+(x.id==
  const badge=el("span",BADGES[systemOf(x)]||(x.name||"?").charAt(0),"av");badge.title=systemOf(x)?fill("original",{system:systemOf(x)}):"";
  b.append(badge,el("span",x.about?title(x):x.name,"t"));const t=el("div",null,"tags");
  if(kind=="later")t.append(el("span",x.tag||S.later_head,"tag soon"));if(kind=="download")t.append(el("span",S.dl_tag,"tag dl"));
+ if(kind=="build"&&x.setup)t.append(el("span",S["setup_"+x.setup],"tag setup "+x.setup));
  if(kind=="build"&&x.ready){const on=x.platforms.filter(p=>x.ready.platforms.includes(p.id)).map(p=>p.short||p.label);if(on.length)t.append(el("span",fill("ready_tag",{devices:on.join(", ")}),"tag ready"))}
  if(kind=="build")for(const p of x.platforms)t.append(el("span",p.short||p.label,"tag"));else{const o=x.plays_on||[];const ios=o.includes("iphone")&&o.includes("ipad")?["iPhone/iPad"]:o.filter(d=>d!="mac").map(d=>DEVICES[d]);for(const d of [...ios,...(o.includes("mac")?["Mac"]:[])])t.append(el("span",d,"tag"))}b.append(t);
  b.append(el("span",x.name+(systemOf(x)?" · "+fill("original",{system:systemOf(x)}):""),"s"));b.onclick=()=>choose(x.id);return b}
@@ -621,7 +669,7 @@ function cards(){const q=$("search").value.trim().toLowerCase();
  else if(!G[group].length){const k=["all","build","download","later"].find(k=>G[k].length);if(k)group=k}
  $("finder").classList.toggle("hidden",!!sel);$("changeGame").classList.toggle("hidden",!sel);$("tabs").classList.toggle("hidden",!!sel);$("pills").classList.toggle("hidden",!!sel);const one=sel&&all().find(x=>x.id==sel);$("gamePage").classList.toggle("hidden",!(one&&one.page));if(one&&one.page){$("gamePageLink").href=one.page;$("gamePageLink").textContent=fill("game_page",{name:one.name})+" ↗"}
  for(const b of document.querySelectorAll(".tab")){b.classList.toggle("on",b.dataset.g==group);b.setAttribute("aria-selected",b.dataset.g==group);b.querySelector(".n").textContent=G[b.dataset.g].length}
- $("groupNote").textContent=sel?"":S[{all:"all_note",build:"builds",download:"no_build",later:"later_note"}[group]];
+ $("groupNote").textContent=sel?"":S[{all:"all_note",build:"builds",download:"no_build",later:"later_note"}[group]]+((group=="all"||group=="build")&&D.games.some(g=>g.setup)?" "+S.start_note:"");
  $("list").replaceChildren(...G[group].map(x=>row(x)));$("list").classList.toggle("hidden",!G[group].length);
  $("noMatch").classList.toggle("hidden",!!G[group].length);layout()}
 function back(top){++fileRequest;reading=false;sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards();if(top)scrollTo({top:0,behavior:"smooth"});else $("pickCard").scrollIntoView({behavior:"smooth"})}
@@ -641,41 +689,49 @@ function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;$("fil
   const l=el("a",a.guide);l.href=a.guide;l.target="_blank";$("dlGuide").replaceChildren(S.guide+": ",l);$("dlBox").scrollIntoView({behavior:"smooth"})}
  for(const id of ["fileBox","deviceBox","planBox"])$(id).classList.add("hidden");$("inApp").classList.add("hidden");if(!g)return;
  if(g.needs_file){$("fileBox").classList.remove("hidden");
-  const h=$("fileHint");h.replaceChildren(el("b",fill("file_hint",{game:g.about||g.name})));
-  if(g.formats.length)h.append(" ",el("span",fill("file_formats",{formats:g.formats.join(", ")}),"muted"));
-  if(g.ids.length)h.append(" · ",el("span",fill(g.ids[0].length==4?"file_code":"file_ids",{ids:g.ids.join(", ")}),"muted"));$("foundBox").classList.toggle("hidden",!g.files.length);$("found").textContent=fill("found",{folder:D.folder});
+  fileHint(g,null);$("foundBox").classList.toggle("hidden",!g.files.length);$("found").textContent=fill("found",{folder:D.folder});
   $("files").replaceChildren(...g.files.map(f=>{const b=el("button",null,"btn file");b.append(el("b",base(f)),el("span","→","muted"));b.title=f;b.onclick=()=>useFile(f);return b}))}
  else{$("inAppText").textContent=fill("file_in_app",{name:g.name});$("inApp").classList.remove("hidden")}
  $("deviceBox").classList.remove("hidden");$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}));
  if(g.platforms.length==1)pickDevice(g.platforms[0].id);($("fileBox").classList.contains("hidden")?$("deviceBox"):$("fileBox")).scrollIntoView({behavior:"smooth"});ready()}
 let planRequest=0;
-async function pickDevice(id){const request=++planRequest;blocked=true;dev=id;ready();for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);const rg=game();$("readyBox").classList.toggle("hidden",!(rg&&rg.ready&&rg.ready.platforms.includes(id)));$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
- const selected=sel;try{const r=await (await fetch("/api/plan?game="+selected+"&platform="+id+"&lang="+D.lang+(file?"&disc="+encodeURIComponent(file):""),{headers:H})).json();if(request!=planRequest||dev!=id||sel!=selected)return;showPlan(r);ready()}catch(e){if(request!=planRequest||dev!=id||sel!=selected)return;$("plan").replaceChildren(el("p",String(e),"bad"));ready()}}
-let blocked=false;
+async function pickDevice(id){const request=++planRequest;blocked=true;planning=true;dev=id;ready();for(const b of $("devices").children)b.classList.toggle("on",b.dataset.id==id);const rg=game();$("readyBox").classList.toggle("hidden",!(rg&&rg.ready&&rg.ready.platforms.includes(id)));$("planBox").classList.remove("hidden");$("plan").replaceChildren(el("p",fill("plan_loading",{name:(game()||{}).name||""}),"muted loading"));
+ const selected=sel;try{const r=await (await fetch("/api/plan?game="+selected+"&platform="+id+"&lang="+D.lang+(file?"&disc="+encodeURIComponent(file):""),{headers:H})).json();if(request!=planRequest||dev!=id||sel!=selected)return;planning=false;showPlan(r);ready()}catch(e){if(request!=planRequest||dev!=id||sel!=selected)return;planning=false;$("plan").replaceChildren(el("p",String(e),"bad"));ready()}}
+let blocked=false,planning=false;
+function copyLine(line){const c=el("div",null,"cmd"),btn=el("button",S.copy);c.append(el("code",line),btn);
+ btn.onclick=async()=>{try{await navigator.clipboard.writeText(line);btn.textContent=S.copied;setTimeout(()=>btn.textContent=S.copy,1500)}catch(e){getSelection().selectAllChildren(c.firstChild)}};return c}
 function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.error){box.append(el("p",p.error,"bad"));return}
- if(g.needs_file&&p.inputs){const h=$("fileHint");h.replaceChildren(el("b",fill("file_hint",{game:g.about||g.name})));
-  for(const i of p.inputs){if(i.description)h.append(" ",el("span",i.description));}
-  const formats=p.inputs.every(i=>(i.formats||[]).length)?[...new Set(p.inputs.flatMap(i=>i.formats))]:[];if(formats.length)h.append(" ",el("span",fill("file_formats",{formats:formats.map(f=>f.toUpperCase()).join(", ")}),"muted"));
-  if(g.ids.length)h.append(" · ",el("span",fill(g.ids[0].length==4?"file_code":"file_ids",{ids:g.ids.join(", ")}),"muted"));}
+ if(g.needs_file&&p.inputs)fileHint(g,p.inputs);
  if(p.output)box.append(el("div",p.output,"out"));
  blocked=p.needs.some(n=>!n.ok);
- if(p.needs.length){box.append(el("p",S.plan_needs,"state"));const u=el("ul",null,"tools");for(const n of p.needs){const li=el("li");li.append(el("span",n.label),el("span",n.ok?S.needs_ok:S.needs_missing,n.ok?"ok":"bad"));u.append(li);if(!n.ok)u.append(el("li",n.note,"detail"))}box.append(u)}
- if(p.before){const b=p.before;box.append(el("p",S.before_title,"state"),linked(b.homebrew?S.before_hint:S.before_brew,"p"));
-  if(b.homebrew&&b.packages.length){const k=el("div",null,"pks");for(const x of b.packages)k.append(el("span",(x.ok?"✓ ":"✗ ")+x.name,"pk"+(x.ok?"":" no")));box.append(k)}
-  for(const line of b.commands){const c=el("div",null,"cmd"),btn=el("button",S.copy);c.append(el("code",line),btn);
-   btn.onclick=async()=>{try{await navigator.clipboard.writeText(line);btn.textContent=S.copied;setTimeout(()=>btn.textContent=S.copy,1500)}catch(e){getSelection().selectAllChildren(c.firstChild)}};box.append(c)}}
+ const m=p.mac_setup,lines=m?[m.brew_line,...m.other].filter(Boolean):[];
+ if(p.needs.length||lines.length){const s=el("div",null,"setup-box");s.append(el("p",S.plan_needs,"state"));
+  if(p.needs.length){const u=el("ul",null,"tools");for(const n of p.needs){const li=el("li"),name=el("span",n.label);
+    if(n.only&&n.only.length)name.append(el("span"," "+fill("only_for",{formats:n.only.map(f=>f.toUpperCase()).join(", ")}),"muted"));
+    li.append(name,el("span",n.ok?S.needs_ok:S.needs_missing,n.ok?"ok":"bad"));u.append(li);
+    if(!n.ok&&!(n.brew&&lines.length)){const d=linked(n.note,"li");d.className="detail";if(n.command)d.append(copyLine(n.command));u.append(d)}}s.append(u)}
+  if(lines.length){s.append(el("p",S.before_title,"state"),linked(m.homebrew?S.before_hint:S.before_brew,"p"));
+   if(m.homebrew&&m.packages.length){const k=el("div",null,"pks");for(const x of m.packages)k.append(el("span",(x.ok?"✓ ":"✗ ")+x.name,"pk"+(x.ok?"":" no")));s.append(k)}
+   for(const line of lines)s.append(copyLine(line))}
+  if(blocked||(m&&m.brew_line)){const again=el("button",S.check_again,"btn");again.onclick=()=>pickDevice(dev);const r=el("div",null,"row");r.append(again);s.append(r)}box.append(s)}
  const o=el("ol");const repo=p.repo.replace("https://","");o.append(el("li",fill("plan_source",{name:g.name,repo})));
-  if(p.tools.length){const li=el("li",fill("plan_tools",{folder:p.tools_folder}));const u=el("ul",null,"tools");
+  if(p.tools.length){const get=p.tools.filter(t=>!t.here),total=get.every(t=>t.size)?get.reduce((a,t)=>a+t.size,0):0,li=el("li",S.plan_tools+(total?" ("+gb(total)+")":""));
+  const d=el("details"),u=el("ul",null,"tools");d.append(el("summary",S.details));
   for(const t of p.tools){const r=el("li");r.append(el("span",t.name+" "+t.version+" · "+fill("from",{host:t.source})),el("span",t.here?S.tool_here:gb(t.size),t.here?"ok":"muted"));u.append(r)}
-  li.append(u);o.append(li)}if(p.app)o.append(el("li",fill("plan_app",{name:g.name})));
+  d.append(u,el("p",fill("tools_folder",{folder:p.tools_folder}),"muted small"));li.append(d);o.append(li)}if(p.app)o.append(el("li",fill("plan_app",{name:g.name})));
  o.append(el("li",g.needs_file?S.plan_build:S.plan_build_app),el("li",fill("plan_save",{folder:p.folder})));box.append(o);
- if(p.space_gb)box.append(el("p",fill("plan_space",{gb:p.space_gb}),"muted small"))}
-function ready(){const g=game();$("make").disabled=!g||!dev||reading||blocked||(g.needs_file&&!file)}
+ if(p.space_gb)box.append(el("p",fill("plan_space",{gb:p.space_gb}),"muted small"));
+ if(p.install){const d=el("details"),ol=el("ol",null,"next");d.append(el("summary",S.install_preview));for(const s of p.install.steps)ol.append(linked(s));d.append(ol,el("p",p.install.note,"muted small"));box.append(d)}}
+// The button is disabled by the state itself; the line under it only says which state it is.
+function ready(){const g=game(),why=!g?"none":!dev?"why_device":reading?"why_reading":(g.needs_file&&!file)?"why_file":planning?"why_loading":blocked?"why_blocked":"";
+ $("make").disabled=!!why;$("makeWhy").textContent=why&&why!="none"?S[why]||"":""}
 async function useFile(path){if(!path)return;const request=++fileRequest,selected=sel;$("path").value=path;reading=true;file=null;ready();$("fileState").className="state";
  $("fileState").textContent="…";const r=await post("/api/file",{game:selected,path});if(request!=fileRequest||sel!=selected)return;reading=false;
  if(r.problem||r.error){$("fileState").className="state bad";$("fileState").textContent=r.problem||r.error}
  else{file=path;$("fileState").className="state ok";$("fileState").textContent="✓ "+fill("file_ok",{file:base(path)});if(dev)await pickDevice(dev)}ready()}
-$("choose").onclick=async()=>{const request=fileRequest,selected=sel,r=await post("/api/pick");if(request!=fileRequest||sel!=selected)return;if(r.path)useFile(r.path);else if(!r.available){$("typeBox").open=true;$("path").focus()}};
+$("choose").onclick=async()=>{const request=fileRequest,selected=sel;$("fileState").className="state muted";$("fileState").textContent=S.picker_open;
+ const r=await post("/api/pick");if(request!=fileRequest||sel!=selected)return;if($("fileState").textContent==S.picker_open)$("fileState").textContent="";
+ if(r.path)useFile(r.path);else if(!r.available){$("typeBox").open=true;$("path").focus()}};
 $("use").onclick=()=>useFile($("path").value.trim().replace(/^["']|["']$/g,""));
 $("make").onclick=async()=>{$("make").disabled=true;const r=await post("/api/make",{game:sel,platform:dev,path:file});
  if(r.error){$("makeError").textContent=r.error;ready();return}show(r);poll()};

@@ -51,7 +51,7 @@ class NextStepsTests(unittest.TestCase):
         with mock.patch.object(cli, "on_android", return_value=False):
             cli.next_steps(catalog()["kartpad"], "ios", Path("/out/KartPad.ipa"), stream)
         text = stream.getvalue()
-        self.assertIn("Your game data stays too", text)
+        self.assertIn("your KartPad game data stays", text)
         self.assertIn("First time only", text)
 
     def test_spanish_player_gets_spanish_steps(self):
@@ -98,8 +98,9 @@ class NextStepsTests(unittest.TestCase):
         stream = io.StringIO()
         cli.next_steps(ENTRY, "ios", Path("/out/x.ipa"), stream)
         text = stream.getvalue()
-        self.assertIn("Install x.ipa on your iPhone or iPad with AltStore, SideStore or Sideloadly", text)
-        self.assertIn("same tool and Apple ID", text)
+        self.assertIn("Drag x.ipa into Sideloadly", text)
+        self.assertIn("VPN & Device Management", text)
+        self.assertIn("your saves stay", text)
         self.assertIn("https://github.com/example/game#get-game", text)
 
     def test_start_shows_steps_and_the_file_after_a_build(self):

@@ -17,6 +17,42 @@
   <a href="https://discord.gg/xwHfUD2bxW"><img alt="Discord" src="https://img.shields.io/badge/Discord-ask%20for%20help-5865F2?logo=discord&amp;logoColor=white"></a>
 </p>
 
+## Quick start
+
+**1. Download PadMint** for the computer you're using. It's free and has no games in it.
+
+| Your computer | Download | Open it |
+|---|---|---|
+| **Mac** | **[⬇ PadMint for Mac](https://github.com/chrissotraidis/padmint/releases/latest/download/PadMint-macos.zip)** | Double-click the ZIP, open the new folder and double-click **PadMint.command**. The first time, macOS says Apple could not verify it: choose **Done**, then **System Settings → Privacy & Security → Open Anyway**. If macOS offers to install *command line developer tools*, click **Install**, wait, then double-click PadMint.command again. |
+| **Windows** 10 or 11 | **[⬇ PadMint for Windows](https://github.com/chrissotraidis/padmint/releases/latest/download/PadMint-windows.zip)** | Right-click the ZIP, choose **Extract All**, open the new folder and double-click **PadMint**. If Windows says it protected your PC, choose **More info**, then **Run anyway**. Python is included. |
+| **Linux** | **[⬇ PadMint for Linux](https://github.com/chrissotraidis/padmint/releases/latest/download/PadMint-linux.zip)** | Unzip it and run `sh padmint.sh` in the folder. Needs Python 3.9+ and Git. |
+
+Use these links, not GitHub's green **Code** button: that one downloads PadMint's
+source code, which is for developers.
+
+**2. Keep the small window open.** It is PadMint working. Your web browser opens
+the PadMint page; if it doesn't, open the `http://127.0.0.1…` address the
+window shows. The page comes from your own computer, not a website.
+
+**3. Choose your game and follow the page.** It tells you exactly what to
+install first, with a **Check again** button, then builds your copy and shows
+how to put it on your phone or tablet. It speaks English, Spanish and Portuguese
+(menu at the top right). Close the small window when you are done.
+
+## Your first game
+
+Each game on the page has a tag that says how much setup it needs. Start with
+an easy one:
+
+| Tag on the page | Games | What you need |
+|---|---|---|
+| **Easiest** | KartPad for Android (Mario Kart Wii) | Any Windows, Mac or Linux computer, an Android phone, and the **European** Mario Kart Wii disc. Install the ready-to-play app; PadMint makes its game data. |
+| **Needs Xcode** | BlueWake (Wind Waker, US disc), SunPad (Super Mario Sunshine, US disc), KartPad for iPhone (European disc), AgePad (Age of Empires II from Steam) | A Mac with Apple Silicon (M1 or newer) and [Xcode](https://apps.apple.com/app/xcode/id497799835), free from the App Store. PadMint downloads everything else. |
+| **Needs Xcode + Homebrew** | Most other games | The same, plus one Homebrew line that the page shows you, with a Copy button. |
+
+Your game file must be the version the page names, for example **Only the US
+(North American) version works**. PadMint checks it as soon as you pick it.
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/padmint-page-dark.png">
@@ -40,24 +76,6 @@ one needs and where it stands, even games it can't build yet.
 Your game file never leaves your computer and PadMint uploads nothing. The page
 it opens is served by your own computer, and before anything starts it lists
 every download, where it comes from, its size and the free space needed.
-
-## Quick start
-
-**1. Download** the ZIP for your computer from the
-[latest PadMint](https://github.com/chrissotraidis/padmint/releases/latest):
-
-| Your computer | Download | Open it |
-|---|---|---|
-| **Windows** 10 or 11 | `PadMint-v…-windows.zip` | Right-click the ZIP, choose **Extract All**, open the new folder and double-click **PadMint**. If Windows says it protected your PC, choose **More info**, then **Run anyway**. Python is included. |
-| **Mac** | `PadMint-v…-macos.zip` | Once, run `xcode-select --install` in Terminal. Double-click the ZIP, open the folder and double-click **PadMint.command**. The first time, macOS says Apple could not verify it: choose **Done**, then **System Settings → Privacy & Security → Open Anyway**. |
-| **Linux** | `PadMint-v…-linux.zip` | Unzip it and run `sh padmint.sh` in the folder. Needs Python 3.9+ and Git. |
-
-**2. Keep the small window open.** It is PadMint working. Your web browser opens
-the PadMint page; if it doesn't, open the `http://127.0.0.1…` address the
-window shows. The page comes from your own computer, not a website.
-
-**3. Choose your game and follow the page.** It speaks English, Spanish and
-Portuguese (menu at the top right). Close the small window when you are done.
 
 **What's in the folder you unzipped:**
 
@@ -104,22 +122,24 @@ need. For each game's exact versions, hosts and known problems, see
 ## Using the page
 
 1. **1. Choose a game.** Search or scroll; each card shows the original game,
-   where it plays (iPhone/iPad, Android, Mac) and its group. **← All games**, or the
+   where it plays (iPhone/iPad, Android, Mac), its group and, on a Mac, how much
+   setup it needs (**Easiest**, **Needs Xcode** or **Needs Xcode + Homebrew**). **← All games**, or the
    PadMint logo at the top, takes you back to the full list. **About …: install guide and updates** opens the game's own page.
 2. **2. Your own game file.** Click **Choose file…** and pick your disc image or
-   ROM. Game files already in your Downloads folder are listed, so you can click
-   one of those. PadMint checks the file straight away and says **✓** or what is
-   wrong (wrong region, wrong version, incomplete file). Some games ask for the
-   file inside the app instead; the page says so.
+   ROM (the file window may open behind your browser). The page says which version
+   works, for example **Only the European (PAL) version works**. Game files already
+   in your Downloads folder are listed, so you can click one of those. PadMint checks
+   the file straight away and says **✓** or what is wrong (wrong region, wrong version,
+   incomplete file). Some games ask for the file inside the app instead; the page says so.
 3. **3. Where will you play?** Choose the device you will play on, whichever
    computer you are using. **This Mac** appears for games with a Mac copy, on an
    Apple Silicon Mac: that copy plays on the Mac that builds it.
-4. **What PadMint will do on this computer** lists everything before it starts:
-   anything you need to install yourself first (it says **found** or **not found**),
-   the source code and free build tools it downloads, and the free space needed.
-   On a Mac, most games also show **Install these once, in Terminal:** the
-   Homebrew line from the game's README, with a **Copy** button and a ✓ beside
-   each package already installed. Run it once, then click **Make my copy**.
+4. **What PadMint will do on this computer** lists everything before it starts.
+   **Before you start (one time only)** marks each program **found** or **not found**
+   and says how to get it: Xcode from the App Store, and one Homebrew line with a
+   **Copy** button for everything else. Install what's missing, click **Check again**,
+   then **Make my copy**. If the button is gray, the line under it says why.
+   **After the build: how to install and play** shows the phone steps in advance.
 
 The page then shows a checklist: finding the latest release, downloading the
 source, each tool with its progress, the build with its current step, and saving
@@ -134,10 +154,23 @@ your Downloads folder and **What to do next**. If it stops, it says why: open
 ## Installing what you made
 
 **iPhone or iPad:** PadMint saves `<Game>-v…-ios-personal.ipa`, the complete app
-with your game inside. Install it with [Sideloadly](https://sideloadly.io),
-[AltStore](https://altstore.io) or [SideStore](https://sidestore.io) and your own
-Apple ID. To update, build the new version with PadMint and install it over the
-old one with the same tool and Apple ID; your saves stay.
+with your game inside. To put it on your device with [Sideloadly](https://sideloadly.io)
+(free, Mac or Windows) and your own Apple ID:
+
+1. Install Sideloadly and open it.
+2. Connect your iPhone or iPad with a cable. Unlock it and tap **Trust** if it asks.
+3. Drag the `.ipa` into Sideloadly, type your Apple ID email and click **Start**.
+   Sideloadly asks for your Apple ID password to sign the app with Apple.
+4. On the device: **Settings → General → VPN & Device Management**, tap your
+   Apple ID, then **Trust**.
+5. If it says Developer Mode is required: **Settings → Privacy & Security →
+   Developer Mode → On**, then restart when asked.
+
+With a free Apple ID the app opens for 7 days; drag the same file into Sideloadly
+again to keep playing. To update, build the new version with PadMint and install
+it the same way with the same Apple ID; your saves stay. [AltStore](https://altstore.io)
+and [SideStore](https://sidestore.io) work too. HaloPad needs a paid Apple
+developer account; its guide explains why.
 
 **Mac (CTRPad):** PadMint saves `<Game>-v…-macos-personal.zip`. Open it, move the
 app to Applications and open it; the game asks for your own game file. To update,

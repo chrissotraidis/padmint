@@ -33,6 +33,17 @@ work and when to revisit it.
 
 ## PadMint itself
 
+- **v0.5.0**: easier for someone new. The README starts with direct Mac, Windows and
+  Linux download links (the ZIPs are now named `PadMint-macos.zip` and so on), and the
+  Mac no longer needs a Terminal step first. On a Mac, each card says how much setup
+  the game needs (**Easiest**, **Needs Xcode**, **Needs Xcode + Homebrew**). The file
+  step says which version works ("Only the US (North American) version works"). The
+  setup list says how to get Xcode when it's missing or not in use, gives one Homebrew
+  line for everything missing, marks programs needed only for some files, finds
+  Homebrew programs installed after PadMint started, and has **Check again**. A gray
+  **Make my copy** says why. The file window opens in front. iPhone and iPad copies
+  come with step-by-step Sideloadly instructions, also shown before the build.
+
 - **v0.4.13**: clearer downloads. KartPad's card says its ready-to-play download is
   for Android ("Android: ready-to-play app"), and the download note appears only when
   you choose Android, with a **Download the Android app** button. It no longer

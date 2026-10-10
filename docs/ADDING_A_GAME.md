@@ -234,6 +234,13 @@ same change:
 - `off_mac`: a message and link for Windows, Linux and Intel Mac players when
   the game has its own route without an Apple Silicon Mac (HaloPad's Xbox edition
   builds on GitHub's Mac runner).
+- `before_build`: the Homebrew line from the game's README. On a Mac the card then
+  says **Needs Xcode + Homebrew**, and the page offers one line with only the missing
+  packages. Without it the card says **Needs Xcode**, and the catalog check fails if the
+  recipe asks players for anything besides Xcode.
+- `player_next`: the steps after a build, per target. For `ios`, `"sideload": true`
+  puts PadMint's Sideloadly steps first and the game's own steps after them; without
+  `player_next.ios` a game gets only the Sideloadly steps.
 - README and STATUS.md say the same thing as the catalog.
 
 The **Catalog check** workflow runs `scripts/audit-catalog.py` every day and on

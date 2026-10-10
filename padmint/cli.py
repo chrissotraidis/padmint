@@ -958,11 +958,53 @@ IOS_PLATFORM = {"name": "xcrun", "version_args": ["--sdk", "iphoneos", "--show-s
 
 def require_programs(manifest, platform_name, disc=None):
     """Stop before any download or build when a program the player installs is missing."""
-    missing = [tool for tool in player_requirements(manifest, platform_name, disc) if not check_program(tool)[0]]
+    missing = [check for check in requirement_checks(manifest, platform_name, disc) if not check["ok"]]
     if missing:
         raise ValueError(f"{manifest['name']} needs these installed first:\n"
-                         + "".join(f"  {label(tool)}: {tool['note']}\n" for tool in missing)
+                         + "".join(f"  {check['label']}: {check['note']}"
+                                   + (f"\n    {check['command']}" if check.get("command") else "") + "\n"
+                                   for check in missing)
                          + "Then run PadMint again.")
+
+
+XCODE_TOOLS = ("xcodebuild", "xcrun")
+
+
+def xcode_problem():
+    """On a Mac without a usable Xcode: ("install", None) when no Xcode app is there, or
+    ("select", app) when Xcode is installed but the Mac still uses only the command line
+    tools. None when Xcode is in use."""
+    if not host_id().startswith("macos"):
+        return None
+    try:
+        selected = subprocess.run(["xcode-select", "-p"], capture_output=True, text=True,
+                                  timeout=10).stdout.strip()
+    except (OSError, subprocess.TimeoutExpired):
+        selected = ""
+    if ".app/Contents/Developer" in selected:
+        return None
+    apps = sorted(Path("/Applications").glob("Xcode*.app"))
+    return ("select", str(apps[0])) if apps else ("install", None)
+
+
+def requirement_checks(manifest, platform_name, disc=None, lang=None):
+    """Each program the player installs, checked: label, ok, note, and the file types it is
+    only needed for (until a file is chosen). When Xcode itself is missing or not in use,
+    its checks become one item that says how to get it: "add iOS in Xcode" is no help
+    to someone who has no Xcode."""
+    checks = [{"name": tool["name"], "label": label(tool), "ok": check_program(tool)[0],
+               "note": tool.get("note", ""), "only": [] if disc else sorted(tool.get("input_formats") or [])}
+              for tool in player_requirements(manifest, platform_name, disc)]
+    if any(not check["ok"] and check["name"] in XCODE_TOOLS for check in checks):
+        problem = xcode_problem()
+        if problem:
+            say = (lambda key, **fields: phrase(key, lang, **fields)) if lang else t
+            checks = [check for check in checks if check["name"] not in XCODE_TOOLS]
+            fix = {"name": "xcodebuild", "label": "Xcode", "ok": False, "only": [], "note": say(f"xcode_{problem[0]}")}
+            if problem[0] == "select":
+                fix["command"] = f"sudo xcode-select -s {problem[1]}"
+            checks.insert(0, fix)
+    return checks
 
 
 def player_requirements(manifest, platform_name=None, disc=None):
@@ -988,8 +1030,10 @@ def host_requirements(manifest, disc=None):
 
 
 def label(tool):
-    """What a requirements.tools entry is called for people: its label, else the program's name."""
-    return tool.get("label") or FRIENDLY.get(tool["name"], tool["name"])
+    """What a requirements.tools entry is called for people: its label, else the program's name
+    (a program checked by its full path, such as Homebrew's LLVM clang, by its file name)."""
+    name = tool["name"]
+    return tool.get("label") or FRIENDLY.get(name) or (Path(name).name if "/" in name else name)
 
 
 # Plain names for programs recipes ask players to install, when a recipe gives no label.
@@ -1138,19 +1182,30 @@ PHONE_DOWNLOADS = Path("/sdcard/Download")
 TERMUX_OPEN_URL = Path("/data/data/com.termux/files/usr/bin/termux-open-url")
 
 
+def ios_install_steps(name, file, in_app, lang=None):
+    """(steps, note): putting an .ipa on an iPhone or iPad with Sideloadly, one action per step."""
+    say = (lambda key, **fields: phrase(key, lang, **fields)) if lang else t
+    keys = ["next_ios_sideloadly", "next_ios_connect", "next_ios_sign", "next_ios_trust", "next_ios_devmode",
+            "next_ios_in_app" if in_app else "next_ios_open"]
+    return [say(key, file=file, name=name) for key in keys], say("next_ios_note", name=name)
+
+
 def next_step_text(entry, platform_name, result, lang=None):
     """(steps, note, guide): the few steps that get this file into the game, in the player's words."""
     guide = entry.get("player_help") or f"{entry['repo_url']}#get-{entry['id']}"
     steps = (entry.get("player_next") or {}).get(platform_name)
     if result is None:
         return [], None, guide
-    if not steps and platform_name == "ios":
-        # Every iPhone and iPad copy installs the same way; the game's guide has the rest.
+    if platform_name == "ios" and (not steps or steps.get("sideload")):
+        # Most iPhone and iPad copies install the same way, with Sideloadly; a game's own steps
+        # ("sideload": true) follow those. The game's guide has the rest.
         in_app = entry.get("player_game_file", "build") == "in-app"
-        keys = ["next_ios_install", "next_ios_update", "next_ios_in_app" if in_app else "next_ios_open"]
-        say = (lambda key, **fields: phrase(key, lang, **fields)) if lang else t
         name = entry.get("name") or (entry.get("manifest") or {}).get("name", entry["id"])
-        return [say(key, file=result.name, name=name) for key in keys], None, guide
+        instructions, note = ios_install_steps(name, result.name, in_app, lang)
+        if not steps:
+            return instructions, note, guide
+        own = [step.format(file=result.name, folder=result.parent) for step in localized(steps, "steps", lang)]
+        return instructions[:-1] + own, " ".join(filter(None, [localized(steps, "note", lang), note])), guide
     if not steps:
         return [], None, guide
     instructions = localized(steps, "steps", lang)
@@ -1671,8 +1726,25 @@ def build_parser():
     return parser
 
 
+# Homebrew installs programs here. A Terminal window opened before Homebrew was installed
+# doesn't have them on its PATH, so PadMint would keep saying "not found" after the player
+# installed them; PadMint looks there too (after everything already on PATH).
+HOMEBREW_BINS = ("/opt/homebrew/bin", "/usr/local/bin")
+
+
+def homebrew_on_path(environ=None):
+    environ = os.environ if environ is None else environ
+    if sys.platform != "darwin":
+        return
+    parts = [part for part in environ.get("PATH", "").split(os.pathsep) if part]
+    extra = [folder for folder in HOMEBREW_BINS if folder not in parts and Path(folder).is_dir()]
+    if extra:
+        environ["PATH"] = os.pathsep.join(parts + extra)
+
+
 def main(argv=None):
     args = build_parser().parse_args(argv)
+    homebrew_on_path()
     try:
         if args.action is None and wants_window():
             from .ui import serve

@@ -243,6 +243,8 @@ def catalog():
                     or not all(isinstance(step, str) for step in steps["phone_steps"])):
                 raise ValueError(f"catalog/{path.name}: player_next.{platform}.phone_steps "
                                  "must be a list of strings")
+            if not isinstance(steps.get("sideload", False), bool) or (steps.get("sideload") and platform != "ios"):
+                raise ValueError(f"catalog/{path.name}: player_next.{platform}.sideload is true or false, for ios")
         ids = entry.get("game_ids", [])
         if not isinstance(ids, list) or not all(re.fullmatch(r"[0-9A-Z]{4}|[0-9A-Z]{6}", str(i)) for i in ids):
             raise ValueError(f"catalog/{path.name}: game_ids lists six-character disc IDs "

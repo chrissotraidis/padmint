@@ -2,9 +2,10 @@
 """Make PadMint's release downloads: Windows (Python included), macOS and Linux.
 
 Usage: scripts/package-release.py OUTPUT_FOLDER
-Writes PadMint-vX.Y.Z-windows.zip, -macos.zip, -linux.zip and SHA256SUMS,
+Writes PadMint-windows.zip, PadMint-macos.zip, PadMint-linux.zip and SHA256SUMS,
 then runs PadMint's own release gate on them (ZIP everywhere: the gate opens
-ZIP archives only).
+ZIP archives only). The names carry no version, so .../releases/latest/download/PadMint-macos.zip
+always gets the newest one; the folder inside is still PadMint-vX.Y.Z.
 """
 import hashlib
 import io
@@ -64,10 +65,10 @@ START = {
                     "If Windows says it protected your PC: More info, then Run anyway.",
                     "Haz doble clic en PadMint (PadMint.cmd). Si Windows dice que protegió tu PC: Más información, luego Ejecutar de todas formas.",
                     "Clique duas vezes em PadMint (PadMint.cmd). Se o Windows disser que protegeu o seu PC: Mais informações, depois Executar assim mesmo."),
-    "PadMint.command": ("Double-click PadMint.command. Once, before that, run this in Terminal: xcode-select --install",
-                        "The first time, macOS says Apple could not verify it: choose Done, then System Settings, Privacy & Security, Open Anyway.",
-                        "Antes, una sola vez, ejecuta en Terminal: xcode-select --install. Luego haz doble clic en PadMint.command. La primera vez, macOS dice que Apple no pudo verificarlo: cierra el aviso y ve a Ajustes del Sistema, Privacidad y seguridad, Abrir igualmente.",
-                        "Antes, uma única vez, execute no Terminal: xcode-select --install. Depois clique duas vezes em PadMint.command. Na primeira vez, o macOS diz que a Apple não pôde verificá-lo: feche o aviso e vá em Ajustes do Sistema, Privacidade e Segurança, Abrir Mesmo Assim."),
+    "PadMint.command": ("Double-click PadMint.command. The first time, macOS says Apple could not verify it: choose Done, then System Settings, Privacy & Security, Open Anyway.",
+                        "If macOS offers to install command line developer tools, click Install, wait, then double-click PadMint.command again (or run: xcode-select --install).",
+                        "Haz doble clic en PadMint.command. La primera vez, macOS dice que Apple no pudo verificarlo: cierra el aviso y ve a Ajustes del Sistema, Privacidad y seguridad, Abrir igualmente. Si macOS ofrece instalar las herramientas de línea de comandos, pulsa Instalar, espera y vuelve a abrir PadMint.command.",
+                        "Clique duas vezes em PadMint.command. Na primeira vez, o macOS diz que a Apple não pôde verificá-lo: feche o aviso e vá em Ajustes do Sistema, Privacidade e Segurança, Abrir Mesmo Assim. Se o macOS oferecer instalar as ferramentas de linha de comando, clique em Instalar, espere e abra o PadMint.command de novo."),
     "padmint.sh": ("In a terminal in this folder, run: sh padmint.sh",
                    "It needs Python 3.9 or newer and Git, for example: sudo apt install python3 git",
                    "En una terminal en esta carpeta, ejecuta: sh padmint.sh (necesita Python 3.9 o más nuevo y Git).",
@@ -121,7 +122,7 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     top = f"PadMint-v{__version__}"
     launchers = ROOT / "launchers"
-    made = [out / f"{top}-windows.zip", out / f"{top}-macos.zip", out / f"{top}-linux.zip"]
+    made = [out / "PadMint-windows.zip", out / "PadMint-macos.zip", out / "PadMint-linux.zip"]
     make_zip(made[0], top, launchers / "PadMint.cmd", windows_python())
     make_zip(made[1], top, launchers / "PadMint.command")
     make_zip(made[2], top, launchers / "padmint.sh")

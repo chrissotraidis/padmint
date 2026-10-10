@@ -3,7 +3,7 @@
   "id": "projectreach",
   "repo_url": "https://github.com/chrissotraidis/projectreach",
   "name": "HaloPad",
-  "game": "Halo: Custom Edition 1.10 (PC) and Halo: Combat Evolved (Xbox)",
+  "game": "Halo: Combat Evolved (Xbox) or Halo: Custom Edition (PC)",
   "player_targets": [
     "ios",
     "macos"

@@ -74,25 +74,23 @@
       }
     },
     "ios": {
+      "sideload": true,
       "steps": [
-        "Install {file} on your iPhone or iPad with AltStore, SideStore or Sideloadly.",
-        "Updating? Install it over your existing KartPad with the same tool and Apple ID to keep your saves. Your game data stays too: if KartPad doesn't ask for it, you're ready to play.",
         "First time only: put the KartPad game data folder from {folder} on the device (iCloud Drive, a USB drive or a cloud drive app). In KartPad, tap Import Game next to Mario Kart Wii, then Import from Extracted Folder…, and pick that folder."
       ],
+      "note": "When you update, your KartPad game data stays: if KartPad doesn't ask for it, you're ready to play.",
       "translations": {
         "es": {
           "steps": [
-            "Instala {file} en tu iPhone o iPad con AltStore, SideStore o Sideloadly.",
-            "¿Actualizas? Instálalo sobre tu KartPad actual con la misma herramienta y el mismo Apple ID para conservar tus partidas. Tus datos del juego también se conservan: si KartPad no los pide, ya puedes jugar.",
             "Solo la primera vez: pon la carpeta KartPad game data de {folder} en el dispositivo (iCloud Drive, una memoria USB o una app de nube). En KartPad, toca Import Game junto a Mario Kart Wii, luego Import from Extracted Folder…, y elige esa carpeta."
-          ]
+          ],
+          "note": "Al actualizar, tus datos del juego de KartPad se conservan: si KartPad no los pide, ya puedes jugar."
         },
         "pt": {
           "steps": [
-            "Instale {file} no seu iPhone ou iPad com AltStore, SideStore ou Sideloadly.",
-            "Atualizando? Instale sobre o seu KartPad atual com a mesma ferramenta e o mesmo Apple ID para manter seus saves. Seus dados do jogo também ficam: se o KartPad não pedir, já pode jogar.",
             "Só na primeira vez: coloque a pasta KartPad game data de {folder} no aparelho (iCloud Drive, um pendrive ou um app de nuvem). No KartPad, toque em Import Game ao lado de Mario Kart Wii, depois em Import from Extracted Folder…, e escolha essa pasta."
-          ]
+          ],
+          "note": "Ao atualizar, os dados do jogo do KartPad continuam: se o KartPad não pedir, já pode jogar."
         }
       }
     }

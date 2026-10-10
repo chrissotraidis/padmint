@@ -27,6 +27,47 @@ def which_without(*missing):
     return lambda name: None if name in missing else f"/usr/bin/{name}"
 
 
+class BeginnerSetupTests(unittest.TestCase):
+    """What a player with a new Mac reads: one Xcode item that says how to get Xcode, and one
+    Homebrew line for everything missing, instead of each recipe note on its own."""
+
+    XCODE = {"name": "xcodebuild", "version_args": ["-version"], "player": True, "note": "Install Xcode"}
+
+    def checks(self, problem):
+        with mock.patch.object(cli, "host_id", return_value="macos-arm64"), \
+                mock.patch.object(cli, "check_program", return_value=(False, "")), \
+                mock.patch.object(cli, "xcode_problem", return_value=problem):
+            return cli.requirement_checks(recipe(self.XCODE, SDL2), "ios", lang="en")
+
+    def test_without_xcode_its_checks_become_one_item_that_says_how_to_get_it(self):
+        checks = self.checks(("install", None))
+        self.assertEqual([check["label"] for check in checks], ["Xcode", "SDL2 (sdl2-config)"])
+        self.assertIn("App Store", checks[0]["note"])
+        selected = self.checks(("select", "/Applications/Xcode.app"))[0]
+        self.assertIn("isn't using it yet", selected["note"])
+        self.assertEqual(selected["command"], "sudo xcode-select -s /Applications/Xcode.app")
+
+    def test_with_xcode_in_use_the_ios_platform_check_keeps_its_own_note(self):
+        labels = [check["label"] for check in self.checks(None)]
+        self.assertEqual(labels, ["Xcode", "SDL2 (sdl2-config)", "Xcode iOS platform"])
+
+    def test_missing_homebrew_programs_share_one_install_line(self):
+        from padmint import ui
+        manifest = recipe({"name": "winetricks", "player": True, "input_formats": ["exe"],
+                           "note": "brew install winetricks (your product ID)"},
+                          {"name": "ld.lld", "player": True, "note": "brew install lld (the Xbox edition)"})
+        before = {"commands": ["brew install cmake ninja lld", "rustup toolchain install 1.88.0"], "homebrew": True,
+                  "packages": [{"name": "cmake", "ok": True}, {"name": "ninja", "ok": False}, {"name": "lld", "ok": False}]}
+        with mock.patch.object(ui, "release_recipe", return_value=manifest), \
+                mock.patch.object(cli, "host_id", return_value="macos-arm64"), \
+                mock.patch.object(cli, "check_program", return_value=(False, "")), \
+                mock.patch.object(cli, "before_build", return_value=before):
+            plan = ui.plan("kartpad", "android", "en")
+        self.assertEqual(plan["mac_setup"]["brew_line"], "brew install ninja lld winetricks")
+        self.assertEqual(plan["mac_setup"]["other"], ["rustup toolchain install 1.88.0"])
+        self.assertEqual({need["label"]: need["only"] for need in plan["needs"]}, {"winetricks": ["exe"], "ld.lld": []})
+
+
 class ManifestFieldTests(unittest.TestCase):
     def test_player_is_true_or_false_and_needs_a_note(self):
         validate_manifest(recipe(SDL2, DEVELOPER))
