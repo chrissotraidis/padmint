@@ -41,6 +41,23 @@ class LaterTests(unittest.TestCase):
         everything = built | set(waiting) | {app["id"] for app in data["downloads"]}
         self.assertEqual(everything, set(manifest.catalog()))
 
+    def test_a_device_held_back_is_shown_on_the_computer_that_would_make_it(self):
+        # KartPad's Mac copy isn't offered yet: an Apple Silicon Mac says so in step 3,
+        # instead of only showing Android and iPhone/iPad (Discord, 12 Oct 2026).
+        from padmint import cli
+        for host, held in (("macos-arm64", ["macos"]), ("macos-x86_64", []), ("windows-x86_64", [])):
+            with self.subTest(host=host), mock.patch.object(cli, "host_id", return_value=host), \
+                    mock.patch.object(cli, "on_android", return_value=False):
+                kartpad = {game["id"]: game for game in ui.player_data("en")["games"]}["kartpad"]
+            self.assertEqual([item["id"] for item in kartpad["held"]], held)
+        self.assertEqual(kartpad["held"], [])
+        with mock.patch.object(cli, "host_id", return_value="macos-arm64"), \
+                mock.patch.object(cli, "on_android", return_value=False):
+            kartpad = {game["id"]: game for game in ui.player_data("es")["games"]}["kartpad"]
+        self.assertEqual(kartpad["held"][0]["label"], "Este Mac")
+        self.assertEqual(kartpad["held"][0]["text"],
+                         "PadMint todavía no crea KartPad para Mac. Para jugar ahora, elige Android o iPhone/iPad.")
+
 
 if __name__ == "__main__":
     unittest.main()

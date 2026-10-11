@@ -1345,6 +1345,15 @@ def elsewhere():
             for game, entry in sorted(catalog().items()) if entry.get("player_targets") and game not in offered]
 
 
+def held_here(entry):
+    """Devices this computer could make a game for that PadMint deliberately doesn't offer yet
+    (the catalog's unoffered_targets, such as KartPad on this Mac): the page shows them dimmed
+    with a word on what to choose instead, so a player doesn't think they were missed."""
+    host = host_id()
+    here = {"macos": host == "macos-arm64" and not on_android(), "windows": host.startswith("windows-")}
+    return [target for target in (entry.get("unoffered_targets") or {}) if here.get(target)]
+
+
 def platform_label(platform_name, lang=None):
     """How the menu names a device: an iPhone copy needs this Mac, or is experimental elsewhere."""
     key = {"android": "android", "ios": "ios_mac" if host_id() == "macos-arm64" else "ios_off_mac",

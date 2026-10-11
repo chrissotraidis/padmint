@@ -384,6 +384,12 @@ MESSAGES = {
     "w_short_ios": {"en": "iPhone/iPad", "es": "iPhone/iPad", "pt": "iPhone/iPad"},
     "w_short_macos": {"en": "Mac", "es": "Mac", "pt": "Mac"},
     "w_short_windows": {"en": "Windows", "es": "Windows", "pt": "Windows"},
+    # A device the game's recipe can make but PadMint doesn't offer yet (catalog unoffered_targets).
+    "w_held_tag": {"en": "Not yet", "es": "Todavía no", "pt": "Ainda não"},
+    "held_text": {"en": "PadMint doesn't make {name} for {device} yet. To play it now, choose {others}.",
+                  "es": "PadMint todavía no crea {name} para {device}. Para jugar ahora, elige {others}.",
+                  "pt": "O PadMint ainda não cria o {name} para {device}. Para jogar agora, escolha {others}."},
+    "held_or": {"en": " or ", "es": " o ", "pt": " ou "},
     "w_all": {"en": "All", "es": "Todos", "pt": "Todos"},
     "w_count": {"en": "{count} games", "es": "{count} juegos", "pt": "{count} jogos"},
     "w_no_match": {"en": "No game matches. Try another name.", "es": "Ningún juego coincide. Prueba otro nombre.",
