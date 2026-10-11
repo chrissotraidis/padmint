@@ -218,7 +218,54 @@ tried on an emulator.
 Next time, type `padmint` in Termux. If Android stops the build ("Process
 completed (signal 9)"), turn on **Settings → System → Developer options →
 Disable child process restrictions** and run `padmint` again. To free the space
-afterwards: `proot-distro remove padmint`.
+afterwards, see [Removing PadMint](#removing-padmint).
+
+## Removing PadMint
+
+PadMint doesn't install itself anywhere. It is the folder you unzipped, plus
+one folder of its own, `.padmint` in your home folder, which keeps the game
+sources, tools and builds it downloaded. That folder can take tens of GB.
+
+1. Close PadMint's small window.
+2. Move the PadMint folder you unzipped to the Trash (Recycle Bin on Windows).
+3. Delete the `.padmint` folder:
+   - **Mac:** open **Terminal** (Applications → Utilities), paste this line and
+     press Return:
+
+     ```
+     rm -rf ~/.padmint ~/.padforge
+     ```
+
+     Or, in Finder, choose **Go → Home**, press **Command-Shift-.** (period) to
+     show hidden folders and move `.padmint` to the Trash. `.padforge` is the
+     old name of the same folder, only there if you used PadMint before 0.2.0.
+     Apple's Python also keeps a few MB of compiled copies of PadMint in
+     `~/Library/Caches/com.apple.python`; it is only a cache and safe to delete.
+   - **Windows:** type `%USERPROFILE%` in File Explorer's address bar, press
+     Enter and delete `.padmint`.
+   - **Linux:** `rm -rf ~/.padmint ~/.padforge`
+   - **Android phone:** in Termux,
+     `proot-distro remove padmint; rm -f $PREFIX/bin/padmint $PREFIX/etc/proot-distro/padmint.sh`.
+     If you installed Termux only for PadMint, uninstalling Termux removes all of it.
+4. Empty the Trash to get the space back.
+
+The copies PadMint made stay in your Downloads folder and on your devices;
+delete them there if you don't want them.
+
+**What you installed for PadMint on a Mac** are separate programs that other
+apps can use too, so removing PadMint leaves them in place. Remove them only if
+nothing else needs them:
+
+- **Apple's command line tools**, which macOS (or `xcode-select --install`)
+  downloaded for PadMint: in Terminal, `sudo rm -rf /Library/Developer/CommandLineTools`
+  and type your Mac password when asked
+  ([Apple's steps](https://developer.apple.com/documentation/xcode/installing-the-command-line-tools#Uninstall-the-Command-Line-Tools-for-Xcode-package)).
+  Without Xcode, Git and `python3` in Terminal then stop working until you
+  install the tools again.
+- **Homebrew** and the programs from a game's `brew install` line:
+  [Homebrew's uninstall steps](https://docs.brew.sh/FAQ#how-do-i-uninstall-homebrew).
+- **Xcode:** move it from Applications to the Trash. You can also delete
+  `~/Library/Developer/Xcode/DerivedData`, where Xcode keeps build files.
 
 ## Questions
 
