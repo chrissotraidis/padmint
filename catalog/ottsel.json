@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "id": "ottsel",
+  "name": "Ottsel",
+  "game": "Jak and Daxter: The Precursor Legacy (PS2)",
+  "plays_on": [
+    "iphone",
+    "ipad",
+    "mac"
+  ],
+  "repo_url": "https://github.com/chrissotraidis/ottsel",
+  "reviewed_revision": null,
+  "player_help": "https://github.com/chrissotraidis/padmint/blob/main/docs/COMPATIBILITY.md#status-by-game",
+  "notes": "Listed so players can find it. Ottsel owns its recipe (padmint.json: iPhone/iPad and Mac, built on an Apple Silicon Mac after brew install cmake ninja ripgrep glslang spirv-cross, from the SCUS-97124 Black Label disc). Its repository is private and has no release, so nothing is offered yet. Once a release publishes ottsel-v...-padmint.json: drop later, add player_targets [\"ios\", \"macos\"], free_space_gb 20, before_build and player_next, point player_help at the README's build-your-own-with-padmint section, and run scripts/player-check.sh first. Developers can already run padmint build ottsel --repo CHECKOUT --revision FULL_COMMIT --disc JAK1.iso.",
+  "later": {
+    "text": "Its source isn't public yet. When it is, PadMint will build it for iPhone, iPad and Mac on an Apple Silicon Mac from your own Jak and Daxter disc (USA, the original Black Label release).",
+    "translations": {
+      "es": {
+        "text": "Su código fuente todavía no es público. Cuando lo sea, PadMint lo creará para iPhone, iPad y Mac en un Mac con Apple Silicon a partir de tu propio disco de Jak and Daxter (EE. UU., la edición original Black Label)."
+      },
+      "pt": {
+        "text": "O código-fonte ainda não é público. Quando for, o PadMint vai criá-lo para iPhone, iPad e Mac num Mac com Apple Silicon a partir do seu próprio disco de Jak and Daxter (EUA, a edição original Black Label)."
+      }
+    }
+  },
+  "manifest": null
+}
