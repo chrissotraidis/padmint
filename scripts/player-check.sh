@@ -3,6 +3,7 @@
 #
 #   scripts/player-check.sh GAME PLATFORM GAME_FILE              the game's latest release
 #   scripts/player-check.sh GAME PLATFORM GAME_FILE CHECKOUT     a clean copy of CHECKOUT's HEAD
+#   GAME_FILE "-": the game has no file to select (its build downloads its own inputs)
 #
 # Players start PadMint.command, which runs Apple's /usr/bin/python3 (3.9), with nothing
 # downloaded yet. A maintainer's `python3 -m padmint` usually runs a newer Python with warm
@@ -16,6 +17,8 @@ if [ $# -lt 3 ] || [ $# -gt 4 ]; then
   exit 2
 fi
 game=$1 platform=$2 game_file=$3 checkout=${4:-}
+disc=(--disc "$game_file")
+if [ "$game_file" = - ]; then disc=(); fi
 player_python=/usr/bin/python3
 padmint_root=$(cd "$(dirname "$0")/.." && pwd)
 check_folder=$(mktemp -d "${TMPDIR:-/tmp}/padmint-player-check.XXXXXX")
@@ -27,9 +30,9 @@ if [ -n "$checkout" ]; then
   git clone --quiet --no-hardlinks "$checkout" "$check_folder/source"
   git -C "$check_folder/source" checkout --quiet --detach "$revision"
   PADMINT_HOME="$check_folder/padmint" "$player_python" -m padmint build "$game" \
-    --repo "$check_folder/source" --revision "$revision" --target "$platform" --disc "$game_file"
+    --repo "$check_folder/source" --revision "$revision" --target "$platform" ${disc[@]+"${disc[@]}"}
 else
   PADMINT_HOME="$check_folder/padmint" "$player_python" -m padmint make "$game" "$platform" \
-    --disc "$game_file" --out "$check_folder/out"
+    ${disc[@]+"${disc[@]}"} --out "$check_folder/out"
 fi
 echo "Player check passed. Delete $check_folder when you are done with it."
