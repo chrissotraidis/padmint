@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "tribespad",
+  "repo_url": "https://github.com/chrissotraidis/tribespad",
+  "name": "TribesPad",
+  "game": "Tribes 2 (free official download) with the TribesNEXT client",
+  "player_targets": [
+    "ios",
+    "macos"
+  ],
+  "free_space_gb": 25,
+  "player_help": "https://github.com/chrissotraidis/tribespad#get-tribespad",
+  "reviewed_revision": null,
+  "notes": "TribesPad owns its release recipe. The build downloads the free official Tribes 2 installer and the TribesNEXT client itself and checks them by SHA-256, so there is no game file to select. Personal builds contain translated game code and the game's data and are never published.",
+  "manifest": null,
+  "player_game_file": "in-app",
+  "before_build": {
+    "commands": [
+      "brew install llvm@20 cmake ninja sevenzip zstd"
+    ]
+  },
+  "player_next": {
+    "ios": {
+      "sideload": true,
+      "steps": [
+        "Open TribesPad. The game is already inside: choose LAN GAME, then HOST, enable bots and start an offline match. Sign with a profile that allows Extended Virtual Addressing (a paid Apple Developer account does)."
+      ]
+    },
+    "macos": {
+      "steps": [
+        "Unzip {file}, move TribesPad to your Applications folder and open it. It needs no Apple account.",
+        "Choose LAN GAME, then HOST, enable bots and start an offline match."
+      ]
+    }
+  },
+  "off_mac": {
+    "url": "https://github.com/chrissotraidis/tribespad#without-a-mac",
+    "text": "PadMint builds TribesPad on a Mac with Apple Silicon (M1 or newer). Without one, GitHub's free Mac runner can build the iPhone and iPad app in your own copy of TribesPad's repository; then install it with Sideloadly."
+  }
+}
