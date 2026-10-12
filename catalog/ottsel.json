@@ -3,24 +3,36 @@
   "id": "ottsel",
   "name": "Ottsel",
   "game": "Jak and Daxter: The Precursor Legacy (PS2)",
-  "plays_on": [
-    "iphone",
-    "ipad",
-    "mac"
-  ],
   "repo_url": "https://github.com/chrissotraidis/ottsel",
+  "player_targets": [
+    "ios",
+    "macos"
+  ],
+  "free_space_gb": 20,
+  "player_help": "https://github.com/chrissotraidis/ottsel#build-your-own-with-padmint",
   "reviewed_revision": null,
-  "player_help": "https://github.com/chrissotraidis/padmint/blob/main/docs/COMPATIBILITY.md#status-by-game",
-  "notes": "Listed so players can find it. Ottsel owns its recipe (padmint.json: iPhone/iPad and Mac, built on an Apple Silicon Mac after brew install cmake ninja ripgrep glslang spirv-cross, from the SCUS-97124 Black Label disc). Its repository is private and has no release, so nothing is offered yet. Once a release publishes ottsel-v...-padmint.json: drop later, add player_targets [\"ios\", \"macos\"], free_space_gb 20, before_build and player_next, point player_help at the README's build-your-own-with-padmint section, and run scripts/player-check.sh first. Developers can already run padmint build ottsel --repo CHECKOUT --revision FULL_COMMIT --disc JAK1.iso.",
-  "later": {
-    "text": "Its source isn't public yet. When it is, PadMint will build it for iPhone, iPad and Mac on an Apple Silicon Mac from your own Jak and Daxter disc (USA, the original Black Label release).",
-    "translations": {
-      "es": {
-        "text": "Su código fuente todavía no es público. Cuando lo sea, PadMint lo creará para iPhone, iPad y Mac en un Mac con Apple Silicon a partir de tu propio disco de Jak and Daxter (EE. UU., la edición original Black Label)."
-      },
-      "pt": {
-        "text": "O código-fonte ainda não é público. Quando for, o PadMint vai criá-lo para iPhone, iPad e Mac num Mac com Apple Silicon a partir do seu próprio disco de Jak and Daxter (EUA, a edição original Black Label)."
-      }
+  "notes": "Ottsel owns its recipe (ottsel-v...-padmint.json in each release). Apple Silicon Mac only; the disc must be the USA SCUS-97124 Black Label release, which the build checks.",
+  "before_build": {
+    "commands": [
+      "brew install cmake ninja ripgrep glslang spirv-cross"
+    ]
+  },
+  "game_data_import": {
+    "ios": "••• → Game Data → Import Game Data…",
+    "macos": "Game Data → Import Game Data…"
+  },
+  "player_next": {
+    "ios": {
+      "sideload": true,
+      "steps": [
+        "First time only: copy the Ottsel game data folder from {folder} to the iPhone or iPad (iCloud Drive, a USB drive, or Finder: select the device, open Files and drag it onto Ottsel). In Ottsel, open ••• → Game Data → Import Game Data…, choose that folder, then close and reopen Ottsel."
+      ]
+    },
+    "macos": {
+      "steps": [
+        "Unzip {file}, move Ottsel to your Applications folder and open it. It needs no Apple account.",
+        "First time only: in the menu bar, choose Game Data → Import Game Data…, pick the Ottsel game data folder in {folder}, then quit and reopen Ottsel."
+      ]
     }
   },
   "manifest": null
