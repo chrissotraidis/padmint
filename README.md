@@ -485,6 +485,9 @@ phone; iPhone/iPad builds need an Apple Silicon Mac, except KartPad, which
 also builds experimentally on Windows, Linux or an Intel Mac. See [STATUS.md](STATUS.md)
 for what has been verified on each.
 
+What PadMint builds on which computer, and what comes next, is tracked in
+[the roadmap](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md).
+
 The [catalog](catalog/) lists every public game: the ones PadMint builds, the
 apps with nothing to build (`download`) and the ones not available yet
 (`later`). [COMPATIBILITY](docs/COMPATIBILITY.md) has each game's status and
