@@ -5,7 +5,8 @@
   "name": "MeleePad",
   "game": "Super Smash Bros. Melee (GameCube)",
   "player_targets": [
-    "ios"
+    "ios",
+    "macos"
   ],
   "game_ids": [
     "GALE01"
@@ -21,5 +22,30 @@
       "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
       "rustup toolchain install 1.88.0 --target aarch64-apple-ios"
     ]
+  },
+  "player_next": {
+    "macos": {
+      "steps": [
+        "Open {file} and move MeleePad.app to your Applications folder.",
+        "Open MeleePad and choose your own GALE01 disc image under Game Data, then Play. If macOS asks whether MeleePad may open files in a folder, allow the one your disc image is in.",
+        "Updating? Replace the old MeleePad.app with the new one. Your saves and settings are kept."
+      ],
+      "translations": {
+        "es": {
+          "steps": [
+            "Abre {file} y mueve MeleePad.app a tu carpeta Aplicaciones.",
+            "Abre MeleePad y elige tu propia imagen de disco GALE01 en Game Data; luego Play. Si macOS pregunta si MeleePad puede abrir archivos de una carpeta, permite la de tu imagen de disco.",
+            "¿Actualizando? Reemplaza el MeleePad.app anterior por el nuevo. Tus partidas y ajustes se conservan."
+          ]
+        },
+        "pt": {
+          "steps": [
+            "Abra {file} e mova o MeleePad.app para a sua pasta Aplicativos.",
+            "Abra o MeleePad e escolha a sua própria imagem de disco GALE01 em Game Data; depois Play. Se o macOS perguntar se o MeleePad pode abrir arquivos de uma pasta, permita a da sua imagem de disco.",
+            "Atualizando? Substitua o MeleePad.app antigo pelo novo. Seus saves e ajustes são mantidos."
+          ]
+        }
+      }
+    }
   }
 }
