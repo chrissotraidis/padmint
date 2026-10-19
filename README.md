@@ -49,7 +49,7 @@ window shows. The page comes from your own computer, not a website.
 **3. Choose your game and follow the page.** It tells you exactly what to
 install first, with a **Check again** button, then builds your copy and shows
 how to put it on your phone or tablet. It speaks English, Spanish and Portuguese
-(menu at the bottom of the sidebar). Close the small window when you are done.
+(**Settings**, at the bottom of the sidebar). Close the small window when you are done.
 
 **4. Your games, on every device.** On a Mac with Xcode, PadMint looks at the
 iPhones and iPads you've connected to this Mac once and lists the Pad games on
@@ -152,7 +152,8 @@ the copies it built, with the version on each device. **Updates** shows the ones
 behind the latest release. **All games** is the full library. Under **Devices**,
 each iPhone, iPad, this Mac and Android has its own list. **Storage** shows the
 space PadMint uses and frees what it no longer needs. The version button at the
-bottom says when PadMint itself has an update. Click a section heading in My
+bottom says when PadMint itself has an update, and **Settings** next to it holds
+the language, your devices, where copies are saved and help. Click a section heading in My
 games, such as **Updates available**, to fold it. To find a game, just start
 typing: PadMint jumps to the library's search, which matches game, port and
 system names.
@@ -331,7 +332,7 @@ PadMint yet; the game's page has the latest.
 <details>
 <summary><strong>Can I play KartPad on my Mac?</strong></summary>
 
-Yes, with the latest PadMint (**0.5.9**), on a Mac with Apple Silicon (M1 or newer)
+Yes, with the latest PadMint (**0.5.10**), on a Mac with Apple Silicon (M1 or newer)
 and Xcode: choose **Mario Kart Wii**, then **This Mac** under **Where will you
 play?** PadMint builds KartPad from your disc and saves the app in your Downloads
 folder. The first build needs about 12 GB free. On an Intel Mac, PadMint builds KartPad for iPhone and iPad
