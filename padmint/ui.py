@@ -913,6 +913,7 @@ html{min-height:100%;background:var(--bg)}body{min-height:100vh;background-attac
 #shelf>.sechead .row{flex-wrap:nowrap;align-items:center;gap:.55rem}#shelfNote{white-space:nowrap;font-size:.82rem}
 #lookAgain{width:2.25rem;min-height:2.25rem;padding:0;border-radius:50%;font-size:0}#lookAgain:before{font-size:1.05rem}
 @media (max-width:560px){.setrow{flex-wrap:wrap}.setctl{width:100%}}
+html.locked,html.locked body{overflow:hidden}.sheet{overscroll-behavior:contain}.sheetbox{overscroll-behavior:contain}
 </style></head><body><div class="app">
 <aside id="side"><a class="brand" id="home" href="#"><div class="mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="pmg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff0b0"/><stop offset="1" stop-color="#14945f"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#pmg)"/><path fill="#06281a" d="M19 19h26c7.2 0 12.6 6.6 11.2 13.7l-2.1 10.2c-1 4.9-7.1 6.6-10.5 2.9L39 41H25l-4.6 4.8c-3.4 3.7-9.5 2-10.5-2.9L7.8 32.7C6.4 25.6 11.8 19 19 19z"/><path stroke="#5ff0b0" stroke-width="4" stroke-linecap="round" d="M20 26v10M15 31h10"/><path fill="#5ff0b0" d="M37 37c0-6.5 4.8-11 12-11 0 6.5-4.8 11-12 11z"/><path stroke="#06281a" stroke-width="1.8" stroke-linecap="round" d="M39.5 34.5l6.5-6"/></svg></div><div><h1>PadMint</h1><div class="v" id="ver"></div></div></a>
 <nav class="sidenav" id="sidenav"></nav>
@@ -1110,8 +1111,9 @@ function filters(){const systems=[...new Set(all().map(systemOf).filter(Boolean)
 
 const size=b=>b>=1e9?(b/1e9).toFixed(b>=1e11?0:1)+" GB":b>=1e6?Math.round(b/1e6)+" MB":b>0?Math.max(1,Math.round(b/1e3))+" KB":"0 KB";
 function toast(text){const t=el("div",text,"toast");document.body.append(t);setTimeout(()=>t.remove(),2800)}
-function sheet(...nodes){$("sheetBody").replaceChildren(...nodes);$("sheet").classList.remove("hidden")}
-function closeSheet(){for(const id of ["aboutPanel","settingsPanel"])if($(id).parentNode==$("sheetBody"))$("aboutHome").append($(id));$("sheet").classList.add("hidden")}
+function lockPage(on){const h=document.documentElement;if(h&&h.classList)h.classList.toggle("locked",on)}
+function sheet(...nodes){$("sheetBody").replaceChildren(...nodes);$("sheet").classList.remove("hidden");lockPage(true)}
+function closeSheet(){for(const id of ["aboutPanel","settingsPanel"])if($(id).parentNode==$("sheetBody"))$("aboutHome").append($(id));$("sheet").classList.add("hidden");lockPage(false)}
 $("sheetClose").onclick=closeSheet;$("sheet").onclick=e=>{if(e.target==$("sheet"))closeSheet()};
 $("aboutOpen").onclick=$("aboutSide").onclick=()=>{$("howBox").open=$("whyBox").open=true;$("aboutPanel").classList.remove("hidden");sheet($("aboutPanel"))};
 function nav(){side()}
@@ -1213,7 +1215,7 @@ function home(keep){if(!keep)view=(mineIds().length?"mine":"library");$("storage
  $("cancel").disabled=false;$("logBox").open=false;$("makeError").textContent="";$("reportLink").href="https://github.com/chrissotraidis/padmint/issues";
  $("search").value="";system="";group="all";watch=true;now(null);filters();back(true)}
 $("home").onclick=e=>{e.preventDefault();home()};$("lookAgain").onclick=()=>seen(true);$("home").setAttribute("aria-label",S.home||"PadMint");
-$("settingsSide").onclick=openSettings;{const lc=$("lang").onchange;$("lang").onchange=async()=>{await lc();if($("settingsPanel").parentNode==$("sheetBody"))openSettings()}}$("search").oninput=cards;document.onkeydown=e=>{const t=e.target;if(t&&t.closest&&t.closest("input,textarea,select,[contenteditable]"))return;const find=(e.key=="f"&&(e.metaKey||e.ctrlKey))||e.key=="/",typed=e.key.length==1&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&/\S/.test(e.key);if(!find&&!typed)return;if(!$("sheet").classList.contains("hidden")||!$("progress").classList.contains("hidden"))return;if(sel)back(true);if(view!="library")go("library");const box=$("search");box.focus();if(find){e.preventDefault();box.select()}};$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
+$("settingsSide").onclick=openSettings;{const lc=$("lang").onchange;$("lang").onchange=async()=>{await lc();if($("settingsPanel").parentNode==$("sheetBody"))openSettings()}}$("search").oninput=cards;document.onkeydown=e=>{if(e.key=="Escape"&&!$("sheet").classList.contains("hidden")){closeSheet();return}const t=e.target;if(t&&t.closest&&t.closest("input,textarea,select,[contenteditable]"))return;const find=(e.key=="f"&&(e.metaKey||e.ctrlKey))||e.key=="/",typed=e.key.length==1&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&/\S/.test(e.key);if(!find&&!typed)return;if(!$("sheet").classList.contains("hidden")||!$("progress").classList.contains("hidden"))return;if(sel)back(true);if(view!="library")go("library");const box=$("search");box.focus();if(find){e.preventDefault();box.select()}};$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
 function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;editFile=editDev=false;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);
  if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=w.text;$("laterLink").href=w.link;$("laterLink").textContent=fill("later_link",{name:w.name});scrollTo({top:0})}
