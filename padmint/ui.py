@@ -1016,7 +1016,7 @@ function vstat(){const a=$("vstat"),newer=!!V.padmint&&cmpv(V.padmint,D.version)
  a.onclick=newer?openUpdate:null}
 const cmpv=(a,b)=>{const x=a.replace(/^v/,"").split(".").map(Number),y=b.replace(/^v/,"").split(".").map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d}return 0};
 // Where each game is: the iPhones and iPads paired with this Mac, its Applications folder, and copies PadMint built.
-let I=D.installed||{state:"idle",mac:[],devices:[]},view="mine",shelfSig="",sideSig="";
+let moved=false,I=D.installed||{state:"idle",mac:[],devices:[]},view="mine",shelfSig="",sideSig="";
 const ICONS={mine:'<rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/>',
  updates:'<circle cx="12" cy="12" r="8.5"/><path d="M12 16V8M8.5 11.5L12 8l3.5 3.5"/>',library:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>',
  ipad:'<rect x="4.5" y="2.5" width="15" height="19" rx="2.5"/><path d="M11 18.5h2"/>',iphone:'<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
@@ -1077,7 +1077,7 @@ function side(){const mine=mineIds(),ups=mine.filter(id=>stateOf(id).stale).leng
  parts.push(el("div",S.sn_library,"sh"),item("mine","mine",S.sn_mine,mine.length||""),item("updates","updates",S.sn_updates,V.done?(ups||""):"",ups?"hot":""),item("library","library",S.sn_browse,all().length));
  if(pl.length){parts.push(el("div",S.sn_devices,"sh"));for(const d of pl)parts.push(item(d.view,d.kind,d.name,d.count||"",d.away?"away":""))}
  parts.push(el("div","","sh"),item("storage","storage",S.nav_storage,""));$("sidenav").replaceChildren(...parts)}
-async function seen(fresh){try{const r=await (await fetch("/api/installed"+(fresh?"?fresh=1":""),{headers:H})).json();if(r.error)return;I=r;if(r.state=="ready"&&!moved&&!sel&&view=="mine"&&!mineIds().length)view="library";layout();if(sel)hero(all().find(x=>x.id==sel));if(r.state!="ready")setTimeout(()=>seen(false),900)}catch(e){}}
+async function seen(fresh){try{const r=await (await fetch("/api/installed"+(fresh?"?fresh=1":""),{headers:H})).json();if(r.error)return;I=r;if(!moved&&!sel&&(view=="mine"||view=="library")){const n=mineIds().length;if(n)view="mine";else if(r.state=="ready")view="library"}layout();if(sel)hero(all().find(x=>x.id==sel));if(r.state!="ready")setTimeout(()=>seen(false),900)}catch(e){}}
 function hero(x){const h=$("hero");if(!x){h.classList.add("hidden");h.replaceChildren();copiesBox(null);return}
  const kind=groupOf(x.id),body=el("div",null,"hbody"),facts=el("div",null,"facts"),v=latest(x.id),st=stateOf(x.id);h.style.setProperty("--c",colorOf(x));
  body.append(el("h2",x.about?title(x):x.name),el("p",x.name+(systemOf(x)?" · "+fill("original",{system:systemOf(x)}):""),"muted"));
@@ -1172,7 +1172,7 @@ function cards(){const q=$("search").value.trim().toLowerCase();
 function back(top){++fileRequest;reading=false;sel=null;file=null;dev=null;for(const id of ["fileBox","deviceBox","planBox","dlBox","readyBox","laterBox","inApp"])$(id).classList.add("hidden");cards();if(top||view!="library")scrollTo({top:0});else $("pickCard").scrollIntoView({behavior:"smooth"})}
 let listShown=false;
 function layout(){intro();shelf();side()}
-let moved=false;function go(v){moved=true;view=v;if(v=="storage"){closeSheet();storageView();return}home(true)}
+function go(v){moved=true;view=v;if(v=="storage"){closeSheet();storageView();return}home(true)}
 function home(keep){if(!keep)view=(mineIds().length?"mine":"library");$("storage").classList.add("hidden");closeSheet();if(last&&last.state=="running"){watch=false;$("progress").classList.add("hidden");$("form").classList.remove("hidden");back(true);now(last);return}
  last=null;shown=false;$("progress").classList.add("hidden");$("form").classList.remove("hidden");$("finished").replaceChildren();$("finished").classList.add("hidden");
  $("cancel").disabled=false;$("logBox").open=false;$("makeError").textContent="";$("reportLink").href="https://github.com/chrissotraidis/padmint/issues";
