@@ -8,6 +8,42 @@ and refresh the numbers with `scripts/demand-report.py` and
 (D5, D13–D16); per-game details are in [COMPATIBILITY.md](COMPATIBILITY.md).
 Tracking issue: #75.
 
+## How PadMint ships today
+
+- **Three ZIPs, one per system** (Mac, Windows, Linux) on PadMint's releases page.
+  Each holds a launcher and an `app` folder. There is no installer, and no .dmg
+  or .exe. The launcher starts PadMint on the player's own computer and opens its
+  page in the web browser at `127.0.0.1`. The Windows ZIP includes Python; Mac
+  and Linux use the system's Python 3.9 or newer.
+- **PadMint.app** (a native Mac window around the same page, in a .dmg) is made by
+  `scripts/package-mac-app.py` but is not published. It is signed ad hoc, so it
+  only suits the Mac that built it; publishing it without the **Open Anyway** step
+  needs an Apple Developer ID.
+- **Updates:** Mac and Linux update themselves from the version button; Windows
+  players download the new ZIP.
+- **Everything PadMint downloads** (game sources, tools, builds) goes in
+  `.padmint` in the player's home folder; finished copies go to Downloads.
+
+### What a Windows player can actually do
+
+1. Download the Windows ZIP, extract it, run PadMint, and get past SmartScreen
+   (**More info → Run anyway**). The browser opens PadMint's page.
+2. The library's first line says what this computer can do: build Mario Kart Wii,
+   and get 8 ready-made apps. The other 28 games are dimmed under **Needs a Mac**;
+   their pages say why.
+3. **Mario Kart Wii:** choose the European disc, then **Android** (PadMint makes
+   KartPad's game data folder for the Android app) or **iPhone or iPad**
+   (experimental: PadMint builds the IPA, the player installs it with Sideloadly).
+4. **A ready-made app** (Caesar III, Daggerfall, Diablo, Fallout 2, Kid Pix,
+   Pharaoh, Red Alert, Warcraft II): the page links the download and the install
+   steps; there's nothing to build.
+5. **My games** shows only copies PadMint built on this PC: PadMint can't see
+   what's on an iPhone or iPad without a Mac with Xcode, and can't check Android
+   phones.
+
+Linux is the same, except that there's no tested way yet to put an iPhone app on
+the device from Linux. An Intel Mac is the same as Windows.
+
 ## The rule
 
 Every route makes the player's copy **on the player's computer, from the

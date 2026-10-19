@@ -17,6 +17,22 @@
   <a href="https://discord.gg/xwHfUD2bxW"><img alt="Discord" src="https://img.shields.io/badge/Discord-ask%20for%20help-5865F2?logo=discord&amp;logoColor=white"></a>
 </p>
 
+## What PadMint can do on your computer
+
+**PadMint does almost everything on a Mac with Apple Silicon, and very little on
+Windows or Linux yet.** Check this before you download:
+
+| Your computer | What PadMint can make |
+|---|---|
+| **Mac with Apple Silicon** (M1 or newer) | All 29 games it builds, for iPhone and iPad, and 12 of them for the Mac too. |
+| **Windows, Linux or an Intel Mac** | One game, Mario Kart Wii: its game data for KartPad's Android app, or an iPhone/iPad copy (experimental). The other 28 games are listed as **Needs a Mac**. PadMint also lists 8 ready-made iPad apps (PC classics such as Diablo) that you download and install with Sideloadly. |
+| **An Android phone, no computer** | Experimental: Mario Kart Wii's game data, through Termux. |
+
+Why: iPhone and Mac apps are built with Apple's tools, which only run on a Mac.
+Making more games on Windows and Linux is the next big piece of work; the
+[roadmap](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md)
+tracks it game by game.
+
 ## Quick start
 
 **1. Download PadMint** for the computer you're using. It's free and has no games in it.
