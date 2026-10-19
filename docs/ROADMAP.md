@@ -1,35 +1,69 @@
-# PadMint roadmap: every game, on every computer
+# PadMint roadmap: every game, from every computer
 
-Updated 19 October 2026, PadMint 0.5.11. This is the working checklist for what
-PadMint builds where, and what to do next. Update it in the same pull request as
-the work: tick the box, move the game in the table, and refresh the numbers with
-`scripts/demand-report.py` and `scripts/audit-catalog.py`. Background and
-earlier decisions are in [DECISIONS.md](DECISIONS.md) (D5, D13–D15) and
-per-game details in [COMPATIBILITY.md](COMPATIBILITY.md). Tracking issue: #75.
+Updated 19 October 2026, PadMint 0.5.11. This is the working checklist for which
+games PadMint can make on which computer, for which device, and what to do next.
+Update it in the same pull request as the work: tick the box, change the cell,
+and refresh the numbers with `scripts/demand-report.py` and
+`scripts/audit-catalog.py`. Earlier decisions are in [DECISIONS.md](DECISIONS.md)
+(D5, D13–D16); per-game details are in [COMPATIBILITY.md](COMPATIBILITY.md).
+Tracking issue: #75.
 
-## Where things stand
+## The rule
 
-The catalog has 37 games: 29 that PadMint builds and 8 ready-made apps.
+Every route makes the player's copy **on the player's computer, from the
+player's own game files**. Releases publish source, recipes and apps with no
+game code in them. A route that needs a ready-made app with game code inside
+isn't a route; the answer is a PadMint build instead.
 
-| Computer | What PadMint does there today |
-|---|---|
-| Mac with Apple Silicon | Builds all 29 for iPhone and iPad, and 12 of them for the Mac too. Shows what's on the player's iPhones and iPads. |
-| Windows, Linux, Intel Mac | Builds Mario Kart Wii (KartPad): Android game data, and iPhone/iPad (experimental). The other 28 are listed under **Needs a Mac**. |
-| Any computer | The 8 ready-made apps (Caesar III, Daggerfall, Diablo, Fallout 2, Kid Pix, Pharaoh, Red Alert, Warcraft II) install with Sideloadly on Windows or a Mac. |
+That rules out shortcuts such as publishing built decompilation apps, even where
+an upstream project publishes builds. It also means some downloads that players
+use today need a PadMint route before they can be replaced (see **First**).
 
-PadMint says this plainly: the library's top line names what the computer can do,
-Windows and Linux get a **Needs a Mac** group, and each game's page says why.
+## Who can make what, today
 
-**Mac copies stay Mac-only.** A Mac app has to be built and signed with Apple's
-SDK, which only runs on a Mac, and anyone who wants a Mac copy has a Mac. The
-off-Mac goal is iPhone/iPad (and Android, where a game has an Android port: only
-KartPad today).
+Rows are the computer PadMint runs on; columns are the device the player plays on.
+"PadMint" means PadMint builds it; "the game's builder" means the game's own
+repository builds it from the player's disc, but PadMint doesn't run it yet.
+
+| PadMint on → to play on | iPhone / iPad | Mac | Android | Windows PC | Linux PC |
+|---|---|---|---|---|---|
+| **Mac, Apple Silicon** | PadMint: all 29 | PadMint: 12 | PadMint: KartPad's game part (see First). The game's builder: BlueWake | — | — |
+| **Mac, Intel** | PadMint: KartPad (experimental) | — (needs Apple Silicon) | PadMint: KartPad's game part | — | — |
+| **Windows** | PadMint: KartPad (experimental). Draft: BlueWake (D16) | — (needs a Mac) | PadMint: KartPad's game part. The game's builder: BlueWake (checked on a phone) | The game's builder: BlueWake. Upstream code: CTRPad | — |
+| **Linux** | PadMint: KartPad (experimental), but no tested way to install it from Linux | — (needs a Mac) | PadMint: KartPad's game part. The game's builder: BlueWake (untested past the disc check) | — | The game's builder: BlueWake. Upstream code: CTRPad |
+| **Android phone** (Termux) | — | — | PadMint: KartPad's game data (emulator only so far) | — | — |
+
+The 8 apps that hold no game code at all (Caesar III, Daggerfall, Diablo,
+Fallout 2, Kid Pix, Pharaoh, Red Alert, Warcraft II) install on an iPhone or iPad
+from any computer that runs Sideloadly (Windows or Mac).
+
+**Installing what PadMint made:**
+
+| Device | From Mac | From Windows | From Linux |
+|---|---|---|---|
+| iPhone / iPad | Sideloadly or AltStore | Sideloadly | **Gap:** no tested tool (Sideloadly has no Linux version) |
+| Android | Copy the APK or folder | Same | Same |
+| Mac | Unzip to Applications | — | — |
+| Windows / Linux PC | — | Unzip and run | Unzip and run |
+
+**Why some cells are empty.** A Mac app has to be built with Apple's SDK, which
+only runs on a Mac. An iPhone app can still be made off a Mac when its release
+ships an app with no game code and PadMint builds the game part on the player's
+computer (D13, D14); KartPad works this way, and every other game needs its code
+split first. Android, Windows and Linux copies need a port to that system: only
+KartPad, BlueWake (Android, Windows, Linux) and CTRPad (Windows, Linux, from its
+upstream code) have one.
+
+## What PadMint shows players
+
+PadMint's library tells each computer what it can make (the line above the
+search box), groups games it can't make there under **Needs a Mac**, and every
+game page says why. When a route above moves, the catalog entry and these texts
+move with it; check them in the same pull request.
 
 ## Demand
 
-PadMint itself, all releases: **Windows 1,299, Mac 1,270, Linux 434** downloads.
-Windows players download PadMint as often as Mac players, while only one game
-builds for them.
+PadMint itself, all releases: Windows 1,299, Mac 1,270, Linux 434 downloads.
 
 | Game | Stars | Visitors, 14 days | iPhone/iPad | Android | Mac | Windows | Linux |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -72,116 +106,58 @@ builds for them.
 | squirrelpad | 3 | 58 | 0 | 0 | 0 | 0 | 0 |
 | ctrpad | 1 | 91 | 336 | 0 | 52 | 0 | 0 |
 
-Stars and 14-day unique visitors are from GitHub on 19 Oct 2026. Downloads are
-player installs over all releases; IPA counts also include the code-free apps
-PadMint fetches while building, and older releases that shipped full apps.
-OpenRCT2Touch is a GitHub fork, so its stars may include the fork's parent.
-Earlier requests: BlueWake's issues mention Windows 64 times and Linux 101
-times; KartPad's mention Android 213 times.
-
-## Three ways a game reaches Windows and Linux
-
-Apple's iPhone SDK only runs on a Mac, so an iPhone app can't be built from
-scratch on Windows or Linux (D15). There are three routes around that.
-
-**A. A ready-made app, built once on a Mac.** For games where the player adds their
-game file **inside the app**, the app holds nothing made from the player's file,
-so it can be built once at release and installed from any computer with
-Sideloadly. 16 of the 29 work this way. No PadMint engineering, only release work
-per game. D5 already allows this for clean engines (no game code). For
-decompilation ports it needs an owner decision: D5 currently publishes those as
-recipes only. Their upstreams publish ready-made Windows, Mac and Linux builds:
-Ship of Harkinian, 2Ship2Harkinian, Starship and SpaghettiKart (checked 19 Oct
-2026).
-
-**B. Build the game part off a Mac.** For games that read the player's disc or ROM
-**while building** (13 of 29), the game's release ships an app with no game code,
-and PadMint compiles the game part on the player's computer and adds it (D13,
-D14). PadMint's half exists and KartPad uses it end to end. Each game needs its
-code split and Windows/Linux build steps; families share most of the work.
-
-**C. Mac only by design (D15).** AgePad and HaloPad. HaloPad's Xbox edition has
-its own route without a Mac, through GitHub's free Mac runner.
-
-## Every game
-
-| Game | Port | Game file | Builds today on | Route to Windows/Linux | Family / next step |
-|---|---|---|---|---|---|
-| Mario Kart Wii | KartPad | build | Mac, Windows, Linux | B, **done** | GameCube/Wii; Android game data too |
-| The Wind Waker | BlueWake | build | Mac | B | GameCube/Wii; draft bluewake#100, about a day |
-| Ocarina of Time | HarkinianPad | in the app | Mac | A (decision) or B | Harbour Masters engine |
-| GoldenEye 007 | GoldenPad | build | Mac | B | N64 recompilation; translator off-Mac first |
-| Super Mario Sunshine | SunPad | build | Mac | B | GameCube/Wii; draft sunpad#57, about a day |
-| RollerCoaster Tycoon 2 | OpenRCT2 Touch | in the app | Mac | A, allowed now | Clean engine (GPL); publish the full app |
-| Halo | HaloPad | build | Mac | C | GitHub runner route for the Xbox edition |
-| Super Mario Galaxy | GalaxyPad | in the app | Mac | A (decision) or B | One-off decompilation |
-| Mario Kart 64 | SpaghettiPad | in the app | Mac | A (decision) or B | Harbour Masters; draft spaghettipad#29 is B's reference |
-| Majora's Mask | MaskPad | in the app | Mac | A (decision) or B | Harbour Masters engine |
-| Super Smash Bros. Melee | MeleePad | build | Mac | B | GameCube/Wii; 2–3 days, needs multi-file insert |
-| Metroid Prime | EctoPad | in the app | Mac | A, check | Metaforce engine; confirm it holds no game code |
-| Paper Mario | PaperPad | in the app | Mac | A (decision) or B | Harbour Masters engine |
-| Animal Crossing | BellPad | in the app | Mac | A (decision) or B | One-off decompilation |
-| Pokémon Stadium | AnnePad | build | Mac | B | N64 recompilation |
-| Super Mario Strikers | BallPad | in the app | Mac | A (decision) or B | One-off decompilation |
-| Star Fox 64 | StarshipPad | in the app | Mac | A (decision) or B | Harbour Masters engine |
-| Super Smash Bros. | BrawlerPad | in the app | Mac | A (decision) or B | Harbour Masters engine |
-| Banjo-Kazooie | BearBirdPad | build | Mac | B | N64 recompilation |
-| Donkey Kong 64 | BananaPad | build | Mac | B | N64 recompilation |
-| Pokémon Snap | SnapPad | build | Mac | B | One-off; reads the ROM while building |
-| Unreal Tournament | UTP | in the app | Mac | A, check | Original engine; confirm its licence allows a published app |
-| Diddy Kong Racing | BarrelPad | in the app | Mac | A (decision) or B | One-off decompilation |
-| Dinosaur Planet | DinoPad | build | Mac | B | N64 recompilation |
-| F-Zero X | F0X | in the app | Mac | A (decision) or B | One-off decompilation |
-| Jak and Daxter | Ottsel | build | Mac | B | One-off; reads the disc while building |
-| Conker's Bad Fur Day | SquirrelPad | build | Mac | B | N64 recompilation |
-| Crash Team Racing | CTRPad | in the app | Mac | A (decision) or B | One-off; compiles as one unit |
-| Age of Empires II | AgePad | in the app | Mac | C | Mac only by design (D15) |
+Stars and 14-day unique visitors from GitHub on 19 Oct 2026; downloads over all
+releases. IPA counts include the code-free apps PadMint downloads while
+building. OpenRCT2Touch is a GitHub fork.
 
 ## Checklist
 
-### Decisions for Chris
+### First: PadMint routes for the downloads players use most
 
-- [ ] **D5 for Harbour Masters ports:** publish ready-made iPhone/iPad apps for
-  HarkinianPad, MaskPad, StarshipPad and SpaghettiPad, as their upstreams publish
-  builds. Unlocks four games on every computer, including the third most-starred repo.
-- [ ] **D5 for the other in-app decompilation ports** (GalaxyPad, PaperPad,
-  BrawlerPad, BellPad, BallPad, BarrelPad, F0X, CTRPad): same question; most of
-  their upstreams don't publish builds. If the answer is no, they take route B.
-- [ ] **Apple Developer ID** (US$99 a year): lets PadMint for Mac ship as a .dmg
-  that opens without **Open Anyway**.
+- [ ] **KartPad on Android, built by PadMint.** PadMint already builds KartPad's
+  Android game part (a library) from the player's disc on every computer. Add a
+  KartPad Android app with no game code to KartPad's release, as its iPhone release
+  already does (`ios-for-padmint.ipa`); point the recipe's `published_app` at
+  it; have PadMint put the game part into it and save the finished APK; check it
+  on a real phone, including updating over an older copy with saves.
+- [ ] **BlueWake on Windows, built by PadMint.** Add a `windows` target to
+  BlueWake's recipe that runs BlueWake's existing Windows builder from the player's
+  disc; player-check it on a Windows PC; the game page says how to run it.
+- [ ] **BlueWake on Android and Linux, built by PadMint**, the same way, from
+  BlueWake's existing builders (Android is checked on a phone; Linux untested past
+  the disc check).
+- [ ] **Wording.** Once those exist, KartPad's and BlueWake's READMEs and PadMint's
+  game pages point Android and Windows players at PadMint.
+- [ ] **Android without a computer.** The Termux route makes KartPad's game data.
+  With a code-free app it also needs the game part, which is a much heavier build
+  for a phone; measure it before promising it.
 
-### Now (no decision needed)
+### Next: iPhone and iPad from Windows and Linux
 
-- [ ] OpenRCT2 Touch: publish the full iPhone/iPad app with its next release (D5
-  allows clean engines). Its v0.1.0 IPA was taken off the release when it was
-  published; check why first.
-- [ ] EctoPad and UTP: confirm the engine holds no game code and its licence allows
-  a published app. If so, publish the full app (route A).
-- [ ] BlueWake off a Mac (route B): bring draft bluewake#100 up to date,
-  build on Windows through PadMint, install with Sideloadly, start the game on an iPhone.
-- [ ] SunPad off a Mac, the same way (draft sunpad#57).
-- [ ] PadMint for route B: Sideloadly install steps on the game page for Windows,
-  a release check that the code-free app and its recipe match, and an off-Mac
-  column in `audit-catalog.py` (about 2–3 days, D15).
-- [ ] Linux iPhone installs: Sideloadly has no Linux version. Test a Linux tool
-  (for example Dadoum's Sideloader) and add its steps.
-- [ ] Real hardware: one PadMint run on a real Windows PC, and the Termux route
-  on a real Android phone with 8 GB of memory.
-
-### Next
-
-- [ ] MeleePad off a Mac (2–3 days, plus inserting several files in PadMint).
-- [ ] N64 recompilations (route B): the translator on Windows and Linux plus
-  GoldenPad (2–4 days), then AnnePad, BananaPad, BearBirdPad, DinoPad and
-  SquirrelPad (half a day to a day each).
-- [ ] If D5 stays for Harbour Masters ports: finish spaghettipad#29 (2–3 days),
-  then HarkinianPad, MaskPad, StarshipPad, PaperPad, BrawlerPad (1–2 days each).
+- [ ] BlueWake (PadMint #135, #136; bluewake#100), then SunPad (sunpad#57) and
+  MeleePad (2–3 days, needs several files inserted).
+- [ ] PadMint's part for all of these: Sideloadly steps on the game page, a release
+  check that each code-free app matches its recipe, and an off-Mac column in
+  `audit-catalog.py`.
+- [ ] A tested way to install on an iPhone from Linux, then its steps.
+- [ ] N64 recompilations: the translator on Windows and Linux plus GoldenPad, then
+  AnnePad, BananaPad, BearBirdPad, DinoPad, SquirrelPad.
+- [ ] Engine ports through spaghettipad#29: SpaghettiPad, then HarkinianPad,
+  MaskPad, StarshipPad, PaperPad, BrawlerPad.
 
 ### Later
 
-- [ ] One-offs that read the game while building: SnapPad, Ottsel.
-- [ ] One-off decompilations if they take route B: GalaxyPad, BellPad, BallPad,
-  BarrelPad, F0X, CTRPad (2–4 days each).
+- [ ] CTRPad for Windows and Linux PCs through PadMint, from its upstream code.
+- [ ] One-off ports for iPhone off a Mac: GalaxyPad, BellPad, BallPad, BarrelPad,
+  F0X, CTRPad, SnapPad, Ottsel, EctoPad, UTP, OpenRCT2 Touch.
+- [ ] Real-hardware checks: a PadMint run on a real Windows PC; the Termux route on a
+  real Android phone with 8 GB of memory.
 
-Every game that moves needs a device check before PadMint offers it: built on the
-new computer, installed, and the game starts on a real device.
+### Not planned
+
+- Mac copies made on Windows or Linux (needs Apple's SDK).
+- AgePad and HaloPad off a Mac (D15); HaloPad's Xbox edition has its own route
+  through GitHub's free Mac runner.
+
+Every route that moves needs a check before PadMint offers it: built on that
+computer, installed, and the game starts on a real device.
