@@ -307,7 +307,7 @@ PadMint yet; the game's page has the latest.
 <details>
 <summary><strong>Can I play KartPad on my Mac?</strong></summary>
 
-Yes, with the latest PadMint (**0.5.5**), on a Mac with Apple Silicon (M1 or newer)
+Yes, with the latest PadMint (**0.5.6**), on a Mac with Apple Silicon (M1 or newer)
 and Xcode: choose **Mario Kart Wii**, then **This Mac** under **Where will you
 play?** PadMint builds KartPad from your disc and saves the app in your Downloads
 folder. The first build needs about 12 GB free. On an Intel Mac, PadMint builds KartPad for iPhone and iPad

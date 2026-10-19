@@ -882,11 +882,24 @@ html{min-height:100%;background:var(--bg)}body{min-height:100vh;background-attac
 #copies{margin:.7rem 0 .2rem;padding:.9rem 1.15rem;border-radius:16px;border:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;gap:.35rem}
 #copies h3{margin:0 0 .15rem;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}#copies .cp{font-size:.93rem}
 .item .side{gap:.8rem}.own{font-size:.8rem}.act{padding:0;border-radius:0;background:none!important;font-size:.84rem;min-width:5.5rem;text-align:right}
-.act.build{color:var(--mint)}.act.download{color:#5bb8f0}.act.later{color:var(--muted)}.act.build:after,.act.download:after{content:" ›";font-size:1.05rem}
+.act.build{color:var(--mint)}.act.build.upd{color:var(--warn)}.act.download{color:#5bb8f0}.act.later{color:var(--muted)}.act.build:after,.act.download:after{content:" ›";font-size:1.05rem}
 @media (max-width:820px){.app{display:block}#side{position:sticky;z-index:6;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:.4rem .6rem;padding:.6rem .8rem;border-right:0;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
  #side .brand{padding:0}.sidenav{order:3;flex:1 1 100%;flex-direction:row;overflow-x:auto;gap:.2rem;scrollbar-width:none}.sidenav::-webkit-scrollbar{display:none}.sh{display:none}.sn{width:auto;white-space:nowrap;flex:none}.sn .l{overflow:visible}
  .sidefoot{flex-direction:row;align-items:center;padding:0;margin-left:auto}.sidefoot .vstat{width:auto}.sidefoot .btn.link{display:none}.wrap{padding:.2rem 1rem 2rem}#shelf>.sechead{flex-direction:column;gap:.4rem}}
 @media (max-width:560px){.mg{flex-wrap:wrap}.mg .side{width:100%;justify-content:flex-start;padding-left:calc(56px + 1rem)}.mg .chev{display:none}.footrow .langw{display:none}}
+.mg{align-items:center;gap:.85rem;padding:.6rem 1rem}
+.mg .art{width:44px;height:44px;border-radius:11px}.mg:hover .art{transform:scale(1.04)}
+.tl{display:flex;align-items:baseline;gap:.55rem;min-width:0}
+.tl .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.mg .body .t{font-size:.98rem}
+.tl .s{white-space:nowrap;flex:none;font-size:.78rem}
+.mg .where{flex-direction:row;flex-wrap:wrap;gap:.1rem 1.1rem;margin-top:.18rem}
+.mg .cp{font-size:.8rem;gap:.32rem;flex-wrap:nowrap;white-space:nowrap}.mg .cp .ic{width:13px;height:13px;opacity:.75}.mg .cp .badge{display:none}
+.cp .vv{color:var(--muted);font-variant-numeric:tabular-nums}.cp .vv.old{color:var(--warn);font-weight:650}
+.mg .side{gap:.4rem}.mg button.btn.main.small{min-height:1.95rem;font-size:.8rem;padding:0 .85rem;box-shadow:none;background:color-mix(in srgb,var(--mint) 16%,transparent);color:var(--mint);border:1px solid color-mix(in srgb,var(--mint) 35%,transparent)}.mg button.btn.main.small:hover:not(:disabled){background:var(--mint);color:#05261a;box-shadow:none}@media (prefers-color-scheme:light){.mg button.btn.main.small{color:#0b6b45}}.mg .chev{font-size:1.2rem}
+.item{padding:.5rem 1rem;gap:.85rem}.item .art{width:40px;height:40px;border-radius:10px}
+.item .body .t{font-size:.97rem}.item .body .s{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#shelf>.sechead{margin:1.3rem 0 .7rem}#shelfTitle{font-size:1.45rem}
+@media (max-width:560px){.tl{flex-direction:column;gap:0}.mg .where{gap:.1rem .8rem}}
 </style></head><body><div class="app">
 <aside id="side"><a class="brand" id="home" href="#"><div class="mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="pmg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff0b0"/><stop offset="1" stop-color="#14945f"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#pmg)"/><path fill="#06281a" d="M19 19h26c7.2 0 12.6 6.6 11.2 13.7l-2.1 10.2c-1 4.9-7.1 6.6-10.5 2.9L39 41H25l-4.6 4.8c-3.4 3.7-9.5 2-10.5-2.9L7.8 32.7C6.4 25.6 11.8 19 19 19z"/><path stroke="#5ff0b0" stroke-width="4" stroke-linecap="round" d="M20 26v10M15 31h10"/><path fill="#5ff0b0" d="M37 37c0-6.5 4.8-11 12-11 0 6.5-4.8 11-12 11z"/><path stroke="#06281a" stroke-width="1.8" stroke-linecap="round" d="M39.5 34.5l6.5-6"/></svg></div><div><h1>PadMint</h1><div class="v" id="ver"></div></div></a>
 <nav class="sidenav" id="sidenav"></nav>
@@ -1032,11 +1045,11 @@ function whereLine(c,v){const li=el("div",null,"cp"+(c.built?" built":"")+(c.awa
  if(c.away&&c.seen&&I.state=="ready")bits.push(fill("seen",{when:ago(c.seen)}));
  if(c.built&&c.platform=="ios"&&I.state=="ready"&&(I.devices||[]).some(d=>d.reachable))bits.push(S.not_on_devices);
  if(c.platform=="android")bits.push(S.android_unseen);
- li.append(ico(c.kind),el("b",c.label),el("span",bits.join(" · "),"d"));if(stale)li.append(el("span",fill("new_version",{version:v}),"badge upd"));return li}
+ const ver=bits.shift(),rest=bits.join(" · ");li.append(ico(c.kind),el("b",c.label),el("span",ver,"vv"+(stale?" old":"")));if(rest)li.append(el("span",rest,"d"));if(stale)li.append(el("span",fill("new_version",{version:v}),"badge upd"));return li}
 function copiesBox(x){const b=$("copies"),st=x&&stateOf(x.id);if(!st||!st.copies.length){b.classList.add("hidden");b.replaceChildren();return}
  b.replaceChildren(el("h3",S.your_copies),...st.copies.map(c=>whereLine(c,st.latest)));b.classList.remove("hidden")}
 function mgRow(id,i){const x=all().find(y=>y.id==id),st=stateOf(id),shown=st.copies.filter(c=>fits(c,view)),old=st.latest?shown.filter(c=>c.version&&cmpv(c.version,st.latest)<0):[],r=el("div",null,"mg"+(old.length?" stale":""));r.style.setProperty("--c",colorOf(x));r.style.setProperty("--i",Math.min(i,20));
- const body=el("div",null,"body"),where=el("div",null,"where");body.append(el("span",x.about?title(x):x.name,"t"),el("span",x.name+(systemOf(x)?" · "+systemOf(x):""),"s"));
+ const body=el("div",null,"body"),where=el("div",null,"where"),tl=el("div",null,"tl");tl.append(el("span",x.about?title(x):x.name,"t"),el("span",x.name+(systemOf(x)?" · "+systemOf(x):""),"s"));body.append(tl);
  where.append(...shown.map(c=>whereLine(c,st.latest)));body.append(where);
  const side=el("div",null,"side");
  if(old.length){const g=D.games.find(y=>y.id==id),p=g&&g.platforms.find(q=>q.id==old[0].platform),b=el("button",fill("update_to",{version:st.latest}),"btn main small");b.onclick=e=>{e.stopPropagation();choose(id);if(p)pickDevice(p.id)};side.append(b)}
@@ -1090,7 +1103,7 @@ $("aboutOpen").onclick=$("aboutSide").onclick=()=>{$("howBox").open=$("whyBox").
 function nav(){side()}
 
 function intro(){const busy=!!sel||view!="library"||!$("progress").classList.contains("hidden")||!$("storage").classList.contains("hidden");
- $("intro").classList.toggle("hidden",busy);$("intro").classList.toggle("compact",(D.library||[]).length>0)}
+ $("intro").classList.toggle("hidden",busy||mineIds().length>0)}
 // PadMint updates itself where it can, else the button opens the download page.
 function openUpdate(){const v=V.padmint;if(!D.self_update){window.open("https://github.com/chrissotraidis/padmint/releases/latest","_blank");return}
  const head=el("div",null,"upd-head");head.append(markIcon(),el("h2",fill("up_title",{version:v})));
@@ -1138,9 +1151,9 @@ function row(x,i){const kind=groupOf(x.id),b=el("button",null,"item "+kind);b.st
  b.title=systemOf(x)?fill("original",{system:systemOf(x)}):"";const body=el("span",null,"body"),meta=[devicesOf(x,kind).join(", ")];
  if(kind=="build"&&x.ready){const on=x.platforms.filter(p=>x.ready.platforms.includes(p.id)).map(p=>p.short||p.label);if(on.length)meta.push(fill("ready_tag",{devices:on.join(", ")}))}
  if(kind=="build"&&x.setup&&x.setup!="easy")meta.push(S["setup_"+x.setup]);if(kind=="later"){if(x.text)meta.push(x.text);else if(x.tag)meta.push(x.tag)}
- body.append(el("span",x.about?title(x):x.name,"t"),el("span",x.name+(systemOf(x)?" · "+systemOf(x):""),"s"),el("span",meta.filter(Boolean).join(" · "),"m"));
- const side=el("span",null,"side"),st=stateOf(x.id),v=st.latest;if(st.stale)side.append(el("span",S.update_ready_short,"own upd"));else if(st.copies.some(c=>!c.built))side.append(el("span","✓ "+S.installed,"own"));else if(st.copies.length)side.append(el("span",S.built_short,"own"));if(v)side.append(el("span",v,"ver"));
- side.append(el("span",kind=="later"&&x.status?S["status_"+x.status]:kind=="later"&&x.tag?x.tag:S[{build:"act_build",download:"act_download",later:"act_later"}[kind]],"act "+kind));
+ const line=[x.name+(systemOf(x)?" · "+systemOf(x):""),...meta].filter(Boolean).join(" · ");body.append(el("span",x.about?title(x):x.name,"t"),el("span",line,"s"));body.title=line;
+ const side=el("span",null,"side"),st=stateOf(x.id),v=st.latest;if(st.stale){if(kind!="build")side.append(el("span",S.update_ready_short,"own upd"))}else if(st.copies.some(c=>!c.built))side.append(el("span","✓ "+S.installed,"own"));else if(st.copies.length)side.append(el("span",S.built_short,"own"));if(v)side.append(el("span",v,"ver"));
+ side.append(el("span",kind=="later"&&x.status?S["status_"+x.status]:kind=="later"&&x.tag?x.tag:S[kind=="build"&&st.stale?"act_update":{build:"act_build",download:"act_download",later:"act_later"}[kind]],"act "+kind+(kind=="build"&&st.stale?" upd":"")));
  b.append(art(x),body,side);b.onclick=()=>choose(x.id);return b}
 function cards(){const q=$("search").value.trim().toLowerCase();
  const match=x=>(!q||(x.name+" "+(x.about||"")).toLowerCase().includes(q))&&(!system||systemOf(x)==system);
