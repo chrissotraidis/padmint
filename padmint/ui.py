@@ -902,6 +902,9 @@ html{min-height:100%;background:var(--bg)}body{min-height:100vh;background-attac
 @media (max-width:560px){.tl{flex-direction:column;gap:0}.mg .where{gap:.1rem .8rem}}
 .here{margin:-.35rem 0 .9rem;padding:.65rem .9rem;border-radius:12px;background:color-mix(in srgb,var(--mint) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--mint) 22%,var(--line));color:var(--text);font-size:.88rem;line-height:1.45}
 .own.none{color:var(--muted);font-weight:500}.item .side .own{white-space:nowrap}
+.group.fold{display:flex;align-items:center;gap:.4rem;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;text-align:left}.group.fold:hover{color:var(--text)}
+.group.fold .tw{display:inline-block;transition:transform .15s;font-size:1rem;line-height:1}.group.fold.open .tw{transform:rotate(90deg)}
+#lookAgain{gap:.4rem}#lookAgain:before{content:"↻";font-size:1rem}
 </style></head><body><div class="app">
 <aside id="side"><a class="brand" id="home" href="#"><div class="mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="pmg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff0b0"/><stop offset="1" stop-color="#14945f"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#pmg)"/><path fill="#06281a" d="M19 19h26c7.2 0 12.6 6.6 11.2 13.7l-2.1 10.2c-1 4.9-7.1 6.6-10.5 2.9L39 41H25l-4.6 4.8c-3.4 3.7-9.5 2-10.5-2.9L7.8 32.7C6.4 25.6 11.8 19 19 19z"/><path stroke="#5ff0b0" stroke-width="4" stroke-linecap="round" d="M20 26v10M15 31h10"/><path fill="#5ff0b0" d="M37 37c0-6.5 4.8-11 12-11 0 6.5-4.8 11-12 11z"/><path stroke="#06281a" stroke-width="1.8" stroke-linecap="round" d="M39.5 34.5l6.5-6"/></svg></div><div><h1>PadMint</h1><div class="v" id="ver"></div></div></a>
 <nav class="sidenav" id="sidenav"></nav>
@@ -962,10 +965,10 @@ const T="__TOKEN__";let D=__DATA__,S=D.text;const H={"Content-Type":"application
 const $=id=>document.getElementById(id);let file=null,reading=false,sel=null,dev=null,shown=false,fileRequest=0;
 const fill=(k,v)=>Object.entries(v||{}).reduce((s,[a,b])=>s.split("{"+a+"}").join(b),S[k]||"");
 for(const e of document.querySelectorAll("[data-t]"))e.textContent=S[e.dataset.t]||"";
-document.documentElement.lang=D.lang;$("lang").value=D.lang;$("ver").textContent="v"+D.version;$("search").placeholder=S.search;
+document.documentElement.lang=D.lang;$("lang").value=D.lang;$("ver").textContent="v"+D.version;$("search").placeholder=S.search_hint||S.search;
 $("choose").classList.toggle("hidden",!D.picker);
 let last=null;
-function texts(){for(const e of document.querySelectorAll("[data-t]"))e.textContent=S[e.dataset.t]||"";document.documentElement.lang=D.lang;$("search").placeholder=S.search;$("home").setAttribute("aria-label",S.home||"PadMint");vstat()}
+function texts(){for(const e of document.querySelectorAll("[data-t]"))e.textContent=S[e.dataset.t]||"";document.documentElement.lang=D.lang;$("search").placeholder=S.search_hint||S.search;$("home").setAttribute("aria-label",S.home||"PadMint");vstat()}
 $("lang").onchange=async()=>{const lang=$("lang").value,r=await (await fetch("/api/player?lang="+lang,{headers:H})).json();
  if(r.error)return;D=r;S=D.text;texts();history.replaceState(null,"","?token="+T+"&lang="+lang);filters();cards();
  if(sel){const keep={file,dev};const g=game();if(g||app()||waiting())redraw(keep)}
@@ -1010,7 +1013,7 @@ function art(x,big){const s=el("span",null,"art"+(big?" big":""));s.style.setPro
  if(ART.has(x.id)){const i=el("img");i.alt="";i.src="/art/"+x.id+".png?token="+T;i.onerror=()=>{i.remove();plain()};s.append(i)}else plain();return s}
 function devicesOf(x,kind){if(kind=="build")return x.platforms.map(p=>p.short||p.label);const o=x.plays_on||[];
  return [...(o.includes("iphone")&&o.includes("ipad")?["iPhone/iPad"]:o.filter(d=>d!="mac").map(d=>DEVICES[d])),...(o.includes("mac")?["Mac"]:[])]}
-function ago(t){const f=new Intl.RelativeTimeFormat(D.lang,{numeric:"auto"}),s=Date.now()/1000-t;
+function ago(t){const f=new Intl.RelativeTimeFormat(D.lang,{numeric:"auto"}),s=Date.now()/1000-t;if(s<60&&S.just_now)return S.just_now;
  for(const [n,k] of [["year",31536000],["month",2592000],["week",604800],["day",86400],["hour",3600],["minute",60]])if(s>=k)return f.format(-Math.floor(s/k),n);return f.format(0,"minute")}
 function vstat(){const a=$("vstat"),newer=!!V.padmint&&cmpv(V.padmint,D.version)>0;
  a.className="vstat"+(newer?" upd":V.padmint?"":" wait")+(V.done&&!V.padmint?" hidden":"");
@@ -1030,7 +1033,8 @@ const norm=v=>String(tagVersion(v)||"").replace(/^v/,"");
 const onMac=()=>String(D.host||"").startsWith("macos");
 const known=id=>all().some(x=>x.id==id);
 function copies(id){const out=[],lib=(D.library||[]).filter(l=>l.id==id);
- for(const d of I.devices||[])for(const a of d.apps||[])if(a.game==id)out.push({where:"dev:"+d.id,kind:d.kind,label:d.name,version:norm(a.version),platform:"ios",away:!d.reachable,seen:d.checked});
+ for(const d of I.devices||[]){const mine=(d.apps||[]).filter(a=>a.game==id);if(!mine.length)continue;const top=mine.map(a=>norm(a.version)).sort((x,y)=>cmpv(y||"0",x||"0"))[0];
+  out.push({where:"dev:"+d.id,kind:d.kind,label:d.name,version:top,platform:"ios",away:!d.reachable,seen:d.checked,extra:mine.length-1})}
  for(const a of I.mac||[])if(a.game==id){const b=lib.find(l=>l.platform=="macos"),bv=b?norm(b.version):"";out.push({where:"mac",kind:"mac",label:S.this_mac,version:bv&&a.version&&bv.startsWith(a.version)?bv:norm(a.version),platform:"macos"})}
  for(const l of lib)if(!out.some(c=>c.platform==l.platform))out.push({where:l.platform=="android"?"android":"built",kind:l.platform=="android"?"android":"built",label:fill("built_copy",{device:S["short_"+l.platform]||l.platform}),version:norm(l.version),platform:l.platform,built:true,when:l.when});
  return out}
@@ -1046,7 +1050,7 @@ function whereLine(c,v){const li=el("div",null,"cp"+(c.built?" built":"")+(c.awa
  if(c.built&&c.when)bits.push(fill("built_when",{when:ago(c.when)}));
  if(c.away&&c.seen&&I.state=="ready")bits.push(fill("seen",{when:ago(c.seen)}));
  if(c.built&&c.platform=="ios"&&I.state=="ready"&&(I.devices||[]).some(d=>d.reachable))bits.push(S.not_on_devices);
- if(c.platform=="android")bits.push(S.android_unseen);
+ if(c.platform=="android")bits.push(S.android_unseen);if(c.extra)bits.push(fill("n_copies",{n:c.extra+1}));
  const ver=bits.shift(),rest=bits.join(" · ");li.append(ico(c.kind),el("b",c.label),el("span",ver,"vv"+(stale?" old":"")));if(rest)li.append(el("span",rest,"d"));if(stale)li.append(el("span",fill("new_version",{version:v}),"badge upd"));return li}
 function copiesBox(x){const b=$("copies"),st=x&&stateOf(x.id);if(!st||!st.copies.length){b.classList.add("hidden");b.replaceChildren();return}
  b.replaceChildren(el("h3",S.your_copies),...st.copies.map(c=>whereLine(c,st.latest)));b.classList.remove("hidden")}
@@ -1062,13 +1066,13 @@ function shelf(){const busy=!!sel||view=="library"||view=="storage"||!$("progres
  const sig=JSON.stringify([ids,view,I,V.done&&V.games,D.lang,D.library]);if(sig==shelfSig)return;const first=!shelfSig;shelfSig=sig;
  const p=places().find(d=>d.view==view),checking=I.state!="ready";$("shelfTitle").textContent=viewName();
  $("shelfSub").textContent=view=="mine"?S.mine_note:view=="updates"?(V.done?(ids.length?S.updates_note:""):S.checking):view=="mac"?S.mac_note:view=="android"?S.android_note:p?[p.d.model,p.away?(p.d.checked?fill("seen",{when:ago(p.d.checked)}):S.device_away):S.device_live].filter(Boolean).join(" · "):"";
- $("shelfNote").textContent=checking?S.checking_devices:I.checked?fill("checked",{when:ago(I.checked)}):"";$("shelfNote").classList.toggle("loading",checking);
+ $("shelfNote").textContent=checking?S.checking_devices:"";$("lookAgain").textContent=I.checked?fill("checked",{when:ago(I.checked)}):S.look_again;$("lookAgain").title=S.check_again_tip;$("shelfNote").classList.toggle("loading",checking);
  $("lookAgain").classList.toggle("hidden",checking||view=="updates"||view=="android"||(!I.xcode&&!onMac()));
  const parts=[];if(view=="mine"&&onMac()&&I.state=="ready"&&!I.xcode)parts.push(el("p",S.no_xcode_note,"note"));
  const list=rows=>{const l=el("div",null,"shelf"+(first?"":" settled"));l.append(...rows.map(mgRow));return l};
  if(!ids.length)parts.push(el("p",view=="updates"?(V.done?"✓ "+S.no_updates:S.checking):view=="mine"?S.empty_mine:S.empty_device,"empty"));
  else if(view=="mine"&&V.done){const up=ids.filter(id=>stateOf(id).stale),rest=ids.filter(id=>!stateOf(id).stale);
-  if(up.length)parts.push(el("div",S.sec_updates+" · "+up.length,"group"),list(up));if(rest.length)parts.push(el("div",(up.length?S.sec_current:S.sec_all)+" · "+rest.length,"group"),list(rest))}
+  if(up.length)parts.push(...fold("up",S.sec_updates+" · "+up.length,list(up)));if(rest.length)parts.push(...fold("rest",(up.length?S.sec_current:S.sec_all)+" · "+rest.length,list(rest)))}
  else parts.push(list(ids));
  $("shelfList").replaceChildren(...parts)}
 function side(){const mine=mineIds(),ups=mine.filter(id=>stateOf(id).stale).length,running=last&&last.state=="running",cur=sel||!$("progress").classList.contains("hidden")?null:view,pl=places();
@@ -1154,8 +1158,12 @@ function kindName(c){return {ipad:"iPad",iphone:"iPhone",mac:"Mac",android:"Andr
 function here(){const h=$("here"),show=!sel&&view=="library";h.classList.toggle("hidden",!show);if(!show)return;const parts=[];
  if(onMac()){parts.push(fill("here_mac",{build:D.games.length,apps:D.downloads.length}));const ds=(I.devices||[]);
   if(ds.length)parts.push(fill("here_devices",{devices:ds.map(d=>d.name).join(", ")}));else if(I.state=="ready")parts.push(I.xcode?S.here_no_devices:S.here_no_xcode)}
+ else if(!D.picker)parts.push(S.here_phone);
  else{const names=D.games.map(g=>g.about?title(g):g.name).join(", ");parts.push(fill(names?"here_other":"here_other_none",{names,apps:D.downloads.length,mac:D.later.length}))}
  h.textContent=parts.join(" ")}
+function fold_text(v){return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim()}
+function fold(key,label,body){const open=localStorage.getItem("pm.fold."+key)!="1",h=el("button",null,"group fold"+(open?" open":""));h.append(el("span","›","tw"),el("span",label));h.setAttribute("aria-expanded",open);body.classList.toggle("hidden",!open);
+ h.onclick=()=>{const now=body.classList.toggle("hidden");h.classList.toggle("open",!now);h.setAttribute("aria-expanded",!now);localStorage.setItem("pm.fold."+key,now?"1":"0")};return [h,body]}
 function row(x,i){const kind=groupOf(x.id),b=el("button",null,"item "+kind);b.style.setProperty("--c",colorOf(x));b.style.setProperty("--i",Math.min(i||0,24));
  b.title=systemOf(x)?fill("original",{system:systemOf(x)}):"";const body=el("span",null,"body"),meta=[devicesOf(x,kind).join(", ")];
  if(kind=="build"&&x.ready){const on=x.platforms.filter(p=>x.ready.platforms.includes(p.id)).map(p=>p.short||p.label);if(on.length)meta.push(fill("ready_tag",{devices:on.join(", ")}))}
@@ -1167,7 +1175,7 @@ function row(x,i){const kind=groupOf(x.id),b=el("button",null,"item "+kind);b.st
  side.append(el("span",kind=="later"&&x.status?S["status_"+x.status]:kind=="later"&&x.tag?x.tag:S[kind=="build"&&st.stale?"act_update":{build:"act_build",download:"act_download",later:"act_later"}[kind]],"act "+kind+(kind=="build"&&st.stale?" upd":"")));
  b.append(art(x),body,side);b.onclick=()=>choose(x.id);return b}
 function cards(){const q=$("search").value.trim().toLowerCase();
- const match=x=>(!q||(x.name+" "+(x.about||"")).toLowerCase().includes(q))&&(!system||systemOf(x)==system);
+ const words=fold_text(q).split(" ").filter(Boolean),match=x=>{const hay=fold_text([x.name,x.about,title(x),systemOf(x),...(x.platforms||[]).map(p=>p.label)].filter(Boolean).join(" "));return words.every(w=>hay.includes(w))&&(!system||systemOf(x)==system)};
  const order=a=>a.sort((x,y)=>sortKey(x).localeCompare(sortKey(y)));
  const G={build:order(D.games.filter(match)),download:order(D.downloads.filter(match)),later:order(D.later.filter(match))};
  G.all=order([...G.build,...G.download,...G.later]);G.missing=mineIds().length?G.all.filter(x=>groupOf(x.id)!="later"&&!copies(x.id).length):[];
@@ -1188,7 +1196,7 @@ function home(keep){if(!keep)view=(mineIds().length?"mine":"library");$("storage
  $("cancel").disabled=false;$("logBox").open=false;$("makeError").textContent="";$("reportLink").href="https://github.com/chrissotraidis/padmint/issues";
  $("search").value="";system="";group="all";watch=true;now(null);filters();back(true)}
 $("home").onclick=e=>{e.preventDefault();home()};$("lookAgain").onclick=()=>seen(true);$("home").setAttribute("aria-label",S.home||"PadMint");
-$("search").oninput=cards;$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
+$("search").oninput=cards;document.onkeydown=e=>{const t=e.target;if(t&&t.closest&&t.closest("input,textarea,select,[contenteditable]"))return;const find=(e.key=="f"&&(e.metaKey||e.ctrlKey))||e.key=="/",typed=e.key.length==1&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&/\S/.test(e.key);if(!find&&!typed)return;if(!$("sheet").classList.contains("hidden")||!$("progress").classList.contains("hidden"))return;if(sel)back(true);if(view!="library")go("library");const box=$("search");box.focus();if(find){e.preventDefault();box.select()}};$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
 function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;editFile=editDev=false;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);
  if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=w.text;$("laterLink").href=w.link;$("laterLink").textContent=fill("later_link",{name:w.name});scrollTo({top:0})}

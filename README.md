@@ -152,7 +152,10 @@ the copies it built, with the version on each device. **Updates** shows the ones
 behind the latest release. **All games** is the full library. Under **Devices**,
 each iPhone, iPad, this Mac and Android has its own list. **Storage** shows the
 space PadMint uses and frees what it no longer needs. The version button at the
-bottom says when PadMint itself has an update.
+bottom says when PadMint itself has an update. Click a section heading in My
+games, such as **Updates available**, to fold it. To find a game, just start
+typing: PadMint jumps to the library's search, which matches game, port and
+system names.
 
 **A game's page** goes from top to bottom:
 
@@ -328,7 +331,7 @@ PadMint yet; the game's page has the latest.
 <details>
 <summary><strong>Can I play KartPad on my Mac?</strong></summary>
 
-Yes, with the latest PadMint (**0.5.8**), on a Mac with Apple Silicon (M1 or newer)
+Yes, with the latest PadMint (**0.5.9**), on a Mac with Apple Silicon (M1 or newer)
 and Xcode: choose **Mario Kart Wii**, then **This Mac** under **Where will you
 play?** PadMint builds KartPad from your disc and saves the app in your Downloads
 folder. The first build needs about 12 GB free. On an Intel Mac, PadMint builds KartPad for iPhone and iPad
