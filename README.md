@@ -30,10 +30,17 @@
 Use these links, not GitHub's green **Code** button: that one downloads PadMint's
 source code, which is for developers.
 
-**Updating PadMint?** Close its running window, download the ZIP again, extract
-it and open the launcher in the **new folder**. The game list comes with that
-folder; refreshing the browser or opening the old folder keeps the old list.
-Keep your disc images, completed builds, caches and saves.
+**Where it lives:** PadMint has no installer. It is the folder you unzipped,
+plus a hidden `.padmint` folder in your home folder where it keeps the game
+sources, tools and builds it downloads. **Storage** in PadMint's sidebar shows
+that folder and frees space; [Removing PadMint](#removing-padmint) deletes both.
+
+**Updating PadMint?** On a Mac or Linux, click the version button at the bottom
+of PadMint's sidebar when it says an update is out; PadMint installs it and
+restarts. On Windows, close PadMint's window, download the ZIP again, extract it
+and open the launcher in the **new folder**: the game list comes with that
+folder, so refreshing the browser or opening the old folder keeps the old list.
+Your disc images, builds and saves stay where they are.
 
 **2. Keep the small window open.** It is PadMint working. Your web browser opens
 the PadMint page; if it doesn't, open the `http://127.0.0.1…` address the
@@ -42,7 +49,12 @@ window shows. The page comes from your own computer, not a website.
 **3. Choose your game and follow the page.** It tells you exactly what to
 install first, with a **Check again** button, then builds your copy and shows
 how to put it on your phone or tablet. It speaks English, Spanish and Portuguese
-(menu at the top right). Close the small window when you are done.
+(menu at the bottom of the sidebar). Close the small window when you are done.
+
+**4. Your games, on every device.** On a Mac with Xcode, PadMint looks at the
+iPhones and iPads you've connected to this Mac once and lists the Pad games on
+each, with their versions. **My games** and **Updates** show what's behind.
+Without Xcode, or on Windows and Linux, it lists the copies it built here.
 
 ## Your first game
 
@@ -307,7 +319,7 @@ PadMint yet; the game's page has the latest.
 <details>
 <summary><strong>Can I play KartPad on my Mac?</strong></summary>
 
-Yes, with the latest PadMint (**0.5.6**), on a Mac with Apple Silicon (M1 or newer)
+Yes, with the latest PadMint (**0.5.7**), on a Mac with Apple Silicon (M1 or newer)
 and Xcode: choose **Mario Kart Wii**, then **This Mac** under **Where will you
 play?** PadMint builds KartPad from your disc and saves the app in your Downloads
 folder. The first build needs about 12 GB free. On an Intel Mac, PadMint builds KartPad for iPhone and iPad
