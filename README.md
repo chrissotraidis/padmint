@@ -58,8 +58,7 @@ Without Xcode, or on Windows and Linux, it lists the copies it built here.
 
 ## Your first game
 
-Each game on the page has a tag that says how much setup it needs. Start with
-an easy one:
+On a Mac, each game says how much setup it needs. Start with an easy one:
 
 | Tag on the page | Games | What you need |
 |---|---|---|
@@ -75,10 +74,7 @@ Your game file must be the version the page names, for example **Only the US
 (North American) version works**. PadMint checks it as soon as you pick it.
 
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/images/padmint-page-dark.png">
-    <img src="docs/images/padmint-page-light.png" width="820" alt="The PadMint page: how it works in three steps, then every game in one list with search, groups and filters">
-  </picture>
+  <img src="docs/images/padmint-library.jpg" width="820" alt="PadMint on a Mac: the sidebar with My games, Updates, All games, devices and Storage; the game library says what this Mac can build, then lists every game with search, groups and filters">
 </p>
 
 > **Two ready-to-play downloads skip the build:**
@@ -126,43 +122,56 @@ apps are a later step if players need them.
 
 ## What you can make, and where
 
-The page sorts every game into one of three groups. Use **All games** to see
-them all, or the tabs to narrow the list.
+What PadMint can do depends on the computer it runs on. The top of the game
+library says it in one line, and every game is listed either way, so you can
+see what exists.
 
-| Group on the page | What it means | What you need |
-|---|---|---|
-| **Build with PadMint** | PadMint builds the game on your computer from your game file, then tells you how to install it | For iPhone and iPad, and for Mac copies (CTRPad, HaloPad, KartPad): a **Mac with Apple Silicon (M1 or newer)** with [Xcode](https://apps.apple.com/app/xcode/id497799835). KartPad is the exception: its iPhone and iPad copy also builds on Windows and Linux (experimental, no Xcode needed), and its Android game data on any Windows, Mac or Linux computer |
-| **Download** | The game's app has no game files in it, so there is nothing to build: download it and add your own files in the app | Any computer to sideload an iPad or iPhone app with your own Apple ID |
-| **Not available yet** | Listed so you can find it. Choosing it says why it isn't available and links to the game's page | — |
+| Your computer | What PadMint does there |
+|---|---|
+| **Mac with Apple Silicon** (M1 or newer) and [Xcode](https://apps.apple.com/app/xcode/id497799835) | Builds every game for iPhone and iPad. Builds a Mac version of Animal Crossing, Crash Team Racing, F-Zero X, Halo, Jak and Daxter, Mario Kart Wii, Metroid Prime, Pokémon Snap, Pokémon Stadium, Super Mario Sunshine, Super Smash Bros. and Melee. Shows which games are on the iPhones and iPads you've connected to the Mac once, and which need an update. |
+| **Windows, Linux or an Intel Mac** | Builds Mario Kart Wii (KartPad): game data for the Android app, and the iPhone and iPad app (experimental). Gets the ready-made iPad apps. The other games are listed under **Needs a Mac**, with what each one needs. |
 
-On Windows, Linux or an Intel Mac, games that need an Apple Silicon Mac stay in
-the list, dimmed and tagged **Needs an M1+ Mac**, so you can see what they
-need. For each game's exact versions, hosts and known problems, see
-[build compatibility](docs/COMPATIBILITY.md).
+The library sorts games into groups. Use **All games** to see them all, or the
+tabs to narrow the list:
 
-## Using the page
+| Group | What it means |
+|---|---|
+| **Build with PadMint** | PadMint builds the game on your computer from your own game file, then tells you how to install it. |
+| **Download** | Ready-made apps with no game files in them: download the app, install it with your own Apple ID and add your own files in the app. |
+| **Needs a Mac** | Only on Windows, Linux or an Intel Mac: games built on a Mac with Apple Silicon. Choose one to see its options. |
+| **Not installed** | Once you have games: the ones that aren't on any of your devices yet. |
 
-1. **1. Choose a game.** Search or scroll; each card shows the original game,
-   where it plays (iPhone/iPad, Android, Mac), its group and, on a Mac, how much
-   setup it needs (**Easiest**, **Needs Xcode** or **Needs Xcode + Homebrew**). **← All games**, or the
-   PadMint logo at the top, takes you back to the full list. **About …: install guide and updates** opens the game's own page.
-2. **2. Your own game file.** Click **Choose file…** and pick your disc image or
-   ROM (the file window may open behind your browser). The page says which version
-   works, for example **Only the European (PAL) version works**. Game files already
-   in your Downloads folder are listed, so you can click one of those. PadMint checks
-   the file straight away and says **✓** or what is wrong (wrong region, wrong version,
-   incomplete file). Some games ask for the file inside the app instead; the page says so.
-3. **3. Where will you play?** Choose the device you will play on, whichever
-   computer you are using. **This Mac** appears for games with a Mac copy, on an
-   Apple Silicon Mac: that copy plays on the Mac that builds it. If PadMint
-   doesn't make a game's Mac copy yet, **This Mac** is dimmed and marked
-   **Not yet**, with the devices you can choose instead.
+Each game says where it is: **On iPad · iPhone**, an update such as
+**v0.2.0 → v0.2.2**, or **Not installed**. For each game's exact versions,
+hosts and known problems, see [build compatibility](docs/COMPATIBILITY.md).
+
+## Using PadMint
+
+**The sidebar.** **My games** lists every game PadMint found on your devices and
+the copies it built, with the version on each device. **Updates** shows the ones
+behind the latest release. **All games** is the full library. Under **Devices**,
+each iPhone, iPad, this Mac and Android has its own list. **Storage** shows the
+space PadMint uses and frees what it no longer needs. The version button at the
+bottom says when PadMint itself has an update.
+
+**A game's page** goes from top to bottom:
+
+1. **Your copies:** where you have it, and which device is behind.
+2. **Your own game file:** click **Choose file…** and pick your disc image or
+   ROM (the file window may open behind your browser). The page says which
+   version works, for example **Only the European (PAL) version works**, lists
+   matching files already in your Downloads folder and checks the file straight
+   away. Some games ask for the file inside the app instead; the page says so.
+3. **Where will you play?** The device you'll play on, whichever computer you're
+   using. **This Mac** appears for games with a Mac version, on an Apple Silicon
+   Mac.
 4. **What PadMint will do on this computer** lists everything before it starts.
    **Before you start (one time only)** marks each program **found** or **not found**
    and says how to get it: Xcode from the App Store, and one Homebrew line with a
    **Copy** button for everything else. Install what's missing, click **Check again**,
-   then **Make my copy**. If the button is gray, the line under it says why.
-   **After the build: how to install and play** shows the phone steps in advance.
+   then **Make my copy** (or **Update to v…** when you have an older one). If the
+   button is gray, the line under it says why. **After the build: how to install
+   and play** shows the device steps in advance.
 
 The page then shows a checklist: finding the latest release, downloading the
 source, each tool with its progress, the build with its current step, and saving
@@ -319,7 +328,7 @@ PadMint yet; the game's page has the latest.
 <details>
 <summary><strong>Can I play KartPad on my Mac?</strong></summary>
 
-Yes, with the latest PadMint (**0.5.7**), on a Mac with Apple Silicon (M1 or newer)
+Yes, with the latest PadMint (**0.5.8**), on a Mac with Apple Silicon (M1 or newer)
 and Xcode: choose **Mario Kart Wii**, then **This Mac** under **Where will you
 play?** PadMint builds KartPad from your disc and saves the app in your Downloads
 folder. The first build needs about 12 GB free. On an Intel Mac, PadMint builds KartPad for iPhone and iPad

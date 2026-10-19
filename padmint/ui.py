@@ -900,6 +900,8 @@ html{min-height:100%;background:var(--bg)}body{min-height:100vh;background-attac
 .item .body .t{font-size:.97rem}.item .body .s{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #shelf>.sechead{margin:1.3rem 0 .7rem}#shelfTitle{font-size:1.45rem}
 @media (max-width:560px){.tl{flex-direction:column;gap:0}.mg .where{gap:.1rem .8rem}}
+.here{margin:-.35rem 0 .9rem;padding:.65rem .9rem;border-radius:12px;background:color-mix(in srgb,var(--mint) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--mint) 22%,var(--line));color:var(--text);font-size:.88rem;line-height:1.45}
+.own.none{color:var(--muted);font-weight:500}.item .side .own{white-space:nowrap}
 </style></head><body><div class="app">
 <aside id="side"><a class="brand" id="home" href="#"><div class="mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="pmg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff0b0"/><stop offset="1" stop-color="#14945f"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#pmg)"/><path fill="#06281a" d="M19 19h26c7.2 0 12.6 6.6 11.2 13.7l-2.1 10.2c-1 4.9-7.1 6.6-10.5 2.9L39 41H25l-4.6 4.8c-3.4 3.7-9.5 2-10.5-2.9L7.8 32.7C6.4 25.6 11.8 19 19 19z"/><path stroke="#5ff0b0" stroke-width="4" stroke-linecap="round" d="M20 26v10M15 31h10"/><path fill="#5ff0b0" d="M37 37c0-6.5 4.8-11 12-11 0 6.5-4.8 11-12 11z"/><path stroke="#06281a" stroke-width="1.8" stroke-linecap="round" d="M39.5 34.5l6.5-6"/></svg></div><div><h1>PadMint</h1><div class="v" id="ver"></div></div></a>
 <nav class="sidenav" id="sidenav"></nav>
@@ -910,9 +912,9 @@ html{min-height:100%;background:var(--bg)}body{min-height:100vh;background-attac
 <section class="intro" id="intro"><h1 data-t="hero_title"></h1><p data-t="hero_text"></p><ol><li data-t="intro_1"></li><li data-t="intro_2"></li><li data-t="intro_3"></li></ol><div class="row"><button class="btn link" id="aboutOpen" data-t="learn_more"></button></div></section>
 <section class="hidden" id="nowBox"></section>
 <section class="hidden" id="shelf"><div class="sechead"><div><h2 id="shelfTitle"></h2><p class="note" id="shelfSub"></p></div><div class="row"><span class="muted small" id="shelfNote"></span><button class="btn small ghost" id="lookAgain" data-t="look_again"></button></div></div><div id="shelfList"></div></section>
-<section class="card" id="pickCard"><h2 id="pickTitle"></h2><button class="btn back hidden" id="changeGame" data-t="change"></button><div id="hero" class="hidden"></div><div id="copies" class="hidden"></div>
+<section class="card" id="pickCard"><h2 id="pickTitle"></h2><p class="here hidden" id="here"></p><button class="btn back hidden" id="changeGame" data-t="change"></button><div id="hero" class="hidden"></div><div id="copies" class="hidden"></div>
 <div id="finder"><div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="search" type="search" autocomplete="off"></div></div>
-<div class="pills" id="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span data-t="later_head"></span><span class="n"></span></button></div><div class="filters" id="filters"></div></div>
+<div class="pills" id="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span id="laterHead" data-t="later_head"></span><span class="n"></span></button><button class="tab" data-g="missing" role="tab"><span data-t="tab_missing"></span><span class="n"></span></button></div><div class="filters" id="filters"></div></div>
 <p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="small hidden" id="gamePage"><a target="_blank" rel="noopener" id="gamePageLink"></a></p><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
 
 <section class="card hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p><button class="btn back backBtn" data-t="change"></button></section>
@@ -1077,7 +1079,7 @@ function side(){const mine=mineIds(),ups=mine.filter(id=>stateOf(id).stale).leng
  parts.push(el("div",S.sn_library,"sh"),item("mine","mine",S.sn_mine,mine.length||""),item("updates","updates",S.sn_updates,V.done?(ups||""):"",ups?"hot":""),item("library","library",S.sn_browse,all().length));
  if(pl.length){parts.push(el("div",S.sn_devices,"sh"));for(const d of pl)parts.push(item(d.view,d.kind,d.name,d.count||"",d.away?"away":""))}
  parts.push(el("div","","sh"),item("storage","storage",S.nav_storage,""));$("sidenav").replaceChildren(...parts)}
-async function seen(fresh){try{const r=await (await fetch("/api/installed"+(fresh?"?fresh=1":""),{headers:H})).json();if(r.error)return;I=r;if(!moved&&!sel&&(view=="mine"||view=="library")){const n=mineIds().length;if(n)view="mine";else if(r.state=="ready")view="library"}layout();if(sel)hero(all().find(x=>x.id==sel));if(r.state!="ready")setTimeout(()=>seen(false),900)}catch(e){}}
+async function seen(fresh){try{const r=await (await fetch("/api/installed"+(fresh?"?fresh=1":""),{headers:H})).json();if(r.error)return;I=r;if(!moved&&!sel&&(view=="mine"||view=="library")){const n=mineIds().length;if(n)view="mine";else if(r.state=="ready")view="library"}layout();if(view=="library"&&!sel&&r.state=="ready")cards();if(sel)hero(all().find(x=>x.id==sel));if(r.state!="ready")setTimeout(()=>seen(false),900)}catch(e){}}
 function hero(x){const h=$("hero");if(!x){h.classList.add("hidden");h.replaceChildren();copiesBox(null);return}
  const kind=groupOf(x.id),body=el("div",null,"hbody"),facts=el("div",null,"facts"),v=latest(x.id),st=stateOf(x.id);h.style.setProperty("--c",colorOf(x));
  body.append(el("h2",x.about?title(x):x.name),el("p",x.name+(systemOf(x)?" · "+fill("original",{system:systemOf(x)}):""),"muted"));
@@ -1148,24 +1150,32 @@ function confirmRemove(list){const total=list.reduce((a,i)=>a+i.size,0),go=el("b
  row.append(go,no);sheet(el("h2",fill("st_confirm_title",{size:size(total)})),el("p",fill("st_confirm_text",{folder:ST.folder})),ul,row)}
 
 
+function kindName(c){return {ipad:"iPad",iphone:"iPhone",mac:"Mac",android:"Android"}[c.kind]||S.built_short}
+function here(){const h=$("here"),show=!sel&&view=="library";h.classList.toggle("hidden",!show);if(!show)return;const parts=[];
+ if(onMac()){parts.push(fill("here_mac",{build:D.games.length,apps:D.downloads.length}));const ds=(I.devices||[]);
+  if(ds.length)parts.push(fill("here_devices",{devices:ds.map(d=>d.name).join(", ")}));else if(I.state=="ready")parts.push(I.xcode?S.here_no_devices:S.here_no_xcode)}
+ else{const names=D.games.map(g=>g.about?title(g):g.name).join(", ");parts.push(fill(names?"here_other":"here_other_none",{names,apps:D.downloads.length,mac:D.later.length}))}
+ h.textContent=parts.join(" ")}
 function row(x,i){const kind=groupOf(x.id),b=el("button",null,"item "+kind);b.style.setProperty("--c",colorOf(x));b.style.setProperty("--i",Math.min(i||0,24));
  b.title=systemOf(x)?fill("original",{system:systemOf(x)}):"";const body=el("span",null,"body"),meta=[devicesOf(x,kind).join(", ")];
  if(kind=="build"&&x.ready){const on=x.platforms.filter(p=>x.ready.platforms.includes(p.id)).map(p=>p.short||p.label);if(on.length)meta.push(fill("ready_tag",{devices:on.join(", ")}))}
- if(kind=="build"&&x.setup&&x.setup!="easy")meta.push(S["setup_"+x.setup]);if(kind=="later"){if(x.text)meta.push(x.text);else if(x.tag)meta.push(x.tag)}
+ if(kind=="build"&&x.setup&&x.setup!="easy")meta.push(S["setup_"+x.setup]);if(kind=="later"&&x.text)b.title=x.text;
  const line=[x.name+(systemOf(x)?" · "+systemOf(x):""),...meta].filter(Boolean).join(" · ");body.append(el("span",x.about?title(x):x.name,"t"),el("span",line,"s"));body.title=line;
- const side=el("span",null,"side"),st=stateOf(x.id),v=st.latest;if(st.stale){if(kind!="build")side.append(el("span",S.update_ready_short,"own upd"))}else if(st.copies.some(c=>!c.built))side.append(el("span","✓ "+S.installed,"own"));else if(st.copies.length)side.append(el("span",S.built_short,"own"));if(v)side.append(el("span",v,"ver"));
+ const side=el("span",null,"side"),st=stateOf(x.id),v=st.latest,where=[...new Set(st.copies.map(kindName))].join(" · ");
+ if(kind=="later"){}else if(st.stale){const o=st.old.map(c=>c.version).sort(cmpv)[0];side.append(el("span",(o?"v"+o+" → ":"")+v,"own upd"))}
+ else if(st.copies.length)side.append(el("span","✓ "+fill("lib_on",{where}),"own"));else if(mineIds().length)side.append(el("span",S.lib_not_installed,"own none"));
  side.append(el("span",kind=="later"&&x.status?S["status_"+x.status]:kind=="later"&&x.tag?x.tag:S[kind=="build"&&st.stale?"act_update":{build:"act_build",download:"act_download",later:"act_later"}[kind]],"act "+kind+(kind=="build"&&st.stale?" upd":"")));
  b.append(art(x),body,side);b.onclick=()=>choose(x.id);return b}
 function cards(){const q=$("search").value.trim().toLowerCase();
  const match=x=>(!q||(x.name+" "+(x.about||"")).toLowerCase().includes(q))&&(!system||systemOf(x)==system);
  const order=a=>a.sort((x,y)=>sortKey(x).localeCompare(sortKey(y)));
  const G={build:order(D.games.filter(match)),download:order(D.downloads.filter(match)),later:order(D.later.filter(match))};
- G.all=order([...G.build,...G.download,...G.later]);
+ G.all=order([...G.build,...G.download,...G.later]);G.missing=mineIds().length?G.all.filter(x=>groupOf(x.id)!="later"&&!copies(x.id).length):[];
  if(sel){group="all";G.all=all().filter(x=>x.id==sel)}
- else if(!G[group].length){const k=["all","build","download","later"].find(k=>G[k].length);if(k)group=k}
+ else if(!G[group].length){const k=["all","build","download","later","missing"].find(k=>G[k].length);if(k)group=k}
  $("finder").classList.toggle("hidden",!!sel);$("changeGame").classList.toggle("hidden",!sel);$("tabs").classList.toggle("hidden",!!sel);$("pills").classList.toggle("hidden",!!sel);const one=sel&&all().find(x=>x.id==sel);$("gamePage").classList.toggle("hidden",!(one&&one.page));if(one&&one.page){$("gamePageLink").href=one.page;$("gamePageLink").textContent=fill("game_page",{name:one.name})+" ↗"}
- for(const b of document.querySelectorAll(".tab")){b.classList.toggle("on",b.dataset.g==group);b.setAttribute("aria-selected",b.dataset.g==group);b.querySelector(".n").textContent=G[b.dataset.g].length;b.classList.toggle("hidden",b.dataset.g!="all"&&!all().some(x=>groupOf(x.id)==b.dataset.g))}
- $("groupNote").textContent=sel?"":S[{all:D.later.length?"all_note":"all_note_plain",build:"builds",download:"no_build",later:"later_note"}[group]]+((group=="all"||group=="build")&&D.games.some(g=>g.setup)?" "+S.start_note:"");
+ for(const b of document.querySelectorAll(".tab")){b.classList.toggle("on",b.dataset.g==group);b.setAttribute("aria-selected",b.dataset.g==group);b.querySelector(".n").textContent=G[b.dataset.g].length;b.classList.toggle("hidden",b.dataset.g=="missing"?!G.missing.length&&group!="missing":b.dataset.g!="all"&&!all().some(x=>groupOf(x.id)==b.dataset.g))}$("laterHead").textContent=onMac()?S.later_head:S.needs_mac_head;here();
+ $("groupNote").textContent=sel?"":S[{all:D.later.length?(onMac()?"all_note":"all_note_off_mac"):"all_note_plain",build:"builds",download:"no_build",later:onMac()?"later_note":"needs_mac_note",missing:"missing_note"}[group]]+(onMac()&&(group=="all"||group=="build")&&D.games.some(g=>g.setup)?" "+S.start_note:"");
  $("pickTitle").textContent=S.library;$("pickTitle").classList.toggle("hidden",!!sel);$("pickCard").classList.toggle("hidden",!sel&&view!="library");$("changeGame").textContent="← "+viewName();hero(sel?all().find(x=>x.id==sel):null);
  $("list").replaceChildren(...(sel?[]:G[group].map((x,i)=>row(x,i))));$("list").classList.toggle("hidden",!!sel||!G[group].length);$("list").classList.toggle("settled",listShown);listShown=true;
  $("noMatch").classList.toggle("hidden",!!G[group].length);layout()}
@@ -1230,7 +1240,7 @@ function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.err
 // The button is disabled by the state itself; the line under it only says which state it is.
 let editFile=false,editDev=false,watch=true;
 function ready(){const g=game(),why=!g?"none":!dev?"why_device":reading?"why_reading":(g.needs_file&&!file)?"why_file":planning?"why_loading":blocked?"why_blocked":"";
- $("make").disabled=!!why;$("makeWhy").textContent=why&&why!="none"?S[why]||"":"";
+ $("make").disabled=!!why;{const st=sel&&stateOf(sel);$("make").textContent=st&&st.stale?fill("update_to",{version:st.latest}):S.make}$("makeWhy").textContent=why&&why!="none"?S[why]||"":"";
  const pf=g&&dev&&g.platforms.find(x=>x.id==dev);$("fileBox").classList.toggle("done",!!(g&&file&&!editFile));$("fileSumText").textContent=file?"✓ "+base(file):"";
  $("deviceBox").classList.toggle("done",!!(pf&&!editDev));$("devSumText").textContent=pf?"✓ "+pf.label:""}
 $("fileChange").onclick=()=>{editFile=true;ready()};$("devChange").onclick=()=>{editDev=true;ready()};
