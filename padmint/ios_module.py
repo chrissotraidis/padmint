@@ -76,8 +76,9 @@ HEADERS = (
     ("libc", "include", "",
      "___wctype.h __wctype.h __xlocale.h _abort.h _bounds.h _ctermid.h _ctype.h _locale.h "
      "_locale_posix2008.h _mb_cur_max.h _printf.h _stdio.h _stdlib.h _string.h _strings.h _time.h "
-     "_types.h _wchar.h _wctype.h _xlocale.h alloca.h ctype.h errno.h limits.h locale.h runetype.h "
-     "stddef.h stdint.h stdio.h stdlib.h string.h time.h unistd.h wchar.h wctype.h xlocale.h"),
+     "_types.h _wchar.h _wctype.h _xlocale.h alloca.h crt_externs.h ctype.h errno.h fcntl.h limits.h "
+     "locale.h runetype.h stddef.h stdint.h stdio.h stdlib.h string.h time.h unistd.h wchar.h wctype.h "
+     "xlocale.h"),
     ("libc", "include/_types", "_types", "*"),
     # Optimized builds turn on Apple's fortified string and stdio functions (__memcpy_chk
     # and friends, all in libSystem), which these headers declare.
@@ -85,8 +86,8 @@ HEADERS = (
     ("libc", "include/xlocale", "xlocale", "*"),
     ("libc", "include/FreeBSD", "", "nl_types.h"),
     ("xnu", "bsd/sys", "sys",
-     "__endian.h _endian.h _types.h appleapiopts.h cdefs.h errno.h resource.h signal.h stdio.h "
-     "syslimits.h types.h wait.h"),
+     "__endian.h _endian.h _types.h appleapiopts.h cdefs.h errno.h fcntl.h mman.h resource.h signal.h "
+     "stat.h stdio.h syslimits.h types.h wait.h"),
     ("xnu", "bsd/sys/_types", "sys/_types", "*"),
     ("xnu", "bsd/arm", "arm", "_endian.h _limits.h _mcontext.h _types.h endian.h limits.h signal.h types.h"),
     ("xnu", "bsd/machine", "machine", "_endian.h _mcontext.h _types.h endian.h limits.h signal.h types.h"),
