@@ -39,7 +39,7 @@ Windows PC, BlueWake has a [separate ready-made download](https://github.com/chr
 shipped shared Windows build tools, cache/retry handling and cancellation fixes.
 Additional local game builds stay unavailable until each game's matching app,
 recipe and device checks are ready. Follow the [progress by game](docs/COMPATIBILITY.md#status-by-game)
-and [roadmap](docs/ROADMAP.md). An experimental recipe or completed build alone
+and [roadmap](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md). An experimental recipe or completed build alone
 does not establish that a game plays correctly on every device.
 
 ## Quick start
