@@ -25,6 +25,38 @@ APP_URL = "https://github.com/chrissotraidis/kartpad/releases/download/v0.7.4/Ka
 APP_SHA256 = "74f0c7e82e1df2d3f32eb0893cb6f5040e50b6e7839272372425057e2b35714a"
 
 
+def incremental_probe(work, app, env, prepared, cmake, build, module):
+    """An identical retry is idle; changed thread-local stubs relink only."""
+    def stamps(paths):
+        return {path: path.stat().st_mtime_ns for path in paths}
+
+    sdk_files = [path for path in prepared["sdk"].rglob("*") if path.is_file()]
+    sdk_files.append(prepared["executable"])
+    before_sdk = stamps(sdk_files)
+    objects = list(build.rglob("*.o"))
+    if not objects:
+        raise SystemExit("the incremental probe found no compiled objects")
+    before_objects, before_module = stamps(objects), module.stat().st_mtime_ns
+    ios_module.prepare(work / "sdk", app, env)
+    if stamps(sdk_files) != before_sdk:
+        raise SystemExit("preparing the same SDK changed generated file timestamps")
+    subprocess.run([cmake, "--build", str(build)], check=True, env=env)
+    if stamps(objects) != before_objects or module.stat().st_mtime_ns != before_module:
+        raise SystemExit("an unchanged SDK rebuilt the module")
+    llvm = ios_module.llvm_root(env)
+    original = ios_module.app_thread_locals(llvm, prepared["executable"])
+    try:
+        for names in (original + ["_padmint_incremental_probe_tls"], original):
+            previous = module.stat().st_mtime_ns
+            ios_module.write_stubs(prepared["sdk"], names)
+            subprocess.run([cmake, "--build", str(build)], check=True, env=env)
+            if stamps(objects) != before_objects or module.stat().st_mtime_ns == previous:
+                raise SystemExit("changed SDK thread-local stubs did not relink only the module")
+    finally:
+        ios_module.write_stubs(prepared["sdk"], original)
+    print(f"SDK incremental probe passed: {len(sdk_files)} files unchanged; TLS changes relink only")
+
+
 def main():
     if len(sys.argv) not in (2, 3):
         raise SystemExit(__doc__)
@@ -63,6 +95,8 @@ def probe(work, app, env, target=None, fresh=True):
     subprocess.run([cmake, "--build", str(build)], check=True, env=env)
     llvm = ios_module.llvm_root(env)
     module = build / "libgame.dylib"
+    if target is None:
+        incremental_probe(work, app, env, prepared, cmake, build, module)
     imports = set(subprocess.check_output([str(ios_module.llvm_tool(llvm, "llvm-nm")), "-u", "-j", str(module)],
                                           text=True).splitlines())
     required = {"___assert_rtn", "_mmap", "_munmap", "_atexit", "_strtol", "_pthread_create",
