@@ -84,6 +84,21 @@ class LaterTests(unittest.TestCase):
         self.assertEqual(waiting["bluewake"]["tag"], "Windows app available")
         self.assertIn("BlueWake.exe", waiting["bluewake"]["text"])
 
+    def test_melee_save_fix_guidance_is_available_on_local_and_remote_build_hosts(self):
+        from padmint import cli
+        for host in ("macos-arm64", "windows-x86_64", "linux-x86_64"):
+            with self.subTest(host=host), mock.patch.object(cli, "host_id", return_value=host), \
+                    mock.patch.object(cli, "on_android", return_value=False):
+                data = ui.player_data("en")
+                games = {x["id"]: x for x in data["games"] + data["later"]}
+                for game in ("meleepad", "melee-pc"):
+                    notice = games[game]["notice"]
+                    self.assertEqual(notice["action"], "Build the save-fix app on GitHub")
+                    self.assertEqual(notice["url"], "https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac")
+                self.assertIn("separate app", games["meleepad"]["notice"]["text"])
+                self.assertIn("save-fix test", games["melee-pc"]["about"])
+                self.assertIsNone(games["bellpad"].get("notice"))
+
     def test_github_builds_match_the_workflow_and_need_no_game_file_while_building(self):
         # The workflow's game menu is the catalog's github_build list; a game that reads
         # the player's game file while building must never be offered there.

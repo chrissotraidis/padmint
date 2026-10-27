@@ -3,7 +3,7 @@
   "id": "melee-pc",
   "repo_url": "https://github.com/chrissotraidis/melee-pc-padmint",
   "name": "Melee PC",
-  "game": "Super Smash Bros. Melee (GameCube, USA revision 2)",
+  "game": "Super Smash Bros. Melee — save-fix test (GameCube, USA revision 2)",
   "player_targets": [
     "ios"
   ],
@@ -27,7 +27,7 @@
       "steps": [
         "In your existing LiveContainer setup, tap + and select {file}; use a fresh data container for this save test and keep the existing app and saves intact. Alternatively, install the IPA normally with your own signing tool.",
         "In Melee, tap Choose Disc and pick your own USA revision 2 (NTSC-U 1.02) disc image from Files.",
-        "Choose Yes to create Game Data. Change Options \u2192 Sound \u2192 music/sound balance, return to the main menu, then restart the game and check that the setting persists.",
+        "Choose Yes to create Game Data. Change Options → Sound → music/sound balance, return to the main menu, then restart the game and check that the setting persists.",
         "The app identifies itself as Melee PC 0.4.2, build 54. Keep this personal IPA private. LiveContainer compatibility still needs confirmation; follow the linked setup guide."
       ]
     }
@@ -36,7 +36,13 @@
   "github_build_private": true,
   "off_mac": {
     "tag": "GitHub Cloud Build",
-    "text": "Build Melee PC for iPhone/iPad on GitHub\u2019s hosted Mac from your browser. Use a private copy of PadMint so the personal IPA stays private. Follow the guide to import the repository, run the melee-pc workflow and download your IPA. Your disc stays on your device. GitHub Actions usage limits apply.",
+    "text": "Build Melee PC for iPhone/iPad on GitHub’s hosted Mac from your browser. Use a private copy of PadMint so the personal IPA stays private. Follow the guide to import the repository, run the melee-pc workflow and download your IPA. Your disc stays on your device. GitHub Actions usage limits apply.",
+    "url": "https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac"
+  },
+  "player_notice": {
+    "title": "Save-fix test: build on GitHub without a Mac",
+    "text": "Import PadMint into a private GitHub repository, then run its iPhone/iPad workflow with melee-pc selected. Download your IPA within one day; GitHub Actions usage limits apply. The app is Melee PC 0.4.2 (54); 0.1.0 is the recipe version. You can also build locally using PadMint on an Apple Silicon Mac. LiveContainer saving still needs confirmation.",
+    "action": "Build the save-fix app on GitHub",
     "url": "https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac"
   }
 }

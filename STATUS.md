@@ -1,5 +1,7 @@
 # PadMint status
 
+**v0.5.21:** MeleePad’s detail page now points directly to the separate Melee PC save-fix test and its private GitHub build guide. The test build is labeled in the library, and its GitHub option is visible on Mac as well as Windows/Linux. The app/save acceptance status is unchanged.
+
 **v0.5.20:** Melee PC can build on GitHub’s hosted Mac without a local Mac. Its downloadable personal IPA requires a private repository. [Hosted compilation and package check passed](https://github.com/chrissotraidis/padmint/actions/runs/40473291597/job/122085358107) on 27 October; CI uploaded no IPA. LiveContainer saving still needs reporter confirmation.
 
 Updated **27 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has

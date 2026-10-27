@@ -48,5 +48,11 @@
         }
       }
     }
+  },
+  "player_notice": {
+    "title": "Looking for the save-crash test build?",
+    "text": "The save-creation patch is in Melee PC, a separate app. Updating MeleePad does not include that patch. You can build the test app on GitHub without a Mac, then import the IPA into LiveContainer. Keep your existing app and saves; saving in LiveContainer still needs confirmation.",
+    "action": "Build the save-fix app on GitHub",
+    "url": "https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac"
   }
 }

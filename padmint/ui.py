@@ -53,6 +53,14 @@ def setup_level(entry, platforms):
     return "brew" if entry.get("before_build") else "xcode"
 
 
+def player_notice(entry, lang):
+    notice = entry.get("player_notice")
+    if not notice:
+        return None
+    return {**{key: localized(notice, key, lang) for key in ("title", "text", "action")},
+            "url": notice["url"]}
+
+
 def player_data(lang):
     """Everything the page shows before a build: games, devices and game files found."""
     folder = cli.player_folder()
@@ -66,6 +74,7 @@ def player_data(lang):
                       "build_note": phrase("w_plan_build" if needs_file else
                                            "w_plan_build_installed" if input_mode == "installed" else "w_plan_build_app", lang),
                       "about": entry.get("game") or (entry.get("manifest") or {}).get("game", ""),
+                      "notice": player_notice(entry, lang),
                       "formats": [f.upper() for f in input_formats(selected_inputs(entry.get("manifest") or {}))],
                       "ids": entry.get("game_ids") or [],
                       "platforms": [{"id": p, "label": cli.platform_label(p, lang),
@@ -149,7 +158,8 @@ def elsewhere_card(game, name, targets, lang):
         route = "mac" if ios else "other"
     return {"id": game, "name": name, "about": entry.get("game") or (entry.get("manifest") or {}).get("game", ""),
             "text": text, "tag": tag, "plays_on": ["iphone", "ipad"] if ios else [], "link": link,
-            "github": steps is not None, "route": route, "steps": steps or [], "explicit_hosts": explicit_hosts}
+            "github": steps is not None, "route": route, "steps": steps or [], "explicit_hosts": explicit_hosts,
+            "notice": player_notice(entry, lang)}
 
 
 def library():
@@ -973,7 +983,7 @@ html.locked,html.locked body{overflow:hidden}.sheet{overscroll-behavior:contain}
 <section class="intro" id="intro"><h1 data-t="hero_title"></h1><p data-t="hero_text"></p><ol><li data-t="intro_1"></li><li data-t="intro_2"></li><li data-t="intro_3"></li></ol><div class="row"><button class="btn link" id="aboutOpen" data-t="learn_more"></button></div></section>
 <section class="hidden" id="nowBox"></section>
 <section class="hidden" id="shelf"><div class="sechead"><div><h2 id="shelfTitle"></h2><p class="note" id="shelfSub"></p></div><div class="row"><span class="muted small" id="shelfNote"></span><button class="btn small ghost" id="lookAgain"></button></div></div><div id="shelfList"></div></section>
-<section class="card" id="pickCard"><h2 id="pickTitle"></h2><p class="here hidden" id="here"></p><button class="btn back hidden" id="changeGame" data-t="change"></button><div id="hero" class="hidden"></div><div id="copies" class="hidden"></div>
+<section class="card" id="pickCard"><h2 id="pickTitle"></h2><p class="here hidden" id="here"></p><button class="btn back hidden" id="changeGame" data-t="change"></button><div id="hero" class="hidden"></div><section class="card banner hidden" id="playerNotice" aria-labelledby="noticeTitle"><h2 id="noticeTitle"></h2><p id="noticeText"></p><a class="btn main" id="noticeLink" target="_blank" rel="noopener"></a></section><div id="copies" class="hidden"></div>
 <div id="finder"><div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="search" type="search" autocomplete="off"></div></div>
 <div class="pills" id="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="github" role="tab"><span data-t="tab_github"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span id="laterHead" data-t="later_head"></span><span class="n"></span></button><button class="tab" data-g="missing" role="tab"><span data-t="tab_missing"></span><span class="n"></span></button></div><div class="filters" id="filters"></div></div>
 <p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="small hidden" id="gamePage"><a target="_blank" rel="noopener" id="gamePageLink"></a></p><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
@@ -1142,7 +1152,9 @@ function side(){const mine=mineIds(),ups=mine.filter(id=>stateOf(id).stale).leng
  if(pl.length){parts.push(el("div",S.sn_devices,"sh"));for(const d of pl)parts.push(item(d.view,d.kind,d.name,d.count||"",d.away?"away":""))}
  parts.push(el("div","","sh"),item("storage","storage",S.nav_storage,""));$("sidenav").replaceChildren(...parts)}
 async function seen(fresh){try{const r=await (await fetch("/api/installed"+(fresh?"?fresh=1":""),{headers:H})).json();if(r.error)return;I=r;if(!moved&&!sel&&(view=="mine"||view=="library")){const n=mineIds().length;if(n)view="mine";else if(r.state=="ready")view="library"}layout();if(view=="library"&&!sel&&r.state=="ready")cards();if(sel)hero(all().find(x=>x.id==sel));if(r.state!="ready")setTimeout(()=>seen(false),900)}catch(e){}}
-function hero(x){const h=$("hero");if(!x){h.classList.add("hidden");h.replaceChildren();copiesBox(null);return}
+function hero(x){const notice=x&&x.notice;$("playerNotice").classList.toggle("hidden",!notice);
+ if(notice){$("noticeTitle").textContent=notice.title;$("noticeText").textContent=notice.text;$("noticeLink").textContent=notice.action;$("noticeLink").href=notice.url}
+ const h=$("hero");if(!x){h.classList.add("hidden");h.replaceChildren();copiesBox(null);return}
  const kind=groupOf(x.id),body=el("div",null,"hbody"),facts=el("div",null,"facts"),v=latest(x.id),st=stateOf(x.id);h.style.setProperty("--c",colorOf(x));
  body.append(el("h2",x.about?title(x):x.name),el("p",x.name+(systemOf(x)?" · "+fill("original",{system:systemOf(x)}):""),"muted"));
  if(v)facts.append(el("span",fill("latest",{version:v}),"fact"+(st.stale?" new":"")));
