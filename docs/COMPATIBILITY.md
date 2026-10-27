@@ -1,7 +1,7 @@
 # Build compatibility
 
 Public recipe snapshot: **27 October 2026**, checked against each game's latest
-release recipe with PadMint **v0.5.19**. The daily Catalog check
+release recipe with PadMint **v0.5.20**. The daily Catalog check
 (`scripts/audit-catalog.py`) compares the live catalog with each latest release;
 trust its output over this table when they differ.
 The table describes the recipe shipped with each game's latest public release.
@@ -379,3 +379,5 @@ architecture and target. Compare with the source manifest and any pending PR,
 but keep unreleased capabilities separate. Use the explicit preview links
 above for preview-only projects; a missing latest release is not proof of no
 preview. Keep unsupported combinations unavailable until their real route is ready.
+
+Melee PC also offers a private-repository GitHub Cloud Build: GitHub supplies the Apple Silicon Mac, and the player downloads the personal IPA from their private Actions run. See [setup steps](https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac). [Hosted compilation and packaging passed](https://github.com/chrissotraidis/padmint/actions/runs/40473291597/job/122085358107) on 27 October 2026. The app still requires LiveContainer save confirmation.

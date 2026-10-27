@@ -26,7 +26,7 @@ GitHub's cloud. You do not need to own a Mac for that route.
 | Your computer | What PadMint can make |
 |---|---|
 | **Mac with Apple Silicon** (M1 or newer) | All 30 games it offers to build for iPhone and iPad; 12 also have Mac builds. Check each game's setup and experimental status. |
-| **Windows or Linux** | **Build here:** KartPad (Mario Kart Wii), for Android or iPhone/iPad, experimental. **GitHub Cloud Build:** 15 more games can build separate iPhone/iPad copies on a temporary macOS machine hosted by GitHub. **Apple Silicon Mac:** the other games need Apple Silicon and Xcode. PadMint also lists 8 ready-made iPad apps (PC classics such as Diablo). |
+| **Windows or Linux** | **Build here:** KartPad (Mario Kart Wii), for Android or iPhone/iPad, experimental. **GitHub Cloud Build:** 16 more games can build separate iPhone/iPad copies on a temporary macOS machine hosted by GitHub. **Apple Silicon Mac:** the other games need Apple Silicon and Xcode. PadMint also lists 8 ready-made iPad apps (PC classics such as Diablo). |
 | **Intel Mac** | Builds KartPad for Android or iPhone/iPad, experimental. Mac app copies and the other iPhone/iPad builds require an Apple Silicon Mac. |
 | **An Android phone, no computer** | Experimental: Mario Kart Wii's game data, through Termux. |
 
@@ -161,7 +161,7 @@ see what exists.
 | Your computer | What PadMint does there |
 |---|---|
 | **Mac with Apple Silicon** (M1 or newer) and [Xcode](https://apps.apple.com/app/xcode/id497799835) | Builds the catalog's 29 buildable games for iPhone and iPad. Mac targets are Animal Crossing, Crash Team Racing, F-Zero X, Halo, Jak and Daxter, Mario Kart Wii, Pokémon Snap, Pokémon Stadium, Super Mario Sunshine, Super Smash Bros., Melee and Tribes 2. Shows which games are on the iPhones and iPads you've connected to the Mac once, and which need an update. |
-| **Windows or Linux** | **Build here:** KartPad's Android game data or experimental iPhone/iPad app. **GitHub Cloud Build:** [15 more iPhone/iPad games](#github-cloud-build-no-mac-needed). [HaloPad's Xbox edition has its own GitHub workflow](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer). Other games explain their Apple Silicon Mac requirement or paused status. Ready-made apps can be installed from Windows or Mac; Linux installation is not validated. |
+| **Windows or Linux** | **Build here:** KartPad's Android game data or experimental iPhone/iPad app. **GitHub Cloud Build:** [16 more iPhone/iPad games](#github-cloud-build-no-mac-needed). [HaloPad's Xbox edition has its own GitHub workflow](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer). Other games explain their Apple Silicon Mac requirement or paused status. Ready-made apps can be installed from Windows or Mac; Linux installation is not validated. |
 | **Intel Mac** | KartPad Android and iPhone/iPad builds, experimental. Mac apps and the other iPhone/iPad builds require Apple Silicon. |
 
 The library sorts games into groups. Use **All games** to see them all, or the
