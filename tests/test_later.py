@@ -64,6 +64,10 @@ class LaterTests(unittest.TestCase):
         self.assertEqual(len(waiting["bellpad"]["steps"]), 5)
         self.assertIn("pick bellpad", waiting["bellpad"]["steps"][2])
         self.assertFalse(waiting["sunpad"]["github"])
+        self.assertEqual(waiting["melee-pc"]["tag"], "GitHub Cloud Build")
+        self.assertIn("private", waiting["melee-pc"]["text"])
+        self.assertFalse(waiting["melee-pc"]["github"])  # Avoid the public Fork button.
+        self.assertIn("#build-on-github-without-a-mac", waiting["melee-pc"]["link"])
         everything = built | set(waiting) | {app["id"] for app in data["downloads"]}
         self.assertEqual(everything, set(manifest.catalog()))
         self.assertEqual(data["host_name"], "Windows x64")
@@ -93,7 +97,7 @@ class LaterTests(unittest.TestCase):
             entry = manifest.catalog()[game]
             self.assertIn("ios", entry["player_targets"], game)
             self.assertEqual(entry["player_game_file"], "in-app", game)
-            self.assertFalse(entry.get("off_mac"), game)
+            self.assertEqual(bool(entry.get("off_mac")), bool(entry.get("github_build_private")), game)
 
     def test_a_device_held_back_is_shown_on_the_computer_that_would_make_it(self):
         # A Mac copy PadMint holds back (KartPad's, before 0.8.0) is shown dimmed in step 3 on

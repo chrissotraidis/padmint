@@ -312,6 +312,9 @@ def catalog():
                 "ios" not in targets or entry.get("player_game_file") != "in-app")):
             raise ValueError(f"catalog/{path.name}: github_build is true or false, "
                              "for an ios target that takes the game file in-app")
+        private = entry.get("github_build_private", False)
+        if not isinstance(private, bool) or (private and (not github or not entry.get("off_mac"))):
+            raise ValueError(f"catalog/{path.name}: github_build_private needs github_build and an off_mac setup guide")
         for platform, steps in (entry.get("player_next") or {}).items():
             if platform not in targets or not isinstance(steps, dict) or not steps.get("steps") \
                     or not all(isinstance(step, str) for step in steps["steps"]):

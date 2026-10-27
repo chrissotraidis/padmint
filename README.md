@@ -260,9 +260,16 @@ stay. The copy holds game code made for you: keep it to yourself.
 **HaloPad's Xbox edition uses its own workflow:** fork or sync
 [HaloPad](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer),
 then choose **Actions → Build HaloPad (Xbox edition) → Run workflow** there.
-HaloPad is not one of the 15 choices in PadMint's workflow. It also provides a
+HaloPad is not one of the 16 choices in PadMint's workflow. It also provides a
 Mac app for playing on a supported Mac; PC Custom Edition builds still need
 your own Apple Silicon Mac.
+
+**Melee PC has a private-repository route:** [follow its GitHub build guide](https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac).
+Import PadMint into a new **private** repository instead of making a public fork,
+then select `melee-pc` in the same workflow. The workflow refuses to upload this
+personal IPA from a public repository. Private Actions usage counts against your
+account's allowance; check your GitHub Actions budget before starting. No disc,
+save, Apple ID or signing certificate is needed during the build.
 
 ## Installing what you made
 

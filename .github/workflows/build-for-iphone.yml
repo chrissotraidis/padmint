@@ -25,6 +25,7 @@ on:
           - galaxypad
           - harkinianpad
           - maskpad
+          - melee-pc
           - openrct2touch
           - paperpad
           - spaghettipad
@@ -73,6 +74,7 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: '1'
       HOMEBREW_NO_INSTALL_CLEANUP: '1'
       GAME: ${{ matrix.game }}
+      PADMINT_REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:

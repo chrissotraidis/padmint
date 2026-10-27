@@ -44,6 +44,14 @@ class CatalogRouteTests(unittest.TestCase):
                 self.read_entry(dict(entry(), **change))
         self.assertFalse(self.read_entry(dict(entry(), github_build=False, player_game_file="build"))["github_build"])
 
+    def test_private_cloud_build_requires_boolean_and_its_own_setup_guide(self):
+        declared = dict(entry(), github_build_private=True,
+                        off_mac={"text": "Use a private copy", "url": "https://example.com/private-build"})
+        self.assertTrue(self.read_entry(declared)["github_build_private"])
+        for change in ({"github_build_private": "true"}, {"github_build": False}, {"off_mac": None}):
+            with self.subTest(change=change), self.assertRaisesRegex(ValueError, "github_build_private"):
+                self.read_entry(dict(declared, **change))
+
     def test_selected_recipe_inputs_block_hosted_build_even_when_catalog_is_stale(self):
         released = recipe()
         released["inputs"][0]["when"] = "build"

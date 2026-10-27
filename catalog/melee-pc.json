@@ -15,10 +15,10 @@
   "player_help": "https://github.com/chrissotraidis/melee-pc-padmint#build-with-padmint",
   "reviewed_revision": null,
   "manifest": null,
-  "notes": "Personal source build of 999sian/melee-pc 0.4.2 with the save-creation fix. Separate from MeleePad; Apple Silicon Mac and Xcode required. LiveContainer confirmation pending.",
+  "notes": "Personal source build of 999sian/melee-pc 0.4.2 with the save-creation fix. Build locally on an Apple Silicon Mac or with GitHub Cloud Build in a private repository. LiveContainer confirmation pending.",
   "before_build": {
     "commands": [
-      "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
+      "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal"
     ]
   },
   "player_next": {
@@ -31,5 +31,12 @@
         "The app identifies itself as Melee PC 0.4.2, build 54. Keep this personal IPA private. LiveContainer compatibility still needs confirmation; follow the linked setup guide."
       ]
     }
+  },
+  "github_build": true,
+  "github_build_private": true,
+  "off_mac": {
+    "tag": "GitHub Cloud Build",
+    "text": "Build Melee PC for iPhone/iPad on GitHub\u2019s hosted Mac from your browser. Use a private copy of PadMint so the personal IPA stays private. Follow the guide to import the repository, run the melee-pc workflow and download your IPA. Your disc stays on your device. GitHub Actions usage limits apply.",
+    "url": "https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac"
   }
 }

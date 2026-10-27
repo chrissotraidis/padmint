@@ -77,6 +77,23 @@ class GitHubBuildTests(unittest.TestCase):
         build.cli.latest_release.assert_called_once()
         build.subprocess.run.assert_called_once()
 
+    def test_private_dispatch_refuses_public_or_unknown_visibility_before_setup(self):
+        self.entry["github_build_private"] = True
+        for visibility in ("false", "", "TRUE"):
+            with self.subTest(visibility=visibility), mock.patch.dict(os.environ, {
+                    "GITHUB_EVENT_NAME": "workflow_dispatch", "PADMINT_REPOSITORY_PRIVATE": visibility}):
+                with self.assertRaisesRegex(ValueError, "private repository"):
+                    build.prepare("game")
+        build.cli.latest_release.assert_not_called()
+        build.subprocess.run.assert_not_called()
+
+    def test_private_dispatch_and_non_uploading_ci_can_build(self):
+        self.entry["github_build_private"] = True
+        for event, visibility in (("workflow_dispatch", "true"), ("pull_request", "false"), ("schedule", "false")):
+            with self.subTest(event=event), mock.patch.dict(os.environ, {
+                    "GITHUB_EVENT_NAME": event, "PADMINT_REPOSITORY_PRIVATE": visibility}):
+                self.assertEqual(build.prepare("game"), self.release)
+
     def test_matrix_uses_catalog_and_refuses_unlisted_selection(self):
         extra = copy.deepcopy(self.entry)
         extra["github_build"] = False

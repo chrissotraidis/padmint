@@ -1,5 +1,7 @@
 # PadMint status
 
+Melee PC GitHub builds are being validated for 0.5.20. Its downloadable personal IPA requires a private repository; CI compiles without uploading it.
+
 Updated **27 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
 the per-game detail, including **Status by game**, which is where the
 compatibility work resumes.

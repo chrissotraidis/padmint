@@ -33,6 +33,11 @@ def prepare(game):
     entry = catalog().get(game)
     if not entry or not entry.get("github_build"):
         raise ValueError(f"{game} is not offered with GitHub Cloud Build")
+    # Dispatch uploads an IPA; PR/scheduled checks only compile and discard it.
+    if (entry.get("github_build_private") and os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+            and os.environ.get("PADMINT_REPOSITORY_PRIVATE") != "true"):
+        raise ValueError("This personal build needs a private repository. Import PadMint into a private "
+                         "repository and run its workflow there; a public fork exposes the IPA.")
     release = cli.latest_release(entry["repo_url"])
     recipe, source = cli.published_recipe(game, release=release)
     if source != f"{game} {release[0]} release":
