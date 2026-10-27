@@ -23,12 +23,13 @@
   },
   "player_next": {
     "ios": {
-      "sideload": true,
+      "sideload": false,
       "steps": [
-        "For the LiveContainer save test, import your personal IPA as a new app with a separate data container; keep the existing app and saves intact.",
+        "In your existing LiveContainer setup, tap + and select {file}; use a fresh data container for this save test and keep the existing app and saves intact. Alternatively, install the IPA normally with your own signing tool.",
         "In Melee, tap Choose Disc and pick your own USA revision 2 (NTSC-U 1.02) disc image from Files.",
-        "Choose Yes to create Game Data. Change Options → Sound → music/sound balance, return to the main menu, then restart the game and check that the setting persists."
-      ]
+        "Choose Yes to create Game Data. Change Options \u2192 Sound \u2192 music/sound balance, return to the main menu, then restart the game and check that the setting persists."
+      ],
+      "note": "The app identifies itself as Melee PC 0.4.2, build 54. Keep this personal IPA private. LiveContainer compatibility still needs confirmation; follow the linked setup guide."
     }
   }
 }
