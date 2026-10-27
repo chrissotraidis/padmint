@@ -59,7 +59,7 @@ def build_routes(entry, lang):
     if entry.get("github_build"):
         cloud = {"url": (entry.get("off_mac") or {}).get("url", GITHUB_BUILD_HELP),
                  "text": (localized(entry["off_mac"], "text", lang) if entry.get("off_mac")
-                          else phrase("w_github_build", lang, name=entry["name"], game=entry["id"])),
+                          else phrase("w_cloud_build", lang, name=entry["name"], game=entry["id"])),
                  "private": entry.get("github_build_private", False)}
     entries = catalog()
     return {"cloud": cloud, "other_ports": [

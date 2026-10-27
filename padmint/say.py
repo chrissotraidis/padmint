@@ -16,6 +16,10 @@ WINDOWS_LANGUAGES = {0x0A: "es", 0x16: "pt"}
 
 MESSAGES = {
     "w_port_github": {"en": "{name} · GitHub build available", "es": "{name} · Compilación en GitHub disponible", "pt": "{name} · Compilação no GitHub disponível"},
+    "w_cloud_build": {
+        "en": "Build {name} for iPhone/iPad on GitHub’s hosted Mac. Follow the guide and select {game} in the workflow. Download the IPA when it finishes, install it with your signing tool, and add your own game file in the app.",
+        "es": "Compila {name} para iPhone/iPad en el Mac de GitHub. Sigue la guía y selecciona {game} en el flujo de trabajo. Descarga el IPA al terminar, instálalo con tu herramienta de firma y añade tu propio archivo del juego en la aplicación.",
+        "pt": "Compile {name} para iPhone/iPad no Mac do GitHub. Siga o guia e selecione {game} no fluxo de trabalho. Baixe o IPA ao terminar, instale com sua ferramenta de assinatura e adicione seu próprio arquivo do jogo no aplicativo."},
     "w_build_options": {"en": "Build options", "es": "Opciones de compilación", "pt": "Opções de compilação"},
     "w_build_on_github": {"en": "Build on GitHub", "es": "Compilar en GitHub", "pt": "Compilar no GitHub"},
     "w_other_ports": {"en": "Other ports of this game (separate apps):", "es": "Otras versiones de este juego (aplicaciones independientes):", "pt": "Outras versões deste jogo (aplicativos separados):"},
