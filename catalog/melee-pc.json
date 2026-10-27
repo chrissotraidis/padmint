@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "melee-pc",
+  "repo_url": "https://github.com/chrissotraidis/melee-pc-padmint",
+  "name": "Melee PC",
+  "game": "Super Smash Bros. Melee (GameCube, USA revision 2)",
+  "player_targets": [
+    "ios"
+  ],
+  "game_ids": [
+    "GALE01"
+  ],
+  "player_game_file": "in-app",
+  "free_space_gb": 15,
+  "player_help": "https://github.com/chrissotraidis/melee-pc-padmint#build-with-padmint",
+  "reviewed_revision": null,
+  "manifest": null,
+  "notes": "Personal source build of 999sian/melee-pc 0.4.2 with the save-creation fix. Separate from MeleePad; Apple Silicon Mac and Xcode required. LiveContainer confirmation pending.",
+  "before_build": {
+    "commands": [
+      "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
+    ]
+  },
+  "player_next": {
+    "ios": {
+      "sideload": true,
+      "steps": [
+        "For the LiveContainer save test, import your personal IPA as a new app with a separate data container; keep the existing app and saves intact.",
+        "In Melee, tap Choose Disc and pick your own USA revision 2 (NTSC-U 1.02) disc image from Files.",
+        "Choose Yes to create Game Data. Change Options → Sound → music/sound balance, return to the main menu, then restart the game and check that the setting persists."
+      ]
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Build compatibility
 
-Public recipe snapshot: **26 October 2026**, checked against each game's latest
-release recipe with PadMint **v0.5.18**. The daily Catalog check
+Public recipe snapshot: **27 October 2026**, checked against each game's latest
+release recipe with PadMint **v0.5.19**. The daily Catalog check
 (`scripts/audit-catalog.py`) compares the live catalog with each latest release;
 trust its output over this table when they differ.
 The table describes the recipe shipped with each game's latest public release.
@@ -59,6 +59,7 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 | [kartpad v0.8.6](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.6) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [kartpad v0.8.6](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.6) | Android | Experimental | Experimental | Experimental / Experimental | Experimental / Experimental | — |
 | [maskpad v0.2.1](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
+| [melee-pc recipe v0.1.0](https://github.com/chrissotraidis/melee-pc-padmint/releases/tag/v0.1.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [meleepad v0.2.4](https://github.com/chrissotraidis/meleepad/releases/tag/v0.2.4) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [meleepad v0.2.4](https://github.com/chrissotraidis/meleepad/releases/tag/v0.2.4) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [OpenRCT2Touch touch-v0.1.0](https://github.com/chrissotraidis/OpenRCT2Touch/releases/tag/touch-v0.1.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |

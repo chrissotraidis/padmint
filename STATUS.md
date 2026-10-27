@@ -1,6 +1,6 @@
 # PadMint status
 
-Updated **26 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
+Updated **27 October 2026**. The [compatibility page](docs/COMPATIBILITY.md) has
 the per-game detail, including **Status by game**, which is where the
 compatibility work resumes.
 
@@ -41,6 +41,8 @@ are in [Building games on Windows](docs/WINDOWS.md).
   listed in PadMint.
 
 ## PadMint itself
+
+- **v0.5.19**: adds **Melee PC** as a separate Apple Silicon Mac personal-build route for iPhone/iPad. Its source-only recipe patches melee-pc 0.4.2 save creation; the existing MeleePad entry is unchanged. The player imports their own disc after installation. LiveContainer confirmation remains open.
 
 - **v0.5.18**: polish for the update flow. The sidebar pill now fits its column,
   the PadMint update dialog hides its action while downloading, and game

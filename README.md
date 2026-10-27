@@ -25,7 +25,7 @@ GitHub's cloud. You do not need to own a Mac for that route.
 
 | Your computer | What PadMint can make |
 |---|---|
-| **Mac with Apple Silicon** (M1 or newer) | All 29 games it offers to build for iPhone and iPad; 12 also have Mac builds. Check each game's setup and experimental status. |
+| **Mac with Apple Silicon** (M1 or newer) | All 30 games it offers to build for iPhone and iPad; 12 also have Mac builds. Check each game's setup and experimental status. |
 | **Windows or Linux** | **Build here:** KartPad (Mario Kart Wii), for Android or iPhone/iPad, experimental. **GitHub Cloud Build:** 15 more games can build separate iPhone/iPad copies on a temporary macOS machine hosted by GitHub. **Apple Silicon Mac:** the other games need Apple Silicon and Xcode. PadMint also lists 8 ready-made iPad apps (PC classics such as Diablo). |
 | **Intel Mac** | Builds KartPad for Android or iPhone/iPad, experimental. Mac app copies and the other iPhone/iPad builds require an Apple Silicon Mac. |
 | **An Android phone, no computer** | Experimental: Mario Kart Wii's game data, through Termux. |
