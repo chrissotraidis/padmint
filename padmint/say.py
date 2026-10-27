@@ -15,6 +15,10 @@ LANGUAGES = ("en", "es", "pt")
 WINDOWS_LANGUAGES = {0x0A: "es", 0x16: "pt"}
 
 MESSAGES = {
+    "w_port_github": {"en": "{name} · GitHub build available", "es": "{name} · Compilación en GitHub disponible", "pt": "{name} · Compilação no GitHub disponível"},
+    "w_build_options": {"en": "Build options", "es": "Opciones de compilación", "pt": "Opções de compilação"},
+    "w_build_on_github": {"en": "Build on GitHub", "es": "Compilar en GitHub", "pt": "Compilar no GitHub"},
+    "w_other_ports": {"en": "Other ports of this game (separate apps):", "es": "Otras versiones de este juego (aplicaciones independientes):", "pt": "Outras versões deste jogo (aplicativos separados):"},
     "intro": {
         "en": "PadMint {version}: make your own copy of a game from your own game file.",
         "es": "PadMint {version}: crea tu propia copia de un juego a partir de tu propio archivo del juego.",

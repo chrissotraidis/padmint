@@ -66,7 +66,9 @@ class LaterTests(unittest.TestCase):
         self.assertFalse(waiting["sunpad"]["github"])
         self.assertEqual(waiting["melee-pc"]["tag"], "GitHub Cloud Build")
         self.assertIn("private", waiting["melee-pc"]["text"])
-        self.assertFalse(waiting["melee-pc"]["github"])  # Avoid the public Fork button.
+        self.assertTrue(waiting["melee-pc"]["github"])
+        self.assertTrue(waiting["melee-pc"]["cloud"]["private"])
+        self.assertEqual(waiting["melee-pc"]["steps"], [])  # No public-fork instructions.
         self.assertIn("#build-on-github-without-a-mac", waiting["melee-pc"]["link"])
         everything = built | set(waiting) | {app["id"] for app in data["downloads"]}
         self.assertEqual(everything, set(manifest.catalog()))
@@ -76,7 +78,7 @@ class LaterTests(unittest.TestCase):
         self.assertEqual(data["text"]["other_routes_head"], "Other routes")
         self.assertEqual(data["text"]["github_build_tag"], "GitHub Cloud Build")
         self.assertEqual(data["text"]["needs_mac_head"], "Apple Silicon Mac")
-        self.assertEqual(sum(item.get("github", False) for item in data["later"]), 15)
+        self.assertEqual(sum(item.get("github", False) for item in data["later"]), 16)
         self.assertIn("not a local Windows build", waiting["bellpad"]["text"])
         self.assertIn("not Windows desktop games", data["text"]["here_other_hosts"])
         self.assertIn("this computer only starts the workflow", data["text"]["github_note"])
@@ -84,20 +86,25 @@ class LaterTests(unittest.TestCase):
         self.assertEqual(waiting["bluewake"]["tag"], "Windows app available")
         self.assertIn("BlueWake.exe", waiting["bluewake"]["text"])
 
-    def test_melee_save_fix_guidance_is_available_on_local_and_remote_build_hosts(self):
+    def test_melee_normal_build_routes_preserve_recipe_identity_on_each_host(self):
         from padmint import cli
-        for host in ("macos-arm64", "windows-x86_64", "linux-x86_64"):
+        for host in ("macos-arm64", "macos-x86_64", "windows-x86_64", "linux-x86_64"):
             with self.subTest(host=host), mock.patch.object(cli, "host_id", return_value=host), \
                     mock.patch.object(cli, "on_android", return_value=False):
                 data = ui.player_data("en")
                 games = {x["id"]: x for x in data["games"] + data["later"]}
-                for game in ("meleepad", "melee-pc"):
-                    notice = games[game]["notice"]
-                    self.assertEqual(notice["action"], "Build the save-fix app on GitHub")
-                    self.assertEqual(notice["url"], "https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac")
-                self.assertIn("separate app", games["meleepad"]["notice"]["text"])
-                self.assertIn("save-fix test", games["melee-pc"]["about"])
-                self.assertIsNone(games["bellpad"].get("notice"))
+                self.assertEqual(games["meleepad"]["other_ports"], [{"id": "melee-pc", "name": "Melee PC", "github": True}])
+                self.assertEqual(games["melee-pc"]["other_ports"], [{"id": "meleepad", "name": "MeleePad", "github": False}])
+                self.assertIsNone(games["meleepad"]["cloud"])  # Never label Melee PC as a MeleePad build.
+                cloud = games["melee-pc"]["cloud"]
+                self.assertTrue(cloud["private"])
+                self.assertEqual(cloud["url"], "https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac")
+                self.assertIn("private", cloud["text"])
+                self.assertIn("Melee", games["melee-pc"]["about"])
+                self.assertNotIn("save-fix", json.dumps(games))
+                self.assertNotIn("notice", games["meleepad"])
+                self.assertFalse(games["bellpad"]["cloud"]["private"])
+                self.assertEqual(games["bellpad"]["other_ports"], [])
 
     def test_github_builds_match_the_workflow_and_need_no_game_file_while_building(self):
         # The workflow's game menu is the catalog's github_build list; a game that reads

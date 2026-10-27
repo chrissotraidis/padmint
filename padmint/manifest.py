@@ -292,15 +292,6 @@ def catalog():
         revision = entry.get("reviewed_revision")
         if revision is not None and not re.fullmatch(r"[0-9a-f]{40}", str(revision)):
             raise ValueError(f"catalog/{path.name}: reviewed_revision must be a full commit or null")
-        notice = entry.get("player_notice")
-        if notice is not None and (not isinstance(notice, dict)
-                or not str(notice.get("url", "")).startswith("https://")
-                or not isinstance(notice.get("translations", {}), dict)
-                or not all(isinstance(text, dict) and isinstance(text.get(key, notice.get(key)), str)
-                           and text.get(key, notice.get(key)).strip()
-                           for text in [notice] + list((notice.get("translations") or {}).values())
-                           for key in ("title", "text", "action"))):
-            raise ValueError(f"catalog/{path.name}: player_notice needs title, text, action and an https url")
         targets = entry.get("player_targets", [])
         if not isinstance(targets, list) or not set(targets) <= {"android", "ios", "macos", "windows"}:
             raise ValueError(f"catalog/{path.name}: player_targets lists android, ios, macos or windows")
@@ -417,6 +408,11 @@ def catalog():
             if entry["manifest"]["id"] != entry["id"]:
                 raise ValueError(f"catalog/{path.name}: interim manifest id mismatch")
         entries[entry["id"]] = entry
+    for game, entry in entries.items():
+        ports = entry.get("other_ports", [])
+        if not isinstance(ports, list) or any(not isinstance(port, str) or port == game
+                or port not in entries for port in ports) or len(set(ports)) != len(ports):
+            raise ValueError(f"catalog/{game}.json: other_ports must name distinct other catalog entries")
     return entries
 
 

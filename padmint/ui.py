@@ -53,12 +53,17 @@ def setup_level(entry, platforms):
     return "brew" if entry.get("before_build") else "xcode"
 
 
-def player_notice(entry, lang):
-    notice = entry.get("player_notice")
-    if not notice:
-        return None
-    return {**{key: localized(notice, key, lang) for key in ("title", "text", "action")},
-            "url": notice["url"]}
+def build_routes(entry, lang):
+    """Normal build choices, shared by locally buildable and remote-only ports."""
+    cloud = None
+    if entry.get("github_build"):
+        cloud = {"url": (entry.get("off_mac") or {}).get("url", GITHUB_BUILD_HELP),
+                 "text": (localized(entry["off_mac"], "text", lang) if entry.get("off_mac")
+                          else phrase("w_github_build", lang, name=entry["name"], game=entry["id"])),
+                 "private": entry.get("github_build_private", False)}
+    entries = catalog()
+    return {"cloud": cloud, "other_ports": [
+        {"id": port, "name": entries[port]["name"], "github": bool(entries[port].get("github_build"))} for port in entry.get("other_ports", [])]}
 
 
 def player_data(lang):
@@ -74,7 +79,7 @@ def player_data(lang):
                       "build_note": phrase("w_plan_build" if needs_file else
                                            "w_plan_build_installed" if input_mode == "installed" else "w_plan_build_app", lang),
                       "about": entry.get("game") or (entry.get("manifest") or {}).get("game", ""),
-                      "notice": player_notice(entry, lang),
+                      **build_routes(entry, lang),
                       "formats": [f.upper() for f in input_formats(selected_inputs(entry.get("manifest") or {}))],
                       "ids": entry.get("game_ids") or [],
                       "platforms": [{"id": p, "label": cli.platform_label(p, lang),
@@ -158,8 +163,8 @@ def elsewhere_card(game, name, targets, lang):
         route = "mac" if ios else "other"
     return {"id": game, "name": name, "about": entry.get("game") or (entry.get("manifest") or {}).get("game", ""),
             "text": text, "tag": tag, "plays_on": ["iphone", "ipad"] if ios else [], "link": link,
-            "github": steps is not None, "route": route, "steps": steps or [], "explicit_hosts": explicit_hosts,
-            "notice": player_notice(entry, lang)}
+            "github": bool(entry.get("github_build")), "route": route, "steps": steps or [], "explicit_hosts": explicit_hosts,
+            **build_routes(entry, lang)}
 
 
 def library():
@@ -983,7 +988,7 @@ html.locked,html.locked body{overflow:hidden}.sheet{overscroll-behavior:contain}
 <section class="intro" id="intro"><h1 data-t="hero_title"></h1><p data-t="hero_text"></p><ol><li data-t="intro_1"></li><li data-t="intro_2"></li><li data-t="intro_3"></li></ol><div class="row"><button class="btn link" id="aboutOpen" data-t="learn_more"></button></div></section>
 <section class="hidden" id="nowBox"></section>
 <section class="hidden" id="shelf"><div class="sechead"><div><h2 id="shelfTitle"></h2><p class="note" id="shelfSub"></p></div><div class="row"><span class="muted small" id="shelfNote"></span><button class="btn small ghost" id="lookAgain"></button></div></div><div id="shelfList"></div></section>
-<section class="card" id="pickCard"><h2 id="pickTitle"></h2><p class="here hidden" id="here"></p><button class="btn back hidden" id="changeGame" data-t="change"></button><div id="hero" class="hidden"></div><section class="card banner hidden" id="playerNotice" aria-labelledby="noticeTitle"><h2 id="noticeTitle"></h2><p id="noticeText"></p><a class="btn main" id="noticeLink" target="_blank" rel="noopener"></a></section><div id="copies" class="hidden"></div>
+<section class="card" id="pickCard"><h2 id="pickTitle"></h2><p class="here hidden" id="here"></p><button class="btn back hidden" id="changeGame" data-t="change"></button><div id="hero" class="hidden"></div><section class="hidden" id="buildRoutes" aria-labelledby="buildRoutesTitle"><h3 id="buildRoutesTitle" data-t="build_options"></h3><div id="cloudRoute" class="hidden"><p class="small" id="cloudText"></p><a class="btn" id="cloudLink" target="_blank" rel="noopener" data-t="build_on_github"></a></div><div id="otherPorts" class="hidden"><p class="small" data-t="other_ports"></p><div class="row" id="portChoices"></div></div></section><div id="copies" class="hidden"></div>
 <div id="finder"><div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="search" type="search" autocomplete="off"></div></div>
 <div class="pills" id="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="github" role="tab"><span data-t="tab_github"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span id="laterHead" data-t="later_head"></span><span class="n"></span></button><button class="tab" data-g="missing" role="tab"><span data-t="tab_missing"></span><span class="n"></span></button></div><div class="filters" id="filters"></div></div>
 <p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="small hidden" id="gamePage"><a target="_blank" rel="noopener" id="gamePageLink"></a></p><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
@@ -1152,8 +1157,10 @@ function side(){const mine=mineIds(),ups=mine.filter(id=>stateOf(id).stale).leng
  if(pl.length){parts.push(el("div",S.sn_devices,"sh"));for(const d of pl)parts.push(item(d.view,d.kind,d.name,d.count||"",d.away?"away":""))}
  parts.push(el("div","","sh"),item("storage","storage",S.nav_storage,""));$("sidenav").replaceChildren(...parts)}
 async function seen(fresh){try{const r=await (await fetch("/api/installed"+(fresh?"?fresh=1":""),{headers:H})).json();if(r.error)return;I=r;if(!moved&&!sel&&(view=="mine"||view=="library")){const n=mineIds().length;if(n)view="mine";else if(r.state=="ready")view="library"}layout();if(view=="library"&&!sel&&r.state=="ready")cards();if(sel)hero(all().find(x=>x.id==sel));if(r.state!="ready")setTimeout(()=>seen(false),900)}catch(e){}}
-function hero(x){const notice=x&&x.notice;$("playerNotice").classList.toggle("hidden",!notice);
- if(notice){$("noticeTitle").textContent=notice.title;$("noticeText").textContent=notice.text;$("noticeLink").textContent=notice.action;$("noticeLink").href=notice.url}
+function hero(x){const cloud=x&&x.cloud&&D.games.some(g=>g.id==x.id),ports=x&&x.other_ports||[];
+ $("buildRoutes").classList.toggle("hidden",!cloud&&!ports.length);$("cloudRoute").classList.toggle("hidden",!cloud);
+ if(cloud){$("cloudText").textContent=x.cloud.text;$("cloudLink").href=x.cloud.url}
+ $("otherPorts").classList.toggle("hidden",!ports.length);$("portChoices").replaceChildren(...ports.map(p=>{const b=el("button",p.github?fill("port_github",{name:p.name}):p.name,"btn");b.onclick=()=>choose(p.id);return b}));
  const h=$("hero");if(!x){h.classList.add("hidden");h.replaceChildren();copiesBox(null);return}
  const kind=groupOf(x.id),body=el("div",null,"hbody"),facts=el("div",null,"facts"),v=latest(x.id),st=stateOf(x.id);h.style.setProperty("--c",colorOf(x));
  body.append(el("h2",x.about?title(x):x.name),el("p",x.name+(systemOf(x)?" · "+fill("original",{system:systemOf(x)}):""),"muted"));
@@ -1284,9 +1291,9 @@ $("home").onclick=e=>{e.preventDefault();home()};$("lookAgain").onclick=()=>seen
 $("settingsSide").onclick=openSettings;{const lc=$("lang").onchange;$("lang").onchange=async()=>{await lc();if($("settingsPanel").parentNode==$("sheetBody"))openSettings()}}$("search").oninput=cards;document.onkeydown=e=>{if(e.key=="Escape"&&!$("sheet").classList.contains("hidden")){closeSheet();return}const t=e.target;if(t&&t.closest&&t.closest("input,textarea,select,[contenteditable]"))return;const find=(e.key=="f"&&(e.metaKey||e.ctrlKey))||e.key=="/",typed=e.key.length==1&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&/\S/.test(e.key);if(!find&&!typed)return;if(!$("sheet").classList.contains("hidden")||!$("progress").classList.contains("hidden"))return;if(sel)back(true);if(view!="library")go("library");const box=$("search");box.focus();if(find){e.preventDefault();box.select()}};$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
 function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;editFile=editDev=false;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);
- if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=w.github?fill("github_page",{name:w.name}):w.text;$("laterSteps").classList.toggle("hidden",!w.github);$("laterSteps").replaceChildren(...(w.steps||[]).map(s=>el("li",s)));
-  for(const id of ["laterFork","laterSideloadly"])$(id).classList.toggle("hidden",!w.github);$("laterFork").textContent=S.github_fork;$("laterSideloadly").textContent=S.github_sideloadly;
-  $("laterLink").href=w.link;$("laterLink").textContent=w.github?S.github_guide:fill("later_link",{name:w.name});scrollTo({top:0})}
+ if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=(w.steps||[]).length?fill("github_page",{name:w.name}):w.text;$("laterSteps").classList.toggle("hidden",!(w.steps||[]).length);$("laterSteps").replaceChildren(...(w.steps||[]).map(s=>el("li",s)));
+  for(const id of ["laterFork","laterSideloadly"])$(id).classList.toggle("hidden",!w.github||!!(w.cloud&&w.cloud.private));$("laterFork").textContent=S.github_fork;$("laterSideloadly").textContent=S.github_sideloadly;
+  $("laterLink").href=w.link;$("laterLink").textContent=w.github?S.build_on_github:fill("later_link",{name:w.name});scrollTo({top:0})}
  $("dlBox").classList.toggle("hidden",!a);
  $("readyBox").classList.add("hidden");if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url;$("readyLink").textContent=fill("ready_link",{devices:g.platforms.filter(p=>g.ready.platforms.includes(p.id)).map(p=>p.short||p.label).join(", ")})}
  if(a){$("dlName").textContent=a.name;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(s=>linked(s)));

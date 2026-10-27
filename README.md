@@ -264,7 +264,7 @@ HaloPad is not one of the 16 choices in PadMint's workflow. It also provides a
 Mac app for playing on a supported Mac; PC Custom Edition builds still need
 your own Apple Silicon Mac.
 
-**Looking for the Melee save-fix test?** In PadMint 0.5.21 or newer, open **MeleePad** and select **Build the save-fix app on GitHub**. The notice explains the separate **Melee PC** test app; its library entry is labeled **save-fix test**. The same button appears on the test app’s page, including on Mac.
+**Melee build options:** MeleePad and Melee PC are separate ports of Super Smash Bros. Melee. Open either game page in PadMint to switch ports under **Build options**. Melee PC uses the maintained patched recipe for both local and GitHub builds. On a Mac, choose **iPhone/iPad** to build locally or **Build on GitHub** to use GitHub’s Mac. On other computers, use **Build on GitHub**.
 
 **Melee PC has a private-repository route:** [follow its GitHub build guide](https://github.com/chrissotraidis/melee-pc-padmint#build-on-github-without-a-mac).
 Import PadMint into a new **private** repository instead of making a public fork,

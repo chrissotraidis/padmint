@@ -36,14 +36,10 @@ class CatalogRouteTests(unittest.TestCase):
             with mock.patch.object(manifest, "CATALOG", Path(folder)):
                 return manifest.catalog()["testpad"]
 
-    def test_player_notice_requires_readable_content_and_https_destination(self):
-        notice = {"title": "Save test", "text": "A separate app", "action": "Build on GitHub",
-                  "url": "https://example.com/build"}
-        self.assertEqual(self.read_entry(dict(entry(), player_notice=notice))["player_notice"], notice)
-        for change in ({"title": ""}, {"text": None}, {"action": []},
-                       {"url": "javascript:alert(1)"}, {"translations": []}, {"translations": {"es": "bad"}}):
-            with self.subTest(change=change), self.assertRaisesRegex(ValueError, "player_notice"):
-                self.read_entry(dict(entry(), player_notice=dict(notice, **change)))
+    def test_other_ports_reject_dangling_self_and_duplicate_links(self):
+        for ports in ("testpad", ["missing"], ["testpad"], [None]):
+            with self.subTest(ports=ports), self.assertRaisesRegex(ValueError, "other_ports"):
+                self.read_entry(dict(entry(), other_ports=ports))
 
     def test_github_flag_is_a_boolean_and_requires_in_app_ios(self):
         self.assertTrue(self.read_entry(entry())["github_build"])
