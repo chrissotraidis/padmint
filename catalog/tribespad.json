@@ -9,7 +9,7 @@
     "macos"
   ],
   "github_build": true,
-  "free_space_gb": 40,
+  "free_space_gb": 20,
   "player_help": "https://github.com/chrissotraidis/tribespad#get-tribespad",
   "reviewed_revision": null,
   "notes": "TribesPad owns its release recipe. Both games are built by default: the build downloads the free official Tribes 2 installer, the TribesNEXT client and PlayT1's Starsiege: Tribes 1.41 installer, and checks them by SHA-256, so there is no game file to select. Personal builds contain translated game code and the game data and are never published. iPhone and iPad builds without a Mac: Actions → Build TribesPad for iPhone and iPad in a fork of the repository.",
