@@ -3,16 +3,16 @@
   "id": "tribespad",
   "repo_url": "https://github.com/chrissotraidis/tribespad",
   "name": "TribesPad",
-  "game": "Tribes 2 (PC)",
+  "game": "Tribes 2 (PC) and Starsiege: Tribes 1.41",
   "player_targets": [
     "ios",
     "macos"
   ],
   "github_build": true,
-  "free_space_gb": 25,
+  "free_space_gb": 40,
   "player_help": "https://github.com/chrissotraidis/tribespad#get-tribespad",
   "reviewed_revision": null,
-  "notes": "TribesPad owns its release recipe. The build downloads the free official Tribes 2 installer and the TribesNEXT client itself and checks them by SHA-256, so there is no game file to select. Personal builds contain translated game code and the game data and are never published. iPhone and iPad builds without a Mac: Actions → Build TribesPad for iPhone and iPad in a fork of the repository.",
+  "notes": "TribesPad owns its release recipe. Both games are built by default: the build downloads the free official Tribes 2 installer, the TribesNEXT client and PlayT1's Starsiege: Tribes 1.41 installer, and checks them by SHA-256, so there is no game file to select. Personal builds contain translated game code and the game data and are never published. iPhone and iPad builds without a Mac: Actions → Build TribesPad for iPhone and iPad in a fork of the repository.",
   "manifest": null,
   "player_game_file": "in-app",
   "before_build": {
@@ -24,14 +24,16 @@
     "ios": {
       "sideload": true,
       "steps": [
-        "Open TribesPad. The game is already inside. Sign in with your TribesNEXT account (CREATE NEW ACCOUNT makes a free one), then PLAY GAME → JOIN lists the internet servers. You join as an observer: press Fire (RT on a controller) to join a team.",
-        "No players online? Turn off Settings → Online Play in the ··· menu to start offline, then choose LAN GAME → HOST, enable bots and start a match."
+        "Open TribesPad and choose Starsiege: Tribes or Tribes 2 from the game picker. Both games are already inside. Tap the controller button to show touch controls.",
+        "For Tribes 2, sign in with your TribesNEXT account (CREATE NEW ACCOUNT makes a free one), then PLAY GAME → JOIN lists the internet servers. You join as an observer: press Fire (RT on a controller) to join a team. To start offline, turn off Settings → Online Play in the ··· menu, then choose LAN GAME → HOST, enable bots and start a match.",
+        "For Starsiege: Tribes, choose TRAINING for bots or HOST MULTIPLAYER for a local game. JOIN lists community servers; ··· → Play Online shows who is playing. Use ··· → Choose Game… and reopen TribesPad to return to the picker."
       ]
     },
     "macos": {
       "steps": [
-        "Unzip {file}, move TribesPad to your Applications folder and open it. It needs no Apple account.",
-        "Sign in with your TribesNEXT account to join internet servers, or choose LAN GAME → HOST, enable bots and start an offline match."
+        "Unzip {file}, move TribesPad to your Applications folder and open it. It needs no Apple account. Choose Starsiege: Tribes or Tribes 2 from the game picker.",
+        "For Tribes 2, sign in with your TribesNEXT account (CREATE NEW ACCOUNT makes a free one), then PLAY GAME → JOIN lists the internet servers. You join as an observer: press Fire (RT on a controller) to join a team. To start offline, turn off Settings → Online Play in the ··· menu, then choose LAN GAME → HOST, enable bots and start a match.",
+        "For Starsiege: Tribes, choose TRAINING for bots or HOST MULTIPLAYER for a local game. JOIN lists community servers; ··· → Play Online shows who is playing. Use ··· → Choose Game… and reopen TribesPad to return to the picker."
       ]
     }
   }
