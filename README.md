@@ -277,10 +277,12 @@ your own Apple Silicon Mac.
 
 ### DarkPad: private GitHub build
 
-**Experimental: a clean hosted build has not yet been recorded.** DarkPad's
-build needs no ROM, but the IPA contains compiled game code and must stay
-private. A public fork is refused before the build starts. DarkPad's public
-release continues to contain only its recipe and checksum.
+**Experimental.** A [clean hosted build of DarkPad v0.1.0](https://github.com/chrissotraidis/padmint/actions/runs/40830430386/job/123303170832)
+passed on October 29, 2026, with IPA upload skipped. That check did not validate
+installation or gameplay. DarkPad's build needs no ROM, but the IPA contains
+compiled game code and must stay private. A public fork is refused before the
+build starts. DarkPad's public release continues to contain only its recipe and
+checksum.
 
 1. Open [GitHub's repository import](https://github.com/new/import). Import
    `https://github.com/chrissotraidis/padmint` into a new repository in your own

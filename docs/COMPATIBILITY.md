@@ -45,12 +45,16 @@ Install full Xcode and its iOS platform plus `brew install cmake ninja xcodegen`
 allow 30 GB free after installing tools. Import a Perfect Dark USA Rev 1 / v1.1
 ROM in the app after sideloading. The output is a personal unsigned IPA; the game
 release contains only its recipe and checksum. Local Intel Mac, Windows and
-Linux builds are not offered. An experimental private GitHub build is prepared
-in PadMint source; a clean hosted build has not yet been recorded. Public manual
-runs are refused and PR checks do not upload the app. See the
+Linux builds are not offered. The experimental private GitHub route passed a
+[clean hosted build](https://github.com/chrissotraidis/padmint/actions/runs/40830430386/job/123303170832)
+on October 29, 2026, using the v0.1.0 release, `macos-15`, Xcode 26.3 and
+`/usr/bin/python3` with an empty PadMint folder. The check tested PR #216 head
+`c211d36` through merge commit `f30cd6d`. Build and checksum steps passed;
+artifact upload was skipped. Public manual runs are refused. See the
 [private setup guide](../README.md#darkpad-private-github-build).
-Physical gameplay remains preview-scoped; a successful build does not establish
-device acceptance.
+A private-repository manual run, installation and physical gameplay remain
+unvalidated by this PR check; a successful build does not establish device
+acceptance.
 
 The library uses DarkPad's original app icon, copied unchanged from
 `app/ios/icon/AppIcon1024.png` at the original checked revision. Its
@@ -80,7 +84,7 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 | [ctrpad v0.2.4](https://github.com/chrissotraidis/ctrpad/releases/tag/v0.2.4) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [ctrpad v0.2.4](https://github.com/chrissotraidis/ctrpad/releases/tag/v0.2.4) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [dinopad v0.2.3](https://github.com/chrissotraidis/dinopad/releases/tag/v0.2.3) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
-| [darkpad v0.1.0](https://github.com/chrissotraidis/darkpad/releases/tag/v0.1.0) | iPhone/iPad | Verified build | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Private, experimental; hosted check pending |
+| [darkpad v0.1.0](https://github.com/chrissotraidis/darkpad/releases/tag/v0.1.0) | iPhone/iPad | Verified build | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Private, experimental; hosted build passed |
 | [f0x v0.1.1](https://github.com/chrissotraidis/f0x/releases/tag/v0.1.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [f0x v0.1.1](https://github.com/chrissotraidis/f0x/releases/tag/v0.1.1) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [galaxypad v0.2.2](https://github.com/chrissotraidis/galaxypad/releases/tag/v0.2.2) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
