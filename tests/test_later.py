@@ -73,13 +73,47 @@ class LaterTests(unittest.TestCase):
         self.assertEqual(data["text"]["other_routes_head"], "Other routes")
         self.assertEqual(data["text"]["github_build_tag"], "GitHub Cloud Build")
         self.assertEqual(data["text"]["needs_mac_head"], "Apple Silicon Mac")
-        self.assertEqual(sum(item.get("github", False) for item in data["later"]), 15)
-        self.assertIn("not a local build", waiting["bellpad"]["text"])
-        self.assertIn("These local builds are for iPhone/iPad or Android", data["text"]["here_other_hosts"])
+        self.assertEqual(sum(item.get("github", False) for item in data["later"]), 17)
+        self.assertIn("not a local Windows build", waiting["bellpad"]["text"])
+        self.assertIn("not Windows desktop games", data["text"]["here_other_hosts"])
         self.assertIn("this computer only starts the workflow", data["text"]["github_note"])
         self.assertNotIn("Windows", data["text"]["needs_mac_note"])
         self.assertEqual(waiting["bluewake"]["tag"], "Windows app available")
         self.assertIn("BlueWake.exe", waiting["bluewake"]["text"])
+
+    def test_halopad_external_workflow_is_discoverable_on_mac_and_off_mac(self):
+        from padmint import cli
+        guide = manifest.catalog()["projectreach"]["off_mac"]["url"]
+        for host in ("macos-arm64", "macos-x86_64", "windows-x86_64", "linux-x86_64"):
+            with self.subTest(host=host), mock.patch.object(cli, "host_id", return_value=host), \
+                    mock.patch.object(cli, "on_android", return_value=False):
+                data = ui.player_data("en")
+            group = "games" if host == "macos-arm64" else "later"
+            halo = next(item for item in data[group] if item["id"] == "projectreach")
+            self.assertEqual(halo["cloud"]["url"], guide)
+            self.assertTrue(halo["cloud"]["external"])
+            self.assertIn("Build HaloPad (Xbox edition)", halo["cloud"]["text"])
+            if group == "later":
+                self.assertTrue(halo["github"])
+                self.assertEqual(halo["tag"], "GitHub Cloud Build (Xbox edition)")
+                self.assertEqual(halo["steps"], [])
+            bluewake = next(item for item in data[group] if item["id"] == "bluewake")
+            self.assertIsNone(bluewake["cloud"])
+
+    def test_darkpad_cloud_route_requires_the_private_guide(self):
+        from padmint import cli
+        with mock.patch.object(cli, "host_id", return_value="windows-x86_64"), \
+                mock.patch.object(cli, "on_android", return_value=False):
+            data = ui.player_data("en")
+        dark = next(item for item in data["later"] if item["id"] == "darkpad")
+        self.assertTrue(dark["github"])
+        self.assertTrue(dark["cloud"]["private"])
+        self.assertFalse(dark["cloud"]["external"])
+        self.assertEqual(dark["cloud"]["url"],
+                         "https://github.com/chrissotraidis/padmint#darkpad-private-github-build")
+        self.assertIn("private repository", dark["text"])
+        self.assertIn("experimental", dark["tag"])
+        self.assertEqual(dark["steps"], [])
 
     def test_github_builds_match_the_workflow_and_need_no_game_file_while_building(self):
         # The workflow's game menu is the catalog's github_build list; a game that reads

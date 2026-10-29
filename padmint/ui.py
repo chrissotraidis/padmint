@@ -56,11 +56,13 @@ def setup_level(entry, platforms):
 def build_routes(entry, lang):
     """Normal build choices, shared by locally buildable and remote-only ports."""
     cloud = None
-    if entry.get("github_build"):
-        cloud = {"url": (entry.get("off_mac") or {}).get("url", GITHUB_BUILD_HELP),
-                 "text": (localized(entry["off_mac"], "text", lang) if entry.get("off_mac")
+    off_mac = entry.get("off_mac") or {}
+    external = off_mac.get("github_workflow", False)
+    if entry.get("github_build") or external:
+        cloud = {"url": off_mac.get("url", GITHUB_BUILD_HELP),
+                 "text": (localized(off_mac, "text", lang) if off_mac
                           else phrase("w_cloud_build", lang, name=entry["name"], game=entry["id"])),
-                 "private": entry.get("github_build_private", False)}
+                 "private": entry.get("github_build_private", False), "external": external}
     entries = catalog()
     return {"cloud": cloud, "other_ports": [
         {"id": port, "name": entries[port]["name"], "github": bool(entries[port].get("github_build"))} for port in entry.get("other_ports", [])]}
@@ -163,7 +165,8 @@ def elsewhere_card(game, name, targets, lang):
         route = "mac" if ios else "other"
     return {"id": game, "name": name, "about": entry.get("game") or (entry.get("manifest") or {}).get("game", ""),
             "text": text, "tag": tag, "plays_on": ["iphone", "ipad"] if ios else [], "link": link,
-            "github": bool(entry.get("github_build")), "route": route, "steps": steps or [], "explicit_hosts": explicit_hosts,
+            "github": bool(entry.get("github_build") or (entry.get("off_mac") or {}).get("github_workflow")),
+            "route": route, "steps": steps or [], "explicit_hosts": explicit_hosts,
             **build_routes(entry, lang)}
 
 
@@ -1332,7 +1335,7 @@ $("settingsSide").onclick=openSettings;{const lc=$("lang").onchange;$("lang").on
 function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;editFile=editDev=false;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);
  if(w){$("laterName").textContent=S["route_"+(w.route||"other")+"_t"]||w.name;$("laterAbout").textContent="";$("laterText").textContent=(w.steps||[]).length?fill("github_page",{name:w.name}):w.text;$("laterSteps").classList.toggle("hidden",!(w.steps||[]).length);$("laterSteps").replaceChildren(...(w.steps||[]).map(s=>el("li",s)));
-  for(const id of ["laterFork","laterSideloadly"])$(id).classList.toggle("hidden",!w.github||!!(w.cloud&&w.cloud.private));$("laterFork").textContent=S.github_fork;$("laterSideloadly").textContent=S.github_sideloadly;
+  for(const id of ["laterFork","laterSideloadly"])$(id).classList.toggle("hidden",!w.github||!!(w.cloud&&(w.cloud.private||w.cloud.external)));$("laterFork").textContent=S.github_fork;$("laterSideloadly").textContent=S.github_sideloadly;
   $("laterLink").href=w.link;$("laterLink").textContent=w.github?S.build_on_github:fill("later_link",{name:w.name});$("laterLink").classList.toggle("main",!!w.github);scrollTo({top:0})}
  $("dlBox").classList.toggle("hidden",!a);
  $("readyBox").classList.add("hidden");if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url;$("readyLink").textContent=fill("ready_link",{devices:g.platforms.filter(p=>g.ready.platforms.includes(p.id)).map(p=>p.short||p.label).join(", ")})}

@@ -26,7 +26,7 @@ GitHub's cloud. You do not need to own a Mac for that route.
 | Your computer | What PadMint can make |
 |---|---|
 | **Mac with Apple Silicon** (M1 or newer) | All 30 games it offers to build for iPhone and iPad; 12 also have Mac builds. Check each game's setup and experimental status. |
-| **Windows or Linux** | **Build here:** KartPad (Mario Kart Wii), for Android or iPhone/iPad, experimental. **GitHub Cloud Build:** 15 more games can build separate iPhone/iPad copies on a temporary macOS machine hosted by GitHub. **Apple Silicon Mac:** the other games need Apple Silicon and Xcode. PadMint also lists 8 ready-made iPad apps (PC classics such as Diablo). |
+| **Windows or Linux** | **Build here:** KartPad (Mario Kart Wii), for Android or iPhone/iPad, experimental. **GitHub Cloud Build:** 15 games use public forks; HaloPad has its own Xbox workflow, and DarkPad has an experimental private-repository route. Compilation runs on GitHub's macOS machines. **Apple Silicon Mac:** the other games need Apple Silicon and Xcode. PadMint also lists 8 ready-made iPad apps (PC classics such as Diablo). |
 | **Intel Mac** | Builds KartPad for Android or iPhone/iPad, experimental. Mac app copies and the other iPhone/iPad builds require an Apple Silicon Mac. |
 | **An Android phone, no computer** | Experimental: Mario Kart Wii's game data, through Termux. |
 
@@ -161,7 +161,7 @@ see what exists.
 | Your computer | What PadMint does there |
 |---|---|
 | **Mac with Apple Silicon** (M1 or newer) and [Xcode](https://apps.apple.com/app/xcode/id497799835) | Builds the catalog's 30 buildable games for iPhone and iPad. Mac targets are Animal Crossing, Crash Team Racing, F-Zero X, Halo, Jak and Daxter, Mario Kart Wii, Pokémon Snap, Pokémon Stadium, Super Mario Sunshine, Super Smash Bros., Melee and Tribes 2. Shows which games are on the iPhones and iPads you've connected to the Mac once, and which need an update. |
-| **Windows or Linux** | **Build here:** KartPad's Android game data or experimental iPhone/iPad app. **GitHub Cloud Build:** [15 more iPhone/iPad games](#github-cloud-build-no-mac-needed). [HaloPad's Xbox edition has its own GitHub workflow](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer). Other games explain their Apple Silicon Mac requirement or paused status. Ready-made apps can be installed from Windows or Mac; Linux installation is not validated. |
+| **Windows or Linux** | **Build here:** KartPad's Android game data or experimental iPhone/iPad app. **GitHub Cloud Build:** [15 public-fork iPhone/iPad games](#github-cloud-build-no-mac-needed), plus [DarkPad's experimental private build](#darkpad-private-github-build). [HaloPad's Xbox edition has its own GitHub workflow](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer). Other games explain their Apple Silicon Mac requirement or paused status. Ready-made apps can be installed from Windows or Mac; Linux installation is not validated. |
 | **Intel Mac** | KartPad Android and iPhone/iPad builds, experimental. Mac apps and the other iPhone/iPad builds require Apple Silicon. |
 
 The library sorts games into groups. Use **All games** to see them all, or the
@@ -232,7 +232,8 @@ your Downloads folder and **What to do next**. If it stops, it says why: open
 ## GitHub Cloud Build (no Mac needed)
 
 **GitHub Cloud Build** means GitHub runs a temporary macOS build machine for
-your free PadMint fork. PadMint on Windows or Linux starts the workflow in your
+your GitHub repository. Most games use a public PadMint fork; DarkPad requires
+a private repository, as explained below. PadMint on Windows or Linux opens the guide in your
 browser; it does not compile these games locally and does not make a Windows
 desktop copy.
 
@@ -251,12 +252,15 @@ Linux or any computer with a web browser:
    [PadMint's page](https://github.com/chrissotraidis/padmint). Press **Fork**, then
    **Create fork**.
 2. In your fork, open **Actions**. If GitHub asks, press **I understand my
-   workflows, go ahead and enable them**.
+   workflows, go ahead and enable them**. On a phone, tap the panel button to the
+   left of **All workflows** to reveal the workflow list.
 3. Choose **Build a game for iPhone and iPad**, press **Run workflow**, pick the
    game and press the green **Run workflow**. It takes a few minutes for small
    games and about 40 minutes for the largest.
-4. Open the finished run and download the file under **Artifacts**. Unzip it to
-   get the `.ipa`. GitHub keeps it for one day.
+4. Wait for the green check, then open the run's title. On its **Summary** page,
+   scroll down to **Artifacts** and tap the game-named download; stay signed in
+   to GitHub. Unzip that download to get the `.ipa`. This is separate from the
+   repository's **Code → Download ZIP**. GitHub keeps the build for one day.
 5. Install the `.ipa` with Sideloadly ([Installing what you made](#installing-what-you-made)),
    then open the game and add your own game file as its page explains.
 
@@ -267,9 +271,40 @@ stay. The copy holds game code made for you: keep it to yourself.
 **HaloPad's Xbox edition uses its own workflow:** fork or sync
 [HaloPad](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer),
 then choose **Actions → Build HaloPad (Xbox edition) → Run workflow** there.
-HaloPad is not one of the 15 choices in PadMint's workflow. It also provides a
+HaloPad is not a choice in PadMint's shared workflow. It also provides a
 Mac app for playing on a supported Mac; PC Custom Edition builds still need
 your own Apple Silicon Mac.
+
+### DarkPad: private GitHub build
+
+**Experimental: a clean hosted build has not yet been recorded.** DarkPad's
+build needs no ROM, but the IPA contains compiled game code and must stay
+private. A public fork is refused before the build starts. DarkPad's public
+release continues to contain only its recipe and checksum.
+
+1. Open [GitHub's repository import](https://github.com/new/import). Import
+   `https://github.com/chrissotraidis/padmint` into a new repository in your own
+   account and select **Private**. A fork of a public repository cannot be made
+   private, so use **Import**, not **Fork**. Confirm the new repository says
+   **Private** before continuing.
+2. Check your account's [Actions allowance and spending limits](https://docs.github.com/en/billing/concepts/product-billing/github-actions).
+   Private macOS runners consume included compute usage; additional usage can
+   be charged when billing permits it. Keep a stop-usage budget if you do not
+   want charges. PadMint does not change your billing settings.
+3. In that private repository, open **Actions → Build a game for iPhone and iPad**,
+   enable Actions if asked, choose **darkpad** and press **Run workflow**. On a
+   phone, the panel button beside **All workflows** reveals the workflow list.
+4. After the green check, open the run's **Summary**, scroll to **Artifacts**,
+   download the DarkPad ZIP and unzip it. The IPA is available to people with
+   access to your private repository for one day. Keep the repository and build
+   private; do not attach the IPA to a public issue or release.
+5. Sign and install the IPA, then import your own Perfect Dark USA Rev 1 / v1.1
+   ROM inside DarkPad. Your ROM is never sent to GitHub.
+
+SquirrelPad is not a cloud choice: its current recipe reads your ROM during
+compilation. Adding its name to a fork's menu does not remove that requirement.
+Its [local Windows work](docs/WINDOWS.md#windows-build-proofs-that-are-not-enabled-yet)
+still needs the matching release and device checks; do not upload a ROM to CI.
 
 ## Installing what you made
 
