@@ -32,7 +32,8 @@ class LaterTests(unittest.TestCase):
         self.assertIn("están en pausa", later["somepad"]["text"])
         self.assertTrue(later["somepad"]["link"].startswith("https://github.com/chrissotraidis/somepad"))
         downloads = {app["id"]: app for app in ui.player_data("es")["downloads"]}
-        self.assertIn("RAtouch-v0.1.0-unsigned.ipa", downloads["ratouch"]["steps"][0])
+        self.assertIn("https://github.com/chrissotraidis/ratouch/releases", downloads["ratouch"]["steps"][0])
+        self.assertIn("IPA sin firmar más reciente", downloads["ratouch"]["steps"][0])
 
     def test_a_listed_game_cannot_also_be_built_or_downloaded(self):
         entry = self.LISTED
