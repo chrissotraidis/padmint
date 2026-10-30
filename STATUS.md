@@ -7,6 +7,14 @@ ownership enforcement, preview updates and the validation each route needs.
 The owner requested this documentation handoff and small fixes, then a stop;
 broader implementation resumes on that later request ([D18](https://github.com/chrissotraidis/padmint/blob/main/docs/DECISIONS.md#d18-save-the-improvements-handoff-then-stop-29-oct-2026)).
 
+**v0.5.26:** RAtouch's download instructions now point to the latest unsigned
+IPA and its matching checksum in English, Spanish and Portuguese, instead of
+directing players to a fixed older version. Its existing download route stays
+the same. Follow-up importer tests reproduced defects in UTP, VaultPad, SunPad,
+RAtouch and BallPad; the [audit](https://github.com/chrissotraidis/bellpad/blob/main/docs/FILE_IMPORT_AUDIT.md)
+records the individual fixes and release verification. App updates deliver
+those corrections; PadMint does not contain their importers.
+
 **v0.5.25:** BellPad's iPhone/iPad finishing steps explain its 0.2.3 ISO/GCM
 import and the Files → BellPad → Import fallback, while preserving the normal
 sideloading/update instructions. SquirrelPad finishing steps also explain that

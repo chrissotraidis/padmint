@@ -13,21 +13,21 @@
   "manifest": null,
   "download": {
     "steps": [
-      "Download RAtouch-v0.1.0-unsigned.ipa from https://github.com/chrissotraidis/ratouch/releases and check it against the SHA-256 file beside it.",
+      "Download the latest RAtouch unsigned IPA from https://github.com/chrissotraidis/ratouch/releases and check it against the SHA-256 file beside it.",
       "Install it with AltStore Classic, SideStore or Sideloadly, signed with your own Apple ID.",
       "Open RAtouch and import the Red Alert .MIX files (MAIN1.MIX, MAIN2.MIX and the others) from your own Steam copy of Command & Conquer Red Alert."
     ],
     "translations": {
       "es": {
         "steps": [
-          "Descarga RAtouch-v0.1.0-unsigned.ipa desde https://github.com/chrissotraidis/ratouch/releases y compruébalo con el archivo SHA-256 que lo acompaña.",
+          "Descarga la IPA sin firmar más reciente de RAtouch desde https://github.com/chrissotraidis/ratouch/releases y compruébalo con el archivo SHA-256 que lo acompaña.",
           "Instálala con AltStore Classic, SideStore o Sideloadly, firmada con tu propio Apple ID.",
           "Abre RAtouch e importa los archivos .MIX de Red Alert (MAIN1.MIX, MAIN2.MIX y los demás) de tu propia copia de Command & Conquer Red Alert en Steam."
         ]
       },
       "pt": {
         "steps": [
-          "Baixe RAtouch-v0.1.0-unsigned.ipa em https://github.com/chrissotraidis/ratouch/releases e confira-o com o arquivo SHA-256 ao lado dele.",
+          "Baixe o IPA não assinado mais recente do RAtouch em https://github.com/chrissotraidis/ratouch/releases e confira-o com o arquivo SHA-256 ao lado dele.",
           "Instale-o com AltStore Classic, SideStore ou Sideloadly, assinado com o seu próprio Apple ID.",
           "Abra o RAtouch e importe os arquivos .MIX de Red Alert (MAIN1.MIX, MAIN2.MIX e os outros) da sua própria cópia de Command & Conquer Red Alert na Steam."
         ]

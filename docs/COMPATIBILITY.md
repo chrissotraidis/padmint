@@ -413,6 +413,15 @@ source risks:
 | SunPad | [#6](https://github.com/chrissotraidis/sunpad/issues/6): Preview 2 changed file selection to copy mode and added a Documents fallback | The closed report does not include a user retest |
 | SquirrelPad | [#3](https://github.com/chrissotraidis/squirrelpad/issues/3) includes an October 27 report that 0.1.2 still cannot select a ROM; [0.1.3](https://github.com/chrissotraidis/squirrelpad/releases/tag/v0.1.3) publishes the broader selection and background import from [merged #8](https://github.com/chrissotraidis/squirrelpad/pull/8) | The clean pre-release PadMint build passed with app version 0.1.3/build 4 and package validation; the reporter's physical-device/provider result remains unconfirmed |
 
+A follow-up investigation reproduced additional defects: interrupted rollback
+retry in UTP, failed source reads and self-import in VaultPad, incomplete
+extraction in SunPad, partial mixed selections in RAtouch, and folder discovery
+and picker-copy handling in BallPad. The
+[detailed audit](https://github.com/chrissotraidis/bellpad/blob/main/docs/FILE_IMPORT_AUDIT.md)
+keeps the regression evidence and each release's verification separate from
+physical-device/provider acceptance. GalaxyPad and F0X remain unconfirmed by
+this investigation; their picker patterns alone did not justify a release.
+
 PadMint builds each app's own importer. File type filtering, file-provider
 access, folder selection and container-hosted installations can fail at
 different points, so an across-the-board picker rewrite is not justified.
