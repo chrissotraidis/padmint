@@ -1222,6 +1222,14 @@ def doctor(game, target_name, repo=None, stream=None):
     else:
         state = target["hosts"].get(host, "unsupported")
         report(state in RUNNABLE_STATES, f"{target_name} builds on {host}", state)
+        if state not in RUNNABLE_STATES:
+            # Nothing installed here would help, so don't list programs (on Linux that meant
+            # Homebrew and Xcode lines); name the computers that can build it instead.
+            available = ", ".join(f"{name} ({status})" for name, status in target["hosts"].items()
+                                  if status in RUNNABLE_STATES) or "none yet"
+            print(f"Available build hosts: {available}.", file=stream)
+            print(f"{problems} item(s) to fix", file=stream)
+            return 1
         for name in target.get("tools", []):  # tools PadMint itself supplies (install nothing here)
             tool = tools.lock()[name]
             if host in tool["hosts"]:

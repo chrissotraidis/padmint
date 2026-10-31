@@ -22,6 +22,8 @@ Storage leads with three plain totals and groups everything removable under
 **Safe to remove** and **App and extra downloads**, each with **Remove all**.
 Settings is grouped, and no longer stays visible under every page after it has
 been opened once. The README screenshot is current.
+On a computer a game can't build on, `padmint doctor` now names the computers
+that can, instead of listing Homebrew and Xcode installs (found on Linux).
 
 This release also lists **DarkPad** under GitHub Cloud Build (experimental; it
 needs a private copy of PadMint, because the build is personal) and shows
