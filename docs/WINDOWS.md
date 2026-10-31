@@ -181,7 +181,7 @@ and recheck each affected PR and release before using this per-game queue.
    passed a packaged PadMint Windows ARM64 build with a shell built from the
    same revision; a shell from an older revision has a different module
    identity and is refused.
-5. BlueWake: mark its Windows hosts experimental, publish, device check. Then
+5. BlueWake: its Windows hosts are experimental in #100; publish, device check. Then
    AnnePad's one Windows script from ROM to module. AgePad needs the Mac game
    through SteamCMD; Ottsel needs a game-free shell and module boundary.
 
