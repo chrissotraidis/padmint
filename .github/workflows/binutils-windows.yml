@@ -1,0 +1,58 @@
+name: MIPS binutils for Windows
+# Maintainer check: build the pinned GNU MIPS binutils for Windows and require
+# the same outputs as a native build. Public sources and a synthetic fixture
+# only; nothing is published.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - scripts/binutils-windows/**
+      - .github/workflows/binutils-windows.yml
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: MinGW-w64 cross compiler
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+      - name: Native build and reference outputs
+        run: |
+          prefix=$(scripts/binutils-windows/build.sh "$RUNNER_TEMP/bu" | tail -n 1)
+          scripts/binutils-windows/check.sh "$prefix/bin" "$RUNNER_TEMP/ref" | tee reference.sha256
+      - name: Windows x64 build
+        run: |
+          prefix=$(scripts/binutils-windows/build.sh "$RUNNER_TEMP/bu" x86_64-w64-mingw32 | tail -n 1)
+          mkdir -p windows-bin
+          for tool in as ld objcopy strip readelf objdump; do cp "$prefix/bin/mips-linux-gnu-$tool.exe" windows-bin/; done
+          sha256sum windows-bin/*.exe
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: binutils-windows
+          path: |
+            windows-bin
+            reference.sha256
+          retention-days: 1
+  check:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [windows-2022, windows-11-arm]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: binutils-windows
+      - name: Same outputs as the native build
+        shell: bash
+        run: |
+          scripts/binutils-windows/check.sh "$PWD/windows-bin" "$RUNNER_TEMP/win" .exe | tee windows.sha256
+          diff reference.sha256 windows.sha256
