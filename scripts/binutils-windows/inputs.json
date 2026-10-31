@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "version": "2.46.1",
+  "url": "https://sourceware.org/pub/binutils/releases/binutils-2.46.1.tar.xz",
+  "sha512": "a5c65e56e400ed3fb8906a995dbb93eb5bea54b16344244653d7f44ef29ceb60270da263b19d25302c37759784e14fcb4b9421b29e0e2c7f450bd99f6bb4595c",
+  "target": "mips-linux-gnu",
+  "configure": [
+    "--disable-gdb",
+    "--disable-gprof",
+    "--disable-nls",
+    "--disable-werror",
+    "--without-zstd",
+    "--without-debuginfod"
+  ],
+  "tools": [
+    "as",
+    "ld",
+    "ar",
+    "objcopy",
+    "strip",
+    "readelf",
+    "objdump"
+  ],
+  "note": "Same version, target and configure flags as SnapPad's scripts/build-mips-binutils.sh."
+}
