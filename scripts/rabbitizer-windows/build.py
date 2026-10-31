@@ -86,13 +86,15 @@ def patch_source(source, lock, git, run):
 
 
 def extract_sdk(archive, target, pin):
-    """Copy only the official headers, matching import library and license."""
+    """Copy only the official headers, import libraries and license. Rabbitizer 1.16
+    builds against the stable ABI (Py_LIMITED_API), so it links python3.lib."""
     checked(archive, pin)
     files = {}
+    libraries = ('tools/libs/python313.lib', 'tools/libs/python3.lib')
     with zipfile.ZipFile(archive) as bundle:
         selected = [name for name in bundle.namelist() if not name.endswith('/') and
-                    (name.startswith('tools/include/') or name in ('tools/libs/python313.lib', 'tools/LICENSE.txt'))]
-        required = {'tools/include/Python.h', 'tools/libs/python313.lib', 'tools/LICENSE.txt'}
+                    (name.startswith('tools/include/') or name in (*libraries, 'tools/LICENSE.txt'))]
+        required = {'tools/include/Python.h', *libraries, 'tools/LICENSE.txt'}
         if not required.issubset(selected):
             raise ValueError('Python SDK headers, import library or license missing')
         for name in selected:
@@ -138,8 +140,8 @@ def pe_machine(data):
     return struct.unpack_from('<H', data, offset + 4)[0]
 
 
-def wheel_extension(wheel, version):
-    expected = 'rabbitizer-' + version + '-cp313-cp313-win_amd64.whl'
+def wheel_extension(wheel, version, tag='cp313-cp313-win_amd64'):
+    expected = 'rabbitizer-' + version + '-' + tag + '.whl'
     if wheel.name != expected:
         raise ValueError(f'Unexpected wheel version or ABI: {wheel.name}')
     with zipfile.ZipFile(wheel) as bundle:
@@ -156,7 +158,7 @@ def wheel_extension(wheel, version):
 
 
 def build(args):
-    lock = json.loads((HERE / 'inputs.json').read_text())
+    lock = json.loads(args.inputs.read_text())
     if os.name != 'nt' or sysconfig.get_platform() != 'win-amd64' or platform.python_version() != lock['python_version']:
         raise ValueError('Use x64 CPython ' + lock['python_version'] + ' on Windows, including on ARM hosts')
     for name, pin in lock['build_dependencies'].items():
@@ -198,7 +200,7 @@ def build(args):
         if len(found) != 1:
             raise ValueError('Expected exactly one newly built wheel')
         wheel = found[0]
-        name, data = wheel_extension(wheel, lock['wheel_version'])
+        name, data = wheel_extension(wheel, lock['wheel_version'], lock.get('wheel_tag', 'cp313-cp313-win_amd64'))
         package = work / 'test-package'; package.mkdir()
         (package / name).write_bytes(data)
         # Test the wheel bytes directly without changing this interpreter's packages.
@@ -209,11 +211,11 @@ def build(args):
         notices = work / 'notices'; notices.mkdir()
         for path, destination in ((source / 'LICENSE', 'Rabbitizer-LICENSE'),
                                   (sdk / 'LICENSE.txt', 'Python-LICENSE.txt'),
-                                  (HERE / 'inputs.json', 'inputs.json'),
+                                  (args.inputs, args.inputs.name),
                                   (HERE / 'unsigned-values.patch', 'unsigned-values.patch')):
             shutil.copyfile(path, notices / destination)
         receipt = {'source': lock['source'], 'wheel_version': lock['wheel_version'],
-                   'input_lock_sha256': sha256(HERE / 'inputs.json'),
+                   'input_lock_sha256': sha256(args.inputs),
                    'patch_sha256': lock['patch_sha256'], 'patched_files': lock['patched_files'],
                    'python': sys.version, 'python_executable': sys.executable,
                    'compiler': compiler, 'compiler_sha256': sha256(compiler),
@@ -235,6 +237,8 @@ def main():
     parser.add_argument('--sdk-archive', type=Path, required=True)
     parser.add_argument('--work', type=Path, required=True, help='New local Windows directory')
     parser.add_argument('--git', default='git')
+    parser.add_argument('--inputs', type=Path, default=HERE / 'inputs.json',
+                        help='Version pin (inputs.json: 1.14.3 for SnapPad; inputs-1.16.2.json: AnnePad)')
     args = parser.parse_args()
     try:
         print(build(args))
