@@ -49,7 +49,7 @@ EctoPad is paused.
 | The Wind Waker (BlueWake) | Ready-to-play **Windows desktop** download; iPhone/iPad needs a Mac | Reads the disc while compiling | [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100) is current with main again (31 Oct); finish the original-disc Windows build |
 | Pokémon Stadium (AnnePad) | Apple Silicon Mac | Reads the ROM while compiling | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20) saves the module work with repeatable shell and module builds. On 31 Oct the module compiled on Windows 11 ARM64 and on Mac and passed PadMint's import audit on both. Next: one Windows script from ROM to module, then a published shell, recipe and device check |
 | Dinosaur Planet (DinoPad) | Apple Silicon Mac | Reads the ROM while compiling | [dinopad#19](https://github.com/chrissotraidis/dinopad/pull/19): the supported ROM built completely on Windows 11 ARM64 and Mac on 31 Oct; add Windows hosts to the recipe, publish the shell and recipe, device check |
-| Jak and Daxter (Ottsel) | Apple Silicon Mac | Reads the disc while compiling | Design the Windows host tools and module delivery |
+| Jak and Daxter (Ottsel) | Apple Silicon Mac | Reads the disc while compiling, and its iOS app links the compiled game code | [ottsel#7](https://github.com/chrissotraidis/ottsel/pull/7): its patched OpenGOAL tools build and run on x64 Windows CI (31 Oct). Next: a disc run on a real x64 PC compared with Mac, then moving the game modules into a private library inserted into a game-free app |
 | Age of Empires II: DE (AgePad) | Apple Silicon Mac | Adds the player's installed **Mac** Steam edition to the app | The inject step is Python with no Xcode. Test fetching the Mac edition on Windows with SteamCMD (`+@sSteamCmdForcePlatformType macos`) from the player's own account, then run the same step |
 | Metroid Prime (EctoPad) | Paused | Its engine (Metaforce) is private until its developers publish it | Wait for Metaforce |
 | 8 ready-made apps: CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad, PeonPad, RAtouch, VaultPad | **No build needed**: download and install with Sideloadly | — | — |
@@ -130,7 +130,7 @@ and ARM64 need their own complete builds and acceptance checks.
 | [BlueWake](https://github.com/chrissotraidis/bluewake/pull/100) | Windows desktop release works outside PadMint. Its iPhone-build route from Windows has a native backend proof but its complete original-disc build is unfinished. |
 | [AnnePad](https://github.com/chrissotraidis/annepad/pull/20) | Fresh Mac and Windows decompilation match the supported ROM. The game-free shell and private module pass PadMint's import, iOS 16 and insertion checks on Mac and Windows 11 ARM64 (31 Oct), from repeatable scripts. One Windows script from ROM to module remains. |
 | AgePad | Portable checks pass, but the available installed Steam files were incompatible with the expected app. A successful real-input build is still required. |
-| Ottsel | No usable local Windows route has been implemented. |
+| [Ottsel](https://github.com/chrissotraidis/ottsel/pull/7) | The patched OpenGOAL host tools (\`goalc\` with \`--isa arm64\`, \`extractor\`) build and run on x64 Windows. They need AVX, so Windows 11 21H2 ARM64 emulation cannot run them. The iOS app still links the compiled game code, so a game-free shell and module boundary are needed. |
 
 **No local Windows game build recorded here:** BallPad, BarrelPad, BellPad,
 BrawlerPad, CTRPad, DarkPad, F0X, GalaxyPad, HarkinianPad, MaskPad, OpenRCT2 Touch,
