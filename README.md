@@ -105,7 +105,7 @@ Your game file must be the version the page names, for example **Only the US
 (North American) version works**. PadMint checks it as soon as you pick it.
 
 <p align="center">
-  <img src="docs/images/padmint-library.jpg" width="820" alt="PadMint on a Mac: the sidebar with My games, Updates, All games, devices and Storage; the game library says what this Mac can build, then lists every game with search, groups and filters">
+  <img src="docs/images/padmint-library.jpg" width="820" alt="PadMint on a Mac: the sidebar with My games, Updates, All games, devices and Storage; the game library says what this Mac can build, then lists every game with search, a systems menu and groups">
 </p>
 
 > **Other ready-to-play downloads:**
@@ -192,24 +192,31 @@ games, such as **Updates available**, to fold it. To find a game, just start
 typing: PadMint jumps to the library's search, which matches game, port and
 system names.
 
-**A game's page** goes from top to bottom:
+**A game's page** looks the same on Mac, Windows and Linux. Under the game's
+name, **Your copies** says where you have it and which device is behind; when one
+is, it says how to update. Then come numbered steps, each marked ✓ when done:
 
-1. **Your copies:** where you have it, and which device is behind.
+1. **Where will you play?** The device you'll play on, whichever computer you're
+   using. **This Mac** appears for games with a Mac version, on an Apple Silicon
+   Mac.
 2. **Your own game file:** click **Choose file…** and pick your disc image or
    ROM (the file window may open behind your browser). The page says which
    version works, for example **Only the European (PAL) version works**, lists
    matching files already in your Downloads folder and checks the file straight
-   away. Some games ask for the file inside the app instead; the page says so.
-3. **Where will you play?** The device you'll play on, whichever computer you're
-   using. **This Mac** appears for games with a Mac version, on an Apple Silicon
-   Mac.
-4. **What PadMint will do on this computer** lists everything before it starts.
-   **Before you start (one time only)** marks each program **found** or **not found**
-   and says how to get it: Xcode from the App Store, and one Homebrew line with a
-   **Copy** button for everything else. Install what's missing, click **Check again**,
-   then **Make my copy** (or **Update to v…** when you have an older one). If the
-   button is gray, the line under it says why. **After the build: how to install
-   and play** shows the device steps in advance.
+   away. Games that take the file inside the app show this step as done.
+3. **Build on this computer** says what you'll get. When every program the build
+   needs is installed, it shows one green line; otherwise it lists what's
+   **not found** first and how to get it: Xcode from the App Store, and one
+   Homebrew line with a **Copy** button for everything else. Install what's
+   missing, click **Check again**, then **Make my copy** (or **Update to v…** when
+   you have an older one). If the button is gray, the line under it says why.
+   **What happens when you build** and **After the build: how to install and
+   play** open the details in advance.
+
+Games that this computer can't build show one card instead, named for the route:
+**Build on GitHub's Mac** with its steps, **Needs an Apple Silicon Mac**, or
+**Get the ready-made app**. On a Mac, games that also have a GitHub route list it
+under **Other ways to build** at the bottom.
 
 The page then shows a checklist: finding the latest release, downloading the
 source, each tool with its progress, the build with its current step, and saving
