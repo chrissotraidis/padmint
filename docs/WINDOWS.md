@@ -48,7 +48,7 @@ EctoPad is paused.
 | Pokémon Snap (SnapPad) | Apple Silicon Mac | Reads the ROM while compiling; its decompilation tools still come from a private, locally verified bundle | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12): publish those tools through PadMint's managed tools, then add Windows hosts to the recipe. SnapPad's release pause still applies |
 | The Wind Waker (BlueWake) | Ready-to-play **Windows desktop** download; iPhone/iPad needs a Mac | Reads the disc while compiling | [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100) is current with main again (31 Oct); finish the original-disc Windows build |
 | Pokémon Stadium (AnnePad) | Apple Silicon Mac | Reads the ROM while compiling | Finish the portable module and app pipeline (decompilation already matches on Windows) |
-| Dinosaur Planet (DinoPad) | Apple Silicon Mac | Reads the ROM while compiling | A full private Windows build with the supported ROM |
+| Dinosaur Planet (DinoPad) | Apple Silicon Mac | Reads the ROM while compiling | [dinopad#19](https://github.com/chrissotraidis/dinopad/pull/19): the supported ROM built completely on Windows 11 ARM64 and Mac on 31 Oct; add Windows hosts to the recipe, publish the shell and recipe, device check |
 | Jak and Daxter (Ottsel) | Apple Silicon Mac | Reads the disc while compiling | Design the Windows host tools and module delivery |
 | Age of Empires II: DE (AgePad) | Apple Silicon Mac | Adds the player's installed **Mac** Steam edition to the app | The inject step is Python with no Xcode. Test fetching the Mac edition on Windows with SteamCMD (`+@sSteamCmdForcePlatformType macos`) from the player's own account, then run the same step |
 | Metroid Prime (EctoPad) | Paused | Its engine (Metaforce) is private until its developers publish it | Wait for Metaforce |
@@ -119,6 +119,7 @@ and ARM64 need their own complete builds and acceptance checks.
 | [SnapPad #12](https://github.com/chrissotraidis/snappad/pull/12) | Full Windows ARM64 ROM-to-IPA pipeline; byte-identical generated output; warm rebuild performs no compilation | Add Windows hosts to the recipe, publish it, device check; current recipe has no Windows host |
 | [MeleePad #52](https://github.com/chrissotraidis/meleepad/pull/52) | Windows ARM64 and emulated x64 backend; existing app has module-loading support | Fix the recipe's invalid `windows-x64` key to `windows-x86_64`, publish it, device check; native private x64 hardware remains separate |
 | [SunPad #78](https://github.com/chrissotraidis/sunpad/pull/78) | Windows ARM64 and emulated x64 backend; PRs #57 and #78 pass | Merge prerequisite [#57](https://github.com/chrissotraidis/sunpad/pull/57) and then #78, publish the recipe, device check |
+| [DinoPad #19](https://github.com/chrissotraidis/dinopad/pull/19) | Supported ROM to module on Windows 11 ARM64 through PadMint 0.5.27's release ZIP and freshly installed tools (31 Oct), and on Mac; all 219 translated game-code files and the RSP code match Mac; PadMint's import, iOS 15 and insertion checks pass on both | Add Windows hosts to the recipe, publish the shell and recipe, device check; native x64 hardware remains separate |
 
 ## Remaining local-Windows work
 
@@ -129,7 +130,6 @@ and ARM64 need their own complete builds and acceptance checks.
 | [BlueWake](https://github.com/chrissotraidis/bluewake/pull/100) | Windows desktop release works outside PadMint. Its iPhone-build route from Windows has a native backend proof but its complete original-disc build is unfinished. |
 | AnnePad | Fresh Mac and Windows decompilation match the supported ROM; the portable module/app pipeline is unfinished. |
 | AgePad | Portable checks pass, but the available installed Steam files were incompatible with the expected app. A successful real-input build is still required. |
-| DinoPad | The supported ROM needed for a full private build is unavailable. |
 | Ottsel | No usable local Windows route has been implemented. |
 
 **No local Windows game build recorded here:** BallPad, BarrelPad, BellPad,
@@ -158,7 +158,7 @@ and recheck each affected PR and release before using this per-game queue.
 4. Publish and test SquirrelPad's code-free shell. Once that shell workflow is
    proven, reuse it for GoldenPad and BearBirdPad, then BananaPad.
 5. Finish BlueWake's original-disc Windows backend, then AnnePad. AgePad needs
-   matching installed files; DinoPad needs its supported ROM; Ottsel needs the
+   matching installed files; Ottsel needs the
    host-tool and module-delivery design implemented.
 
 Do not mark another game as **Build here** merely because a private proof
