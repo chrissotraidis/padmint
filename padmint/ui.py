@@ -1032,7 +1032,7 @@ details.which ul{margin:.4rem 0 .2rem;padding-left:1.2rem;font-size:.9rem;color:
 
 <section class="card route hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p><button class="btn back backBtn" data-t="change"></button></section>
 
-<section class="card route hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><ol class="next hidden" id="laterSteps"></ol><div class="row"><a class="btn hidden" id="laterFork" href="https://github.com/chrissotraidis/padmint/fork" target="_blank"></a><a class="btn" id="laterLink" target="_blank"></a><a class="btn hidden" id="laterSideloadly" href="https://sideloadly.io" target="_blank"></a><button class="btn back backBtn" data-t="change"></button></div></section>
+<section class="card route hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><ol class="next hidden" id="laterSteps"></ol><p class="small hidden" id="laterStatus"><a target="_blank" rel="noopener" id="laterStatusLink"></a></p><div class="row"><a class="btn hidden" id="laterFork" href="https://github.com/chrissotraidis/padmint/fork" target="_blank"></a><a class="btn" id="laterLink" target="_blank"></a><a class="btn hidden" id="laterSideloadly" href="https://sideloadly.io" target="_blank"></a><button class="btn back backBtn" data-t="change"></button></div></section>
 
 <section class="card step hidden" id="deviceBox"><h2 data-t="step3"></h2><p class="muted small hidden" id="inApp"><span id="inAppText"></span></p><div class="grid" id="devices"></div><p class="muted small hidden" id="installHint" data-t="install_hint"></p><p class="muted small hidden" id="heldNote"></p><div class="sum" id="devSum"><b id="devSumText"></b><button class="btn link" id="devChange" data-t="change_short"></button></div>
 <details class="small"><summary data-t="device_help"></summary><p data-t="update_help"></p><a href="https://github.com/chrissotraidis/padmint/releases/latest" target="_blank" rel="noopener" data-t="update"></a></details></section>
@@ -1092,7 +1092,7 @@ const base=p=>p.split(/[\\/]/).pop();
 function el(tag,text,cls){const e=document.createElement(tag);if(text!=null&&text!=="")e.textContent=text;if(cls)e.className=cls;return e}
 const gb=b=>b?(b>=1e9?(b/1e9).toFixed(1)+" GB":Math.max(1,Math.round(b/1e6))+" MB"):"";
 const game=()=>D.games.find(g=>g.id==sel),app=()=>D.downloads.find(a=>a.id==sel),waiting=()=>D.later.find(l=>l.id==sel);
-let system="";
+let system="";const WINDOWS_LIST="https://github.com/chrissotraidis/padmint/blob/main/docs/WINDOWS.md#every-game-from-a-windows-pc-running-list";
 const title=g=>(g.about||g.name).replace(/\s*\([^)]*\)\s*$/,"");
 const systemOf=g=>{const m=(g.about||"").match(/\(([^),]+)/);return m?m[1].replace(/ prototype$/,""):""};
 const sortKey=g=>title(g).replace(/^(The|A) /i,"").toLowerCase();
@@ -1336,7 +1336,7 @@ function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;editFi
  $("laterBox").classList.toggle("hidden",!w);
  if(w){$("laterName").textContent=S["route_"+(w.github&&!(w.cloud&&w.cloud.external)?"github":w.route||"other")+"_t"]||w.name;$("laterAbout").textContent="";$("laterText").textContent=(w.steps||[]).length?fill("github_page",{name:w.name}):w.text;$("laterSteps").classList.toggle("hidden",!(w.steps||[]).length);$("laterSteps").replaceChildren(...(w.steps||[]).map(s=>el("li",s)));
   for(const id of ["laterFork","laterSideloadly"])$(id).classList.toggle("hidden",!w.github||!!(w.cloud&&(w.cloud.private||w.cloud.external)));$("laterFork").textContent=S.github_fork;$("laterSideloadly").textContent=S.github_sideloadly;
-  $("laterLink").href=w.link;$("laterLink").textContent=w.github?S.build_on_github:fill("later_link",{name:w.name});$("laterLink").classList.toggle("main",!!w.github);scrollTo({top:0})}
+  {const off=!onMac()&&(w.route=="mac"||w.route=="other");$("laterStatus").classList.toggle("hidden",!off);$("laterStatusLink").href=WINDOWS_LIST;$("laterStatusLink").textContent=S.windows_list+" ↗"}$("laterLink").href=w.link;$("laterLink").textContent=w.github?S.build_on_github:fill("later_link",{name:w.name});$("laterLink").classList.toggle("main",!!w.github);scrollTo({top:0})}
  $("dlBox").classList.toggle("hidden",!a);
  $("readyBox").classList.add("hidden");if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url;$("readyLink").textContent=fill("ready_link",{devices:g.platforms.filter(p=>g.ready.platforms.includes(p.id)).map(p=>p.short||p.label).join(", ")})}
  if(a){$("dlName").textContent=S.get_app_t;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(s=>linked(s)));
