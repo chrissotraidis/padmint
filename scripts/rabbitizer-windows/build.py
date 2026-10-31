@@ -140,8 +140,8 @@ def pe_machine(data):
     return struct.unpack_from('<H', data, offset + 4)[0]
 
 
-def wheel_extension(wheel, version):
-    expected = 'rabbitizer-' + version + '-cp313-cp313-win_amd64.whl'
+def wheel_extension(wheel, version, tag='cp313-cp313-win_amd64'):
+    expected = 'rabbitizer-' + version + '-' + tag + '.whl'
     if wheel.name != expected:
         raise ValueError(f'Unexpected wheel version or ABI: {wheel.name}')
     with zipfile.ZipFile(wheel) as bundle:
@@ -200,7 +200,7 @@ def build(args):
         if len(found) != 1:
             raise ValueError('Expected exactly one newly built wheel')
         wheel = found[0]
-        name, data = wheel_extension(wheel, lock['wheel_version'])
+        name, data = wheel_extension(wheel, lock['wheel_version'], lock.get('wheel_tag', 'cp313-cp313-win_amd64'))
         package = work / 'test-package'; package.mkdir()
         (package / name).write_bytes(data)
         # Test the wheel bytes directly without changing this interpreter's packages.

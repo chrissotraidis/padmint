@@ -48,5 +48,6 @@
       "sha256": "29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"
     }
   },
-  "patch_sha256": "742ef18f6e396d657e5f7ad4317a4571db0ceee4f29f4b09a0d109538987ed79"
+  "patch_sha256": "742ef18f6e396d657e5f7ad4317a4571db0ceee4f29f4b09a0d109538987ed79",
+  "wheel_tag": "cp34-abi3-win_amd64"
 }
