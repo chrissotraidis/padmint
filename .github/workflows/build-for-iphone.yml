@@ -37,6 +37,8 @@ on:
       - scripts/github-build.py
       - 'catalog/**'
       - 'padmint/**'
+      # The browser window: builds run "python -m padmint make", which never loads it.
+      - '!padmint/ui.py'
       - 'tests/test_github_build.py'
   schedule:
     - cron: '0 3 * * 1'
