@@ -68,11 +68,15 @@ locally verified tool bundle (SnapPad's `scripts/build-windows-module.py
 | Rabbitizer 1.14.3 wheel with the unsigned-value fix (`1.14.3+padmint.1`) | Producer in `scripts/rabbitizer-windows`; not published |
 | asm-processor (Python implementation) | Preparation in `scripts/asm-processor-windows`; not published |
 | MIPS binutils 2.46.1: `as`, `ld`, `objcopy`, `strip`, `readelf`, `objdump` | Producer in `scripts/binutils-windows` ([#225](https://github.com/chrissotraidis/padmint/pull/225)): Windows builds give byte-identical fixture outputs to a native build on x64 and ARM64; not published |
-| `pigment64`, `uv`, `cpp`, and the setuptools, wheel and packaging build wheels | No producer or pin yet |
+| pigment64 0.6.3 | No producer needed: upstream's own [Windows release](https://github.com/decompals/pigment64/releases/tag/0.6.3) archives (`aarch64-pc-windows-msvc` SHA-256 `26dda627…1e86`, `x86_64-pc-windows-msvc` `8feb7c61…4bfc`). On 1 Nov both converted a test image to RGBA16, RGBA32, I8 and IA16 byte-identically to the Mac's 0.6.3 on Windows 11 ARM64. Not yet in `tools.lock.json` |
+| uv 0.12.6 (SnapPad's Mac version) | No producer needed: Astral's Windows x64 and ARM64 zips; checksums match Astral's `.sha256` files (`6dda514f…253a`, `df7cb9f2…a6ef`) and both start on Windows 11 ARM64. Not yet in `tools.lock.json` |
+| `cpp` | Nothing to add: SnapPad calls it as `cpp -E -x assembler-with-cpp`, which PadMint's managed Clang 21.1.8 already does on Windows (checked 1 Nov) |
+| setuptools 80.9.0, wheel 0.45.1, packaging 25.0 build wheels | No producer needed: pure-Python wheels from PyPI, checked against PyPI's SHA-256. Not yet in `tools.lock.json` |
 
-Publishing these needs a pinned, checksummed archive for each, a
-`tools.lock.json` entry per Windows host, and the owner's approval to publish
-tool binaries. Then the SnapPad and AnnePad recipes can declare Windows hosts
+The first four rows (IDO, Rabbitizer, asm-processor and binutils) still need
+a pinned, checksummed archive published by PadMint, and the owner's approval to publish
+tool binaries. The others only need `tools.lock.json` entries pointing at their
+upstream files. Then the SnapPad and AnnePad recipes can declare Windows hosts
 the way GoldenPad, BearBirdPad, BananaPad, SquirrelPad and DinoPad do.
 
 ## Recently completed
