@@ -40,9 +40,9 @@ EctoPad is paused.
 | Perfect Dark (DarkPad) | **GitHub Cloud Build**, private copy of PadMint (0.5.27) | Same as above | A private manual run, then install and play it |
 | Halo (HaloPad) | Xbox edition: **HaloPad's own GitHub workflow** | Custom Edition converts the PC game with Wine and Mac tools | No Windows design for Custom Edition yet |
 | Conker's Bad Fur Day (SquirrelPad) | Apple Silicon Mac | Reads the ROM while compiling, so it can't use GitHub (D15) | [squirrelpad#7](https://github.com/chrissotraidis/squirrelpad/pull/7): publish the game-free shell and Windows recipe, then a device check |
-| GoldenEye 007 (GoldenPad) | Apple Silicon Mac | Reads the ROM while compiling | [goldenpad#52](https://github.com/chrissotraidis/goldenpad/pull/52): recipe declares Windows; publish shell and recipe, device check |
-| Banjo-Kazooie (BearBirdPad) | Apple Silicon Mac | Reads the ROM while compiling | [bearbirdpad#27](https://github.com/chrissotraidis/bearbirdpad/pull/27): publish shell and recipe, device check |
-| Donkey Kong 64 (BananaPad) | Apple Silicon Mac | Reads the ROM while compiling | [bananapad#22](https://github.com/chrissotraidis/bananapad/pull/22): test the recipe (still `draft-untested`), publish, device check |
+| GoldenEye 007 (GoldenPad) | Apple Silicon Mac | Reads the ROM while compiling | [goldenpad#52](https://github.com/chrissotraidis/goldenpad/pull/52): on 1 Nov the packaged PadMint 0.5.27 build completed on Windows 11 ARM64 in 70 s with a shell built from the same revision. Next: publish the shell and recipe, device check |
+| Banjo-Kazooie (BearBirdPad) | Apple Silicon Mac | Reads the ROM while compiling | [bearbirdpad#27](https://github.com/chrissotraidis/bearbirdpad/pull/27): on 1 Nov the packaged PadMint 0.5.27 build completed on Windows 11 ARM64 in 98 s with a shell built from the same revision. Next: publish the shell and recipe, device check |
+| Donkey Kong 64 (BananaPad) | Apple Silicon Mac | Reads the ROM while compiling | [bananapad#22](https://github.com/chrissotraidis/bananapad/pull/22): on 1 Nov the packaged PadMint 0.5.27 build completed on Windows 11 ARM64 in 108 s, and the recipe is now `experimental`. Next: publish the shell and recipe, device check |
 | Super Mario Sunshine (SunPad) | Apple Silicon Mac | Reads the disc while compiling | Merge [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57), then [#78](https://github.com/chrissotraidis/sunpad/pull/78); publish, device check |
 | Super Smash Bros. Melee (MeleePad) | Apple Silicon Mac | Reads the disc while compiling | [meleepad#52](https://github.com/chrissotraidis/meleepad/pull/52): host names fixed, and on 31 Oct the packaged PadMint 0.5.27 build completed on Windows 11 ARM64 from the reviewed v1.02 disc in 15.5 min. Next: release the recipe, device check |
 | Pokémon Snap (SnapPad) | Apple Silicon Mac | Reads the ROM while compiling; its decompilation tools still come from a private, locally verified bundle | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12): publish those tools through PadMint's managed tools, then add Windows hosts to the recipe. SnapPad's release pause still applies |
@@ -134,11 +134,11 @@ and ARM64 need their own complete builds and acceptance checks.
 | Game | Proven on the build side | Missing before Windows can be selected |
 |---|---|---|
 | [SquirrelPad #7](https://github.com/chrissotraidis/squirrelpad/pull/7) | Packaged Windows ARM64 build; generated files matched Mac; native x64 generator CI | Publish the code-free `SquirrelPad-v…-ios-shell.ipa`, publish the Windows recipe, device launch/audio/save |
-| [GoldenPad #52](https://github.com/chrissotraidis/goldenpad/pull/52) | Private Windows ARM64 and emulated x64 toolchain; matching shell | Publish the shell and recipe, device check; native private x64 hardware remains separate |
-| [BearBirdPad #27](https://github.com/chrissotraidis/bearbirdpad/pull/27) | Private Windows ARM64 and emulated x64; generated files match Mac | Publish the shell and recipe, device check; native private x64 hardware remains separate |
-| [BananaPad #22](https://github.com/chrissotraidis/bananapad/pull/22) | Private Windows ARM64; matching iOS shell/module readback; public generator CI | Publish the shell and recipe, device check; recipe is still marked `draft-untested` |
+| [GoldenPad #52](https://github.com/chrissotraidis/goldenpad/pull/52) | Packaged PadMint 0.5.27 build on Windows 11 ARM64 (1 Nov) from a fresh clone and a shell built at the same revision, adding only the module; earlier emulated x64 toolchain | Publish the shell and recipe, device check; native private x64 hardware remains separate |
+| [BearBirdPad #27](https://github.com/chrissotraidis/bearbirdpad/pull/27) | Packaged PadMint 0.5.27 build on Windows 11 ARM64 (1 Nov), all 279 shell entries unchanged; earlier emulated x64; generated files match Mac | Publish the shell and recipe, device check; native private x64 hardware remains separate |
+| [BananaPad #22](https://github.com/chrissotraidis/bananapad/pull/22) | Packaged PadMint 0.5.27 build on Windows 11 ARM64 (1 Nov), all 248 shell entries unchanged; public generator CI | Publish the shell and recipe, device check; native private x64 hardware remains separate |
 | [SnapPad #12](https://github.com/chrissotraidis/snappad/pull/12) | Full Windows ARM64 ROM-to-IPA pipeline; byte-identical generated output; warm rebuild performs no compilation | Add Windows hosts to the recipe, publish it, device check; current recipe has no Windows host |
-| [MeleePad #52](https://github.com/chrissotraidis/meleepad/pull/52) | Packaged PadMint 0.5.27 build on Windows 11 ARM64 from the reviewed v1.02 disc (31 Oct), with corrected \`windows-x86_64\` host names; earlier emulated x64 backend | Publish the recipe, device check; native private x64 hardware remains separate |
+| [MeleePad #52](https://github.com/chrissotraidis/meleepad/pull/52) | Packaged PadMint 0.5.27 build on Windows 11 ARM64 from the reviewed v1.02 disc (31 Oct), with corrected `windows-x86_64` host names; earlier emulated x64 backend | Publish the recipe, device check; native private x64 hardware remains separate |
 | [SunPad #78](https://github.com/chrissotraidis/sunpad/pull/78) | Windows ARM64 and emulated x64 backend; PRs #57 and #78 pass | Merge prerequisite [#57](https://github.com/chrissotraidis/sunpad/pull/57) and then #78, publish the recipe, device check |
 | [DinoPad #19](https://github.com/chrissotraidis/dinopad/pull/19) | Supported ROM to module on Windows 11 ARM64 through PadMint 0.5.27's release ZIP and freshly installed tools (31 Oct), and on Mac; all 219 translated game-code files and the RSP code match Mac; PadMint's import, iOS 15 and insertion checks pass on both | Recipe declares Windows hosts (31 Oct); publish the shell and recipe, device check; native x64 hardware remains separate |
 
@@ -151,7 +151,7 @@ and ARM64 need their own complete builds and acceptance checks.
 | [BlueWake](https://github.com/chrissotraidis/bluewake/pull/100) | Windows desktop release works outside PadMint. Its iPhone/iPad route now completes on Windows 11 ARM64 from the original disc through packaged PadMint, and a warm repeat recompiles nothing. A release with Windows hosts and a device check remain. |
 | [AnnePad](https://github.com/chrissotraidis/annepad/pull/20) | Fresh Mac and Windows decompilation match the supported ROM. The game-free shell and private module pass PadMint's import, iOS 16 and insertion checks on Mac and Windows 11 ARM64 (31 Oct), from repeatable scripts. One Windows script from ROM to module remains. |
 | [AgePad](https://github.com/chrissotraidis/agepad/pull/15) | The build is a portable Python inject step. Its Steam for Mac files can now be fetched from Valve on any computer and inject succeeded with them on Mac. The Mac game files still have to reach a Windows PC (SteamCMD with the player's own login), and the v0.1.0 recipe's Steam pins are out of date. |
-| [Ottsel](https://github.com/chrissotraidis/ottsel/pull/7) | The patched OpenGOAL tools build and run natively on x64 and ARM64 Windows. On Windows 11 ARM64 the supported disc went through extraction, decompilation and \`goalc --isa arm64\`. Two compiler fixes (a retry outside a \`catch\` block, and a stable sort in register allocation) make \`KERNEL.CGO\`, \`GAME.CGO\` and 320 of 321 outputs byte-identical with the Mac. The iOS app still links the compiled game code, so a game-free shell and module boundary are needed. |
+| [Ottsel](https://github.com/chrissotraidis/ottsel/pull/7) | The patched OpenGOAL tools build and run natively on x64 and ARM64 Windows. On Windows 11 ARM64 the supported disc went through extraction, decompilation and `goalc --isa arm64`. Two compiler fixes (a retry outside a `catch` block, and a stable sort in register allocation) make `KERNEL.CGO`, `GAME.CGO` and 320 of 321 outputs byte-identical with the Mac. The iOS app still links the compiled game code, so a game-free shell and module boundary are needed. |
 
 **No local Windows game build recorded here:** BallPad, BarrelPad, BellPad,
 BrawlerPad, CTRPad, DarkPad, F0X, GalaxyPad, HarkinianPad, MaskPad, OpenRCT2 Touch,
@@ -177,10 +177,13 @@ and recheck each affected PR and release before using this per-game queue.
 3. Merge SunPad #57 and #78, publish the recipe, and run the physical-device
    check.
 4. Publish and test SquirrelPad's code-free shell. Once that shell workflow is
-   proven, reuse it for GoldenPad and BearBirdPad, then BananaPad.
-5. Finish BlueWake's original-disc Windows backend, then AnnePad. AgePad needs
-   matching installed files; Ottsel needs the
-   host-tool and module-delivery design implemented.
+   proven, reuse it for GoldenPad and BearBirdPad, then BananaPad. All four
+   passed a packaged PadMint Windows ARM64 build with a shell built from the
+   same revision; a shell from an older revision has a different module
+   identity and is refused.
+5. BlueWake: mark its Windows hosts experimental, publish, device check. Then
+   AnnePad's one Windows script from ROM to module. AgePad needs the Mac game
+   through SteamCMD; Ottsel needs a game-free shell and module boundary.
 
 Do not mark another game as **Build here** merely because a private proof
 exists. A row moves only after all of these are true:
