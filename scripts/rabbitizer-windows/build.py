@@ -156,7 +156,7 @@ def wheel_extension(wheel, version):
 
 
 def build(args):
-    lock = json.loads((HERE / 'inputs.json').read_text())
+    lock = json.loads(args.inputs.read_text())
     if os.name != 'nt' or sysconfig.get_platform() != 'win-amd64' or platform.python_version() != lock['python_version']:
         raise ValueError('Use x64 CPython ' + lock['python_version'] + ' on Windows, including on ARM hosts')
     for name, pin in lock['build_dependencies'].items():
@@ -209,11 +209,11 @@ def build(args):
         notices = work / 'notices'; notices.mkdir()
         for path, destination in ((source / 'LICENSE', 'Rabbitizer-LICENSE'),
                                   (sdk / 'LICENSE.txt', 'Python-LICENSE.txt'),
-                                  (HERE / 'inputs.json', 'inputs.json'),
+                                  (args.inputs, args.inputs.name),
                                   (HERE / 'unsigned-values.patch', 'unsigned-values.patch')):
             shutil.copyfile(path, notices / destination)
         receipt = {'source': lock['source'], 'wheel_version': lock['wheel_version'],
-                   'input_lock_sha256': sha256(HERE / 'inputs.json'),
+                   'input_lock_sha256': sha256(args.inputs),
                    'patch_sha256': lock['patch_sha256'], 'patched_files': lock['patched_files'],
                    'python': sys.version, 'python_executable': sys.executable,
                    'compiler': compiler, 'compiler_sha256': sha256(compiler),
@@ -235,6 +235,8 @@ def main():
     parser.add_argument('--sdk-archive', type=Path, required=True)
     parser.add_argument('--work', type=Path, required=True, help='New local Windows directory')
     parser.add_argument('--git', default='git')
+    parser.add_argument('--inputs', type=Path, default=HERE / 'inputs.json',
+                        help='Version pin (inputs.json: 1.14.3 for SnapPad; inputs-1.16.2.json: AnnePad)')
     args = parser.parse_args()
     try:
         print(build(args))
