@@ -23,6 +23,13 @@ Storage leads with three plain totals and groups everything removable under
 Settings is grouped, and no longer stays visible under every page after it has
 been opened once. The README screenshot is current.
 
+This release also lists **DarkPad** under GitHub Cloud Build (experimental; it
+needs a private copy of PadMint, because the build is personal) and shows
+**HaloPad's** own Xbox-edition workflow there, so 17 games can be built for
+iPhone/iPad from Windows or Linux without a Mac. A clean hosted DarkPad build
+passed; installing and playing that build still need testing. SquirrelPad stays
+local because it reads the player's ROM while compiling.
+
 **v0.5.26:** RAtouch's download instructions now point to the latest unsigned
 IPA and its matching checksum in English, Spanish and Portuguese, instead of
 directing players to a fixed older version. Its existing download route stays
