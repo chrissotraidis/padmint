@@ -30,7 +30,8 @@ py -3.13-64 -m venv NEW_BUILD_ENV
 Obtain the two archives from their exact URLs in `inputs.json`; every byte is
 checked against the recorded size and SHA-256 before extraction. Existing work
 folders are refused. Inputs and earlier outputs are never replaced. The only
-SDK files extracted are Python headers, `python313.lib`, and its license; no
+SDK files extracted are Python headers, `python313.lib`, `python3.lib` (1.16.2
+links the stable ABI) and its license; no
 Python runtime or system setting is installed. Build requirements belong in the
 new build environment. They are checked again before compiling.
 

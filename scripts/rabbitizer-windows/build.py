@@ -86,13 +86,15 @@ def patch_source(source, lock, git, run):
 
 
 def extract_sdk(archive, target, pin):
-    """Copy only the official headers, matching import library and license."""
+    """Copy only the official headers, import libraries and license. Rabbitizer 1.16
+    builds against the stable ABI (Py_LIMITED_API), so it links python3.lib."""
     checked(archive, pin)
     files = {}
+    libraries = ('tools/libs/python313.lib', 'tools/libs/python3.lib')
     with zipfile.ZipFile(archive) as bundle:
         selected = [name for name in bundle.namelist() if not name.endswith('/') and
-                    (name.startswith('tools/include/') or name in ('tools/libs/python313.lib', 'tools/LICENSE.txt'))]
-        required = {'tools/include/Python.h', 'tools/libs/python313.lib', 'tools/LICENSE.txt'}
+                    (name.startswith('tools/include/') or name in (*libraries, 'tools/LICENSE.txt'))]
+        required = {'tools/include/Python.h', *libraries, 'tools/LICENSE.txt'}
         if not required.issubset(selected):
             raise ValueError('Python SDK headers, import library or license missing')
         for name in selected:
