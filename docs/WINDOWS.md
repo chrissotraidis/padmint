@@ -54,6 +54,27 @@ EctoPad is paused.
 | Metroid Prime (EctoPad) | Paused | Its engine (Metaforce) is private until its developers publish it | Wait for Metaforce |
 | 8 ready-made apps: CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad, PeonPad, RAtouch, VaultPad | **No build needed**: download and install with Sideloadly | — | — |
 
+## Managed Windows tools still to publish
+
+SnapPad's and AnnePad's Windows routes rebuild the original N64 ROM from its
+decompilation before generating code, which needs the original IDO compilers and
+MIPS tools. PadMint does not manage these yet, so both still read a private,
+locally verified tool bundle (SnapPad's `scripts/build-windows-module.py
+--tools`). The roles SnapPad's backend checks, and where PadMint stands:
+
+| Tool | PadMint today |
+|---|---|
+| IDO 5.3 and 7.1 compilers | Producer and synthetic checks in `scripts/ido-windows` (also covers AnnePad); not published |
+| Rabbitizer 1.14.3 wheel with the unsigned-value fix (`1.14.3+padmint.1`) | Producer in `scripts/rabbitizer-windows`; not published |
+| asm-processor (Python implementation) | Preparation in `scripts/asm-processor-windows`; not published |
+| MIPS binutils: `as`, `ld`, `objcopy`, `strip`, `readelf`, `objdump` | No producer or pin yet |
+| `pigment64`, `uv`, `cpp`, and the setuptools, wheel and packaging build wheels | No producer or pin yet |
+
+Publishing these needs a pinned, checksummed archive for each, a
+`tools.lock.json` entry per Windows host, and the owner's approval to publish
+tool binaries. Then the SnapPad and AnnePad recipes can declare Windows hosts
+the way GoldenPad, BearBirdPad, BananaPad, SquirrelPad and DinoPad do.
+
 ## Recently completed
 
 - **0.5.27:** DarkPad joins GitHub Cloud Build (private copy of PadMint) and
