@@ -283,6 +283,7 @@ building. OpenRCT2Touch is a GitHub fork.
   already does (`ios-for-padmint.ipa`); point the recipe's `published_app` at
   it; have PadMint put the game part into it and save the finished APK; check it
   on a real phone, including updating over an older copy with saves.
+  Proposed design: [plans/local-android-and-windows-builds.md](plans/local-android-and-windows-builds.md).
 - [ ] **BlueWake on Windows, built by PadMint.** Add a `windows` target to
   BlueWake's recipe that runs BlueWake's existing Windows builder from the player's
   disc; player-check it on a Windows PC; the game page says how to run it.
