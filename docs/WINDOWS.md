@@ -15,9 +15,9 @@ Use these labels consistently in the app and documentation:
 
 - **Build here**: the game's published recipe supports local compilation on
   this Windows PC.
-- **GitHub Cloud Build**: PadMint links to the guide and workflow for your
-  fork; you start the build on GitHub's temporary macOS machine. The shared
-  workflow needs no personal game files. HaloPad uses its own project workflow.
+- **GitHub Cloud Build**: GitHub runs a temporary macOS build machine for your
+  GitHub repository; Windows only starts the workflow. Your game files are
+  never uploaded. DarkPad requires a private repository and its Actions allowance.
 - **Apple Silicon Mac**: the iPhone/iPad or Mac app needs an Apple Silicon Mac
   with Xcode, unless the game's project documents another route.
 
@@ -44,8 +44,9 @@ Use these labels consistently in the app and documentation:
 |---|---|---|---|
 | **Build here with PadMint** | KartPad | iPhone/iPad `.ipa`, or a KartPad game-data pack for the published Android app | Experimental; published recipe |
 | **GitHub Cloud Build** | BallPad, BarrelPad, BellPad, BrawlerPad, CTRPad, F0X, GalaxyPad, HarkinianPad, MaskPad, OpenRCT2 Touch, PaperPad, SpaghettiPad, StarshipPad, TribesPad, UTP | iPhone/iPad `.ipa` | Published workflow; not a local Windows build |
-| **Project GitHub Cloud Build** | HaloPad, Xbox edition | iPhone/iPad `.ipa` or Mac app | Published [project workflow](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer); shown under Other routes in 0.5.24 |
-| **Apple Silicon Mac** | The other buildable titles, including DarkPad and the seven Windows proofs below; HaloPad Custom Edition | iPhone/iPad `.ipa`, and for some games a personal Mac app | The app must show **Apple Silicon Mac**; a private Windows proof alone does not enable it |
+| **Separate GitHub workflow** | HaloPad, Xbox edition | iPhone/iPad `.ipa` or Mac app | [Use HaloPad's own repository and workflow](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer); Custom Edition still needs an Apple Silicon Mac |
+| **Private GitHub Cloud Build** | DarkPad | iPhone/iPad `.ipa` | Experimental; [clean hosted build passed](https://github.com/chrissotraidis/padmint/actions/runs/40830430386/job/123303170832), with no IPA uploaded. Installation and gameplay are unvalidated. [Private setup and Actions allowance](../README.md#darkpad-private-github-build) |
+| **Apple Silicon Mac** | The other buildable titles, including the seven Windows proofs below | iPhone/iPad `.ipa`, and for some games a personal Mac app | The app must show **Apple Silicon Mac**; a private Windows proof alone does not enable it |
 | **No build needed** | CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad, PeonPad, RAtouch, VaultPad | iPhone/iPad app from its release | Download and install; add your own game files in the app where required |
 
 **Windows desktop is a separate product.** BlueWake publishes a ready-to-play

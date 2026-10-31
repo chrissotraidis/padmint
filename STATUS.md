@@ -1,11 +1,34 @@
 # PadMint status
 
-Updated **30 October 2026**. **Next work:** when the owner asks to continue
+Updated **31 October 2026**. **Next work:** when the owner asks to continue
 improving PadMint, start with [Resume work](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#resume-work).
 It records the audit, existing PRs, more Windows/Linux and cloud build options,
 ownership enforcement, preview updates and the validation each route needs.
 The owner requested this documentation handoff and small fixes, then a stop;
 broader implementation resumes on that later request ([D18](https://github.com/chrissotraidis/padmint/blob/main/docs/DECISIONS.md#d18-save-the-improvements-handoff-then-stop-29-oct-2026)).
+
+**v0.5.27:** a cleaner window, the same on Mac, Windows and Linux. Every
+game page now has numbered steps marked ✓ as they're done: **Where will you
+play?**, **Your own game file** (shown as done when the game takes its file in the
+app) and **Build on this computer**. When every program is installed, setup folds
+to one green line; anything missing is listed first. The build's plan and the
+install steps open on request, several file choices fold under one question, and
+an older copy says how to update. GitHub Cloud Build moves to **Other ways to
+build** at the bottom of Mac pages. Games built elsewhere, and ready-made apps,
+use one card named for the route (**Build on GitHub's Mac**, **Needs an Apple
+Silicon Mac**, **Get the ready-made app**). The library has one search row with a
+systems menu and a single row of tabs, and rows no longer repeat where they build.
+Storage leads with three plain totals and groups everything removable under
+**Safe to remove** and **App and extra downloads**, each with **Remove all**.
+Settings is grouped, and no longer stays visible under every page after it has
+been opened once. The README screenshot is current.
+
+This release also lists **DarkPad** under GitHub Cloud Build (experimental; it
+needs a private copy of PadMint, because the build is personal) and shows
+**HaloPad's** own Xbox-edition workflow there, so 17 games can be built for
+iPhone/iPad from Windows or Linux without a Mac. A clean hosted DarkPad build
+passed; installing and playing that build still need testing. SquirrelPad stays
+local because it reads the player's ROM while compiling.
 
 **v0.5.26:** RAtouch's download instructions now point to the latest unsigned
 IPA and its matching checksum in English, Spanish and Portuguese, instead of

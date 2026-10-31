@@ -219,6 +219,18 @@ recipe before setup and uses that same release for the build. The workflow's tes
 matrix comes from the catalog; its player-facing choice menu must also include the
 game. Catalog, runner and tool changes rerun the hosted builds.
 
+For personal output that must remain private, also set `github_build_private: true`
+and supply an `off_mac` guide describing private repository import and Actions
+usage. Public or unknown-visibility manual runs stop before setup. PR and scheduled
+checks compile without uploading the app. Record a successful clean hosted build
+before describing the route as validated.
+
+A game's separate GitHub workflow can be listed in the cloud category with
+`off_mac.github_workflow: true`. Its `off_mac.url` and localized text must explain
+which repository and workflow to use. This is a link to the game's own route;
+it does not add it to PadMint's shared build menu or claim its normal recipe can
+build without inputs. Do not combine it with `github_build`.
+
 For local iOS builds, prefer an exact catalog `ios_hosts` list, for example
 `["macos-arm64", "windows-arm64"]` when only those computers have the required
 evidence. It is a nonempty list of unique host IDs and requires an `ios` player

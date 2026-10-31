@@ -57,6 +57,18 @@ class CatalogRouteTests(unittest.TestCase):
             with self.subTest(change=change), self.assertRaisesRegex(ValueError, "github_build_private"):
                 self.read_entry(dict(declared, **change))
 
+    def test_external_workflow_does_not_enable_the_shared_builder(self):
+        external = dict(entry(), github_build=False, player_game_file="build",
+                        off_mac={"text": "Use this game's Xbox workflow", "url": "https://example.com/guide",
+                                 "github_workflow": True})
+        self.assertTrue(self.read_entry(external)["off_mac"]["github_workflow"])
+        with self.assertRaisesRegex(ValueError, "not offered"):
+            manifest.validate_github_build(external, recipe())
+        for change in ({"off_mac": dict(external["off_mac"], github_workflow="true")},
+                       {"github_build": True, "player_game_file": "in-app"}):
+            with self.subTest(change=change), self.assertRaisesRegex(ValueError, "github_workflow"):
+                self.read_entry(dict(external, **change))
+
     def test_selected_recipe_inputs_block_hosted_build_even_when_catalog_is_stale(self):
         released = recipe()
         released["inputs"][0]["when"] = "build"

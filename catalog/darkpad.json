@@ -30,5 +30,22 @@
         "For updates, install over the existing app with the same signing setup to keep saves and settings. Deleting DarkPad deletes its local data."
       ]
     }
+  },
+  "github_build": true,
+  "github_build_private": true,
+  "off_mac": {
+    "url": "https://github.com/chrissotraidis/padmint#darkpad-private-github-build",
+    "tag": "GitHub Cloud Build (experimental)",
+    "text": "DarkPad has an experimental GitHub build for iPhone/iPad. Import PadMint into a private repository; a public fork cannot run this personal build. Private macOS builds use your account's Actions allowance. Follow the guide, then add your own Perfect Dark ROM inside DarkPad. A clean hosted build passed; installation and gameplay still need testing.",
+    "translations": {
+      "es": {
+        "tag": "GitHub Cloud Build (experimental)",
+        "text": "DarkPad tiene una compilaci\u00f3n experimental de GitHub para iPhone/iPad. Importa PadMint en un repositorio privado; un fork p\u00fablico no puede ejecutar esta compilaci\u00f3n personal. Las compilaciones privadas de macOS consumen la cuota de Actions de tu cuenta. Sigue la gu\u00eda y a\u00f1ade tu propia ROM de Perfect Dark dentro de DarkPad. Una compilaci\u00f3n limpia en GitHub termin\u00f3 correctamente; la instalaci\u00f3n y el juego a\u00fan necesitan pruebas."
+      },
+      "pt": {
+        "tag": "GitHub Cloud Build (experimental)",
+        "text": "O DarkPad tem uma compila\u00e7\u00e3o experimental do GitHub para iPhone/iPad. Importe o PadMint para um reposit\u00f3rio privado; um fork p\u00fablico n\u00e3o pode executar esta compila\u00e7\u00e3o pessoal. As compila\u00e7\u00f5es privadas do macOS consomem a cota de Actions da sua conta. Siga o guia e adicione sua pr\u00f3pria ROM de Perfect Dark no DarkPad. Uma compila\u00e7\u00e3o limpa no GitHub foi conclu\u00edda; a instala\u00e7\u00e3o e a jogabilidade ainda precisam de testes."
+      }
+    }
   }
 }
