@@ -58,9 +58,9 @@ EctoPad is paused.
 
 SnapPad's and AnnePad's Windows routes rebuild the original N64 ROM from its
 decompilation before generating code, which needs the original IDO compilers and
-MIPS tools. PadMint does not manage these yet, so both still read a private,
-locally verified tool bundle (SnapPad's `scripts/build-windows-module.py
---tools`). The roles SnapPad's backend checks, and where PadMint stands:
+MIPS tools. PadMint does not publish these yet: SnapPad reads a private, locally
+verified tool bundle (`scripts/build-windows-module.py --tools`), and AnnePad's
+`scripts/build-windows-module.py` takes their paths. The tools, and where PadMint stands:
 
 | Tool | PadMint today |
 |---|---|
