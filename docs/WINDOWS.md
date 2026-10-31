@@ -67,7 +67,7 @@ locally verified tool bundle (SnapPad's `scripts/build-windows-module.py
 | IDO 5.3 and 7.1 compilers | Producer and synthetic checks in `scripts/ido-windows` (also covers AnnePad); not published |
 | Rabbitizer 1.14.3 wheel with the unsigned-value fix (`1.14.3+padmint.1`) | Producer in `scripts/rabbitizer-windows`; not published |
 | asm-processor (Python implementation) | Preparation in `scripts/asm-processor-windows`; not published |
-| MIPS binutils: `as`, `ld`, `objcopy`, `strip`, `readelf`, `objdump` | No producer or pin yet |
+| MIPS binutils 2.46.1: `as`, `ld`, `objcopy`, `strip`, `readelf`, `objdump` | Producer in `scripts/binutils-windows` ([#225](https://github.com/chrissotraidis/padmint/pull/225)): Windows builds give byte-identical fixture outputs to a native build on x64 and ARM64; not published |
 | `pigment64`, `uv`, `cpp`, and the setuptools, wheel and packaging build wheels | No producer or pin yet |
 
 Publishing these needs a pinned, checksummed archive for each, a
