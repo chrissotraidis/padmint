@@ -69,11 +69,13 @@ deployment keep their separate approval and validation gates.
 
 **Building on Windows today:** the only game PadMint compiles locally on a
 Windows PC through a published recipe is **KartPad**, for Android or iPhone/iPad
-(experimental). Fifteen iPhone/iPad games can be compiled by **GitHub's free
-Mac** after Windows starts the workflow. The other games currently need an Apple
-Silicon Mac or their project's own route. None of these options is a Windows
-desktop build. The dated roster, seven private Windows proofs, and active queue
-are in [Building games on Windows](docs/WINDOWS.md).
+(experimental). Sixteen iPhone/iPad games can be compiled by **GitHub's Mac**
+after Windows starts the workflow (DarkPad from a private copy of PadMint), and
+HaloPad's Xbox edition has its own GitHub workflow. Twelve ports still need an
+Apple Silicon Mac for iPhone/iPad; EctoPad is paused. None of these options is a
+Windows desktop build. The game-by-game running list, with each game's next fix,
+is in [Building games on Windows](docs/WINDOWS.md#every-game-from-a-windows-pc-running-list);
+game pages link to it from Windows and Linux.
 
 ## Which games use PadMint
 
