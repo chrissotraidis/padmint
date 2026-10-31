@@ -47,7 +47,7 @@ EctoPad is paused.
 | Super Smash Bros. Melee (MeleePad) | Apple Silicon Mac | Reads the disc while compiling | [meleepad#52](https://github.com/chrissotraidis/meleepad/pull/52): host name fixed to `windows-x86_64` and checked on 31 Oct; publish, device check |
 | Pokémon Snap (SnapPad) | Apple Silicon Mac | Reads the ROM while compiling; its decompilation tools still come from a private, locally verified bundle | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12): publish those tools through PadMint's managed tools, then add Windows hosts to the recipe. SnapPad's release pause still applies |
 | The Wind Waker (BlueWake) | Ready-to-play **Windows desktop** download; iPhone/iPad needs a Mac | Reads the disc while compiling | [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100) is current with main again (31 Oct); finish the original-disc Windows build |
-| Pokémon Stadium (AnnePad) | Apple Silicon Mac | Reads the ROM while compiling | Finish the portable module and app pipeline (decompilation already matches on Windows) |
+| Pokémon Stadium (AnnePad) | Apple Silicon Mac | Reads the ROM while compiling | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20) saves the module work; its module/app import audit passed on Mac on 31 Oct. Next: one repeatable script for the full build, then the Windows module compile |
 | Dinosaur Planet (DinoPad) | Apple Silicon Mac | Reads the ROM while compiling | [dinopad#19](https://github.com/chrissotraidis/dinopad/pull/19): the supported ROM built completely on Windows 11 ARM64 and Mac on 31 Oct; add Windows hosts to the recipe, publish the shell and recipe, device check |
 | Jak and Daxter (Ottsel) | Apple Silicon Mac | Reads the disc while compiling | Design the Windows host tools and module delivery |
 | Age of Empires II: DE (AgePad) | Apple Silicon Mac | Adds the player's installed **Mac** Steam edition to the app | The inject step is Python with no Xcode. Test fetching the Mac edition on Windows with SteamCMD (`+@sSteamCmdForcePlatformType macos`) from the player's own account, then run the same step |
@@ -128,7 +128,7 @@ and ARM64 need their own complete builds and acceptance checks.
 | Game | Current position |
 |---|---|
 | [BlueWake](https://github.com/chrissotraidis/bluewake/pull/100) | Windows desktop release works outside PadMint. Its iPhone-build route from Windows has a native backend proof but its complete original-disc build is unfinished. |
-| AnnePad | Fresh Mac and Windows decompilation match the supported ROM; the portable module/app pipeline is unfinished. |
+| [AnnePad](https://github.com/chrissotraidis/annepad/pull/20) | Fresh Mac and Windows decompilation match the supported ROM. The game-free shell and private module pass PadMint's import, iOS 16 and insertion checks on Mac (31 Oct). A repeatable full build script and the Windows module compile remain. |
 | AgePad | Portable checks pass, but the available installed Steam files were incompatible with the expected app. A successful real-input build is still required. |
 | Ottsel | No usable local Windows route has been implemented. |
 
