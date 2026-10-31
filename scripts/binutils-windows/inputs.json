@@ -15,6 +15,7 @@
   "tools": [
     "as",
     "ld",
+    "ar",
     "objcopy",
     "strip",
     "readelf",

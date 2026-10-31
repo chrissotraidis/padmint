@@ -28,7 +28,7 @@ jobs:
         run: |
           prefix=$(scripts/binutils-windows/build.sh "$RUNNER_TEMP/bu" x86_64-w64-mingw32 | tail -n 1)
           mkdir -p windows-bin
-          for tool in as ld objcopy strip readelf objdump; do cp "$prefix/bin/mips-linux-gnu-$tool.exe" windows-bin/; done
+          for tool in as ld ar objcopy strip readelf objdump; do cp "$prefix/bin/mips-linux-gnu-$tool.exe" windows-bin/; done
           sha256sum windows-bin/*.exe
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

@@ -12,7 +12,7 @@ natively, or for Windows with a MinGW-w64 host triple (statically linked, so no
 MinGW runtime DLLs are needed beside them).
 
 `check.sh` runs a synthetic MIPS fixture (`fixture.s`, `fixture.ld`) through
-`as`, `ld`, `objcopy`, `strip`, `readelf` and `objdump` and prints a SHA-256
+`as`, `ld`, `ar`, `objcopy`, `strip`, `readelf` and `objdump` and prints a SHA-256
 per output. `.github/workflows/binutils-windows.yml` builds native Linux and
 Windows x64 tools, then requires the Windows tools on Windows x64 and Windows
 11 ARM64 to produce byte-identical outputs to the native Linux build.
