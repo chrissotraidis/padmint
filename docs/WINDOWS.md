@@ -188,8 +188,10 @@ and recheck each affected PR and release before using this per-game queue.
    identity and is refused.
 5. BlueWake: its Windows hosts are experimental in #100; publish, device check.
    AnnePad (#20) and SnapPad (#12) wait for the published IDO, binutils and
-   Rabbitizer builds. AgePad needs the Mac game through SteamCMD; Ottsel needs a
-   game-free shell and module boundary.
+   Rabbitizer builds. AgePad needs the Mac game through SteamCMD; Ottsel's game-free shell
+   waits for its signed whole-game execution on the Mac: today only part of the
+   kernel runs from signed ahead-of-time code (docs/SIGNED_AOT_RECOVERY.md), so a
+   module boundary designed now could not be checked on a device.
 
 Do not mark another game as **Build here** merely because a private proof
 exists. A row moves only after all of these are true:
