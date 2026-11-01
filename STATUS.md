@@ -141,7 +141,7 @@ game pages link to it from Windows and Linux.
 - **v0.5.14**: no Mac? Fifteen games (BallPad, BarrelPad, BellPad, BrawlerPad,
   CTRPad, F0X, GalaxyPad, HarkinianPad, MaskPad, OpenRCT2 Touch, PaperPad,
   SpaghettiPad, StarshipPad, TribesPad, UTP) can be built for iPhone and iPad on
-  GitHub Cloud Build from Windows, Linux or any browser (\`build-for-iphone.yml\`;
+  GitHub Cloud Build from Windows, Linux or any browser (`build-for-iphone.yml`;
   README "GitHub Cloud Build"). Off a Mac they get their own **GitHub Cloud Build**
   tab, and each game page gives numbered steps with Fork PadMint,
   Step-by-step guide and Get Sideloadly buttons. Game pages on a Mac say how the
