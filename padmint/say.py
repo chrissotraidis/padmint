@@ -686,6 +686,7 @@ MESSAGES = {
     "w_st_safe_d": {"en": "Older versions and unused tools", "es": "Versiones anteriores y herramientas sin uso", "pt": "Versões anteriores e ferramentas sem uso"},
     "w_st_cache_d": {"en": "PadMint downloads these again when a build needs them", "es": "PadMint las vuelve a descargar cuando una compilación las necesita", "pt": "O PadMint baixa de novo quando uma compilação precisar"},
     "w_update_how": {"en": "To update, follow the steps below to build {version}, then install it over the copy you have.", "es": "Para actualizar, sigue los pasos de abajo para crear {version} e instálala sobre la copia que ya tienes.", "pt": "Para atualizar, siga os passos abaixo para compilar {version} e instale por cima da cópia que você já tem."},
+    "w_windows_list": {"en": "Where Windows builds stand for every game", "es": "Cómo van las compilaciones en Windows de cada juego", "pt": "Como estão as compilações no Windows de cada jogo"},
     "w_mine_stats": {"en": "{games} games · {updates} with updates", "es": "{games} juegos · {updates} con actualizaciones", "pt": "{games} jogos · {updates} com atualizações"},
     "w_mine_stats_ok": {"en": "{games} games · all up to date", "es": "{games} juegos · todos al día", "pt": "{games} jogos · todos atualizados"},
     "w_all_note_plain": {"en": "Every game, by name.", "es": "Todos los juegos, por nombre.", "pt": "Todos os jogos, por nome."},

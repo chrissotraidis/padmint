@@ -131,6 +131,16 @@ class DoctorTests(unittest.TestCase):
         text, _code = self.doctor(recipe(SDL2), missing=())
         self.assertIn("ok   SDL2 (sdl2-config): /usr/bin/sdl2-config", text)
 
+    def test_an_unsupported_computer_lists_hosts_instead_of_installs(self):
+        # GoldenPad on Linux listed brew and Xcode fixes that could never make it build there.
+        data = recipe(SDL2)
+        data["targets"]["android"]["hosts"] = {"macos-arm64": "verified", "windows-x86_64": "planned"}
+        text, code = self.doctor(data, missing=("sdl2-config",))
+        self.assertEqual(code, 1)
+        self.assertIn("FIX  android builds on linux-arm64: unsupported", text)
+        self.assertIn("Available build hosts: macos-arm64 (verified).", text)
+        self.assertNotIn("brew", text)
+
 
 class MakeTests(unittest.TestCase):
     def make(self, data, missing, which=None):
