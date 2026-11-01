@@ -107,7 +107,9 @@ def player_data(lang):
         {"id": app, "name": name, "about": catalog()[app].get("game", ""), "plays_on": catalog()[app].get("plays_on", []),
          "intro": phrase("download_intro", lang, name=name).strip(),
          "steps": localized(catalog()[app]["download"], "steps", lang),
-         "guide": catalog()[app].get("player_help") or catalog()[app]["repo_url"]}
+         "guide": catalog()[app].get("player_help") or catalog()[app]["repo_url"],
+         # Most of these publish previews, which /releases/latest skips; their steps link here too.
+         "releases": catalog()[app]["repo_url"].removesuffix(".git").rstrip("/") + "/releases"}
         for app, name in cli.downloads()]
     waiting = [{"id": game, "name": name, "about": catalog()[game]["game"], "status": catalog()[game]["later"].get("status"),
                 "text": localized(catalog()[game]["later"], "text", lang), "plays_on": catalog()[game].get("plays_on", []),
@@ -135,7 +137,7 @@ def player_data(lang):
         text["install_hint"] += " " + text["linux_install_short"]
         text["github_page"] += " " + text["linux_install"]
         for app in apps:
-            app["intro"] += " " + text["linux_install"]
+            app["note"] = text["linux_install"]
         for item in waiting:
             if item.get("github") and not item.get("steps"):
                 item["text"] += " " + text["linux_install"]
@@ -1053,7 +1055,7 @@ details.which ul{margin:.4rem 0 .2rem;padding-left:1.2rem;font-size:.9rem;color:
 <div class="pills" id="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="github" role="tab"><span data-t="tab_github"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span id="laterHead" data-t="later_head"></span><span class="n"></span></button><button class="tab" data-g="missing" role="tab"><span data-t="tab_missing"></span><span class="n"></span></button></div></div>
 <p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="small hidden" id="gamePage"><a target="_blank" rel="noopener" id="gamePageLink"></a></p><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
 
-<section class="card route hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p><button class="btn back backBtn" data-t="change"></button></section>
+<section class="card route hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p><p class="why warn hidden" id="dlNote"></p><div class="row"><a class="btn main" id="dlLink" target="_blank" rel="noopener" data-t="dl_link"></a><button class="btn back backBtn" data-t="change"></button></div></section>
 
 <section class="card route hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><ol class="next hidden" id="laterSteps"></ol><p class="small hidden" id="laterStatus"><a target="_blank" rel="noopener" id="laterStatusLink"></a></p><div class="row"><a class="btn hidden" id="laterFork" href="https://github.com/chrissotraidis/padmint/fork" target="_blank"></a><a class="btn" id="laterLink" target="_blank"></a><a class="btn hidden" id="laterSideloadly" href="https://sideloadly.io" target="_blank"></a><button class="btn back backBtn" data-t="change"></button></div></section>
 
@@ -1313,8 +1315,8 @@ function here(){const h=$("here"),show=!sel&&view=="library";h.classList.toggle(
  if(onMac()){parts.push(fill("here_mac",{build:D.games.length,apps:D.downloads.length}));const ds=(I.devices||[]);
   if(ds.length)parts.push(fill("here_devices",{devices:ds.map(d=>d.name).join(", ")}));else if(I.state=="ready")parts.push(I.xcode?S.here_no_devices:S.here_no_xcode)}
  else if(!D.picker)parts.push(S.here_phone);
- else{const names=D.games.map(g=>g.name).join(", "),gh=D.later.filter(x=>x.github).length,
-  other=D.later.filter(x=>!x.github&&!x.status).length;parts.push(fill(names?"here_other_hosts":"here_other_hosts_none",
+ else{const list=D.games.map(title).sort((a,b)=>a.localeCompare(b,D.lang)),names=list.length?(window.Intl&&Intl.ListFormat?new Intl.ListFormat(D.lang,{type:"conjunction"}).format(list):list.join(", ")):"",gh=D.later.filter(x=>x.github).length,
+  other=D.later.filter(x=>!x.github).length;parts.push(fill(names?"here_other_hosts":"here_other_hosts_none",
    {host:D.host_name,names,apps:D.downloads.length,mac:other,github:gh}))}
  h.textContent=parts.join(" ")}
 function fold_text(v){return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim()}
@@ -1359,11 +1361,11 @@ function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;editFi
  $("laterBox").classList.toggle("hidden",!w);
  if(w){$("laterName").textContent=S["route_"+(w.github&&!(w.cloud&&w.cloud.external)?"github":w.route||"other")+"_t"]||w.name;$("laterAbout").textContent="";$("laterText").textContent=(w.steps||[]).length?fill("github_page",{name:w.name}):w.text;$("laterSteps").classList.toggle("hidden",!(w.steps||[]).length);$("laterSteps").replaceChildren(...(w.steps||[]).map(s=>el("li",s)));
   for(const id of ["laterFork","laterSideloadly"])$(id).classList.toggle("hidden",!w.github||!!(w.cloud&&(w.cloud.private||w.cloud.external)));$("laterFork").textContent=S.github_fork;$("laterSideloadly").textContent=S.github_sideloadly;
-  {const off=!onMac()&&(w.route=="mac"||w.route=="other");$("laterStatus").classList.toggle("hidden",!off);$("laterStatusLink").href=WINDOWS_LIST;$("laterStatusLink").textContent=S.windows_list+" ↗"}$("laterLink").href=w.link;$("laterLink").textContent=w.github?S.build_on_github:fill("later_link",{name:w.name});$("laterLink").classList.toggle("main",!!w.github);scrollTo({top:0})}
+  {const off=!onMac()&&(w.route=="mac"||w.route=="other");$("laterStatus").classList.toggle("hidden",!off);$("laterStatusLink").href=WINDOWS_LIST;$("laterStatusLink").textContent=S.windows_list+" ↗"}$("laterLink").href=w.link;const forkFirst=w.github&&!(w.cloud&&(w.cloud.private||w.cloud.external));$("laterLink").textContent=forkFirst?S.github_guide:w.github?S.build_on_github:fill("later_link",{name:w.name});$("laterLink").classList.toggle("main",!!w.github&&!forkFirst);$("laterFork").classList.toggle("main",forkFirst);scrollTo({top:0})}
  $("dlBox").classList.toggle("hidden",!a);
  $("readyBox").classList.add("hidden");if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url;$("readyLink").textContent=fill("ready_link",{devices:g.platforms.filter(p=>g.ready.platforms.includes(p.id)).map(p=>p.short||p.label).join(", ")})}
  if(a){$("dlName").textContent=S.get_app_t;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(s=>linked(s)));
-  const l=el("a",a.guide);l.href=a.guide;l.target="_blank";$("dlGuide").replaceChildren(S.guide+": ",l);scrollTo({top:0})}
+  const l=el("a",a.guide);l.href=a.guide;l.target="_blank";$("dlGuide").replaceChildren(S.guide+": ",l);$("dlLink").href=a.releases;$("dlNote").textContent=a.note||"";$("dlNote").classList.toggle("hidden",!a.note);scrollTo({top:0})}
  for(const id of ["fileBox","deviceBox","planBox"])$(id).classList.add("hidden");$("inApp").classList.add("hidden");if(!g)return;
  $("hostNote").replaceChildren(...(g.note?linked(g.note,"span").childNodes:[]));$("hostNote").classList.toggle("hidden",!g.note);
  $("fileBox").classList.remove("hidden");$("fileChange").classList.toggle("hidden",!g.needs_file);$("fileSum").title=g.needs_file?"":g.input_note;

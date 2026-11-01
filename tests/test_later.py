@@ -75,7 +75,7 @@ class LaterTests(unittest.TestCase):
         self.assertEqual(data["text"]["needs_mac_head"], "Apple Silicon Mac")
         self.assertEqual(sum(item.get("github", False) for item in data["later"]), 17)
         self.assertIn("nothing compiles on this computer", waiting["bellpad"]["text"])
-        self.assertIn("These local builds are for iPhone/iPad or Android", data["text"]["here_other_hosts"])
+        self.assertIn("Builds here make iPhone/iPad apps or Android game data", data["text"]["here_other_hosts"])
         self.assertIn("nothing compiles on this computer", data["text"]["github_note"])
         self.assertNotIn("Windows", data["text"]["needs_mac_note"])
         self.assertEqual(waiting["bluewake"]["tag"], "Windows and Linux downloads")
@@ -135,7 +135,8 @@ class LaterTests(unittest.TestCase):
         install = "directly from Linux isn't tested"
         self.assertIn(install, linux["text"]["install_hint"])
         self.assertIn(install, linux["text"]["github_page"])
-        self.assertTrue(all(install in app["intro"] for app in linux["downloads"]))
+        self.assertTrue(all(install in app["note"] for app in linux["downloads"]))
+        self.assertTrue(all("note" not in app for app in windows["downloads"]))
         self.assertIn(install, next(i for i in linux["later"] if i["id"] == "darkpad")["text"])
         self.assertNotIn(install, next(i for i in linux["later"] if i["id"] == "bluewake")["text"])
         self.assertNotIn(install, windows["text"]["install_hint"])

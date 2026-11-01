@@ -40,6 +40,26 @@ in setup when they change the next action.
 The README now opens with these three routes and one table of what each
 computer builds, instead of repeating the roster in several places.
 
+### After an end-to-end pass on 0.5.29 (on main, next release)
+
+Clicking through the published 0.5.29 on a real Apple Silicon Mac, and as
+Windows and Linux, found four rough spots, now fixed in all three languages:
+
+- The library line named ports ("BananaPad, BearBirdPad…") while the rows show
+  game titles, and counted 6 "other" games while the **Other routes** tab showed
+  7. It now lists game titles and counts the paused game too.
+- On a GitHub Cloud Build page the green button said **Build on GitHub** but only
+  opened the README, while step 1 said to press **Fork PadMint**. **Fork PadMint**
+  is now the main button, the README link is **Step-by-step guide**, and step 1
+  no longer repeats the card's first sentence. It now says how to update: open an
+  existing fork and press **Sync fork**. Guide-only buttons (DarkPad, HaloPad, the
+  Mac's **Other ways to build**) say **Open the GitHub build guide**.
+- Ready-made apps had no button; the download link sat inside step 1. They now
+  have **Open the download page**, to the project's releases (most publish
+  previews, which the latest-release link skips).
+- On Linux the install warning was glued to "To get it:" before the steps. It is
+  now its own line above the download button.
+
 ## DarkPad is not technically a different kind of personal build
 
 Chris's distinction is between **ready-made apps he has authorized for
