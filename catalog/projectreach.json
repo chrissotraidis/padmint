@@ -40,15 +40,15 @@
   },
   "off_mac": {
     "url": "https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer",
-    "text": "Build HaloPad's Xbox edition for iPhone, iPad or Mac on GitHub. Fork HaloPad, then open Actions \u2192 Build HaloPad (Xbox edition) in that fork. It is a separate workflow, not a choice in PadMint's workflow. Add your own Xbox disc inside the app. Custom Edition still needs an Apple Silicon Mac.",
+    "text": "Build HaloPad's Xbox edition on GitHub's Mac with HaloPad's own build page: fork HaloPad, then run Actions \u2192 Build HaloPad (Xbox edition) in your fork. It makes an iPhone/iPad app and a Mac app, kept for 7 days. Add your own Xbox disc inside the app after installing. To sign it for iPhone or iPad, follow HaloPad's install guide: the app asks for extra memory capabilities, and a free Apple ID worked in one Xbox-edition iPad test but isn't tested more widely. Custom Edition, made from your own PC installer, needs an Apple Silicon Mac.",
     "translations": {
       "es": {
         "tag": "GitHub Cloud Build (edici\u00f3n Xbox)",
-        "text": "Crea la edici\u00f3n Xbox de HaloPad para iPhone, iPad o Mac en GitHub. Haz un fork de HaloPad y abre Actions \u2192 Build HaloPad (Xbox edition) en ese fork. Es un workflow separado, no una opci\u00f3n del workflow de PadMint. A\u00f1ade tu propio disco de Xbox dentro de la app. Custom Edition sigue necesitando un Mac con Apple Silicon."
+        "text": "Crea la edici\u00f3n Xbox de HaloPad en el Mac de GitHub con la p\u00e1gina de compilaci\u00f3n de HaloPad: haz un fork de HaloPad y ejecuta Actions \u2192 Build HaloPad (Xbox edition) en tu fork. Crea una app para iPhone/iPad y una app para Mac, que se guardan 7 d\u00edas. A\u00f1ade tu propio disco de Xbox dentro de la app despu\u00e9s de instalarla. Para firmarla en iPhone o iPad, sigue la gu\u00eda de instalaci\u00f3n de HaloPad: la app pide capacidades de memoria adicionales, y un Apple ID gratuito funcion\u00f3 en una prueba de la edici\u00f3n Xbox en iPad, pero no se ha probado m\u00e1s. Custom Edition, creada con tu propio instalador de PC, necesita un Mac con Apple Silicon."
       },
       "pt": {
         "tag": "GitHub Cloud Build (edi\u00e7\u00e3o Xbox)",
-        "text": "Crie a edi\u00e7\u00e3o Xbox do HaloPad para iPhone, iPad ou Mac no GitHub. Fa\u00e7a um fork do HaloPad e abra Actions \u2192 Build HaloPad (Xbox edition) nesse fork. \u00c9 um workflow separado, n\u00e3o uma op\u00e7\u00e3o do workflow do PadMint. Adicione seu pr\u00f3prio disco do Xbox no app. O Custom Edition ainda precisa de um Mac com Apple Silicon."
+        "text": "Crie a edi\u00e7\u00e3o Xbox do HaloPad no Mac do GitHub com a p\u00e1gina de compila\u00e7\u00e3o do HaloPad: fa\u00e7a um fork do HaloPad e execute Actions \u2192 Build HaloPad (Xbox edition) no seu fork. Ela cria um app para iPhone/iPad e um app para Mac, guardados por 7 dias. Adicione seu pr\u00f3prio disco do Xbox dentro do app depois de instalar. Para assinar no iPhone ou iPad, siga o guia de instala\u00e7\u00e3o do HaloPad: o app pede capacidades extras de mem\u00f3ria, e um Apple ID gratuito funcionou num teste da edi\u00e7\u00e3o Xbox no iPad, mas ainda n\u00e3o foi testado mais amplamente. O Custom Edition, criado com o seu pr\u00f3prio instalador de PC, precisa de um Mac com Apple Silicon."
       }
     },
     "github_workflow": true,

@@ -12,6 +12,19 @@
     "windows-arm64",
     "windows-x86_64"
   ],
+  "host_notes": {
+    "windows": {
+      "text": "Experimental on Windows: this build has completed on Windows 11 ARM64, but a Windows-built copy hasn't been installed and played on an iPhone or iPad yet, and a native x64 Windows PC hasn't been tried.",
+      "translations": {
+        "es": {
+          "text": "Experimental en Windows: esta compilación se completó en Windows 11 ARM64, pero todavía no se ha instalado ni jugado en un iPhone o iPad una copia creada en Windows, y no se ha probado en un PC con Windows x64 nativo."
+        },
+        "pt": {
+          "text": "Experimental no Windows: esta compilação foi concluída no Windows 11 ARM64, mas uma cópia criada no Windows ainda não foi instalada e jogada num iPhone ou iPad, e um PC com Windows x64 nativo ainda não foi testado."
+        }
+      }
+    }
+  },
   "game_ids": [
     "NDOE"
   ],

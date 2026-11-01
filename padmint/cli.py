@@ -1281,8 +1281,11 @@ TERMUX_OPEN_URL = Path("/data/data/com.termux/files/usr/bin/termux-open-url")
 def ios_install_steps(name, file, in_app, lang=None):
     """(steps, note): putting an .ipa on an iPhone or iPad with Sideloadly, one action per step."""
     say = (lambda key, **fields: phrase(key, lang, **fields)) if lang else t
-    keys = ["next_ios_sideloadly", "next_ios_connect", "next_ios_sign", "next_ios_trust", "next_ios_devmode",
-            "next_ios_in_app" if in_app else "next_ios_open"]
+    # Sideloadly has no Linux version: from Linux the file goes to a Windows PC or Mac first.
+    linux = host_id().startswith("linux") and not on_android()
+    keys = ["next_ios_sideloadly_linux" if linux else "next_ios_sideloadly",
+            "next_ios_connect_linux" if linux else "next_ios_connect", "next_ios_sign", "next_ios_trust",
+            "next_ios_devmode", "next_ios_in_app" if in_app else "next_ios_open"]
     return [say(key, file=file, name=name) for key in keys], say("next_ios_note", name=name)
 
 
@@ -1298,6 +1301,9 @@ def next_step_text(entry, platform_name, result, lang=None):
         in_app = entry.get("player_game_file", "build") == "in-app"
         name = entry.get("name") or (entry.get("manifest") or {}).get("name", entry["id"])
         instructions, note = ios_install_steps(name, result.name, in_app, lang)
+        if host_id().startswith("linux") and not on_android():
+            # No route from Linux itself has been tested; say so after the Windows/Mac steps.
+            note = " ".join(filter(None, [note, phrase("w_linux_install_short", lang) if lang else t("w_linux_install_short")]))
         if not steps:
             return instructions, note, guide
         own = [step.format(file=result.name, folder=result.parent) for step in localized(steps, "steps", lang)]

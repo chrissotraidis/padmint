@@ -1,7 +1,7 @@
 # Build compatibility
 
-Public recipe snapshot: **30 October 2026**, checked against each game's latest
-release recipe with PadMint **v0.5.25**. The live audit checked **39 entries**
+Public recipe snapshot: **1 November 2026**, checked against each game's latest
+release recipe with PadMint **v0.5.29**. The live audit checked **39 entries**
 with zero inconsistencies. The daily Catalog check (`scripts/audit-catalog.py`)
 compares the live catalog with each latest release; trust its output over this
 table when they differ. This audit did not repeat the game builds recorded below.
@@ -51,7 +51,10 @@ on October 29, 2026, using the v0.1.0 release, `macos-15`, Xcode 26.3 and
 `/usr/bin/python3` with an empty PadMint folder. The check tested PR #216 head
 `c211d36` through merge commit `f30cd6d`. Build and checksum steps passed;
 artifact upload was skipped. Public manual runs are refused. See the
-[private setup guide](../README.md#darkpad-private-github-build).
+[private setup guide](../README.md#darkpad-private-github-build). This is the
+current route restriction, not a technical distinction from every other personal
+cloud build. [Build-route wording](BUILD_ROUTE_COPY.md#darkpad-is-not-technically-a-different-kind-of-personal-build)
+records the inconsistent visibility settings as an open decision.
 A private-repository manual run, installation and physical gameplay remain
 unvalidated by this PR check; a successful build does not establish device
 acceptance.
@@ -63,8 +66,15 @@ records its creation.
 
 ## Current player recipes
 
-Every release link is the exact version checked. macOS targets marked planned
-are omitted. Guided setup offers each Mac target on Apple Silicon (This Mac),
+Every release link is the exact version checked on 1 November.
+
+**Known blocker:** AgePad 0.1.0 can reject updated Steam libraries; its declared
+Mac host does not establish that today's installed Steam works. See
+[agepad#15](https://github.com/chrissotraidis/agepad/pull/15).
+BlueWake 0.10.0 separately publishes Windows and Linux desktop downloads;
+its Linux recipe target is not offered by PadMint.
+
+macOS targets marked planned are omitted. Guided setup offers each Mac target on Apple Silicon (This Mac),
 alongside the game's other targets. Intel Macs show why the Mac target is unavailable.
 
 | Project and release | Output | Apple Silicon Mac | Intel Mac | Windows local x64 / ARM64 | Linux local x64 / ARM64 | GitHub Cloud Build |
@@ -72,13 +82,13 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 | [agepad v0.1.0](https://github.com/chrissotraidis/agepad/releases/tag/v0.1.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [annepad v0.2.3](https://github.com/chrissotraidis/annepad/releases/tag/v0.2.3) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [annepad v0.2.3](https://github.com/chrissotraidis/annepad/releases/tag/v0.2.3) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
-| [ballpad v1.1.1](https://github.com/chrissotraidis/ballpad/releases/tag/v1.1.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
+| [ballpad v1.1.2](https://github.com/chrissotraidis/ballpad/releases/tag/v1.1.2) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [bananapad v0.3.0](https://github.com/chrissotraidis/bananapad/releases/tag/v0.3.0) | iPhone/iPad | Experimental | Unavailable | Experimental / Experimental | Unavailable / Unavailable | — |
 | [barrelpad v0.2.1](https://github.com/chrissotraidis/barrelpad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [bearbirdpad v0.3.0](https://github.com/chrissotraidis/bearbirdpad/releases/tag/v0.3.0) | iPhone/iPad | Experimental | Unavailable | Experimental / Experimental | Unavailable / Unavailable | — |
 | [bellpad v0.2.3](https://github.com/chrissotraidis/bellpad/releases/tag/v0.2.3) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [bellpad v0.2.3](https://github.com/chrissotraidis/bellpad/releases/tag/v0.2.3) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
-| [bluewake v0.9.0](https://github.com/chrissotraidis/bluewake/releases/tag/v0.9.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
+| [bluewake v0.10.0](https://github.com/chrissotraidis/bluewake/releases/tag/v0.10.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [brawlerpad v0.2.2](https://github.com/chrissotraidis/brawlerpad/releases/tag/v0.2.2) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [brawlerpad v0.2.2](https://github.com/chrissotraidis/brawlerpad/releases/tag/v0.2.2) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [ctrpad v0.2.4](https://github.com/chrissotraidis/ctrpad/releases/tag/v0.2.4) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
@@ -88,11 +98,11 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 | [f0x v0.1.1](https://github.com/chrissotraidis/f0x/releases/tag/v0.1.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [f0x v0.1.1](https://github.com/chrissotraidis/f0x/releases/tag/v0.1.1) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [galaxypad v0.2.2](https://github.com/chrissotraidis/galaxypad/releases/tag/v0.2.2) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
-| [goldenpad v0.3.0](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.3.0) | iPhone/iPad | Experimental | Unavailable | Experimental / Experimental | Planned / Unavailable | — |
+| [goldenpad v0.3.0](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.3.0) | iPhone/iPad | Experimental | Unavailable | Experimental / Experimental | Unavailable / Unavailable | — |
 | [harkinianpad v0.2.2](https://github.com/chrissotraidis/harkinianpad/releases/tag/v0.2.2) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
-| [kartpad v0.8.6](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.6) | iPhone/iPad | Experimental | Experimental | Experimental / Experimental | Experimental / Experimental | — |
-| [kartpad v0.8.6](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.6) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
-| [kartpad v0.8.6](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.6) | Android | Experimental | Experimental | Experimental / Experimental | Experimental / Experimental | — |
+| [kartpad v0.8.7](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.7) | iPhone/iPad | Experimental | Experimental | Experimental / Experimental | Experimental / Experimental | — |
+| [kartpad v0.8.7](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.7) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
+| [kartpad v0.8.7](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.7) | Android | Experimental | Experimental | Experimental / Experimental | Experimental / Experimental | — |
 | [maskpad v0.2.1](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | iPhone/iPad | Experimental | Unavailable | Experimental / Experimental | Unavailable / Unavailable | — |
 | [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
@@ -107,11 +117,11 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 | [spaghettipad v0.2.1](https://github.com/chrissotraidis/spaghettipad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [squirrelpad v0.2.0](https://github.com/chrissotraidis/squirrelpad/releases/tag/v0.2.0) | iPhone/iPad | Experimental | Unavailable | Experimental / Experimental | Unavailable / Unavailable | — |
 | [starshippad v0.2.1](https://github.com/chrissotraidis/starshippad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
-| [sunpad v0.2.2](https://github.com/chrissotraidis/sunpad/releases/tag/v0.2.2) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
-| [sunpad v0.2.2](https://github.com/chrissotraidis/sunpad/releases/tag/v0.2.2) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
+| [sunpad v0.2.3](https://github.com/chrissotraidis/sunpad/releases/tag/v0.2.3) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
+| [sunpad v0.2.3](https://github.com/chrissotraidis/sunpad/releases/tag/v0.2.3) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [tribespad v0.2.0](https://github.com/chrissotraidis/tribespad/releases/tag/v0.2.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [tribespad v0.2.0](https://github.com/chrissotraidis/tribespad/releases/tag/v0.2.0) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
-| [utp v0.1.0](https://github.com/chrissotraidis/utp/releases/tag/v0.1.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
+| [utp v0.1.2](https://github.com/chrissotraidis/utp/releases/tag/v0.1.2) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 
 **Android as the build host:** only KartPad's phone route is offered, through
 Termux and a Linux ARM64 environment. It remains experimental: the recorded
@@ -148,8 +158,8 @@ Games are grouped by family so shared build work can be reused; each port still
 requires its own validation.
 Windows build hardening resumed on 26 October 2026
 ([D17](DECISIONS.md#d17-windows-build-hardening-resumes-26-oct-2026)).
-The 29 October handoff defers broader implementation until the next owner
-request; [Resume work](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#resume-work) records that queue. The rows
+[Resume work](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#resume-work)
+records the current queue. The rows
 preserve earlier published routes and private proof records. A completed build
 does not establish device launch or gameplay. The 5 October pause remains a
 historical decision.
@@ -161,7 +171,7 @@ it does not imply both operating systems were tested.
 | Game | Status | Smallest next step |
 |---|---|---|
 | KartPad | **Android is a ready-to-play download** on [its releases](https://github.com/chrissotraidis/kartpad/releases/latest): the APK includes the game code, so on Android PadMint's useful output is the `KartPad game data` folder. iPhone/iPad is built through PadMint (the release's `ios-for-padmint.ipa` has no game code). The Mac copy builds through PadMint on Apple Silicon Macs. The 0.7.9–0.7.13 ready-to-play Apple downloads won't get updates. Earlier: Android packs built on Mac, Windows and Linux raced on an Android 16 emulator; iPhone off a Mac is experimental | A data-only Android target in KartPad's recipe, so PadMint skips the 1 GB NDK and the unused pack |
-| BlueWake | Ready-to-play Windows desktop downloads remain outside PadMint. On 31 October the iPhone module [draft #100](https://github.com/chrissotraidis/bluewake/pull/100) completed a full packaged PadMint 0.5.27 build on Windows 11 ARM64 from the original disc (8,344 s), with module/companion, ABI, imports and IPA readback checks; a warm repeat recompiled nothing (build stage 93 s, 924 s with the disc check). #100 marks its Windows hosts experimental, because PadMint refuses planned hosts | BlueWake's next full release (desktop downloads included) carries the Windows recipe; then device checks |
+| BlueWake | Ready-to-play Windows and Linux desktop downloads ship in 0.10.0 outside PadMint. On 31 October the iPhone module [#100](https://github.com/chrissotraidis/bluewake/pull/100) completed a full packaged PadMint 0.5.27 build on Windows 11 ARM64 from the original disc (8,344 s), with module/companion, ABI, imports and IPA readback checks; a warm repeat recompiled nothing (build stage 93 s, 924 s with the disc check). #100 marks its Windows hosts experimental, because PadMint refuses planned hosts | Publish an iPhone recipe enabling Windows and its matching app, then device checks. Released 0.10.0 still declares only Mac for iPhone |
 | SunPad | [Draft #78](https://github.com/chrissotraidis/sunpad/pull/78), stacked on #57, records a complete private Windows ARM64 PadMint build and a private x64-toolchain disc build under ARM emulation. All 225 generated files match Mac after newline normalization; 2,797 base-app entries stay unchanged. Native x64 CI separately covers public tools and module checks | Finish Unicode-path hardening, then device launch/audio/saves and release review. Emulation is not native private x64 hardware acceptance |
 | MeleePad | **Build here (experimental)** since [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) (1 November): its release carries the Windows recipe and a matching app without game code, and PadMint 0.5.27 built the published release on Windows 11 ARM64 from the player's file. Earlier: [#52](https://github.com/chrissotraidis/meleepad/pull/52) builds the offline module directly with pinned DolRecomp. Both supported revisions built on Mac; on 31 October the packaged PadMint 0.5.27 ZIP built it on Windows 11 ARM64 from the reviewed v1.02 image in 931 s, adding only the module and its identity file to the app. All 241 generated files match Mac after newline normalization. Its recipe now names the `windows-x86_64` host correctly. Slippi online builds stay separate | Install and play a Windows-built copy on an iPhone or iPad; a native x64 Windows PC |
 

@@ -7,6 +7,19 @@
   "player_targets": [
     "ios"
   ],
+  "host_notes": {
+    "macos": {
+      "text": "Known problem: AgePad 0.1.0 can stop when Steam has updated its files since that release, because its recipe expects the older Steam files. A fix is in progress (https://github.com/chrissotraidis/agepad/pull/15); check it before installing the tools.",
+      "translations": {
+        "es": {
+          "text": "Problema conocido: AgePad 0.1.0 puede detenerse si Steam actualizó sus archivos después de esa versión, porque su receta espera los archivos anteriores de Steam. Hay una corrección en curso (https://github.com/chrissotraidis/agepad/pull/15); revísala antes de instalar las herramientas."
+        },
+        "pt": {
+          "text": "Problema conhecido: o AgePad 0.1.0 pode parar se o Steam atualizou os arquivos depois dessa versão, porque a receita espera os arquivos antigos do Steam. Uma correção está em andamento (https://github.com/chrissotraidis/agepad/pull/15); confira antes de instalar as ferramentas."
+        }
+      }
+    }
+  },
   "player_game_file": "in-app",
   "free_space_gb": 3,
   "player_help": "https://github.com/chrissotraidis/agepad#get-agepad",

@@ -223,7 +223,15 @@ For personal output that must remain private, also set `github_build_private: tr
 and supply an `off_mac` guide describing private repository import and Actions
 usage. Public or unknown-visibility manual runs stop before setup. PR and scheduled
 checks compile without uploading the app. Record a successful clean hosted build
-before describing the route as validated.
+before describing the build as validated; a manual artifact download, signing,
+installation and gameplay need their own evidence.
+
+The private flag is an explicit catalog setting, not automatically derived from
+`publication.public_binaries`. Several released personal recipes set that field
+to false while their cloud routes allow public forks; DarkPad requires a private
+copy. [Build-route wording](BUILD_ROUTE_COPY.md#darkpad-is-not-technically-a-different-kind-of-personal-build)
+records that inconsistency as an open owner decision. Do not infer hosted-artifact
+permission from ROM timing or change existing restrictions as part of a copy edit.
 
 A game's separate GitHub workflow can be listed in the cloud category with
 `off_mac.github_workflow: true`. Its `off_mac.url` and localized text must explain
@@ -430,6 +438,11 @@ same change:
   says **Needs Xcode + Homebrew**, and the page offers one line with only the missing
   packages. Without it the card says **Needs Xcode**, and the catalog check fails if the
   recipe asks players for anything besides Xcode.
+- `host_notes`: one short note per kind of computer (`macos`, `windows` or
+  `linux`), with `translations` like `off_mac`. The game page shows it beside the
+  build, before setup, for a route's known limit: the six newer Windows routes
+  list their open device and native x64 checks, and AgePad its Steam problem.
+  Remove the note when the limit is gone.
 - `player_next`: the steps after a build, per target. For `ios`, `"sideload": true`
   puts PadMint's Sideloadly steps first and the game's own steps after them; without
   `player_next.ios` a game gets only the Sideloadly steps.

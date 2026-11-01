@@ -1,18 +1,35 @@
 # PadMint status
 
-Updated **1 November 2026**. **Next work:** when the owner asks to continue
+Updated **1 November 2026**.
+
+**Next work:** when the owner asks to continue
 improving PadMint, start with [Resume work](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#resume-work).
 It records the audit, existing PRs, more Windows/Linux and cloud build options,
 ownership enforcement, preview updates and the validation each route needs.
-The owner requested this documentation handoff and small fixes, then a stop;
-broader implementation resumes on that later request ([D18](https://github.com/chrissotraidis/padmint/blob/main/docs/DECISIONS.md#d18-save-the-improvements-handoff-then-stop-29-oct-2026)).
+Implementation resumed at the owner's request after the 29 October stop
+([D18](https://github.com/chrissotraidis/padmint/blob/main/docs/DECISIONS.md#d18-save-the-improvements-handoff-then-stop-29-oct-2026)).
+
+**v0.5.29:** clearer choices on every computer. A game's build step is named
+for the computer (**Build on this Mac**, **this Windows PC**, **this Linux
+computer**), and a short note beside it gives a route's known limit: the six
+new Windows routes have no device or native x64 check yet, and AgePad 0.1.0 can
+stop after Steam updates. On Linux, pages say before a build or download that
+installing on an iPhone directly from Linux isn't tested, and the install steps
+start by copying the app to a Windows PC or Mac. GitHub Cloud Build cards say
+GitHub compiles on a temporary Mac while you start the run on GitHub, without
+promising a build time. BlueWake's card offers its Windows and Linux downloads;
+HaloPad's covers both editions and signing; DarkPad's says its route currently
+requires a private copy of PadMint, without claiming a technical reason. All of
+it is in English, Spanish and Portuguese. The README opens with the three routes
+and one table of what each computer builds. What changed, the checks and the
+open DarkPad decision are in [Build-route wording](docs/BUILD_ROUTE_COPY.md).
 
 **v0.5.28:** six more games build for iPhone and iPad on a Windows PC, marked
 experimental: **GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and
 MeleePad**. Each game's new release (GoldenPad, BearBirdPad, BananaPad and
 MeleePad 0.3.0, DinoPad 0.3.1, SquirrelPad 0.2.0) carries a Windows recipe and
-an app without game code. On Windows PadMint installs Visual Studio's C++ tools
-and the pinned compilers, builds the game from the player's own ROM or disc and
+an app without game code. On Windows PadMint asks for Visual Studio's C++ Build
+Tools, installs the pinned compilers, builds the game from the player's own ROM or disc and
 adds it to that app; on a Mac the build is unchanged. Before this PadMint was
 released, PadMint 0.5.27's `padmint make <game> ios` built each published
 release on Windows 11 ARM64 (SquirrelPad 103 s, BananaPad 134 s, GoldenPad
@@ -40,8 +57,8 @@ On a computer a game can't build on, `padmint doctor` now names the computers
 that can, instead of listing Homebrew and Xcode installs (found on Linux).
 
 This release also lists **DarkPad** under GitHub Cloud Build (experimental; it
-needs a private copy of PadMint, because the build is personal) and shows
-**HaloPad's** own Xbox-edition workflow there, so 17 games can be built for
+currently requires a private copy of PadMint; see [Build-route wording](docs/BUILD_ROUTE_COPY.md#darkpad-is-not-technically-a-different-kind-of-personal-build))
+and shows **HaloPad's** own Xbox-edition workflow there, so 17 games can be built for
 iPhone/iPad from Windows or Linux without a Mac. A clean hosted DarkPad build
 passed; installing and playing that build still need testing. SquirrelPad stays
 local because it reads the player's ROM while compiling.
@@ -87,9 +104,9 @@ deployment keep their separate approval and validation gates.
 Windows PC through published recipes, all experimental: **KartPad** (Android or
 iPhone/iPad) and, from 0.5.28, the iPhone/iPad apps of **GoldenPad, BearBirdPad,
 BananaPad, SquirrelPad, DinoPad and MeleePad**. Sixteen iPhone/iPad games can be
-compiled by **GitHub's Mac** after Windows starts the workflow (DarkPad from a
+compiled by **GitHub's Mac**, started by the player on GitHub (DarkPad from a
 private copy of PadMint), and HaloPad's Xbox edition has its own GitHub
-workflow. Six ports still need an Apple Silicon Mac for iPhone/iPad; EctoPad is
+workflow. Linux builds KartPad locally and offers the same 17 cloud routes. Six ports still need an Apple Silicon Mac for iPhone/iPad; EctoPad is
 paused. None of these options is a
 Windows desktop build. The game-by-game running list, with each game's next fix,
 is in [Building games on Windows](docs/WINDOWS.md#every-game-from-a-windows-pc-running-list);
@@ -104,13 +121,17 @@ game pages link to it from Windows and Linux.
   and is only for PadMint. The 0.7.9–0.7.13 ready-to-play iPhone/iPad and Mac
   downloads won't get updates.
 - **HaloPad's Xbox edition** can also be built without a Mac, using GitHub Cloud
-  Build ([steps](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer)).
-  On Windows and Linux PadMint points there instead of saying it needs a Mac.
-- **BlueWake on Windows** downloads its ready-to-play build from
+  Build ([steps](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer));
+  the run makes iPhone/iPad and Mac apps. Signing follows
+  [HaloPad's install guide](https://github.com/chrissotraidis/projectreach/blob/main/docs/INSTALL-IPHONE.md).
+  Custom Edition, from the player's PC installer, needs an Apple Silicon Mac.
+- **BlueWake on Windows and Linux** has ready-to-play desktop downloads in
+  **0.10.0** from
   [BlueWake's releases](https://github.com/chrissotraidis/bluewake/releases/latest).
   Its iPhone route from Windows ([#100](https://github.com/chrissotraidis/bluewake/pull/100))
   built the original disc through packaged PadMint on Windows 11 ARM64 in
-  2 h 19 min; it reaches players with BlueWake's next full release.
+  2 h 19 min. The published 0.10.0 iPhone recipe still declares only Mac;
+  a release explicitly enabling Windows and a device check remain.
 - **Every other Pad game** builds through PadMint, or is a no-build download
   listed in PadMint.
 

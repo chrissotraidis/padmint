@@ -91,6 +91,14 @@ manifest-only change rather than a new wrapper in every repository.
 
 ## D5. One release formula for every game (owner decision, 29 Sep 2026)
 
+**Historical scope:** this records the 29 September formula. Current authorized
+downloads and game-specific release arrangements are described in
+[the player guide](../README.md#what-you-can-make-and-where); do not use this
+older text to remove those downloads or infer permission for other outputs.
+[Build-route wording](BUILD_ROUTE_COPY.md#darkpad-is-not-technically-a-different-kind-of-personal-build)
+separates authorized ready-made apps from personal builds and records the
+unresolved consistency of personal cloud-artifact visibility.
+
 Nothing containing game code, disc data or keys is published. Everything else
 is, in the same shape for every repo and every update: one version (the repo's
 `version.json`), assets named `<Game>-vX.Y.Z-...`, and `SHA256SUMS`.
@@ -428,6 +436,11 @@ focused work, plus a device check per game. Android copies of games other than
 KartPad need an Android port first, which none has. Publishing the apps without game
 code for the decompilation ports changes D5 (recipe only) and needs an owner
 decision.
+
+**Later clarification (1 November):** the rejected cloud shortcut below refers
+to a build that reads the player's private disc/ROM. Published cloud routes can
+build without those inputs and import them on the device afterward. See
+[the current route roster](WINDOWS.md).
 
 Rejected shortcuts: building on a cloud Mac uploads players' game files and breaks
 "nothing is uploaded"; extracting Apple's SDK to use on a PC breaks Apple's license.

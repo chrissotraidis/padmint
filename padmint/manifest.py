@@ -373,6 +373,16 @@ def catalog():
                         or (off_mac.get("github_workflow") and github)):
             raise ValueError(f"catalog/{path.name}: off_mac.github_workflow is a boolean for a separate workflow, "
                              "not a shared github_build")
+        # A short note for players on one kind of computer (macos, windows or linux), shown next
+        # to the build: a route's known limit, such as checks a new route has not had yet.
+        notes = entry.get("host_notes")
+        if notes is not None and (not isinstance(notes, dict) or not targets or not notes
+                                  or not set(notes) <= {"macos", "windows", "linux"}
+                                  or not all(isinstance(note, dict) and all(
+                                      isinstance(text.get("text", note.get("text")), str)
+                                      for text in [note] + list((note.get("translations") or {}).values()))
+                                      for note in notes.values())):
+            raise ValueError(f"catalog/{path.name}: host_notes maps macos, windows or linux to localized text")
         # Targets the game's recipe can build that PadMint deliberately doesn't offer yet, each
         # with the reason; scripts/audit-catalog.py reports any other hidden target.
         held = entry.get("unoffered_targets")
