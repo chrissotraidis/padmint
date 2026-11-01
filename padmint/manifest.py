@@ -369,6 +369,10 @@ def catalog():
                                     or not all(isinstance(text.get("text", off_mac.get("text")), str)
                                                for text in [off_mac] + list((off_mac.get("translations") or {}).values()))):
             raise ValueError(f"catalog/{path.name}: off_mac needs player_targets, an https url and text")
+        if off_mac and (not isinstance(off_mac.get("github_workflow", False), bool)
+                        or (off_mac.get("github_workflow") and github)):
+            raise ValueError(f"catalog/{path.name}: off_mac.github_workflow is a boolean for a separate workflow, "
+                             "not a shared github_build")
         # Targets the game's recipe can build that PadMint deliberately doesn't offer yet, each
         # with the reason; scripts/audit-catalog.py reports any other hidden target.
         held = entry.get("unoffered_targets")

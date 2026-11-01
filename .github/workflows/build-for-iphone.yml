@@ -1,6 +1,7 @@
 name: Build a game for iPhone and iPad
-# For players without a Mac with Apple Silicon. Fork PadMint, open Actions in your fork,
-# choose this workflow, pick a game and press Run workflow. GitHub's free Mac makes your
+# For players without a Mac with Apple Silicon. Use a public fork for the listed games
+# except DarkPad, which requires a private repository and its Actions allowance. Open
+# Actions, choose this workflow, pick a game and press Run workflow. GitHub makes your
 # copy from the game's latest release, the same way PadMint does on a Mac. These games
 # take your own game file inside the app after installing, so nothing of yours is
 # uploaded. The IPA stays with your run for one day: download it, install it with
@@ -21,6 +22,7 @@ on:
           - bellpad
           - brawlerpad
           - ctrpad
+          - darkpad
           - f0x
           - galaxypad
           - harkinianpad
