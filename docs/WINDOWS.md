@@ -1,6 +1,6 @@
 # Building games on Windows
 
-Published-route snapshot: **31 October 2026**, PadMint **v0.5.27**.
+Published-route snapshot: **1 November 2026**, PadMint **v0.5.28**.
 
 This page answers one question: **which game builds can run on a Windows
 computer with PadMint?** It is about the *build computer*. The result is an
@@ -23,15 +23,17 @@ Use these labels consistently in the app and documentation:
 
 ## Every game from a Windows PC: running list
 
-Updated **31 October 2026** for PadMint **0.5.27**, from the live catalog audit
+Updated **1 November 2026** for PadMint **0.5.28**, from the live catalog audit
 (`scripts/audit-catalog.py`) and each game's open pull requests. This is the
 work queue for "every game can be built from Windows". A game moves to **Build
 here** only after the gates in [Active queue](#active-queue) are met.
 
-**Today, from Windows:** 18 of the 31 buildable ports reach an iPhone/iPad
-(1 built locally, 17 on GitHub's Mac), and all 8 ready-made apps install with
-Sideloadly. Twelve ports still need an Apple Silicon Mac for iPhone/iPad, and
-EctoPad is paused.
+**Today, from Windows:** 24 of the 31 buildable ports reach an iPhone/iPad
+(7 built locally, 17 on GitHub's Mac), and all 8 ready-made apps install with
+Sideloadly. Six ports still need an Apple Silicon Mac for iPhone/iPad, and
+EctoPad is paused. The six new local Windows builds are experimental: each
+built on Windows 11 ARM64 from its published release, but no Windows-built copy
+has been installed on an iPhone or iPad yet.
 
 | Game (port) | From Windows today | Why there is no local Windows build yet | Next fix |
 |---|---|---|---|
@@ -39,16 +41,16 @@ EctoPad is paused.
 | 15 games on the shared workflow: BallPad, BarrelPad, BellPad, BrawlerPad, CTRPad, F0X, GalaxyPad, HarkinianPad, MaskPad, OpenRCT2 Touch, PaperPad, SpaghettiPad, StarshipPad, TribesPad, UTP | **GitHub Cloud Build** | The app's engine still needs Apple's SDK to compile; the game is added in the app, so GitHub's Mac can build it | None for players. Local builds follow [spaghettipad#29](https://github.com/chrissotraidis/spaghettipad/pull/29); PaperPad's pinned downloads wait for [paperpad#24](https://github.com/chrissotraidis/paperpad/pull/24) |
 | Perfect Dark (DarkPad) | **GitHub Cloud Build**, private copy of PadMint (0.5.27) | Same as above | A private manual run, then install and play it |
 | Halo (HaloPad) | Xbox edition: **HaloPad's own GitHub workflow** | Custom Edition converts the PC game with Wine and Mac tools | No Windows design for Custom Edition yet |
-| Conker's Bad Fur Day (SquirrelPad) | Apple Silicon Mac | Reads the ROM while compiling, so it can't use GitHub (D15) | [squirrelpad#7](https://github.com/chrissotraidis/squirrelpad/pull/7): publish the game-free shell and Windows recipe, then a device check |
-| GoldenEye 007 (GoldenPad) | Apple Silicon Mac | Reads the ROM while compiling | [goldenpad#52](https://github.com/chrissotraidis/goldenpad/pull/52): on 1 Nov the packaged PadMint 0.5.27 build completed on Windows 11 ARM64 in 70 s with a shell built from the same revision. Next: publish the shell and recipe, device check |
-| Banjo-Kazooie (BearBirdPad) | Apple Silicon Mac | Reads the ROM while compiling | [bearbirdpad#27](https://github.com/chrissotraidis/bearbirdpad/pull/27): on 1 Nov the packaged PadMint 0.5.27 build completed on Windows 11 ARM64 in 98 s with a shell built from the same revision. Next: publish the shell and recipe, device check |
-| Donkey Kong 64 (BananaPad) | Apple Silicon Mac | Reads the ROM while compiling | [bananapad#22](https://github.com/chrissotraidis/bananapad/pull/22): on 1 Nov the packaged PadMint 0.5.27 build completed on Windows 11 ARM64 in 108 s, and the recipe is now `experimental`. Next: publish the shell and recipe, device check |
+| Conker's Bad Fur Day (SquirrelPad) | **Build here** (experimental), [squirrelpad v0.2.0](https://github.com/chrissotraidis/squirrelpad/releases/tag/v0.2.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (103 s). Next: install and play a Windows-built copy on a device |
+| GoldenEye 007 (GoldenPad) | **Build here** (experimental), [goldenpad v0.3.0](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (126 s). Next: install and play a Windows-built copy on a device |
+| Banjo-Kazooie (BearBirdPad) | **Build here** (experimental), [bearbirdpad v0.3.0](https://github.com/chrissotraidis/bearbirdpad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (155 s). Next: install and play a Windows-built copy on a device |
+| Donkey Kong 64 (BananaPad) | **Build here** (experimental), [bananapad v0.3.0](https://github.com/chrissotraidis/bananapad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (134 s). Next: install and play a Windows-built copy on a device |
 | Super Mario Sunshine (SunPad) | Apple Silicon Mac | Reads the disc while compiling | Merge [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57), then [#78](https://github.com/chrissotraidis/sunpad/pull/78); publish, device check |
-| Super Smash Bros. Melee (MeleePad) | Apple Silicon Mac | Reads the disc while compiling | [meleepad#52](https://github.com/chrissotraidis/meleepad/pull/52): host names fixed, and on 31 Oct the packaged PadMint 0.5.27 build completed on Windows 11 ARM64 from the reviewed v1.02 disc in 15.5 min. Next: release the recipe, device check |
+| Super Smash Bros. Melee (MeleePad) | **Build here** (experimental), [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (3,863 s). Next: install and play a Windows-built copy on a device |
 | Pokémon Snap (SnapPad) | Apple Silicon Mac | Reads the ROM while compiling; its decompilation tools still come from a private, locally verified bundle | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12): publish those tools through PadMint's managed tools, then add Windows hosts to the recipe. SnapPad's release pause still applies |
-| The Wind Waker (BlueWake) | Ready-to-play **Windows desktop** download; iPhone/iPad needs a Mac | Reads the disc while compiling | [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100): on 31 Oct the complete route ran on Windows 11 ARM64 through PadMint 0.5.27: original disc to personal IPA in 2 h 19 min, warm repeat with nothing recompiled. Next: release the recipe with Windows hosts, then a device check |
+| The Wind Waker (BlueWake) | Ready-to-play **Windows desktop** download; iPhone/iPad needs a Mac | Reads the disc while compiling | [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100) is merged: the Windows route (2 h 19 min on Windows 11 ARM64 from the original disc) ships with BlueWake's next full release, which also rebuilds its desktop downloads. Then a device check |
 | Pokémon Stadium (AnnePad) | Apple Silicon Mac | Reads the ROM while compiling | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20): on 1 Nov one Windows script took the ROM to the game module in 25 min on Windows 11 ARM64 (exact ROM rebuild, generated code matching Mac, module accepted by a matching shell). Next: publish PadMint's IDO, binutils and Rabbitizer builds, then the shell, recipe and device check |
-| Dinosaur Planet (DinoPad) | Apple Silicon Mac | Reads the ROM while compiling | [dinopad#19](https://github.com/chrissotraidis/dinopad/pull/19): the supported ROM built completely on Windows 11 ARM64 and Mac on 31 Oct, and the recipe's Windows module route ran through packaged PadMint 0.5.27 on Windows 11 ARM64; publish the shell and recipe, device check |
+| Dinosaur Planet (DinoPad) | **Build here** (experimental), [dinopad v0.3.1](https://github.com/chrissotraidis/dinopad/releases/tag/v0.3.1) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (196 s). Next: install and play a Windows-built copy on a device |
 | Jak and Daxter (Ottsel) | Apple Silicon Mac | Reads the disc while compiling, and its iOS app links the compiled game code | [ottsel#7](https://github.com/chrissotraidis/ottsel/pull/7): on 31 Oct Windows 11 ARM64 extracted, decompiled and compiled the owner's disc, and the game code matched the Mac byte for byte after two compiler fixes. Next: a device check of the changed Mac output, then a game-free app with the compiled game in a private library |
 | Age of Empires II: DE (AgePad) | Apple Silicon Mac | Adds the player's installed **Mac** Steam edition and Steam for Mac's libraries to the app | [agepad#15](https://github.com/chrissotraidis/agepad/pull/15): the Steam libraries now download from Valve's public packages on any computer. On 31 Oct, 6 of 8 pinned Steam files no longer matched an installed Steam, so the v0.1.0 Mac route currently fails after Steam updates. Next: an iPad run, a base-app release with the new pins, then the Mac game via SteamCMD on Windows |
 | Metroid Prime (EctoPad) | Paused | Its engine (Metaforce) is private until its developers publish it | Wait for Metaforce |
@@ -82,6 +84,9 @@ the way GoldenPad, BearBirdPad, BananaPad, SquirrelPad and DinoPad do.
 
 ## Recently completed
 
+- **0.5.28:** GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and
+  MeleePad build for iPhone/iPad on Windows (experimental), from their new
+  releases' game-free apps and Windows recipes.
 - **0.5.27:** DarkPad joins GitHub Cloud Build (private copy of PadMint) and
   HaloPad's own workflow is listed there, so 17 games build for iPhone/iPad from
   Windows. Every game page uses the same numbered steps on every system.
@@ -104,11 +109,11 @@ the way GoldenPad, BearBirdPad, BananaPad, SquirrelPad and DinoPad do.
 
 | Route | Games | Result | Current status |
 |---|---|---|---|
-| **Build here with PadMint** | KartPad | iPhone/iPad `.ipa`, or a KartPad game-data pack for the published Android app | Experimental; published recipe |
+| **Build here with PadMint** | KartPad, GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad, MeleePad | iPhone/iPad `.ipa` (and a KartPad game-data pack for the published Android app) | Experimental; published recipes. The six N64/GameCube ports download a game-free app from their release and add the module PadMint builds from the player's file. Needs Visual Studio 2022 Build Tools with C++ |
 | **GitHub Cloud Build** | BallPad, BarrelPad, BellPad, BrawlerPad, CTRPad, F0X, GalaxyPad, HarkinianPad, MaskPad, OpenRCT2 Touch, PaperPad, SpaghettiPad, StarshipPad, TribesPad, UTP | iPhone/iPad `.ipa` | Published workflow; not a local Windows build |
 | **Separate GitHub workflow** | HaloPad, Xbox edition | iPhone/iPad `.ipa` or Mac app | [Use HaloPad's own repository and workflow](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer); Custom Edition still needs an Apple Silicon Mac |
 | **Private GitHub Cloud Build** | DarkPad | iPhone/iPad `.ipa` | Experimental; [clean hosted build passed](https://github.com/chrissotraidis/padmint/actions/runs/40830430386/job/123303170832), with no IPA uploaded. Installation and gameplay are unvalidated. [Private setup and Actions allowance](../README.md#darkpad-private-github-build) |
-| **Apple Silicon Mac** | The other buildable titles, including the seven Windows proofs below | iPhone/iPad `.ipa`, and for some games a personal Mac app | The app must show **Apple Silicon Mac**; a private Windows proof alone does not enable it |
+| **Apple Silicon Mac** | The other buildable titles, including the Windows proofs below | iPhone/iPad `.ipa`, and for some games a personal Mac app | The app must show **Apple Silicon Mac**; a private Windows proof alone does not enable it |
 | **No build needed** | CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad, PeonPad, RAtouch, VaultPad | iPhone/iPad app from its release | Download and install; add your own game files in the app where required |
 
 **Windows desktop is a separate product.** BlueWake publishes a ready-to-play
@@ -117,8 +122,8 @@ the other games into Windows desktop ports.
 
 The 39-entry catalog passed the live recipe audit on 29 October 2026 with
 zero inconsistencies. This checks published declarations and links, not fresh
-game builds or device acceptance. KartPad remains the only published local
-Windows/Linux recipe.
+game builds or device acceptance. On 1 November the audit listed Windows hosts for
+GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and MeleePad.
 
 PadMint 0.5.27 ([PR #216](https://github.com/chrissotraidis/padmint/pull/216))
 added the private-repository DarkPad cloud route and made HaloPad's existing
@@ -138,14 +143,8 @@ and ARM64 need their own complete builds and acceptance checks.
 
 | Game | Proven on the build side | Missing before Windows can be selected |
 |---|---|---|
-| [SquirrelPad #7](https://github.com/chrissotraidis/squirrelpad/pull/7) | Packaged Windows ARM64 build; generated files matched Mac; native x64 generator CI | Publish the code-free `SquirrelPad-v…-ios-shell.ipa`, publish the Windows recipe, device launch/audio/save |
-| [GoldenPad #52](https://github.com/chrissotraidis/goldenpad/pull/52) | Packaged PadMint 0.5.27 build on Windows 11 ARM64 (1 Nov) from a fresh clone and a shell built at the same revision, adding only the module; earlier emulated x64 toolchain | Publish the shell and recipe, device check; native private x64 hardware remains separate |
-| [BearBirdPad #27](https://github.com/chrissotraidis/bearbirdpad/pull/27) | Packaged PadMint 0.5.27 build on Windows 11 ARM64 (1 Nov), all 279 shell entries unchanged; earlier emulated x64; generated files match Mac | Publish the shell and recipe, device check; native private x64 hardware remains separate |
-| [BananaPad #22](https://github.com/chrissotraidis/bananapad/pull/22) | Packaged PadMint 0.5.27 build on Windows 11 ARM64 (1 Nov), all 248 shell entries unchanged; public generator CI | Publish the shell and recipe, device check; native private x64 hardware remains separate |
 | [SnapPad #12](https://github.com/chrissotraidis/snappad/pull/12) | Full Windows ARM64 ROM-to-IPA pipeline; byte-identical generated output; warm rebuild performs no compilation | Add Windows hosts to the recipe, publish it, device check; current recipe has no Windows host |
-| [MeleePad #52](https://github.com/chrissotraidis/meleepad/pull/52) | Packaged PadMint 0.5.27 build on Windows 11 ARM64 from the reviewed v1.02 disc (31 Oct), with corrected `windows-x86_64` host names; earlier emulated x64 backend | Publish the recipe, device check; native private x64 hardware remains separate |
 | [SunPad #78](https://github.com/chrissotraidis/sunpad/pull/78) | Windows ARM64 and emulated x64 backend; PRs #57 and #78 pass | Merge prerequisite [#57](https://github.com/chrissotraidis/sunpad/pull/57) and then #78, publish the recipe, device check |
-| [DinoPad #19](https://github.com/chrissotraidis/dinopad/pull/19) | Supported ROM to module on Windows 11 ARM64 through PadMint 0.5.27's release ZIP and freshly installed tools (31 Oct), and on Mac; all 219 translated game-code files and the RSP code match Mac; PadMint's import, iOS 15 and insertion checks pass on both | Recipe declares Windows hosts (31 Oct); publish the shell and recipe, device check; native x64 hardware remains separate |
 
 ## Remaining local-Windows work
 
@@ -172,21 +171,16 @@ Broader implementation is deferred after the 29 October documentation handoff.
 On the next request to continue, start with [Resume work](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#resume-work)
 and recheck each affected PR and release before using this per-game queue.
 
-1. SnapPad: publish its decompilation tools through PadMint's managed tools
+1. Install and play a Windows-built copy of each new route (GoldenPad,
+   BearBirdPad, BananaPad, SquirrelPad, DinoPad, MeleePad) on an iPhone or iPad,
+   and repeat one on a native x64 Windows PC.
+2. SnapPad: publish its decompilation tools through PadMint's managed tools
    (its backend still reads a private, locally verified bundle), then add
    Windows x64 and ARM64 to the recipe, publish it and run the physical-device
    check. SnapPad's release pause still applies.
-2. MeleePad: the recipe now uses `windows-x86_64`, and a test checks every host
-   name against PadMint's list ([meleepad#52](https://github.com/chrissotraidis/meleepad/pull/52),
-   31 October). Publish the recipe, then run the physical-device check.
 3. Merge SunPad #57 and #78, publish the recipe, and run the physical-device
    check.
-4. Publish and test SquirrelPad's code-free shell. Once that shell workflow is
-   proven, reuse it for GoldenPad and BearBirdPad, then BananaPad. All four
-   passed a packaged PadMint Windows ARM64 build with a shell built from the
-   same revision; a shell from an older revision has a different module
-   identity and is refused.
-5. BlueWake: its Windows hosts are experimental in #100; publish, device check.
+4. BlueWake: ship #100 with the next full BlueWake release (desktop downloads included), then a device check.
    AnnePad (#20) and SnapPad (#12) wait for the published IDO, binutils and
    Rabbitizer builds. AgePad needs the Mac game through SteamCMD; Ottsel's game-free shell
    waits for its signed whole-game execution on the Mac: today only part of the
@@ -194,14 +188,20 @@ and recheck each affected PR and release before using this per-game queue.
    module boundary designed now could not be checked on a device.
 
 Do not mark another game as **Build here** merely because a private proof
-exists. A row moves only after all of these are true:
+exists. A row moves to **Build here (experimental)** only after all of these are
+true:
 
 - its published recipe lists the exact Windows host(s);
-- its matching app shell or complete package is in the release and checksummed;
-- the build produces the expected signed library or IPA on that host;
-- the result launches on a physical iPhone/iPad, with audio and saves checked;
+- its matching app shell or complete package is in the release, checksummed,
+  and passes `python3 -m padmint audit` and the private release gate;
+- PadMint's player check passes on a Mac before tagging and after publishing;
+- the released PadMint for Windows runs `padmint make <game> ios` from the
+  published release and produces the personal IPA on that host;
 - this page, [compatibility](COMPATIBILITY.md), `STATUS.md` and the game catalog
   are updated together.
+
+The **experimental** label comes off only after a Windows-built copy launches on
+a physical iPhone/iPad, with audio and saves checked.
 
 ## Checking this page
 
