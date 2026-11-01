@@ -317,10 +317,9 @@ building. OpenRCT2Touch is a GitHub fork.
 - [ ] A tested way to install on an iPhone from Linux, then its steps.
 - [ ] Engine ports through spaghettipad#29: SpaghettiPad, then HarkinianPad,
   MaskPad, StarshipPad, PaperPad, BrawlerPad.
-- [ ] Keep the GitHub build check off changes it cannot affect. Today any edit
-  under `padmint/` rebuilds all 15 listed games on hosted Macs, so a window
-  polish release takes about two hours to reach green even though no recipe
-  changed. Split the window and documentation checks from the game matrix.
+- [x] Keep the GitHub build check off changes it cannot affect. Pull requests
+  that change only the browser window (`padmint/ui.py`) no longer rebuild every
+  listed game on hosted Macs; documentation was already outside the filter.
 
 ### Later
 
