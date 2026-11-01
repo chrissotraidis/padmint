@@ -55,9 +55,9 @@ draft is still current. No background builds or scheduled work are requested.
    existing-port edits, uncatalogued own-port fixtures, worktrees and offline
    operation. Use synthetic fixtures; never build someone else's app to test it.
 2. **Finish the existing cloud-route work.** Review
-   [#216](https://github.com/chrissotraidis/padmint/pull/216): at this audit it is
-   unmerged, with all 31 checks passing, including 16 hosted game builds. It
-   adds DarkPad's private cloud route and makes HaloPad's existing project
+   [#216](https://github.com/chrissotraidis/padmint/pull/216): merged and released
+   in 0.5.27 after all 31 checks passed, including 16 hosted game builds. It
+   added DarkPad's private cloud route and made HaloPad's existing project
    workflow easier to find. The check uploaded no game artifacts; private
    manual dispatch, signing/install and device gameplay still need validation.
    SquirrelPad needs the player's ROM during compilation and stays local.
@@ -88,7 +88,7 @@ plus the relevant host and device checks. Keep private game inputs local.
 
 | PR | State at the audit | Next decision |
 |---|---|---|
-| [#216](https://github.com/chrissotraidis/padmint/pull/216) | Open cloud-route implementation; checks pass | Review the remaining private workflow/device gates; do not describe it as shipped |
+| [#216](https://github.com/chrissotraidis/padmint/pull/216) | Merged; released in 0.5.27 | Validate a private manual run, signing/install and device gameplay |
 | [#172](https://github.com/chrissotraidis/padmint/pull/172) | Draft iOS SDK header work; checks pass | Reuse where a real module build needs it; this alone is not a complete game route |
 | [#168](https://github.com/chrissotraidis/padmint/pull/168) | Docs-only Android/Windows distribution proposal | Reconcile with each game's current owner-approved distribution before implementation |
 | [#136](https://github.com/chrissotraidis/padmint/pull/136) | Conflicted older BlueWake draft | Preserve its useful alignment fix, rebase and remove premature host enablement |

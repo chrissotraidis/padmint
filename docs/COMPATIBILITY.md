@@ -207,8 +207,8 @@ Custom Edition installer (with product-key.txt) builds both editions and needs W
 Off a Mac, the Xbox edition has no game input to build from: HaloPad's README shows how a
 player's own GitHub fork runs [GitHub Cloud Build](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer).
 This published project route is available from Windows or Linux and appears
-under Other routes in PadMint 0.5.24. PR #216 changes its placement; it does not
-create the HaloPad workflow or add it to PadMint's shared game dropdown.
+under GitHub Cloud Build since PadMint 0.5.27 (PR #216); PadMint links to it but does
+not create the HaloPad workflow or add it to its shared game dropdown.
 
 **No build needed:** CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad,
 PeonPad and VaultPad appear in the PadMint page with download and data-import

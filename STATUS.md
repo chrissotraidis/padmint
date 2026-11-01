@@ -53,7 +53,7 @@ so Windows displays accented text and folder arrows correctly.
 This release also includes host-neutral cloud-build wording for Windows/Linux
 and a **View guide** fallback for existing project routes without a card label,
 including HaloPad, from #217. These label fixes add no build route. Cloud-route
-PR #216 remains separate and unmerged.
+PR #216 shipped later, in 0.5.27.
 
 **v0.5.24:** Removed Melee PC. It built 999sian/melee-pc, another person's project, and PadMint lists only Chris's own ports (AGENTS.md now says so, and `tests/test_catalog_ownership.py` checks it). MeleePad no longer links to it, and the GitHub workflow no longer offers it.
 
