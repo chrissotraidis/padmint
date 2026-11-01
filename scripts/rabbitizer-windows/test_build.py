@@ -124,10 +124,10 @@ class ProducerTests(unittest.TestCase):
     def test_sdk_extracts_only_headers_import_library_and_license(self):
         archive = self.root / 'sdk.zip'
         with zipfile.ZipFile(archive, 'w') as bundle:
-            for name in ('include/Python.h', 'libs/python313.lib', 'LICENSE.txt', 'python.exe'):
+            for name in ('include/Python.h', 'libs/python313.lib', 'libs/python3.lib', 'LICENSE.txt', 'python.exe'):
                 bundle.writestr('tools/' + name, name.encode())
         files = producer.extract_sdk(archive, self.root / 'sdk', pin(archive))
-        self.assertEqual(set(files), {'include/Python.h', 'libs/python313.lib', 'LICENSE.txt'})
+        self.assertEqual(set(files), {'include/Python.h', 'libs/python313.lib', 'libs/python3.lib', 'LICENSE.txt'})
         self.assertFalse((self.root / 'sdk/python.exe').exists())
 
     def test_sdk_missing_license_refuses_before_writes(self):
