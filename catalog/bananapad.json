@@ -7,6 +7,11 @@
   "player_targets": [
     "ios"
   ],
+  "ios_hosts": [
+    "macos-arm64",
+    "windows-arm64",
+    "windows-x86_64"
+  ],
   "game_ids": [
     "NDOE"
   ],

@@ -220,11 +220,14 @@ def audit(json_output=False):
                 found(f"its card says Needs Xcode, but the recipe also asks for {', '.join(extra)}; "
                       "add their install line to before_build")
         # {python} is the Python running PadMint: Apple's 3.9 when PadMint.command starts it.
+        # Only a Mac runs that Python, so count Mac steps and Mac-side requirements only.
+        on_mac = lambda hosts: not hosts or any(host.startswith("macos") for host in hosts)
         newer = [tool["min_version"] for tool in recipe.get("requirements", {}).get("tools", [])
-                 if tool["name"] in ("python", "python3")
+                 if tool["name"] in ("python", "python3") and on_mac(tool.get("hosts"))
                  and cli.version_tuple(str(tool.get("min_version", "0"))) > (3, 9)]
         steps = [step for target in (recipe.get("targets") or {}).values()
-                 for step in ([target] if "command" in target else target.get("steps", []))]
+                 for step in ([target] if "command" in target else target.get("steps", []))
+                 if "macos" in step.get("on", ["macos"])]
         if newer and any(step["command"][:1] == ["{python}"] for step in steps):
             found(f"a step runs {{python}} (PadMint's Python, 3.9 on a Mac) but the recipe checks for "
                   f"Python {newer[0]}+; run python3, the program that check finds")

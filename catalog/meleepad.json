@@ -8,6 +8,11 @@
     "ios",
     "macos"
   ],
+  "ios_hosts": [
+    "macos-arm64",
+    "windows-arm64",
+    "windows-x86_64"
+  ],
   "game_ids": [
     "GALE01"
   ],

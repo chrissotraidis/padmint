@@ -61,10 +61,15 @@ draft is still current. No background builds or scheduled work are requested.
    workflow easier to find. The check uploaded no game artifacts; private
    manual dispatch, signing/install and device gameplay still need validation.
    SquirrelPad needs the player's ROM during compilation and stays local.
-3. **Turn private local-build proofs into usable released routes.** Follow
-   [the per-game queue](WINDOWS.md#active-queue): SnapPad and MeleePad recipe
-   corrections; SunPad prerequisites; SquirrelPad, GoldenPad, BearBirdPad and
-   BananaPad matching shells/recipes; then BlueWake and the unfinished families.
+3. **Turn private local-build proofs into usable released routes.** On
+   1 November GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and
+   MeleePad published Windows recipes with matching app shells (experimental;
+   PadMint's page lists them from 0.5.28). Next, follow
+   [the per-game queue](WINDOWS.md#active-queue): install and play a
+   Windows-built copy of each; BlueWake's next full release with
+   [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100); SunPad
+   #57 then #78; AnnePad and SnapPad once PadMint publishes its IDO, binutils,
+   Rabbitizer and asm-processor builds; then Ottsel and AgePad.
    Reuse shared runner/module work. Record Windows x64, Windows ARM64, Linux
    x64 and Linux ARM64 separately; Windows evidence does not qualify Linux.
    A private successful build cannot enable a public **Build here** button.

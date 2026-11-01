@@ -1,11 +1,25 @@
 # PadMint status
 
-Updated **31 October 2026**. **Next work:** when the owner asks to continue
+Updated **1 November 2026**. **Next work:** when the owner asks to continue
 improving PadMint, start with [Resume work](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#resume-work).
 It records the audit, existing PRs, more Windows/Linux and cloud build options,
 ownership enforcement, preview updates and the validation each route needs.
 The owner requested this documentation handoff and small fixes, then a stop;
 broader implementation resumes on that later request ([D18](https://github.com/chrissotraidis/padmint/blob/main/docs/DECISIONS.md#d18-save-the-improvements-handoff-then-stop-29-oct-2026)).
+
+**v0.5.28:** six more games build for iPhone and iPad on a Windows PC, marked
+experimental: **GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and
+MeleePad**. Each game's new release (GoldenPad, BearBirdPad, BananaPad and
+MeleePad 0.3.0, DinoPad 0.3.1, SquirrelPad 0.2.0) carries a Windows recipe and
+an app without game code. On Windows PadMint installs Visual Studio's C++ tools
+and the pinned compilers, builds the game from the player's own ROM or disc and
+adds it to that app; on a Mac the build is unchanged. Before this PadMint was
+released, PadMint 0.5.27's `padmint make <game> ios` built each published
+release on Windows 11 ARM64 (SquirrelPad 103 s, BananaPad 134 s, GoldenPad
+126 s, BearBirdPad 155 s, DinoPad 196 s, MeleePad 3,863 s), and PadMint's player
+check passed on a Mac before tagging and after publishing. Not checked yet: a
+Windows-built copy on an iPhone or iPad, and a native x64 Windows PC. The
+catalog audit now applies its Apple Python 3.9 check only to Mac build steps.
 
 **v0.5.27:** a cleaner window, the same on Mac, Windows and Linux. Every
 game page now has numbered steps marked ✓ as they're done: **Where will you
@@ -69,12 +83,14 @@ source of truth: draft build evidence does not enable a catalog button or
 establish device launch, audio or save compatibility. Game releases and device
 deployment keep their separate approval and validation gates.
 
-**Building on Windows today:** the only game PadMint compiles locally on a
-Windows PC through a published recipe is **KartPad**, for Android or iPhone/iPad
-(experimental). Sixteen iPhone/iPad games can be compiled by **GitHub's Mac**
-after Windows starts the workflow (DarkPad from a private copy of PadMint), and
-HaloPad's Xbox edition has its own GitHub workflow. Twelve ports still need an
-Apple Silicon Mac for iPhone/iPad; EctoPad is paused. None of these options is a
+**Building on Windows today:** PadMint compiles seven games locally on a
+Windows PC through published recipes, all experimental: **KartPad** (Android or
+iPhone/iPad) and, from 0.5.28, the iPhone/iPad apps of **GoldenPad, BearBirdPad,
+BananaPad, SquirrelPad, DinoPad and MeleePad**. Sixteen iPhone/iPad games can be
+compiled by **GitHub's Mac** after Windows starts the workflow (DarkPad from a
+private copy of PadMint), and HaloPad's Xbox edition has its own GitHub
+workflow. Six ports still need an Apple Silicon Mac for iPhone/iPad; EctoPad is
+paused. None of these options is a
 Windows desktop build. The game-by-game running list, with each game's next fix,
 is in [Building games on Windows](docs/WINDOWS.md#every-game-from-a-windows-pc-running-list);
 game pages link to it from Windows and Linux.
@@ -92,10 +108,9 @@ game pages link to it from Windows and Linux.
   On Windows and Linux PadMint points there instead of saying it needs a Mac.
 - **BlueWake on Windows** downloads its ready-to-play build from
   [BlueWake's releases](https://github.com/chrissotraidis/bluewake/releases/latest).
-  The iPhone module route from Windows remains
-  [draft #100](https://github.com/chrissotraidis/bluewake/pull/100), refreshed on
-  current main. A native Windows backend build from preserved extracted inputs
-  and its warm repeat passed; a complete current original-disc build is pending.
+  Its iPhone route from Windows ([#100](https://github.com/chrissotraidis/bluewake/pull/100))
+  built the original disc through packaged PadMint on Windows 11 ARM64 in
+  2 h 19 min; it reaches players with BlueWake's next full release.
 - **Every other Pad game** builds through PadMint, or is a no-build download
   listed in PadMint.
 
