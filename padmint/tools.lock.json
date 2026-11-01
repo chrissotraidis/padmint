@@ -867,6 +867,50 @@
           "rename": "nodtool"
         }
       }
+    },
+    "pigment64": {
+      "version": "0.6.3",
+      "only_where_listed": true,
+      "note": "Windows only: N64 image conversion for decompilation builds; Mac players install it with cargo.",
+      "bin": [
+        "."
+      ],
+      "hosts": {
+        "windows-arm64": {
+          "url": "https://github.com/decompals/pigment64/releases/download/0.6.3/pigment64-aarch64-pc-windows-msvc.tar.gz",
+          "sha256": "26dda627926d335bcb2de551f12bf2f8a4251c28d6e00c2e674b8daaa0031e86",
+          "size": 410730,
+          "archive": "tar.gz"
+        },
+        "windows-x86_64": {
+          "url": "https://github.com/decompals/pigment64/releases/download/0.6.3/pigment64-x86_64-pc-windows-msvc.tar.gz",
+          "sha256": "8feb7c611ffc531d67afc57aac65faa13a8fb143a903c643a970e091e1234bfc",
+          "size": 431832,
+          "archive": "tar.gz"
+        }
+      }
+    },
+    "uv": {
+      "version": "0.12.6",
+      "only_where_listed": true,
+      "note": "Windows only: Python environments for decompilation builds; Mac players install it with Homebrew.",
+      "bin": [
+        "."
+      ],
+      "hosts": {
+        "windows-arm64": {
+          "url": "https://github.com/astral-sh/uv/releases/download/0.12.6/uv-aarch64-pc-windows-msvc.zip",
+          "sha256": "6dda514fbbe3152d980758e0f6347116060114d7d24932fc0ea5d8063f8b253a",
+          "size": 19049489,
+          "archive": "zip"
+        },
+        "windows-x86_64": {
+          "url": "https://github.com/astral-sh/uv/releases/download/0.12.6/uv-x86_64-pc-windows-msvc.zip",
+          "sha256": "df7cb9f243eae1621400d4fcf5b1b3d90f20e264ece91b64deb3b0078abca6ef",
+          "size": 17777417,
+          "archive": "zip"
+        }
+      }
     }
   }
 }
