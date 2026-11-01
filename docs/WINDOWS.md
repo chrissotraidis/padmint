@@ -120,9 +120,9 @@ zero inconsistencies. This checks published declarations and links, not fresh
 game builds or device acceptance. KartPad remains the only published local
 Windows/Linux recipe.
 
-[PR #216](https://github.com/chrissotraidis/padmint/pull/216) is unmerged and
-unreleased. It adds a private-repository DarkPad cloud route and makes HaloPad's
-existing workflow easier to find. Hosted build checks passed, but private manual
+PadMint 0.5.27 ([PR #216](https://github.com/chrissotraidis/padmint/pull/216))
+added the private-repository DarkPad cloud route and made HaloPad's existing
+workflow easier to find. Hosted build checks passed, but private manual
 dispatch, signing/install and physical gameplay still need validation. It does
 not add SquirrelPad, which needs the player's ROM during compilation.
 
