@@ -501,7 +501,8 @@ def make_handler(token, builds, restart=None):
             self.send_response(code)
             self.send_header("Content-Type", kind)
             self.send_header("Cache-Control", "no-store")
-            self.send_header("Content-Security-Policy", "default-src 'self' 'unsafe-inline'")
+            # data: images only for the page's own inline icon; scripts and connections stay on this computer.
+            self.send_header("Content-Security-Policy", "default-src 'self' 'unsafe-inline'; img-src 'self' data:")
             self.end_headers()
             self.wfile.write(data)
 
@@ -978,6 +979,39 @@ html{min-height:100%;background:var(--bg)}body{min-height:100vh;background-attac
 #lookAgain{width:2.25rem;min-height:2.25rem;padding:0;border-radius:50%;font-size:0}#lookAgain:before{font-size:1.05rem}
 @media (max-width:560px){.setrow{flex-wrap:wrap}.setctl{width:100%}}
 html.locked,html.locked body{overflow:hidden}.sheet{overscroll-behavior:contain}.sheetbox{overscroll-behavior:contain}
+
+/* Refresh: numbered steps on every build page, one toolbar for the library, clearer Storage and Settings. */
+.uphow{margin:.35rem 0 0;padding-top:.5rem;border-top:1px solid var(--line);font-size:.86rem;color:var(--muted)}
+#form{counter-reset:step}.card.step:not(.hidden){counter-increment:step}
+.card.step>h2,.card.route>h2{display:flex;align-items:center;gap:.6rem;font-size:1.08rem}
+.card.step>h2:before{content:counter(step);display:inline-grid;place-items:center;flex:none;width:1.6rem;height:1.6rem;border-radius:50%;font-size:.8rem;font-weight:800;background:color-mix(in srgb,var(--text) 10%,transparent);color:var(--text)}
+.card.step.done>h2:before{content:"\2713";background:var(--mint);color:#05261a}
+.card ol.next{list-style:none;counter-reset:n;padding:0;margin:.5rem 0 .9rem}
+.card ol.next>li{counter-increment:n;position:relative;padding:.3rem 0 .3rem 2.3rem;margin:.15rem 0}
+.card ol.next>li:before{content:counter(n);position:absolute;left:0;top:.32rem;width:1.55rem;height:1.55rem;border-radius:50%;display:grid;place-items:center;font-size:.76rem;font-weight:800;background:color-mix(in srgb,var(--mint) 16%,transparent);color:var(--mint)}
+.card.route .row{margin-top:.4rem}
+details.setup-ok{margin:.6rem 0;padding:.55rem .85rem;border-radius:11px;background:color-mix(in srgb,var(--mint) 8%,var(--panel2))}
+details.setup-ok>summary{color:var(--mint);font-weight:650}details.setup-ok .tools{margin-top:.45rem}
+details.what,details.which{margin:.55rem 0}details.what>summary,details.which>summary{font-weight:600}
+details.which ul{margin:.4rem 0 .2rem;padding-left:1.2rem;font-size:.9rem;color:var(--muted)}details.which li{margin:.3rem 0}
+#plan .out{margin:.2rem 0 .6rem}#buildRoutes p{margin:.1rem 0 .7rem}#buildRoutes .row{gap:.5rem}
+#finder{display:flex;gap:.5rem;align-items:stretch}#finder .search{flex:1;min-width:0}
+.sysw{position:relative;display:flex;flex:none}.sysw:after{content:"\25BE";position:absolute;right:.85rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.sysw select{appearance:none;-webkit-appearance:none;border-radius:12px;padding:0 2.2rem 0 .95rem;font-weight:600;font-size:.9rem;cursor:pointer;min-width:9.5rem}
+.sysw select.on{border-color:var(--mint);color:var(--mint)}
+.pills{margin:.7rem 0 .25rem}.tabs{flex-wrap:nowrap;overflow-x:auto;gap:.15rem;padding:.22rem;border-radius:12px;background:color-mix(in srgb,var(--text) 6%,transparent);scrollbar-width:none;max-width:100%}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;border-radius:9px;padding:.42rem .8rem;font-size:.86rem;color:var(--muted)}
+.tab:hover{color:var(--text);background:none;border:0}.tab.on{background:var(--panel);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.tab .n{background:none;min-width:0;padding:0;margin-left:.35rem;color:var(--muted);font-variant-numeric:tabular-nums}.tab.on .n{background:none;color:var(--mint)}
+.st-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin:.65rem 0 .3rem}
+.st-tile{display:flex;flex-direction:column;gap:.12rem;padding:.75rem .9rem;border-radius:14px;border:1px solid var(--line);background:var(--panel)}
+.st-tile .k{display:flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:700;color:var(--muted)}.st-tile .k:before{content:"";width:.6rem;height:.6rem;border-radius:3px;background:var(--c)}
+.st-tile b{font-size:1.15rem;font-variant-numeric:tabular-nums}.st-tile .d{font-size:.78rem;line-height:1.35;color:var(--muted)}
+#storage .sechead .row{flex-wrap:nowrap;gap:.7rem}
+.setsec{margin:1.1rem 0 0;padding-bottom:.1rem;font-size:.72rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+#settingsPanel>h2+.setsec{margin-top:.3rem}.setsec+.setrow{border-top:0}
+@media (max-width:640px){.st-tiles{grid-template-columns:1fr}#finder{flex-direction:column}.sysw select{width:100%;min-height:2.6rem}}
 </style></head><body><div class="app">
 <aside id="side"><a class="brand" id="home" href="#"><div class="mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="pmg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff0b0"/><stop offset="1" stop-color="#14945f"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#pmg)"/><path fill="#06281a" d="M19 19h26c7.2 0 12.6 6.6 11.2 13.7l-2.1 10.2c-1 4.9-7.1 6.6-10.5 2.9L39 41H25l-4.6 4.8c-3.4 3.7-9.5 2-10.5-2.9L7.8 32.7C6.4 25.6 11.8 19 19 19z"/><path stroke="#5ff0b0" stroke-width="4" stroke-linecap="round" d="M20 26v10M15 31h10"/><path fill="#5ff0b0" d="M37 37c0-6.5 4.8-11 12-11 0 6.5-4.8 11-12 11z"/><path stroke="#06281a" stroke-width="1.8" stroke-linecap="round" d="M39.5 34.5l6.5-6"/></svg></div><div><h1>PadMint</h1><div class="v" id="ver"></div></div></a>
 <nav class="sidenav" id="sidenav"></nav>
@@ -988,30 +1022,33 @@ html.locked,html.locked body{overflow:hidden}.sheet{overscroll-behavior:contain}
 <section class="intro" id="intro"><h1 data-t="hero_title"></h1><p data-t="hero_text"></p><ol><li data-t="intro_1"></li><li data-t="intro_2"></li><li data-t="intro_3"></li></ol><div class="row"><button class="btn link" id="aboutOpen" data-t="learn_more"></button></div></section>
 <section class="hidden" id="nowBox"></section>
 <section class="hidden" id="shelf"><div class="sechead"><div><h2 id="shelfTitle"></h2><p class="note" id="shelfSub"></p></div><div class="row"><span class="muted small" id="shelfNote"></span><button class="btn small ghost" id="lookAgain"></button></div></div><div id="shelfList"></div></section>
-<section class="card" id="pickCard"><h2 id="pickTitle"></h2><p class="here hidden" id="here"></p><button class="btn back hidden" id="changeGame" data-t="change"></button><div id="hero" class="hidden"></div><section class="hidden" id="buildRoutes" aria-labelledby="buildRoutesTitle"><h3 id="buildRoutesTitle" data-t="build_options"></h3><div id="cloudRoute" class="hidden"><p class="small" id="cloudText"></p><a class="btn" id="cloudLink" target="_blank" rel="noopener" data-t="build_on_github"></a></div><div id="otherPorts" class="hidden"><p class="small" data-t="other_ports"></p><div class="row" id="portChoices"></div></div></section><div id="copies" class="hidden"></div>
-<div id="finder"><div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="search" type="search" autocomplete="off"></div></div>
-<div class="pills" id="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="github" role="tab"><span data-t="tab_github"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span id="laterHead" data-t="later_head"></span><span class="n"></span></button><button class="tab" data-g="missing" role="tab"><span data-t="tab_missing"></span><span class="n"></span></button></div><div class="filters" id="filters"></div></div>
+<section class="card" id="pickCard"><h2 id="pickTitle"></h2><p class="here hidden" id="here"></p><button class="btn back hidden" id="changeGame" data-t="change"></button><div id="hero" class="hidden"></div><div id="copies" class="hidden"></div>
+<div id="finder"><div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="search" type="search" autocomplete="off"></div><label class="sysw"><select id="system" aria-label="System"></select></label></div>
+<div class="pills" id="pills"><div class="tabs" id="tabs" role="tablist"><button class="tab" data-g="all" role="tab"><span data-t="tab_all"></span><span class="n"></span></button><button class="tab" data-g="build" role="tab"><span data-t="tab_build"></span><span class="n"></span></button><button class="tab" data-g="download" role="tab"><span data-t="tab_download"></span><span class="n"></span></button><button class="tab" data-g="github" role="tab"><span data-t="tab_github"></span><span class="n"></span></button><button class="tab" data-g="later" role="tab"><span id="laterHead" data-t="later_head"></span><span class="n"></span></button><button class="tab" data-g="missing" role="tab"><span data-t="tab_missing"></span><span class="n"></span></button></div></div>
 <p class="note" id="groupNote"></p><div class="list" id="list"></div><p class="small hidden" id="gamePage"><a target="_blank" rel="noopener" id="gamePageLink"></a></p><p class="muted hidden" id="noMatch" data-t="no_match"></p></section>
 
-<section class="card hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p><button class="btn back backBtn" data-t="change"></button></section>
+<section class="card route hidden" id="dlBox"><h2 id="dlName"></h2><p id="dlIntro"></p><ol class="next" id="dlSteps"></ol><p class="small" id="dlGuide"></p><button class="btn back backBtn" data-t="change"></button></section>
 
-<section class="card hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><ol class="next hidden" id="laterSteps"></ol><div class="row"><a class="btn hidden" id="laterFork" href="https://github.com/chrissotraidis/padmint/fork" target="_blank"></a><a class="btn" id="laterLink" target="_blank"></a><a class="btn hidden" id="laterSideloadly" href="https://sideloadly.io" target="_blank"></a><button class="btn back backBtn" data-t="change"></button></div></section>
+<section class="card route hidden" id="laterBox"><h2 id="laterName"></h2><p class="muted" id="laterAbout"></p><p id="laterText"></p><ol class="next hidden" id="laterSteps"></ol><div class="row"><a class="btn hidden" id="laterFork" href="https://github.com/chrissotraidis/padmint/fork" target="_blank"></a><a class="btn" id="laterLink" target="_blank"></a><a class="btn hidden" id="laterSideloadly" href="https://sideloadly.io" target="_blank"></a><button class="btn back backBtn" data-t="change"></button></div></section>
 
-<section class="card hidden" id="fileBox"><h2 data-t="step2"></h2><div id="fileHint" class="small"></div>
+<section class="card step hidden" id="deviceBox"><h2 data-t="step3"></h2><p class="muted small hidden" id="inApp"><span id="inAppText"></span></p><div class="grid" id="devices"></div><p class="muted small hidden" id="installHint" data-t="install_hint"></p><p class="muted small hidden" id="heldNote"></p><div class="sum" id="devSum"><b id="devSumText"></b><button class="btn link" id="devChange" data-t="change_short"></button></div>
+<details class="small"><summary data-t="device_help"></summary><p data-t="update_help"></p><a href="https://github.com/chrissotraidis/padmint/releases/latest" target="_blank" rel="noopener" data-t="update"></a></details></section>
+
+<section class="card step hidden" id="fileBox"><h2 data-t="step2"></h2><div id="fileHint" class="small"></div>
 <div class="row"><button class="btn" id="choose" data-t="choose"></button></div>
 <div id="foundBox"><p class="muted small" id="found"></p><div id="files"></div></div>
 <details id="typeBox"><summary data-t="type_toggle"></summary><p class="muted small" data-t="type"></p>
 <div class="row"><input id="path" style="flex:1;min-width:240px"><button class="btn" id="use" data-t="use"></button></div></details>
 <p class="state" id="fileState"></p><div class="sum" id="fileSum"><b id="fileSumText"></b><button class="btn link" id="fileChange" data-t="change_short"></button></div></section>
 
-<section class="card hidden" id="deviceBox"><h2 data-t="step3"></h2><p class="muted small hidden" id="inApp"><span id="inAppText"></span></p><div class="grid" id="devices"></div><p class="muted small hidden" id="installHint" data-t="install_hint"></p><p class="muted small hidden" id="heldNote"></p><div class="sum" id="devSum"><b id="devSumText"></b><button class="btn link" id="devChange" data-t="change_short"></button></div>
-<details class="small"><summary data-t="device_help"></summary><p data-t="update_help"></p><a href="https://github.com/chrissotraidis/padmint/releases/latest" target="_blank" rel="noopener" data-t="update"></a></details></section>
+
 
 <section class="card banner hidden" id="readyBox"><h2 data-t="ready_title"></h2><p id="readyText"></p><div class="row"><a class="btn main" id="readyLink" target="_blank"></a></div><p class="muted small" data-t="ready_or"></p></section>
 
-<section class="card plan hidden" id="planBox"><h2 data-t="plan_title"></h2><div id="plan"></div>
+<section class="card step plan hidden" id="planBox"><h2 data-t="build_title"></h2><div id="plan"></div>
 <div class="row" style="margin-top:.8rem"><button class="btn main" id="make" data-t="make" disabled></button></div><p class="why" id="makeWhy"></p>
 <p class="bad" id="makeError"></p></section>
+<section class="card hidden" id="buildRoutes" aria-labelledby="buildRoutesTitle"><h2 id="buildRoutesTitle" data-t="other_ways"></h2><div id="cloudRoute" class="hidden"><p class="small" id="cloudText"></p><a class="btn" id="cloudLink" target="_blank" rel="noopener" data-t="build_on_github"></a></div><div id="otherPorts" class="hidden"><p class="small" data-t="other_ports"></p><div class="row" id="portChoices"></div></div></section>
 </main>
 
 <main id="progress" class="hidden">
@@ -1024,7 +1061,7 @@ html.locked,html.locked body{overflow:hidden}.sheet{overscroll-behavior:contain}
 <pre id="tail"></pre><button class="btn" id="copy" data-t="copy_log"></button></details></section>
 </main>
 <main id="storage" class="hidden"><div class="sechead"><h2 data-t="nav_storage"></h2></div><p class="note" data-t="st_intro"></p><div id="stBody"></div></main>
-<div id="aboutHome"><div class="hidden" id="settingsPanel"><h2 data-t="settings"></h2><div class="setrow"><div class="settxt"><b data-t="set_lang_t"></b><span class="muted" data-t="set_lang_d"></span></div><div class="setctl"><label class="langw"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></label></div></div><div id="setBody"></div></div><div class="hidden" id="aboutPanel"><h2 data-t="about_padmint"></h2><div class="who"><div class="mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="pmg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff0b0"/><stop offset="1" stop-color="#14945f"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#pmg2)"/><path fill="#06281a" d="M19 19h26c7.2 0 12.6 6.6 11.2 13.7l-2.1 10.2c-1 4.9-7.1 6.6-10.5 2.9L39 41H25l-4.6 4.8c-3.4 3.7-9.5 2-10.5-2.9L7.8 32.7C6.4 25.6 11.8 19 19 19z"/><path stroke="#5ff0b0" stroke-width="4" stroke-linecap="round" d="M20 26v10M15 31h10"/><path fill="#5ff0b0" d="M37 37c0-6.5 4.8-11 12-11 0 6.5-4.8 11-12 11z"/><path stroke="#06281a" stroke-width="1.8" stroke-linecap="round" d="M39.5 34.5l6.5-6"/></svg></div><div><b><span data-t="who_title"></span> <a href="https://github.com/chrissotraidis" target="_blank" rel="noopener">Kahris</a></b><span class="muted" data-t="who_text"></span></div></div><section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div>
+<div id="aboutHome"><div class="hidden" id="settingsPanel"><h2 data-t="settings"></h2><div class="setsec" data-t="set_sec_general"></div><div class="setrow"><div class="settxt"><b data-t="set_lang_t"></b><span class="muted" data-t="set_lang_d"></span></div><div class="setctl"><label class="langw"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><select id="lang" aria-label="Language"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option></select></label></div></div><div id="setBody"></div></div><div class="hidden" id="aboutPanel"><h2 data-t="about_padmint"></h2><div class="who"><div class="mark"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="pmg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff0b0"/><stop offset="1" stop-color="#14945f"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#pmg2)"/><path fill="#06281a" d="M19 19h26c7.2 0 12.6 6.6 11.2 13.7l-2.1 10.2c-1 4.9-7.1 6.6-10.5 2.9L39 41H25l-4.6 4.8c-3.4 3.7-9.5 2-10.5-2.9L7.8 32.7C6.4 25.6 11.8 19 19 19z"/><path stroke="#5ff0b0" stroke-width="4" stroke-linecap="round" d="M20 26v10M15 31h10"/><path fill="#5ff0b0" d="M37 37c0-6.5 4.8-11 12-11 0 6.5-4.8 11-12 11z"/><path stroke="#06281a" stroke-width="1.8" stroke-linecap="round" d="M39.5 34.5l6.5-6"/></svg></div><div><b><span data-t="who_title"></span> <a href="https://github.com/chrissotraidis" target="_blank" rel="noopener">Kahris</a></b><span class="muted" data-t="who_text"></span></div></div><section class="hero"><p data-t="intro"></p><div class="chips"><span class="chip" data-t="trust_local"></span><span class="chip" data-t="trust_upload"></span><span class="chip" data-t="trust_open"></span></div>
 </section>
 <section class="about" id="about"><h2 data-t="about_title"></h2><div class="flow"><div><i>1</i><b data-t="flow_1"></b><span data-t="flow_1s"></span></div><div><i>2</i><b data-t="flow_2"></b><span data-t="flow_2s"></span></div><div><i>3</i><b data-t="flow_3"></b><span data-t="flow_3s"></span></div></div>
 <div class="explain"><details id="howBox"><summary data-t="how_title"></summary><ol><li data-t="how_1"></li><li data-t="how_2"></li><li data-t="how_3"></li><li data-t="how_4"></li><li data-t="how_5"></li></ol></details>
@@ -1067,7 +1104,7 @@ function fileHint(g,inputs){const h=$("fileHint");h.replaceChildren(el("b",fill(
  const facts=[formats.length?fill("file_formats",{formats:formats.join(", ")}):"",g.ids.length?fill(id.length==4?"file_code":"file_ids",{ids:g.ids.join(", ")}):""].filter(Boolean);
  if(facts.length)h.append(el("div",facts.join(" · "),"muted"));
  const notes=(inputs||[]).filter(i=>i.description);
- if(notes.length>1){h.append(el("p",S.which_file,"state"));const u=el("ul");for(const i of notes)u.append(el("li",i.description));h.append(u)}
+ if(notes.length>1){const d=el("details",null,"which"),u=el("ul");for(const i of notes)u.append(el("li",i.description));d.append(el("summary",(S.which_file||"").replace(/[:：]\s*$/,"")),u);h.append(d)}
  else if(notes.length){const d=el("details");d.append(el("summary",S.more_file),el("p",notes[0].description,"muted"));h.append(d)}}
 const colorOf=x=>COLORS[systemOf(x)]||"#1fa572";
 let group="all";const all=()=>[...D.games,...D.downloads,...D.later];
@@ -1126,7 +1163,7 @@ function whereLine(c,v){const li=el("div",null,"cp"+(c.built?" built":"")+(c.awa
  if(c.platform=="android")bits.push(S.android_unseen);if(c.extra)bits.push(fill("n_copies",{n:c.extra+1}));
  const ver=bits.shift(),rest=bits.join(" · ");li.append(ico(c.kind),el("b",c.label),el("span",ver,"vv"+(stale?" old":"")));if(rest)li.append(el("span",rest,"d"));if(stale)li.append(el("span",fill("new_version",{version:v}),"badge upd"));return li}
 function copiesBox(x){const b=$("copies"),st=x&&stateOf(x.id);if(!st||!st.copies.length){b.classList.add("hidden");b.replaceChildren();return}
- b.replaceChildren(el("h3",S.your_copies),...st.copies.map(c=>whereLine(c,st.latest)));b.classList.remove("hidden")}
+ b.replaceChildren(el("h3",S.your_copies),...st.copies.map(c=>whereLine(c,st.latest)));if(st.stale&&D.games.some(g=>g.id==x.id))b.append(el("p",fill("update_how",{version:st.latest}),"uphow"));b.classList.remove("hidden")}
 function mgRow(id,i){const x=all().find(y=>y.id==id),st=stateOf(id),shown=st.copies.filter(c=>fits(c,view)),old=st.latest?shown.filter(c=>c.version&&cmpv(c.version,st.latest)<0):[],r=el("div",null,"mg"+(old.length?" stale":""));r.style.setProperty("--c",colorOf(x));r.style.setProperty("--i",Math.min(i,20));
  const body=el("div",null,"body"),where=el("div",null,"where"),tl=el("div",null,"tl");tl.append(el("span",x.about?title(x):x.name,"t"),el("span",x.name+(systemOf(x)?" · "+systemOf(x):""),"s"));body.append(tl);
  where.append(...shown.map(c=>whereLine(c,st.latest)));body.append(where);
@@ -1174,14 +1211,15 @@ async function versions(){try{const r=await (await fetch("/api/versions",{header
 
 
 for(const b of document.querySelectorAll(".tab"))b.onclick=()=>{group=b.dataset.g;cards()};
-function filters(){const systems=[...new Set(all().map(systemOf).filter(Boolean))].sort();
- $("filters").replaceChildren(...["",...systems].map(s=>{const b=el("button",s||S.all,"filter"+(s==system?" on":""));b.onclick=()=>{system=s;filters();cards()};return b}))}
+function filters(){const systems=[...new Set(all().map(systemOf).filter(Boolean))].sort(),box=$("system");
+ box.replaceChildren(...["",...systems].map(s=>{const o=el("option",s||S.all);o.value=s;return o}));box.value=system;box.classList.toggle("on",!!system)}
+$("system").onchange=()=>{system=$("system").value;$("system").classList.toggle("on",!!system);cards()};
 
 const size=b=>b>=1e9?(b/1e9).toFixed(b>=1e11?0:1)+" GB":b>=1e6?Math.round(b/1e6)+" MB":b>0?Math.max(1,Math.round(b/1e3))+" KB":"0 KB";
 function toast(text){const t=el("div",text,"toast");document.body.append(t);setTimeout(()=>t.remove(),2800)}
 function lockPage(on){const h=document.documentElement;if(h&&h.classList)h.classList.toggle("locked",on)}
 function sheet(...nodes){$("sheetBody").replaceChildren(...nodes);$("sheet").classList.remove("hidden");lockPage(true)}
-function closeSheet(){for(const id of ["aboutPanel","settingsPanel"])if($(id).parentNode==$("sheetBody"))$("aboutHome").append($(id));$("sheet").classList.add("hidden");lockPage(false)}
+function closeSheet(){for(const id of ["aboutPanel","settingsPanel"])if($(id).parentNode==$("sheetBody")){$(id).classList.add("hidden");$("aboutHome").append($(id))}$("sheet").classList.add("hidden");lockPage(false)}
 $("sheetClose").onclick=closeSheet;$("sheet").onclick=e=>{if(e.target==$("sheet"))closeSheet()};
 $("aboutOpen").onclick=$("aboutSide").onclick=()=>{$("howBox").open=$("whyBox").open=true;$("aboutPanel").classList.remove("hidden");sheet($("aboutPanel"))};
 function nav(){side()}
@@ -1191,7 +1229,7 @@ function intro(){const busy=!!sel||view!="library"||!$("progress").classList.con
 // PadMint updates itself where it can, else the button opens the download page.
 function openSettings(){const row=(t,d,...ctl)=>{const r=el("div",null,"setrow"),tx=el("div",null,"settxt"),c=el("div",null,"setctl");tx.append(el("b",t),el("span",d,"muted"));c.append(...ctl);r.append(tx,c);return r},rows=[];
  const newer=!!V.padmint&&cmpv(V.padmint,D.version)>0;let vb;if(newer){vb=el("button",fill("pm_update",{version:V.padmint}),"btn main small");vb.onclick=()=>{closeSheet();openUpdate()}}else vb=el("span",V.padmint?"✓ "+S.up_to_date:S.checking,"okt");
- rows.push(row(S.set_version_t,"v"+D.version,vb));
+ rows.push(row(S.set_version_t,"v"+D.version,vb),el("div",S.set_sec_computer,"setsec"));
  const ds=I.devices||[],look=el("button",S.look_again,"btn small");look.onclick=()=>{closeSheet();seen(true)};
  rows.push(row(S.set_devices_t,ds.length?fill("here_devices",{devices:ds.map(d=>d.name).join(", ")}):onMac()?(I.xcode?S.here_no_devices:S.here_no_xcode):S.set_devices_off,...(onMac()?[look]:[])));
  rows.push(row(S.set_saved_t,D.folder));
@@ -1227,11 +1265,13 @@ function renderStorage(){const box=$("stBody");if(!ST||ST.state!="ready"){box.re
  const items=ST.items,bulk=items.filter(i=>i.removable&&i.reason!="cache"),gone=bulk.reduce((a,i)=>a+i.size,0),cache=items.filter(i=>i.reason=="cache");
  const sum=el("div",null,"st-sum"),body=el("div",null,"body");body.append(el("div",size(ST.total),"big"),el("span",fill("st_folder_line",{folder:ST.folder,free:size(ST.free)}),"s"));const cacheSize=cache.reduce((a,i)=>a+i.size,0);
  const meter=el("div",null,"st-meter"),keep=el("i",null,"keep"),old=el("i",null,"old"),cch=el("i",null,"cch"),span=Math.max(1,ST.total);keep.style.width=(100*(ST.total-gone-cacheSize)/span)+"%";old.style.width=(100*gone/span)+"%";cch.style.width=(100*cacheSize/span)+"%";meter.append(keep,old,cch);
- const lg=el("div",null,"legend"),l1=el("span",S.st_in_use+" · "+size(ST.total-gone-cacheSize)),l2=el("span",S.st_safe+" · "+size(gone)),l3=el("span",S.st_cache+" · "+size(cacheSize));l1.style.setProperty("--c","var(--mint)");l2.style.setProperty("--c","var(--warn)");l3.style.setProperty("--c","#5bb8f0");lg.append(l1,l2);if(cacheSize)lg.append(l3);body.append(meter,lg);
+ const tiles=el("div",null,"st-tiles"),tile=(label,bytes,note,c)=>{const t=el("div",null,"st-tile");t.style.setProperty("--c",c);t.append(el("span",label,"k"),el("b",size(bytes)),el("span",note,"d"));tiles.append(t)};
+ tile(S.st_in_use,ST.total-gone-cacheSize,S.st_in_use_d,"var(--mint)");tile(S.st_safe,gone,S.st_safe_d,"var(--warn)");tile(S.st_cache,cacheSize,S.st_cache_d,"#5bb8f0");body.append(meter);
  const side=el("div",null,"side");if(gone){const b=el("button",fill("st_free_up",{size:size(gone)}),"btn main");b.onclick=()=>confirmRemove(bulk);side.append(b)}else side.append(el("span","✓ "+S.st_nothing,"badge ok"));
- sum.append(body,side);const parts=[sum];
- const group=(key,list,note)=>{if(!list.length)return;const h=el("div",null,"sechead");h.append(el("h2",S[key]),el("span",size(list.reduce((a,i)=>a+i.size,0)),"muted small"));parts.push(h);if(note)parts.push(el("p",S[note],"note"));const l=el("div",null,"list");l.append(...list.sort((a,b)=>b.size-a.size).map(stRow));parts.push(l)};
- group("st_old",items.filter(i=>i.removable&&i.reason!="cache"&&i.reason!="unused"),"st_old_note");group("st_tools",items.filter(i=>i.reason=="unused"));group("st_cache",cache,"st_cache_note");
+ sum.append(body,side);const parts=[sum,tiles];
+ const group=(key,list,note)=>{if(!list.length)return;const h=el("div",null,"sechead"),r=el("div",null,"row");h.append(el("h2",S[key]));r.append(el("span",size(list.reduce((a,i)=>a+i.size,0)),"muted small"));
+  if(list.length>1){const b=el("button",S.st_remove_all,"btn small ghost");b.onclick=()=>confirmRemove(list);r.append(b)}h.append(r);parts.push(h);if(note)parts.push(el("p",S[note],"note"));const l=el("div",null,"list");l.append(...list.sort((a,b)=>b.size-a.size).map(stRow));parts.push(l)};
+ group("st_safe",bulk,"st_safe_note");group("st_cache",cache,"st_cache_note");
  const kept=items.filter(i=>!i.removable);if(kept.length){const d=el("details",null,"kept"),s=el("summary",fill("st_kept_sum",{games:kept.filter(i=>i.kind=="game").length,tools:kept.filter(i=>i.kind=="tool").length,size:size(kept.reduce((a,i)=>a+i.size,0))}));const l=el("div",null,"list");l.append(...kept.sort((a,b)=>b.size-a.size).map(stRow));d.append(s,el("p",S.st_kept_note,"note"),l);parts.push(d)}
  const un=el("details",null,"kept");un.append(el("summary",S.st_uninstall),el("p",fill("st_uninstall_text",{folder:ST.folder}),"note"));parts.push(un);
  box.replaceChildren(...parts)}
@@ -1257,7 +1297,7 @@ function fold(key,label,body){const open=localStorage.getItem("pm.fold."+key)!="
 function row(x,i){const kind=groupOf(x.id),b=el("button",null,"item "+kind);b.style.setProperty("--c",colorOf(x));b.style.setProperty("--i",Math.min(i||0,24));
  b.title=systemOf(x)?fill("original",{system:systemOf(x)}):"";const body=el("span",null,"body"),meta=[devicesOf(x,kind).join(", ")];
  if(kind=="build"&&x.ready){const on=x.platforms.filter(p=>x.ready.platforms.includes(p.id)).map(p=>p.short||p.label);if(on.length)meta.push(fill("ready_tag",{devices:on.join(", ")}))}
- if(kind=="build")meta.push(fill("built_where",{host:D.host_name}));if(kind=="build"&&x.setup&&x.setup!="easy")meta.push(S["setup_"+x.setup]);if((kind=="later"||kind=="github")&&x.text)b.title=x.text;
+ if(kind=="build"&&x.setup&&x.setup!="easy")meta.push(S["setup_"+x.setup]);if((kind=="later"||kind=="github")&&x.text)b.title=x.text;
  const line=[x.name+(systemOf(x)?" · "+systemOf(x):""),...meta].filter(Boolean).join(" · ");body.append(el("span",x.about?title(x):x.name,"t"),el("span",line,"s"));body.title=line;
  const side=el("span",null,"side"),st=stateOf(x.id),v=st.latest,where=[...new Set(st.copies.map(kindName))].join(" · ");
  if(kind=="later"||kind=="github"){}else if(st.stale){const o=st.old.map(c=>c.version).sort(cmpv)[0];side.append(el("span",(o?"v"+o+" → ":"")+v,"own upd"))}
@@ -1275,7 +1315,7 @@ function cards(){const q=$("search").value.trim().toLowerCase();
  else if(!G[group].length){const k=["all","build","download","github","later","missing"].find(k=>G[k].length);if(k)group=k}
  $("finder").classList.toggle("hidden",!!sel);$("changeGame").classList.toggle("hidden",!sel);$("tabs").classList.toggle("hidden",!!sel);$("pills").classList.toggle("hidden",!!sel);const one=sel&&all().find(x=>x.id==sel);$("gamePage").classList.toggle("hidden",!(one&&one.page));if(one&&one.page){$("gamePageLink").href=one.page;$("gamePageLink").textContent=fill("game_page",{name:one.name})+" ↗"}
  for(const b of document.querySelectorAll(".tab")){b.classList.toggle("on",b.dataset.g==group);b.setAttribute("aria-selected",b.dataset.g==group);b.querySelector(".n").textContent=G[b.dataset.g].length;b.classList.toggle("hidden",b.dataset.g=="missing"?!G.missing.length&&group!="missing":b.dataset.g!="all"&&!all().some(x=>groupOf(x.id)==b.dataset.g))}$("laterHead").textContent=onMac()?S.later_head:S.other_routes_head;here();
- $("groupNote").textContent=sel?"":S[{all:D.later.length?(onMac()?"all_note":"all_note_off_mac"):"all_note_plain",build:"builds",download:"no_build",github:"github_note",later:onMac()?"later_note":"needs_mac_note",missing:"missing_note"}[group]]+(onMac()&&(group=="all"||group=="build")&&D.games.some(g=>g.setup)?" "+S.start_note:"");
+ $("groupNote").textContent=sel?"":S[{all:D.later.length?(onMac()?"all_note":"all_note_off_mac"):"all_note_plain",build:"builds",download:"no_build",github:"github_note",later:onMac()?"later_note":"needs_mac_note",missing:"missing_note"}[group]];
  $("pickTitle").textContent=S.library;$("pickTitle").classList.toggle("hidden",!!sel);$("pickCard").classList.toggle("hidden",!sel&&view!="library");$("changeGame").textContent="← "+viewName();hero(sel?all().find(x=>x.id==sel):null);
  $("list").replaceChildren(...(sel?[]:G[group].map((x,i)=>row(x,i))));$("list").classList.toggle("hidden",!!sel||!G[group].length);$("list").classList.toggle("settled",listShown);listShown=true;
  $("noMatch").classList.toggle("hidden",!!G[group].length);layout()}
@@ -1291,17 +1331,16 @@ $("home").onclick=e=>{e.preventDefault();home()};$("lookAgain").onclick=()=>seen
 $("settingsSide").onclick=openSettings;{const lc=$("lang").onchange;$("lang").onchange=async()=>{await lc();if($("settingsPanel").parentNode==$("sheetBody"))openSettings()}}$("search").oninput=cards;document.onkeydown=e=>{if(e.key=="Escape"&&!$("sheet").classList.contains("hidden")){closeSheet();return}const t=e.target;if(t&&t.closest&&t.closest("input,textarea,select,[contenteditable]"))return;const find=(e.key=="f"&&(e.metaKey||e.ctrlKey))||e.key=="/",typed=e.key.length==1&&!e.metaKey&&!e.ctrlKey&&!e.altKey&&/\S/.test(e.key);if(!find&&!typed)return;if(!$("sheet").classList.contains("hidden")||!$("progress").classList.contains("hidden"))return;if(sel)back(true);if(view!="library")go("library");const box=$("search");box.focus();if(find){e.preventDefault();box.select()}};$("changeGame").onclick=back;for(const b of document.querySelectorAll(".backBtn"))b.onclick=back;
 function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;editFile=editDev=false;$("fileState").textContent="";$("path").value="";cards();const g=game(),a=app(),w=waiting();
  $("laterBox").classList.toggle("hidden",!w);
- if(w){$("laterName").textContent=w.name;$("laterAbout").textContent=[systemOf(w)?fill("original",{system:systemOf(w)}):"",(w.plays_on||[]).length?fill("plays_on",{devices:(w.plays_on.includes("iphone")&&w.plays_on.includes("ipad")?["iPhone/iPad"]:w.plays_on.filter(d=>d!="mac").map(d=>DEVICES[d])).concat(w.plays_on.includes("mac")?["Mac"]:[]).join(", ")}):""].filter(Boolean).join(" · ");$("laterText").textContent=(w.steps||[]).length?fill("github_page",{name:w.name}):w.text;$("laterSteps").classList.toggle("hidden",!(w.steps||[]).length);$("laterSteps").replaceChildren(...(w.steps||[]).map(s=>el("li",s)));
+ if(w){$("laterName").textContent=S["route_"+(w.route||"other")+"_t"]||w.name;$("laterAbout").textContent="";$("laterText").textContent=(w.steps||[]).length?fill("github_page",{name:w.name}):w.text;$("laterSteps").classList.toggle("hidden",!(w.steps||[]).length);$("laterSteps").replaceChildren(...(w.steps||[]).map(s=>el("li",s)));
   for(const id of ["laterFork","laterSideloadly"])$(id).classList.toggle("hidden",!w.github||!!(w.cloud&&w.cloud.private));$("laterFork").textContent=S.github_fork;$("laterSideloadly").textContent=S.github_sideloadly;
-  $("laterLink").href=w.link;$("laterLink").textContent=w.github?S.build_on_github:fill("later_link",{name:w.name});scrollTo({top:0})}
+  $("laterLink").href=w.link;$("laterLink").textContent=w.github?S.build_on_github:fill("later_link",{name:w.name});$("laterLink").classList.toggle("main",!!w.github);scrollTo({top:0})}
  $("dlBox").classList.toggle("hidden",!a);
  $("readyBox").classList.add("hidden");if(g&&g.ready){$("readyText").textContent=g.ready.text;$("readyLink").href=g.ready.url;$("readyLink").textContent=fill("ready_link",{devices:g.platforms.filter(p=>g.ready.platforms.includes(p.id)).map(p=>p.short||p.label).join(", ")})}
- if(a){$("dlName").textContent=a.name;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(s=>linked(s)));
+ if(a){$("dlName").textContent=S.get_app_t;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(s=>linked(s)));
   const l=el("a",a.guide);l.href=a.guide;l.target="_blank";$("dlGuide").replaceChildren(S.guide+": ",l);scrollTo({top:0})}
  for(const id of ["fileBox","deviceBox","planBox"])$(id).classList.add("hidden");$("inApp").classList.add("hidden");if(!g)return;
- if(g.needs_file){$("fileBox").classList.remove("hidden");
-  fileHint(g,null);showFiles([]);loadFiles(g.id)}
- else{$("inAppText").textContent=g.input_note;$("inApp").classList.remove("hidden")}
+ $("fileBox").classList.remove("hidden");$("fileChange").classList.toggle("hidden",!g.needs_file);$("fileSum").title=g.needs_file?"":g.input_note;
+ if(g.needs_file){fileHint(g,null);showFiles([]);loadFiles(g.id)}
  $("deviceBox").classList.remove("hidden");$("installHint").classList.toggle("hidden",!g.platforms.some(p=>p.id=="ios"));$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}),
   ...(g.held||[]).map(h=>{const b=el("button",null,"pick");b.append(el("b",h.label),el("span",h.tag));b.disabled=true;b.setAttribute("aria-describedby","heldNote");return b}));
  const held=g.held||[];$("heldNote").classList.toggle("hidden",!held.length);if(held.length){const l=el("a",fill("later_link",{name:g.name}));l.href=g.page;l.target="_blank";$("heldNote").replaceChildren(held.map(h=>h.text).join(" ")+" ",l)}
@@ -1322,8 +1361,13 @@ function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.err
  if(p.output)box.append(el("div",p.output,"out"));
  blocked=p.needs.some(n=>!n.ok);
  const m=p.mac_setup,lines=m?[m.brew_line,...m.other].filter(Boolean):[];
- if(p.needs.length||lines.length){const s=el("div",null,"setup-box");s.append(el("p",S.plan_needs,"state"));
-  if(p.needs.length){const u=el("ul",null,"tools");for(const n of p.needs){const li=el("li"),name=el("span",n.label);
+ const fine=!blocked&&!(m&&m.brew_line);
+ if(fine&&(p.needs.length||lines.length)){const d=el("details",null,"setup-ok"),u=el("ul",null,"tools");
+  d.append(el("summary","✓ "+S.setup_ok+(p.needs.length?" · "+fill("setup_found",{n:p.needs.length}):"")));
+  for(const n of p.needs){const li=el("li"),name=el("span",n.label);if(n.only&&n.only.length)name.append(el("span"," "+fill("only_for",{formats:n.only.map(f=>f.toUpperCase()).join(", ")}),"muted"));li.append(name,el("span",S.needs_ok,"ok"));u.append(li)}
+  d.append(u);for(const line of lines)d.append(copyLine(line));box.append(d)}
+ else if(p.needs.length||lines.length){const s=el("div",null,"setup-box");s.append(el("p",S.plan_needs,"state"));
+  if(p.needs.length){const u=el("ul",null,"tools");for(const n of [...p.needs.filter(x=>!x.ok),...p.needs.filter(x=>x.ok)]){const li=el("li"),name=el("span",n.label);
     if(n.only&&n.only.length)name.append(el("span"," "+fill("only_for",{formats:n.only.map(f=>f.toUpperCase()).join(", ")}),"muted"));
     li.append(name,el("span",n.ok?S.needs_ok:S.needs_missing,n.ok?"ok":"bad"));u.append(li);
     if(!n.ok&&!(n.brew&&lines.length)){const d=linked(n.note,"li");d.className="detail";if(n.command)d.append(copyLine(n.command));u.append(d)}}s.append(u)}
@@ -1336,7 +1380,7 @@ function showPlan(p){const g=game(),box=$("plan");box.replaceChildren();if(p.err
   const d=el("details"),u=el("ul",null,"tools");d.append(el("summary",S.details));
   for(const t of p.tools){const r=el("li");r.append(el("span",t.name+" "+t.version+" · "+fill("from",{host:t.source})),el("span",t.here?S.tool_here:gb(t.size),t.here?"ok":"muted"));u.append(r)}
   d.append(u,el("p",fill("tools_folder",{folder:p.tools_folder}),"muted small"));li.append(d);o.append(li)}if(p.app)o.append(el("li",fill("plan_app",{name:g.name})));
- o.append(el("li",g.build_note),el("li",fill("plan_save",{folder:p.folder})));box.append(o);
+ o.append(el("li",g.build_note),el("li",fill("plan_save",{folder:p.folder})));const what=el("details",null,"what");what.append(el("summary",S.plan_what),o);box.append(what);
  if(p.space_gb)box.append(el("p",fill("plan_space",{gb:p.space_gb}),"muted small"));
  if(p.install){const d=el("details"),ol=el("ol",null,"next");d.append(el("summary",S.install_preview));for(const s of p.install.steps)ol.append(linked(s));d.append(ol,el("p",p.install.note,"muted small"));box.append(d)}}
 // The button is disabled by the state itself; the line under it only says which state it is.
@@ -1350,7 +1394,7 @@ function ready(){const g=game(),why=!g?"none":!dev?"why_device":reading?"why_rea
  else if(why=="why_blocked"){label=updating?S.update_fix_setup:S.make_fix_setup;stopped=true}
  $("make").disabled=stopped;$("make").dataset.action=action;$("make").textContent=label;
  $("makeWhy").className="why"+(/^why_(file|device|blocked)$/.test(why)?" warn":"");$("makeWhy").textContent=why&&why!="none"?S[why]||"":"";
- const pf=g&&dev&&g.platforms.find(x=>x.id==dev);$("fileBox").classList.toggle("done",!!(g&&file&&!editFile));$("fileSumText").textContent=file?"✓ "+base(file):"";
+ const pf=g&&dev&&g.platforms.find(x=>x.id==dev);$("fileBox").classList.toggle("done",!!(g&&(!g.needs_file||(file&&!editFile))));$("fileSumText").textContent=g&&!g.needs_file?"✓ "+S.file_in_app_short:file?"✓ "+base(file):"";
  $("deviceBox").classList.toggle("done",!!(pf&&!editDev));$("devSumText").textContent=pf?"✓ "+pf.label:""}
 $("fileChange").onclick=()=>{editFile=true;ready()};$("devChange").onclick=()=>{editDev=true;ready()};
 async function useFile(path){if(!path)return;const request=++fileRequest,selected=sel;$("path").value=path;reading=true;file=null;ready();$("fileState").className="state";
