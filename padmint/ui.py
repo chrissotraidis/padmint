@@ -42,6 +42,13 @@ def input_formats(inputs):
     return sorted({name for item in inputs for name in item["formats"]})
 
 
+def host_note(entry, lang):
+    """The game's own note for this kind of computer (catalog host_notes, by system), shown
+    next to the build: a known limit or problem the player should read before starting."""
+    note = (entry.get("host_notes") or {}).get(cli.host_id().split("-")[0])
+    return localized(note, "text", lang) if note else None
+
+
 def setup_level(entry, platforms):
     """How much a player sets up before this game, for its card: "easy" when a ready-to-play
     app exists, otherwise on a Mac "xcode" (Xcode only) or "brew" (Xcode and Homebrew
@@ -94,6 +101,7 @@ def player_data(lang):
                                  "url": entry["ready_to_play"]["url"],
                                  "platforms": entry["ready_to_play"].get("platforms", platforms)}
                                 if entry.get("ready_to_play") else None),
+                      "note": host_note(entry, lang),
                       "page": entry.get("player_help") or entry["repo_url"], "issues": entry["repo_url"] + "/issues"})
     apps = [] if cli.on_android() else [
         {"id": app, "name": name, "about": catalog()[app].get("game", ""), "plays_on": catalog()[app].get("plays_on", []),
@@ -118,6 +126,19 @@ def player_data(lang):
             text[key] = text[replacement]
     host = cli.host_id()
     host_key = "host_" + host.replace("-", "_")
+    system = host.split("-")[0]
+    if not cli.on_android() and f"build_title_{system}" in text:
+        text["build_title"] = text[f"build_title_{system}"]  # name the build computer
+    if system == "linux" and not cli.on_android():
+        # Building and downloading work here; installing on an iPhone from Linux isn't tested.
+        # Say so before the player starts, wherever the result is an iPhone/iPad app.
+        text["install_hint"] += " " + text["linux_install_short"]
+        text["github_page"] += " " + text["linux_install"]
+        for app in apps:
+            app["intro"] += " " + text["linux_install"]
+        for item in waiting:
+            if item.get("github") and not item.get("steps"):
+                item["text"] += " " + text["linux_install"]
     if not host.startswith("macos"):
         # "My games" on a Windows or Linux computer holds the copies PadMint built there;
         # there is no Mac and no phone to list.
@@ -292,7 +313,9 @@ def plan(game, platform_name, lang, disc=None):
     return {"repo": entry["repo_url"], "tools": items, "tools_folder": str(tools.tools_root()),
             "app": bool(target.get("published_app")), "space_gb": cli.player_free_space(entry, platform_name),
             "folder": str(cli.player_folder()), "needs": needs, "mac_setup": mac_setup, "install": install,
-            "output": phrase(key, lang, name=name) if key in MESSAGES else "",
+            "output": " ".join(filter(None, [phrase(key, lang, name=name) if key in MESSAGES else "",
+                                             phrase("w_linux_install_short", lang) if platform_name == "ios"
+                                             and cli.host_id().startswith("linux") and not cli.on_android() else ""])),
             "inputs": selected_inputs(manifest)}
 
 
@@ -1048,7 +1071,7 @@ details.which ul{margin:.4rem 0 .2rem;padding-left:1.2rem;font-size:.9rem;color:
 
 <section class="card banner hidden" id="readyBox"><h2 data-t="ready_title"></h2><p id="readyText"></p><div class="row"><a class="btn main" id="readyLink" target="_blank"></a></div><p class="muted small" data-t="ready_or"></p></section>
 
-<section class="card step plan hidden" id="planBox"><h2 data-t="build_title"></h2><div id="plan"></div>
+<section class="card step plan hidden" id="planBox"><h2 data-t="build_title"></h2><p class="why warn hidden" id="hostNote"></p><div id="plan"></div>
 <div class="row" style="margin-top:.8rem"><button class="btn main" id="make" data-t="make" disabled></button></div><p class="why" id="makeWhy"></p>
 <p class="bad" id="makeError"></p></section>
 <section class="card hidden" id="buildRoutes" aria-labelledby="buildRoutesTitle"><h2 id="buildRoutesTitle" data-t="other_ways"></h2><div id="cloudRoute" class="hidden"><p class="small" id="cloudText"></p><a class="btn" id="cloudLink" target="_blank" rel="noopener" data-t="build_on_github"></a></div><div id="otherPorts" class="hidden"><p class="small" data-t="other_ports"></p><div class="row" id="portChoices"></div></div></section>
@@ -1342,6 +1365,7 @@ function choose(id){++fileRequest;reading=false;sel=id;file=null;dev=null;editFi
  if(a){$("dlName").textContent=S.get_app_t;$("dlIntro").textContent=a.intro;$("dlSteps").replaceChildren(...a.steps.map(s=>linked(s)));
   const l=el("a",a.guide);l.href=a.guide;l.target="_blank";$("dlGuide").replaceChildren(S.guide+": ",l);scrollTo({top:0})}
  for(const id of ["fileBox","deviceBox","planBox"])$(id).classList.add("hidden");$("inApp").classList.add("hidden");if(!g)return;
+ $("hostNote").replaceChildren(...(g.note?linked(g.note,"span").childNodes:[]));$("hostNote").classList.toggle("hidden",!g.note);
  $("fileBox").classList.remove("hidden");$("fileChange").classList.toggle("hidden",!g.needs_file);$("fileSum").title=g.needs_file?"":g.input_note;
  if(g.needs_file){fileHint(g,null);showFiles([]);loadFiles(g.id)}
  $("deviceBox").classList.remove("hidden");$("installHint").classList.toggle("hidden",!g.platforms.some(p=>p.id=="ios"));$("devices").replaceChildren(...g.platforms.map(p=>{const b=el("button",null,"pick");b.append(el("b",p.label));b.onclick=()=>pickDevice(p.id);b.dataset.id=p.id;return b}),

@@ -74,11 +74,11 @@ class LaterTests(unittest.TestCase):
         self.assertEqual(data["text"]["github_build_tag"], "GitHub Cloud Build")
         self.assertEqual(data["text"]["needs_mac_head"], "Apple Silicon Mac")
         self.assertEqual(sum(item.get("github", False) for item in data["later"]), 17)
-        self.assertIn("not a local build", waiting["bellpad"]["text"])
+        self.assertIn("nothing compiles on this computer", waiting["bellpad"]["text"])
         self.assertIn("These local builds are for iPhone/iPad or Android", data["text"]["here_other_hosts"])
-        self.assertIn("this computer only starts the workflow", data["text"]["github_note"])
+        self.assertIn("nothing compiles on this computer", data["text"]["github_note"])
         self.assertNotIn("Windows", data["text"]["needs_mac_note"])
-        self.assertEqual(waiting["bluewake"]["tag"], "Windows app available")
+        self.assertEqual(waiting["bluewake"]["tag"], "Windows and Linux downloads")
         self.assertIn("BlueWake.exe", waiting["bluewake"]["text"])
 
     def test_halopad_external_workflow_is_discoverable_on_mac_and_off_mac(self):
@@ -111,9 +111,34 @@ class LaterTests(unittest.TestCase):
         self.assertFalse(dark["cloud"]["external"])
         self.assertEqual(dark["cloud"]["url"],
                          "https://github.com/chrissotraidis/padmint#darkpad-private-github-build")
-        self.assertIn("private repository", dark["text"])
+        self.assertIn("private copy of PadMint", dark["text"])
         self.assertIn("experimental", dark["tag"])
         self.assertEqual(dark["steps"], [])
+
+    def test_pages_name_the_build_computer_and_its_limits(self):
+        from padmint import cli
+        def page(host):
+            with mock.patch.object(cli, "host_id", return_value=host), \
+                    mock.patch.object(cli, "on_android", return_value=False):
+                return ui.player_data("en")
+        mac, windows, linux = page("macos-arm64"), page("windows-arm64"), page("linux-x86_64")
+        self.assertEqual(mac["text"]["build_title"], "Build on this Mac")
+        self.assertEqual(windows["text"]["build_title"], "Build on this Windows PC")
+        self.assertEqual(linux["text"]["build_title"], "Build on this Linux computer")
+        # A game's note appears only on the kind of computer it is about.
+        note = lambda data, game: next(g for g in data["games"] if g["id"] == game)["note"]
+        self.assertIn("Windows 11 ARM64", note(windows, "goldenpad"))
+        self.assertIsNone(note(mac, "goldenpad"))
+        self.assertIn("Steam", note(mac, "agepad"))
+        self.assertIsNone(note(linux, "kartpad"))
+        # Linux says before the build or download that installing from Linux isn't tested.
+        install = "directly from Linux isn't tested"
+        self.assertIn(install, linux["text"]["install_hint"])
+        self.assertIn(install, linux["text"]["github_page"])
+        self.assertTrue(all(install in app["intro"] for app in linux["downloads"]))
+        self.assertIn(install, next(i for i in linux["later"] if i["id"] == "darkpad")["text"])
+        self.assertNotIn(install, next(i for i in linux["later"] if i["id"] == "bluewake")["text"])
+        self.assertNotIn(install, windows["text"]["install_hint"])
 
     def test_github_builds_match_the_workflow_and_need_no_game_file_while_building(self):
         # The workflow's game menu is the catalog's github_build list; a game that reads

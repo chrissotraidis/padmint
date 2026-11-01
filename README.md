@@ -17,34 +17,37 @@
   <a href="https://discord.gg/xwHfUD2bxW"><img alt="Discord" src="https://img.shields.io/badge/Discord-ask%20for%20help-5865F2?logo=discord&amp;logoColor=white"></a>
 </p>
 
-## What PadMint can do on your computer
+## How it works
 
-**You can build games from Windows today.** Some builds run on your computer;
-others use **GitHub Cloud Build**, which runs a temporary macOS machine in
-GitHub's cloud. You do not need to own a Mac for that route.
+Pick a game and the device you'll play on. PadMint then gets you the app in one
+of three ways, and each game's page shows only the ways that work on the
+computer you're using:
 
-| Your computer | What PadMint can make |
-|---|---|
-| **Mac with Apple Silicon** (M1 or newer) | All 30 games it offers to build for iPhone and iPad; 12 also have Mac builds. Check each game's setup and experimental status. |
-| **Windows or Linux** | **Build here:** KartPad (Mario Kart Wii), for Android or iPhone/iPad, experimental. On Windows, also the iPhone/iPad apps of GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and MeleePad, experimental. **GitHub Cloud Build:** 15 games use public forks; HaloPad has its own Xbox workflow, and DarkPad has an experimental private-repository route. Compilation runs on GitHub's macOS machines. **Apple Silicon Mac:** the other games need Apple Silicon and Xcode. PadMint also lists 8 ready-made iPad apps (PC classics such as Diablo). |
-| **Intel Mac** | Builds KartPad for Android or iPhone/iPad, experimental. Mac app copies and the other iPhone/iPad builds require an Apple Silicon Mac. |
-| **An Android phone, no computer** | Experimental: Mario Kart Wii's game data, through Termux. |
+| Route | What happens | What you get |
+|---|---|---|
+| **Build on this computer** | PadMint downloads the game's source and free tools and builds your copy here, from your own game file when the game needs one at build time. | An iPhone/iPad app (`.ipa`), a Mac app, or KartPad's Android game data |
+| **Build on GitHub's Mac** | You start the build on GitHub in your browser, and GitHub compiles the app on a temporary Mac. Nothing compiles on your computer and nothing of yours is uploaded: you add your game file inside the app after installing it. | An iPhone/iPad app, downloaded from the GitHub run |
+| **Download the app** | Nothing to build. Eight ready-made apps for PC classics (Diablo, Fallout 2 and others); you add your own game files inside the app. | An iPhone/iPad app from the game's release |
 
-PadMint also lists **8 ready-made iPad apps** to install with Sideloadly on
-Windows or Mac; each page explains any game files you need to add. Building an
-iPhone/iPad app from Windows does not create a Windows desktop version. To play
-on a Windows PC, BlueWake has a
-[separate ready-made download](https://github.com/chrissotraidis/bluewake/releases/latest).
+You then [install the iPhone/iPad app](#installing-what-you-made) with Sideloadly
+from a Windows PC or Mac. Which computer can build what:
 
-**More local Windows builds are in active development.**
-PadMint 0.5.15 shipped the shared Windows build tools, cache/retry handling and
-cancellation fixes; 0.5.16 makes the build locations explicit. Additional local
-game builds stay unavailable until each game's matching app, recipe and device
-checks are ready. Follow [Building games on Windows](docs/WINDOWS.md), the
-[progress by game](docs/COMPATIBILITY.md#status-by-game), and the
-[roadmap and next improvements](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#resume-work).
-An experimental recipe or completed build alone does not establish that a game
-plays correctly on every device.
+| Your computer | Build on this computer | Build on GitHub's Mac |
+|---|---|---|
+| **Mac with Apple Silicon** (M1 or newer) | All 30 buildable games for iPhone/iPad; 12 also as Mac apps | Also offered for 17 games, under **Other ways to build** |
+| **Windows PC** | 7 games, experimental: KartPad (also Android game data), GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and MeleePad | 17 games |
+| **Linux** | KartPad, experimental | 17 games |
+| **Intel Mac** | KartPad, experimental | 17 games |
+| **Android phone**, no computer | KartPad's game data, experimental | — |
+
+The other six games build only on an Apple Silicon Mac for now, and EctoPad is
+paused; [Building games on Windows](docs/WINDOWS.md) tracks each one. On Linux,
+installing on an iPhone or iPad directly from Linux isn't tested yet.
+
+PadMint makes iPhone, iPad, Mac and Android copies, not Windows or Linux desktop
+games. Two projects publish ready-to-play downloads of their own:
+[KartPad for Android](https://github.com/chrissotraidis/kartpad/releases/latest)
+and [BlueWake for Windows and Linux](https://github.com/chrissotraidis/bluewake/releases/latest).
 
 ## Quick start
 
@@ -97,18 +100,16 @@ On a Mac, each game says how much setup it needs. Start with an easy one:
 | **Needs Xcode** | BlueWake (Wind Waker, US disc), SunPad (Super Mario Sunshine, US disc), KartPad for Mac, and KartPad for iPhone when you build on a Mac (European disc), AgePad (Age of Empires II from Steam) | A Mac with Apple Silicon (M1 or newer) and [Xcode](https://apps.apple.com/app/xcode/id497799835), free from the App Store. PadMint downloads everything else. |
 | **Needs Xcode + Homebrew** | Most other games | The same, plus one Homebrew line that the page shows you, with a Copy button. |
 
-**KartPad for iPhone and iPad doesn't need a Mac.** On Windows or Linux,
-PadMint builds it with its own compiler, so there's no Xcode to install. That
-route is experimental: it's checked less often than building on a Mac.
+AgePad has a [known Steam-version problem](https://github.com/chrissotraidis/agepad/pull/15):
+its released recipe can stop when Steam has updated its files. Its page says so
+before you install anything.
 
-**Six more games build for iPhone and iPad on a Windows PC** with PadMint
-0.5.28 or newer: GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and
-MeleePad. Install Visual Studio's free C++ Build Tools once (the page names the
-parts); PadMint downloads the rest and adds the game made from your own ROM or
-disc to the app from the game's release.
-This is experimental too: each built on Windows from its published release, but
-a Windows-built copy hasn't been installed on an iPhone or iPad yet. See
-[Building games on Windows](docs/WINDOWS.md).
+**On a Windows PC**, KartPad needs no extra setup. GoldenPad, BearBirdPad,
+BananaPad, SquirrelPad, DinoPad and MeleePad need Visual Studio's free C++ Build
+Tools once (the page names the parts); PadMint downloads the rest. These Windows
+routes are experimental: each built on Windows 11 ARM64 from its published
+release, but a Windows-built copy hasn't been installed and played on an iPhone
+or iPad yet.
 
 Your game file must be the version the page names, for example **Only the US
 (North American) version works**. PadMint checks it as soon as you pick it.
@@ -117,11 +118,10 @@ Your game file must be the version the page names, for example **Only the US
   <img src="docs/images/padmint-library.jpg" width="820" alt="PadMint on a Mac: the sidebar with My games, Updates, All games, devices and Storage; the game library says what this Mac can build, then lists every game with search, a systems menu and groups">
 </p>
 
-> **Other ready-to-play downloads:**
-> **KartPad for Android** from the [latest KartPad](https://github.com/chrissotraidis/kartpad/releases/latest)
-> (the app has the game code; you add your own game data, which PadMint can make from your disc), and
-> **BlueWake for Windows** from [BlueWake's releases](https://github.com/chrissotraidis/bluewake/releases/latest).
-> KartPad for iPhone and iPad uses PadMint to build a personal copy from your own game file.
+> **Ready-to-play downloads outside PadMint:** **KartPad for Android** from the
+> [latest KartPad](https://github.com/chrissotraidis/kartpad/releases/latest) (you add your own game
+> data, which PadMint can make from your disc), and **BlueWake for Windows and Linux** from
+> [BlueWake's releases](https://github.com/chrissotraidis/bluewake/releases/latest).
 
 ## Why PadMint exists
 
@@ -163,25 +163,16 @@ apps are a later step if players need them.
 
 ## What you can make, and where
 
-What PadMint can do depends on the computer it runs on. The top of the game
-library says it in one line, and every game is listed either way, so you can
-see what exists.
-
-| Your computer | What PadMint does there |
-|---|---|
-| **Mac with Apple Silicon** (M1 or newer) and [Xcode](https://apps.apple.com/app/xcode/id497799835) | Builds the catalog's 30 buildable games for iPhone and iPad. Mac targets are Animal Crossing, Crash Team Racing, F-Zero X, Halo, Jak and Daxter, Mario Kart Wii, Pokémon Snap, Pokémon Stadium, Super Mario Sunshine, Super Smash Bros., Melee and Tribes 2. Shows which games are on the iPhones and iPads you've connected to the Mac once, and which need an update. |
-| **Windows or Linux** | **Build here:** KartPad's Android game data or experimental iPhone/iPad app; on Windows, also the experimental iPhone/iPad apps of GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and MeleePad. **GitHub Cloud Build:** [15 public-fork iPhone/iPad games](#github-cloud-build-no-mac-needed), plus [DarkPad's experimental private build](#darkpad-private-github-build). [HaloPad's Xbox edition has its own GitHub workflow](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer). Other games explain their Apple Silicon Mac requirement or paused status. Ready-made apps can be installed from Windows or Mac; Linux installation is not validated. |
-| **Intel Mac** | KartPad Android and iPhone/iPad builds, experimental. Mac apps and the other iPhone/iPad builds require Apple Silicon. |
-
-The library sorts games into groups. Use **All games** to see them all, or the
-tabs to narrow the list:
+The top of the game library says in one line what this computer can build, and
+every game is listed either way. Use **All games** to see them all, or the tabs
+to narrow the list:
 
 | Group | What it means |
 |---|---|
-| **Build here** | PadMint compiles on this computer. Today this is KartPad on Windows and Linux (an Android pack or iPhone/iPad `.ipa`), plus GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and MeleePad on Windows (an iPhone/iPad `.ipa`), all experimental. The page says when it needs your game file. |
-| **Ready-made apps** | Download and install the app with your own Apple ID; its page explains any game files you need to add. |
-| **GitHub Cloud Build** | GitHub runs a temporary macOS build machine for your PadMint fork and compiles an iPhone/iPad `.ipa`. PadMint on Windows or Linux only starts the workflow. This is not a local Windows build. |
-| **Other routes** | Games that need an Apple Silicon Mac with Xcode, use their project's own separate route, have a separate Windows download such as BlueWake, or are paused. Each card states which one applies. |
+| **Build here** | PadMint builds on this computer. The page says when it needs your game file. |
+| **Ready-made apps** | Download the app and install it with your own Apple ID; its page explains any game files you add inside the app. |
+| **GitHub Cloud Build** | GitHub builds the iPhone/iPad app on a temporary Mac; PadMint opens the steps and you start the build on GitHub. |
+| **Other routes** | Games built on another computer (such as an Apple Silicon Mac), with their project's own route, with a separate desktop download such as BlueWake, or paused. Each card says which. |
 | **Not on your devices** | Once you have games: the ones that aren't on any of your devices yet. |
 
 Each game says where it is: **On iPad · iPhone**, an update such as
@@ -213,7 +204,8 @@ is, it says how to update. Then come numbered steps, each marked ✓ when done:
    version works, for example **Only the European (PAL) version works**, lists
    matching files already in your Downloads folder and checks the file straight
    away. Games that take the file inside the app show this step as done.
-3. **Build on this computer** says what you'll get. When every program the build
+3. **Build on this Mac** (or **this Windows PC**, **this Linux computer**) says
+   what you'll get, and any note the game has for this kind of computer. When every program the build
    needs is installed, it shows one green line; otherwise it lists what's
    **not found** first and how to get it: Xcode from the App Store, and one
    Homebrew line with a **Copy** button for everything else. Install what's
@@ -223,8 +215,8 @@ is, it says how to update. Then come numbered steps, each marked ✓ when done:
    play** open the details in advance.
 
 Games that this computer can't build show one card instead, named for the route:
-**Build on GitHub's Mac** with its steps, **Needs an Apple Silicon Mac**, or
-**Get the ready-made app**. On a Mac, games that also have a GitHub route list it
+**Build on GitHub's Mac** with its steps, **This iPhone/iPad build needs an
+Apple Silicon Mac**, **Build it on another computer**, or **Get the ready-made app**. On a Mac, games that also have a GitHub route list it
 under **Other ways to build** at the bottom.
 
 The page then shows a checklist: finding the latest release, downloading the
@@ -240,15 +232,11 @@ your Downloads folder and **What to do next**. If it stops, it says why: open
 <a id="no-mac-build-on-githubs-mac"></a>
 ## GitHub Cloud Build (no Mac needed)
 
-**GitHub Cloud Build** means GitHub runs a temporary macOS build machine for
-your GitHub repository. Most games use a public PadMint fork; DarkPad requires
-a private repository, as explained below. PadMint on Windows or Linux opens the guide in your
-browser; it does not compile these games locally and does not make a Windows
-desktop copy.
-
-**Use this route from Windows, Linux or an Intel Mac.** You run the workflow in
-your browser; compilation happens on GitHub's hosted macOS build machine. The result is an iPhone/iPad
-app, not a Windows desktop game. Your own game files are not uploaded.
+**GitHub Cloud Build** means GitHub compiles the iPhone/iPad app on a temporary
+Mac for your GitHub copy of PadMint. PadMint only opens the steps; you start the
+build on GitHub in your browser, from Windows, Linux, an Intel Mac or any other
+computer. Most games use a public PadMint fork; DarkPad currently requires a
+private copy, as explained below. Your own game files are not uploaded.
 
 These games take your own game file inside the app, after installing, so the build
 itself needs nothing of yours: BallPad, BarrelPad, BellPad, BrawlerPad, CTRPad,
@@ -265,7 +253,7 @@ Linux or any computer with a web browser:
    left of **All workflows** to reveal the workflow list.
 3. Choose **Build a game for iPhone and iPad**, press **Run workflow**, pick the
    game and press the green **Run workflow**. It takes a few minutes for small
-   games and about 40 minutes for the largest.
+   games and can take an hour or more for larger ones, plus GitHub queue time.
 4. Wait for the green check, then open the run's title. On its **Summary** page,
    scroll down to **Artifacts** and tap the game-named download; stay signed in
    to GitHub. Unzip that download to get the `.ipa`. This is separate from the
@@ -280,18 +268,23 @@ stay. The copy holds game code made for you: keep it to yourself.
 **HaloPad's Xbox edition uses its own workflow:** fork or sync
 [HaloPad](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer),
 then choose **Actions → Build HaloPad (Xbox edition) → Run workflow** there.
-HaloPad is not a choice in PadMint's shared workflow. It also provides a
-Mac app for playing on a supported Mac; PC Custom Edition builds still need
-your own Apple Silicon Mac.
+HaloPad is not a choice in PadMint's shared workflow. The run makes an
+iPhone/iPad app and a Mac app, and GitHub keeps them for 7 days. To sign the
+iPhone/iPad app, follow [HaloPad's install guide](https://github.com/chrissotraidis/projectreach/blob/main/docs/INSTALL-IPHONE.md).
+Custom Edition, made from your own PC installer, still needs your own Apple
+Silicon Mac.
 
 ### DarkPad: private GitHub build
 
 **Experimental.** A [clean hosted build of DarkPad v0.1.0](https://github.com/chrissotraidis/padmint/actions/runs/40830430386/job/123303170832)
 passed on October 29, 2026, with IPA upload skipped. That check did not validate
-installation or gameplay. DarkPad's build needs no ROM, but the IPA contains
-compiled game code and must stay private. A public fork is refused before the
-build starts. DarkPad's public release continues to contain only its recipe and
-checksum.
+installation or gameplay. The current PadMint route requires a private
+repository and refuses a public manual run before the build starts. You add
+your own Perfect Dark ROM inside the app after installation; the build needs
+no ROM.
+Its public release remains recipe-only. The consistency of the private-output
+rule across personal cloud builds is [an open decision](docs/BUILD_ROUTE_COPY.md#darkpad-is-not-technically-a-different-kind-of-personal-build);
+the steps below describe the route available now.
 
 1. Open [GitHub's repository import](https://github.com/new/import). Import
    `https://github.com/chrissotraidis/padmint` into a new repository in your own
@@ -314,13 +307,15 @@ checksum.
 
 SquirrelPad is not a cloud choice: its current recipe reads your ROM during
 compilation. Adding its name to a fork's menu does not remove that requirement.
-Its [local Windows work](docs/WINDOWS.md#windows-build-proofs-that-are-not-enabled-yet)
-still needs the matching release and device checks; do not upload a ROM to CI.
+Its [local Windows route](docs/WINDOWS.md#every-game-from-a-windows-pc-running-list)
+is published and experimental; physical-device checks remain. Keep the ROM
+on the build computer.
 
 ## Installing what you made
 
 **iPhone or iPad:** PadMint saves `<Game>-v…-ios-personal.ipa`, the complete app
-with your game inside. To put it on your device with [Sideloadly](https://sideloadly.io)
+ready to sign and install. Some games still ask for your ROM, disc or data
+inside the app afterward. To put it on your device with [Sideloadly](https://sideloadly.io)
 (free, Mac or Windows) and your own Apple ID:
 
 1. Install Sideloadly and open it.
@@ -335,8 +330,15 @@ with your game inside. To put it on your device with [Sideloadly](https://sidelo
 With a free Apple ID the app opens for 7 days; drag the same file into Sideloadly
 again to keep playing. To update, build the new version with PadMint and install
 it the same way with the same Apple ID; your saves stay. [AltStore](https://altstore.io)
-and [SideStore](https://sidestore.io) work too. HaloPad needs a paid Apple
-developer account; its guide explains why.
+and [SideStore](https://sidestore.io) work too. For HaloPad, follow its
+[current signing instructions](https://github.com/chrissotraidis/projectreach/blob/main/docs/INSTALL-IPHONE.md):
+its memory capabilities need an appropriate signing profile. A limited Xbox-edition
+iPad test worked without those capabilities, but a free-account installation
+route and iPhones are not yet validated.
+
+**From Linux:** copy the `.ipa` to a Windows PC or Mac and follow the same
+steps there. Sideloadly has no Linux version, and installing directly from
+Linux isn't tested.
 
 **Mac (CTRPad):** PadMint saves `<Game>-v…-macos-personal.zip`. Open it, move the
 app to Applications and open it; the game asks for your own game file. To update,
@@ -485,20 +487,14 @@ caches and saves; none need deleting to restore the Mac option.
 <details>
 <summary><strong>Can I build iPhone apps on Windows or Linux?</strong></summary>
 
-On your own Windows PC: KartPad, GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and MeleePad, all experimental (on Linux, KartPad only). Fifteen
-games that take your game file inside the app can be made on
-[GitHub Cloud Build](#github-cloud-build-no-mac-needed) instead, and HaloPad's Xbox
-edition has [its own GitHub route](https://github.com/chrissotraidis/projectreach#on-windows-linux-or-any-computer).
-The other games that read your disc or ROM while building (BlueWake, SunPad,
-SnapPad, AnnePad, Jak and Daxter) need a Mac with Apple Silicon and Xcode for
-now. PadMint adds a game to **Build here** on Windows once its release contains a
-Windows recipe and matching app shell and PadMint has built it on Windows from
-that release. See the current roster in
-[Building games on Windows](docs/WINDOWS.md). None of these is a Windows desktop build.
-
-That work is active: PadMint 0.5.15 shipped the shared Windows build foundation.
-Each additional local route still needs its own matching release and recipe, and
-every Windows-built copy still needs a check on an iPhone or iPad. See [progress by game](docs/COMPATIBILITY.md#status-by-game).
+Yes. On a Windows PC, PadMint builds seven games itself, experimentally
+(KartPad, GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and MeleePad);
+on Linux, KartPad. From either, 17 more build on
+[GitHub's Mac](#github-cloud-build-no-mac-needed), including DarkPad's
+[private route](#darkpad-private-github-build) and HaloPad's Xbox edition. The
+remaining games read your disc or ROM while building with tools that still need
+an Apple Silicon Mac; [Building games on Windows](docs/WINDOWS.md) tracks each
+one. All of these make iPhone/iPad apps, not desktop games.
 
 </details>
 <details>

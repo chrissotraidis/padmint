@@ -21,7 +21,27 @@ clearer choices on Windows, Linux and Mac. Recheck the affected release and PR
 before acting; the dated findings below are a starting point, not proof that a
 draft is still current. No background builds or scheduled work are requested.
 
-### Published baseline
+### Current state, 1 November 2026
+
+PadMint **0.5.29** applied the requested route wording
+([Build-route wording](BUILD_ROUTE_COPY.md)): build steps name the computer,
+games carry a short note for a host where a route has a known limit, Linux says
+before a build that installing from Linux isn't tested, and the BlueWake,
+HaloPad and DarkPad cards were corrected, in all three languages. The README
+leads with the three routes. One decision is open: the visibility rule for
+personal cloud output (DarkPad private, other personal builds public).
+
+PadMint exposes seven local Windows routes; Linux exposes KartPad only. Both
+hosts can start 17 cloud routes (15 public PadMint choices, private DarkPad and
+HaloPad Xbox in its own repository). The catalog has 30 ports with build
+routes, eight guided downloads and one paused entry. Six of the 30 still need a
+local Apple Silicon Mac for iPhone/iPad, including AgePad with its known
+Steam-version problem. The live recipe audit on 1 November checked all 39
+entries with zero inconsistencies; it did not run game builds or establish
+device acceptance. Use [the current roster](WINDOWS.md) and
+[recipe matrix](COMPATIBILITY.md) for details.
+
+### Historical baseline, 29 October 2026
 
 - **0.5.24**, main at `d6f0f59`: all three release ZIPs passed checksums and
   contained the same 39-entry catalog. The live recipe audit found zero
@@ -54,20 +74,22 @@ draft is still current. No background builds or scheduled work are requested.
    downloads or execution. Test unknown and retired IDs, mismatched origins,
    existing-port edits, uncatalogued own-port fixtures, worktrees and offline
    operation. Use synthetic fixtures; never build someone else's app to test it.
-2. **Finish the existing cloud-route work.** Review
-   [#216](https://github.com/chrissotraidis/padmint/pull/216): merged and released
-   in 0.5.27 after all 31 checks passed, including 16 hosted game builds. It
-   added DarkPad's private cloud route and made HaloPad's existing project
-   workflow easier to find. The check uploaded no game artifacts; private
-   manual dispatch, signing/install and device gameplay still need validation.
-   SquirrelPad needs the player's ROM during compilation and stays local.
+2. **Settle and finish the cloud routes.** Chris decides one visibility rule
+   for personal cloud output; today DarkPad requires a private copy while
+   BallPad, BellPad, BrawlerPad, PaperPad and the other personal builds use
+   public forks ([the comparison](BUILD_ROUTE_COPY.md#darkpad-is-not-technically-a-different-kind-of-personal-build)).
+   Change `github_build_private`, the guide and the card together afterwards.
+   Hosted builds pass, but a private manual DarkPad run, signing/install and
+   device gameplay still need validation. SquirrelPad needs the player's ROM
+   during compilation and stays local.
 3. **Turn private local-build proofs into usable released routes.** On
    1 November GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and
    MeleePad published Windows recipes with matching app shells (experimental;
    PadMint's page lists them from 0.5.28). Next, follow
    [the per-game queue](WINDOWS.md#active-queue): install and play a
-   Windows-built copy of each; BlueWake's next full release with
-   [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100); SunPad
+   Windows-built copy of each (then drop their Windows note in the catalog); a Windows-enabled iPhone recipe following
+   [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100) (published
+   BlueWake 0.10.0 still declares only Mac for iPhone); SunPad
    #57 then #78; AnnePad and SnapPad once PadMint publishes its IDO, binutils,
    Rabbitizer and asm-processor builds; then Ottsel and AgePad.
    Reuse shared runner/module work. Record Windows x64, Windows ARM64, Linux
@@ -81,7 +103,9 @@ draft is still current. No background builds or scheduled work are requested.
 5. **Validate the player experience on the actual hosts.** Check ZIP extraction,
    launch, browser/file selection, non-English paths, cancellation/retry,
    updates and output installation on Windows/Linux. Add a tested Linux iPhone
-   installation route before documenting it as supported. Keep native x64,
+   installation route before documenting it as supported; until then the Linux
+   pages send the `.ipa` to a Windows PC or Mac. The 0.5.29 wording was checked
+   on pages served for each host, not on the physical hosts. Keep native x64,
    ARM64, emulation, synthetic checks and device gameplay evidence distinct.
 
 Keep source, recipes, matching app artifacts, public host labels and these docs
@@ -123,14 +147,14 @@ rules, and its demand figures are historical. Start with this resume queue.
 
 1. Download the Windows ZIP, extract it, run PadMint, and get past SmartScreen
    (**More info → Run anyway**). The browser opens PadMint's page.
-2. **Build here:** Mario Kart Wii (KartPad) is the only game PadMint compiles
-   locally on Windows today. Choose **Android** for the game-data pack, or
-   **iPhone or iPad** for an experimental IPA that the player installs with
-   Sideloadly.
-3. **GitHub Cloud Build:** fifteen games can build an iPhone/iPad IPA on a
-   temporary macOS build machine hosted by GitHub. PadMint starts the workflow
-   from Windows. HaloPad's Xbox edition uses its own GitHub workflow. Windows
-   does not compile either group locally, and nothing personal is uploaded.
+2. **Build here:** KartPad, GoldenPad, BearBirdPad, BananaPad, SquirrelPad,
+   DinoPad and MeleePad compile locally for iPhone/iPad on Windows, experimental.
+   KartPad also prepares Android game data. Sign/install the IPA with Sideloadly.
+3. **GitHub Cloud Build:** 15 games use public PadMint forks, DarkPad currently
+   requires a private copy, and HaloPad Xbox uses its own workflow. PadMint opens
+   the guide; the player starts the build on GitHub's temporary Mac. No player
+   ROM or disc is uploaded. Personal-output visibility is an open decision in
+   [Build-route wording](BUILD_ROUTE_COPY.md).
 4. **A ready-made app** (Caesar III, Daggerfall, Diablo, Fallout 2, Kid Pix,
    Pharaoh, Red Alert, Warcraft II): the page links the download and the install
    steps; there's nothing to build.
@@ -142,7 +166,8 @@ rules, and its demand figures are historical. Start with this resume queue.
    HaloPad's PC Custom Edition also needs an Apple Silicon Mac. The active
    release queue is in [WINDOWS.md](WINDOWS.md).
 
-Linux offers the same route choices, but installing an iPhone app from Linux is
+Linux offers KartPad locally and the same 17 cloud routes, not the six new
+Windows-only local routes. Installing an iPhone app directly from Linux is
 not validated. On Intel Macs, KartPad's local iPhone route uses Xcode; the
 other hosted choices remain available.
 
@@ -154,10 +179,11 @@ to players; the rest remain development work:
 
 | Route | What compiles | Games |
 |---|---|---|
-| **Build here** | The player's Windows or Linux computer compiles the game from their game file | KartPad only, currently experimental |
+| **Build here** | The player's computer compiles from their game file | Windows: KartPad plus GoldenPad, BearBirdPad, BananaPad, SquirrelPad, DinoPad and MeleePad. Linux: KartPad only. All experimental |
 | **GitHub Cloud Build** | GitHub runs a temporary macOS machine and runs PadMint's shared workflow (`build-for-iphone.yml`) | BallPad, BarrelPad, BellPad, BrawlerPad, CTRPad, F0X, GalaxyPad, HarkinianPad, MaskPad, OpenRCT2 Touch, PaperPad, SpaghettiPad, StarshipPad, TribesPad, UTP |
+| **GitHub Cloud Build, private** | The same shared workflow in a private copy of PadMint | DarkPad, experimental; output-policy consistency remains to resolve |
 | **GitHub Cloud Build, project-owned** | The game's own GitHub macOS workflow | HaloPad's Xbox edition |
-| **Apple Silicon Mac** | The player's Mac with Xcode, or the project's own route | KartPad also builds locally; the remaining titles need another route. Seven private Windows proofs still need release and device checks |
+| **Apple Silicon Mac** | The player's Mac with Xcode | Local iPhone routes for AnnePad, SnapPad, SunPad, BlueWake, Ottsel and AgePad are Mac-only; AgePad has a known blocker. Windows proofs do not enable buttons |
 
 Uploading a player's disc or ROM to GitHub stays out (D15), which is why the
 games that read those files during the build need the local route.
@@ -189,13 +215,13 @@ repository builds it from the player's disc, but PadMint doesn't run it yet.
 
 | PadMint on → to play on | iPhone / iPad | Mac | Android | Windows PC | Linux PC |
 |---|---|---|---|---|---|
-| **Mac, Apple Silicon** | PadMint: all 30 | PadMint: 12 | PadMint: KartPad's game part (see First). The game's builder: BlueWake | — | — |
-| **Mac, Intel** | Local: KartPad (experimental). GitHub Cloud Build: 15 PadMint games plus HaloPad Xbox | HaloPad Xbox builds with GitHub Cloud Build for playing on Apple Silicon | PadMint: KartPad's game part | — | — |
-| **Windows** | Local: KartPad (experimental). GitHub Cloud Build: 15 PadMint games plus HaloPad Xbox | HaloPad Xbox builds with GitHub Cloud Build for playing on Apple Silicon | PadMint: KartPad's game part. The game's builder: BlueWake (checked on a phone) | The game's builder: BlueWake. PadMint makes no Windows desktop games; upstream code includes CTRPad | — |
-| **Linux** | Local: KartPad (experimental). GitHub Cloud Build: 15 PadMint games plus HaloPad Xbox. Installing from Linux is not validated | HaloPad Xbox builds with GitHub Cloud Build for playing on Apple Silicon | PadMint: KartPad's game part. The game's builder: BlueWake (untested past the disc check) | — | The game's builder: BlueWake. PadMint makes no Linux desktop games; upstream code includes CTRPad |
+| **Mac, Apple Silicon** | 30 declared routes; AgePad has a blocker | PadMint: 12 | PadMint: KartPad's game part (see First). The game's builder: BlueWake | — | — |
+| **Mac, Intel** | Local: KartPad (experimental). Cloud: 15 public PadMint games, private DarkPad, HaloPad Xbox | HaloPad Xbox builds with GitHub Cloud Build for playing on Apple Silicon | PadMint: KartPad's game part | — | — |
+| **Windows** | Local: seven games (experimental; see WINDOWS.md). Cloud: 15 public PadMint games, private DarkPad, HaloPad Xbox | HaloPad Xbox builds with GitHub Cloud Build for playing on Apple Silicon | PadMint: KartPad's game part. The game's builder: BlueWake (checked on a phone) | BlueWake Windows x64 download; PadMint does not build desktop copies | — |
+| **Linux** | Local: KartPad (experimental). Cloud: 15 public PadMint games, private DarkPad, HaloPad Xbox. Installing from Linux is not validated | HaloPad Xbox builds with GitHub Cloud Build for playing on Apple Silicon | PadMint: KartPad's game part. The game's builder: BlueWake (untested past the disc check) | — | BlueWake Linux x86-64 AppImage; PadMint does not build desktop copies |
 | **Android phone** (Termux) | — | — | PadMint: KartPad's game data (emulator only so far) | — | — |
 
-The 8 apps that hold no game code at all (Caesar III, Daggerfall, Diablo,
+The 8 authorized ready-made apps (Caesar III, Daggerfall, Diablo,
 Fallout 2, Kid Pix, Pharaoh, Red Alert, Warcraft II) install on an iPhone or iPad
 from any computer that runs Sideloadly (Windows or Mac).
 
@@ -206,7 +232,7 @@ from any computer that runs Sideloadly (Windows or Mac).
 | iPhone / iPad | Sideloadly or AltStore | Sideloadly | **Gap:** no tested tool (Sideloadly has no Linux version) |
 | Android | Copy the APK or folder | Same | Same |
 | Mac | Unzip to Applications | — | — |
-| Windows / Linux PC | — | Unzip and run | Unzip and run |
+| Windows / Linux PC (BlueWake download) | — | Unzip and run | Make the AppImage executable and run |
 
 **Why some cells are empty.** A Mac app has to be built with Apple's SDK, which
 only runs on a Mac. An iPhone app can still be made off a Mac when its release
@@ -280,6 +306,11 @@ building. OpenRCT2Touch is a GitHub fork.
 
 ## Checklist
 
+The **First** section is an older distribution proposal, not the active queue
+or permission to replace authorized ready-made downloads. Current implementation
+work starts at [Resume work](#resume-work); the route wording is recorded in
+[Build-route wording](BUILD_ROUTE_COPY.md).
+
 ### First: PadMint routes for the downloads players use most
 
 - [ ] **KartPad on Android, built by PadMint.** PadMint already builds KartPad's
@@ -292,8 +323,8 @@ building. OpenRCT2Touch is a GitHub fork.
   BlueWake's recipe that runs BlueWake's existing Windows builder from the player's
   disc; player-check it on a Windows PC; the game page says how to run it.
 - [ ] **BlueWake on Android and Linux, built by PadMint**, the same way, from
-  BlueWake's existing builders (Android is checked on a phone; Linux untested past
-  the disc check).
+  BlueWake's existing builders. Its 0.10.0 Linux AppImage is already published;
+  a PadMint-managed Linux build remains separate work.
 - [ ] **Wording.** Once those exist, KartPad's and BlueWake's READMEs and PadMint's
   game pages point Android and Windows players at PadMint.
 - [ ] **Android without a computer.** The Termux route makes KartPad's game data.
@@ -311,14 +342,17 @@ building. OpenRCT2Touch is a GitHub fork.
   focused [Windows roster and active queue](WINDOWS.md).
 - [ ] BlueWake's original-disc Windows backend (PadMint #135, #136;
   bluewake#100); Windows desktop is already published separately.
-- [ ] Fix and release SnapPad's Windows hosts, then MeleePad's invalid
-  `windows-x64` key; add pinned manifest validation to both game CIs.
+- [ ] Publish SnapPad's managed tools, matching shell and Windows recipe.
+- [x] MeleePad's host key is corrected and its Windows route shipped in 0.3.0;
+  native Windows x64 and physical-device acceptance remain.
 - [ ] Merge SunPad #57 and #78, then publish its Windows recipe and run the
   physical-device check.
-- [ ] Publish SquirrelPad's shell and recipe; reuse the shell workflow for
-  GoldenPad, BearBirdPad and BananaPad.
-- [ ] Finish AnnePad; resolve AgePad's installed-input mismatch; test DinoPad
-  with its ROM; design Ottsel's portable host-tool route.
+- [x] Publish SquirrelPad, GoldenPad, BearBirdPad, BananaPad and DinoPad
+  Windows shells/recipes; PadMint 0.5.28 exposes them.
+- [ ] Install and play all six new Windows-built apps on physical devices, and
+  validate on native Windows x64.
+- [ ] Finish AnnePad; resolve AgePad's Steam pins and installed inputs; finish
+  Ottsel's signed game execution and portable packaging.
 - [ ] A tested way to install on an iPhone from Linux, then its steps.
 - [ ] Engine ports through spaghettipad#29: SpaghettiPad, then HarkinianPad,
   MaskPad, StarshipPad, PaperPad, BrawlerPad.
