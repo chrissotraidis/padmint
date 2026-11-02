@@ -1,8 +1,10 @@
 # Agent instructions
 
-Start with [STATUS.md](STATUS.md), then [Resume work](docs/ROADMAP.md#resume-work).
-That queue is the handoff for an owner request to continue improving PadMint;
-it separates published routes, unfinished work and the evidence still needed.
+Start with [What PadMint still needs](docs/REMAINING.md). It answers "what do we
+still need to do for PadMint?": where every computer stands, the ordered work
+queue, the decisions only Chris can make and the evidence each step needs. Keep
+it current in the same PR as the work. [STATUS.md](STATUS.md) says what each
+release changed; [Resume work](docs/ROADMAP.md#resume-work) keeps earlier handoffs.
 
 - This repository holds only the shared Builder: its pipeline, profiles, tests and docs. Never commit or upload game code (translated or decompiled), disc images, ROMs, extracted game files, saves, console keys or personal builds.
 - Before any public release, every asset must pass `python3 -m padmint audit <asset>` (and the private `~/.codex/release-gate/release_gate.py` while it remains the reference). A failure is a stop, not a note.

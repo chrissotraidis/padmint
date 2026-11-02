@@ -11,6 +11,9 @@ On Windows and Linux, the downloaded launcher runs PadMint on the player's
 computer and opens its interface in a browser at `127.0.0.1`. Local tools and
 builds run on that computer. GitHub Cloud Build is a separate hosted route.
 
+For the whole remaining queue (Mac, Windows, Linux, Chromebooks, UI text and
+open decisions), see [What PadMint still needs](REMAINING.md).
+
 The app uses these labels ([Build-route wording](BUILD_ROUTE_COPY.md) records
 the exact copy):
 

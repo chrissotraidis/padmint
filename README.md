@@ -39,10 +39,12 @@ from a Windows PC or Mac. Which computer can build what:
 | **Linux** | KartPad, experimental | 17 games |
 | **Intel Mac** | KartPad, experimental | 17 games |
 | **Android phone**, no computer | KartPad's game data, experimental | — |
+| **Chromebook** (untested) | With ChromeOS's Linux turned on, the same as Linux | 17 games, from the browser |
 
 The other six games build only on an Apple Silicon Mac for now, and EctoPad is
 paused; [Building games on Windows](docs/WINDOWS.md) tracks each one. On Linux,
-installing on an iPhone or iPad directly from Linux isn't tested yet.
+or a Chromebook, installing on an iPhone or iPad needs a Windows PC or Mac for
+now. [What PadMint still needs](docs/REMAINING.md) lists the work left for each.
 
 PadMint makes iPhone, iPad, Mac and Android copies, not Windows or Linux desktop
 games. Two projects publish ready-to-play downloads of their own:
@@ -455,11 +457,25 @@ Click a question to see the answer.
 <details>
 <summary><strong>My game isn't in the list, or it's dimmed.</strong></summary>
 
-Choose it anyway: the page names the actual route. **Build here** means PadMint
-compiles on your PC. **GitHub Cloud Build** means a temporary macOS machine
-hosted by GitHub compiles it. **Apple Silicon Mac** means it needs your own Apple Silicon
-Mac with Xcode, unless the project documents another route. **Not available
-yet** means there is nothing to build or download through PadMint yet.
+Choose it anyway: its page says how to get it. **Build here** (on the page,
+**Build on this computer**) means PadMint compiles it on the computer you're
+using. **GitHub Cloud Build** (**Build on GitHub's Mac**) means GitHub compiles
+it on a temporary Mac that you start from your browser. **Needs an Apple
+Silicon Mac** means it needs your own Apple Silicon Mac with Xcode, unless the
+project documents another route. **Paused for now** means there is nothing to
+build or download through PadMint yet.
+
+</details>
+<details>
+<summary><strong>Can I use a Chromebook?</strong></summary>
+
+Partly, and it hasn't been tested yet. From the browser alone you can start
+[GitHub Cloud Build](#github-cloud-build-no-mac-needed) for 17 games, but
+installing the app on an iPhone or iPad needs Sideloadly on a Windows PC or Mac.
+With ChromeOS's Linux turned on, [PadMint for Linux](#quick-start) should also
+build KartPad, which needs plenty of free space. School and work Chromebooks often block
+Linux. KartPad's [Android download](https://github.com/chrissotraidis/kartpad/releases/latest)
+should install on a Chromebook that runs Android apps.
 
 </details>
 <details>

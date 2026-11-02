@@ -1,11 +1,11 @@
 # PadMint status
 
-Updated **1 November 2026**.
+Updated **2 November 2026**.
 
-**Next work:** when the owner asks to continue
-improving PadMint, start with [Resume work](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#resume-work).
-It records the audit, existing PRs, more Windows/Linux and cloud build options,
-ownership enforcement, preview updates and the validation each route needs.
+**Next work:** [What PadMint still needs](https://github.com/chrissotraidis/padmint/blob/main/docs/REMAINING.md)
+is the current queue: how much of the catalog works on Mac, Windows, Linux and
+Chromebooks, what's next for each game, the UI text to fix, and the decisions
+waiting on the owner. Earlier handoffs stay in [Resume work](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#resume-work).
 Implementation resumed at the owner's request after the 29 October stop
 ([D18](https://github.com/chrissotraidis/padmint/blob/main/docs/DECISIONS.md#d18-save-the-improvements-handoff-then-stop-29-oct-2026)).
 
