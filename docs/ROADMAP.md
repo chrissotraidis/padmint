@@ -41,6 +41,17 @@ entries with zero inconsistencies; it did not run game builds or establish
 device acceptance. Use [the current roster](WINDOWS.md) and
 [recipe matrix](COMPATIBILITY.md) for details.
 
+### Do soon (noted 2 November 2026)
+
+- [ ] **Swap HarkinianPad's card art for the blue ocarina.** PadMint still shows
+  the old ship's-wheel picture (`art/harkinianpad.png`, unchanged since
+  18 October), so updating PadMint doesn't change it. HarkinianPad switched its
+  app icon to the blue ocarina in
+  [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41).
+  Make a 144×144 PNG from HarkinianPad's `assets/AppIcon.appiconset/AppIcon.png`
+  to match the other cards, and ship it in the next PadMint release, after
+  HarkinianPad v0.2.3 publishes the new icon.
+
 ### Historical baseline, 29 October 2026
 
 - **0.5.24**, main at `d6f0f59`: all three release ZIPs passed checksums and
