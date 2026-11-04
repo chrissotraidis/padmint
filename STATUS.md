@@ -9,6 +9,8 @@ waiting on the owner. Earlier handoffs stay in [Resume work](https://github.com/
 Implementation resumed at the owner's request after the 29 October stop
 ([D18](https://github.com/chrissotraidis/padmint/blob/main/docs/DECISIONS.md#d18-save-the-improvements-handoff-then-stop-29-oct-2026)).
 
+**v0.5.30:** Adds NightPad (007: Nightfire, Xbox) to the Apple Silicon Mac → iPhone/iPad catalog, with its app icon, tool requirements and sideloading/import/update instructions. PadMint reads the player's own Xbox disc image during the build and hands over a personal unsigned IPA plus a NightPad game data folder, which the player imports in the app. NightPad releases contain only source, a recipe and checksums; PadMint builds the app on the player's Mac.
+
 **v0.5.29:** clearer choices on every computer. A game's build step is named
 for the computer (**Build on this Mac**, **this Windows PC**, **this Linux
 computer**), and a short note beside it gives a route's known limit: the six
