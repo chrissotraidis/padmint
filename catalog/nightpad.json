@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "nightpad",
+  "repo_url": "https://github.com/chrissotraidis/nightpad",
+  "name": "NightPad",
+  "game": "007: Nightfire (Xbox)",
+  "player_targets": [
+    "ios"
+  ],
+  "free_space_gb": 12,
+  "player_help": "https://github.com/chrissotraidis/nightpad#build-with-padmint",
+  "reviewed_revision": null,
+  "notes": "NightPad owns its release recipe (nightpad-v...-padmint.json). An Apple Silicon Mac builds a personal unsigned iPhone/iPad IPA and extracts the player's own Xbox Nightfire disc image into the NightPad game data folder that the app imports.",
+  "manifest": null,
+  "before_build": {
+    "commands": [
+      "brew install cmake"
+    ]
+  },
+  "game_data_import": {
+    "ios": "⋯ → Data & Saves → Game Data → Import Prepared Game Data…"
+  },
+  "player_next": {
+    "ios": {
+      "sideload": true,
+      "steps": [
+        "Install {file} on your iPhone or iPad, signed with your own Apple developer profile.",
+        "Updating? Install it over your current NightPad with the same signing to keep your codenames, saves and touch layout.",
+        "First time only: put the NightPad game data folder from {folder} on the device (Files, iCloud Drive or a USB drive). Open NightPad, choose ⋯ → Data & Saves → Game Data → Import Prepared Game Data… and pick that folder. Then choose ⋯ → Start Game."
+      ]
+    }
+  }
+}

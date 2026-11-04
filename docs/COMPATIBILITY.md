@@ -64,6 +64,29 @@ The library uses DarkPad's original app icon, copied unchanged from
 [art provenance](https://github.com/chrissotraidis/darkpad/blob/26ac4bd14d05ef353d0544767ad6b97ee98dbdf6/docs/ART.md)
 records its creation.
 
+## NightPad route
+
+NightPad (007: Nightfire, Xbox) uses its own recipe from the
+[0.2.0 release](https://github.com/chrissotraidis/nightpad/releases/tag/v0.2.0).
+Its catalog entry is included in PadMint 0.5.30. Apple Silicon Mac → iPhone/iPad
+passed `scripts/player-check.sh` on November 4 using PadMint `683cc18` plus this
+catalog entry, Apple's Python 3.9.6 and an empty PadMint folder. NightPad source:
+`7aa87763435dc025aca52612a5c0f66be56eb45b`; build time about 7 minutes.
+
+The player selects their own Xbox disc image (ISO or XISO) for the build.
+NightPad's backend only reads it: it validates the listing, hashes the image
+before and after extraction, and leaves the prepared folder beside the IPA,
+which PadMint saves as **NightPad game data**. The player imports that folder
+in the app with ⋯ → Data & Saves → Game Data → Import Prepared Game Data…. Install
+full Xcode and its iOS platform plus `brew install cmake`; allow 12 GB free.
+The output is a personal unsigned IPA; the game release contains only its recipe
+and checksum. Intel Mac, Windows, Linux and GitHub Cloud Build routes are not
+offered. A passing build does not establish device acceptance; NightPad's README
+records what has been played on an iPad.
+
+The library uses NightPad's own app icon, copied unchanged from
+`apple/ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png`.
+
 ## Current player recipes
 
 Every release link is the exact version checked on 1 November.
@@ -106,6 +129,7 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 | [maskpad v0.2.1](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | iPhone/iPad | Experimental | Unavailable | Experimental / Experimental | Unavailable / Unavailable | — |
 | [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
+| [nightpad v0.2.0](https://github.com/chrissotraidis/nightpad/releases/tag/v0.2.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [OpenRCT2Touch touch-v0.1.0](https://github.com/chrissotraidis/OpenRCT2Touch/releases/tag/touch-v0.1.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [ottsel v0.1.0](https://github.com/chrissotraidis/ottsel/releases/tag/v0.1.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [ottsel v0.1.0](https://github.com/chrissotraidis/ottsel/releases/tag/v0.1.0) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
