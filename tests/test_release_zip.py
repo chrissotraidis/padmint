@@ -64,7 +64,8 @@ class ReleaseZipTests(unittest.TestCase):
     def test_packaged_update_help_explains_why_an_old_folder_keeps_old_choices(self):
         with zipfile.ZipFile(self.zip) as bundle:
             note = bundle.read("PadMint-vX/Start here.txt").decode()
-            guide = bundle.read("PadMint-vX/app/README.md").decode()
+            guide = bundle.read("PadMint-vX/app/README.md").decode() + \
+                bundle.read("PadMint-vX/app/docs/GUIDE.md").decode()
         # The menu catalog ships inside PadMint. Updating a game or refreshing
         # the browser cannot add a target absent from an older PadMint folder.
         self.assertIn("NEW folder", note)

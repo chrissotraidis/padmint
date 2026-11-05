@@ -1,8 +1,8 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **2 November 2026** for PadMint **0.5.29**,
-using the live catalog audit (39 entries, 0 problems) and the open pull requests
+continuing work. It was updated on **5 November 2026** for PadMint **0.5.30**,
+using the live catalog audit (40 entries, 0 problems) and the open pull requests
 in PadMint and each game's repository. Any PR that finishes an item below
 updates this page too.
 
@@ -23,15 +23,15 @@ Portuguese.
 
 ## Where it stands
 
-These counts cover the 38 entries players can use: 30 games PadMint builds and 8
+These counts cover the 39 entries players can use: 31 games PadMint builds and 8
 ready-made apps. EctoPad is paused and not counted.
 
 | Measure | Mac (Apple Silicon) | Windows PC | Linux |
 |---|---|---|---|
-| The player can end up with an iPhone/iPad app by any route, including GitHub's Mac | 37/38 (97%) | 32/38 (84%) | 26/38 (68%), but installing needs a Windows PC or Mac |
-| The player's own computer builds it (ready-made apps count) | 37/38 (97%) | 15/38 (39%) | 9/38 (24%) |
-| Built games only, on the player's own computer | 29/30 (97%) | 7/30 (23%) | 1/30 (3%) |
-| A copy built there has been installed and opened or played on a device | Every game's latest build as of 18–21 October opened on an iPad with iPadOS 27 | 0 of 7 | 0 of 1 |
+| The player can end up with an iPhone/iPad app by any route, including GitHub's Mac | 38/39 (97%) | 32/39 (82%) | 26/39 (67%), but installing needs a Windows PC or Mac |
+| The player's own computer builds it (ready-made apps count) | 38/39 (97%) | 15/39 (38%) | 9/39 (23%) |
+| Built games only, on the player's own computer | 30/31 (97%) | 7/31 (23%) | 1/31 (3%) |
+| A copy built there has been installed and opened or played on a device | Every game's latest build as of 18–21 October opened on an iPad with iPadOS 27; NightPad, added in 0.5.30, has been installed on an iPad, with broad gameplay checks still open | 0 of 7 | 0 of 1 |
 
 The Mac's one miss is **AgePad**: 6 of its 8 pinned Steam files no longer match
 an installed Steam, so v0.1.0 stops after Steam updates. **HaloPad** can also
@@ -46,8 +46,8 @@ The Windows counts break down as follows:
 - 7 games build locally, all experimental and all built only on Windows 11 ARM64.
 - 17 build on GitHub's Mac.
 - All 8 ready-made apps install with Sideloadly.
-- 6 games still need an Apple Silicon Mac: SunPad, SnapPad, AnnePad, BlueWake's
-  iPhone app, Ottsel and AgePad. HaloPad's Custom Edition also needs a Mac.
+- 7 games still need an Apple Silicon Mac: SunPad, SnapPad, AnnePad, BlueWake's
+  iPhone app, Ottsel, AgePad and NightPad. HaloPad's Custom Edition also needs a Mac.
 
 Linux builds KartPad locally (x64 and ARM64 in its recipe) and can start the
 same 17 cloud builds.
@@ -90,19 +90,20 @@ Nothing new needs building for this step. It turns "experimental" into "works".
   Do the same for DarkPad's private route.
 - **Done when** [WINDOWS.md](WINDOWS.md) records a device result for each game.
 
-### 2. Bring the six Mac-only games to Windows
+### 2. Bring the seven Mac-only games to Windows
 
 A game counts as done when its published recipe declares Windows hosts,
 `scripts/player-check.sh` passes, and a copy built on Windows plays on a device.
 
 | Game | What blocks it | Next step |
 |---|---|---|
-| BlueWake | Windows proof merged ([bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100), 2 h 19 min from the original disc), but the published 0.10.0 recipe lists only Mac | Release a recipe with Windows hosts, then a device check. Close or rebase PadMint's old drafts [#135](https://github.com/chrissotraidis/padmint/pull/135) and [#136](https://github.com/chrissotraidis/padmint/pull/136) |
+| BlueWake | Windows proof merged ([bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100), 2 h 19 min from the original disc), but the published 0.10.0 recipe lists only Mac | Release a recipe with Windows hosts, then a device check. PadMint's old drafts #135 and #136 were closed on 5 November; #136's module string-table alignment fix landed on its own in [#234](https://github.com/chrissotraidis/padmint/pull/234) |
 | SunPad | Two draft PRs | Merge [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57), then [#78](https://github.com/chrissotraidis/sunpad/pull/78), and publish |
 | SnapPad | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12) uses a private tool bundle | PadMint publishes its Windows IDO, binutils, Rabbitizer and asm-processor builds (**needs Chris's approval**). SnapPad's release pause still applies |
 | AnnePad | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20) built the ROM-to-module step on Windows in 25 min | The same tool publication, then the shell, recipe and device check |
 | Ottsel | [ottsel#7](https://github.com/chrissotraidis/ottsel/pull/7): Windows output matches the Mac byte for byte | Device-check the changed Mac output, then a game-free app with a private game library |
 | AgePad | Broken on Mac too (stale Steam pins) | Release [agepad#15](https://github.com/chrissotraidis/agepad/pull/15) for the Mac first, then the Mac game files via SteamCMD on Windows |
+| NightPad | Added in 0.5.30; its recipe declares only Mac | Finish its iPad gameplay check first, then assess a Windows route |
 | HaloPad Custom Edition | Converts the PC game with Wine and Mac tools | No Windows design yet. The Xbox edition is covered by HaloPad's own GitHub workflow |
 
 ### 3. Build the GitHub-only games on Windows itself
@@ -208,7 +209,15 @@ only.
   shipped in the first PadMint release after HarkinianPad v0.2.3 publishes the
   new icon. The latest release is still v0.2.2.
 - [#232](https://github.com/chrissotraidis/padmint/pull/232): TribesPad's
-  Vengeance in the default build (draft, 2 November).
+  Vengeance in the default build (draft). Its game-side change,
+  [tribespad#36](https://github.com/chrissotraidis/tribespad/pull/36), merged on
+  2 November, but TribesPad's latest release is still v0.2.0, and the iPad
+  performance follow-up [tribespad#37](https://github.com/chrissotraidis/tribespad/pull/37)
+  still needs its manual iPad checks. Merge #232 after a TribesPad release with
+  Vengeance passes `scripts/player-check.sh`.
+- [#172](https://github.com/chrissotraidis/padmint/pull/172): iPhone SDK headers
+  for game modules (draft). It belongs to step 3 and waits for the first game
+  that needs it.
 - [#168](https://github.com/chrissotraidis/padmint/pull/168): plan for KartPad
   Android and BlueWake Windows built locally. Reconcile it with item 9.
 
