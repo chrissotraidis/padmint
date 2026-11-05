@@ -1,7 +1,7 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **5 November 2026** for PadMint **0.5.30**,
+continuing work. It was updated on **5 November 2026** for PadMint **0.5.31**,
 using the live catalog audit (40 entries, 0 problems) and the open pull requests
 in PadMint and each game's repository. Any PR that finishes an item below
 updates this page too.
@@ -34,12 +34,10 @@ ready-made apps. EctoPad is paused and not counted.
 | A copy built there has been installed and opened or played on a device | Every game's latest build as of 18–21 October opened on an iPad with iPadOS 27; NightPad, added in 0.5.30, has been installed on an iPad, with broad gameplay checks still open | 0 of 7 | 0 of 1 |
 
 The Mac's one miss is **AgePad**: 6 of its 8 pinned Steam files no longer match
-an installed Steam, so v0.1.0 stops after Steam updates. **HaloPad** can also
-fail at its last step on some Macs when Apple's `actool` crashes
-([#220](https://github.com/chrissotraidis/padmint/issues/220)). The fix
-([projectreach#37](https://github.com/chrissotraidis/projectreach/pull/37)) was
-merged on 31 October, but the current release, v0.3.13 (27 October), doesn't
-include it yet.
+an installed Steam, so v0.1.0 stops after Steam updates. HaloPad's `actool`
+failure ([#220](https://github.com/chrissotraidis/padmint/issues/220)) is fixed
+in [HaloPad 0.3.14](https://github.com/chrissotraidis/projectreach/releases/tag/v0.3.14)
+(5 November).
 
 The Windows counts break down as follows:
 
@@ -84,7 +82,6 @@ Nothing new needs building for this step. It turns "experimental" into "works".
   its experimental label. Never upgrade a label without a recorded run.
 - Build at least one of them on a **native x64 Windows PC**. All Windows
   evidence so far comes from Windows 11 ARM64.
-- Release HaloPad with projectreach#37, then close #220.
 - Run **GitHub Cloud Build end to end** once: fork, run, download, sign with
   Sideloadly, play. The hosted builds pass, but nobody has installed one yet.
   Do the same for DarkPad's private route.

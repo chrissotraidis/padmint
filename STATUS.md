@@ -6,12 +6,20 @@ What each recent PadMint release changed. Updated **5 November 2026**.
 queue. Older releases, from 0.5.22 back, and the October build evidence are in
 [STATUS-HISTORY.md](STATUS-HISTORY.md).
 
-**Since v0.5.30 (on main, not released):** the README is rewritten as a short
-player page, with the details in a new [player guide](docs/GUIDE.md) and
+**v0.5.31:** the README is rewritten as a short player page, with the details in a new [player guide](docs/GUIDE.md) and
 [developer guide](docs/DEVELOPING.md), and a [docs index](docs/README.md). The
 release ZIP now carries every guide. DarkPad's help link opens the guide.
 When PadMint puts a game module into its app, it now aligns the module's string
 table the way recent iOS versions require ([#234](https://github.com/chrissotraidis/padmint/pull/234)).
+Four in-app strings are fixed in English, Spanish and Portuguese ([#236](https://github.com/chrissotraidis/padmint/pull/236)):
+the home page says *Your game file stays on this computer* instead of promising
+everything runs locally, update help tells Mac and Linux players to use the
+version button, KartPad's ready-to-play download is named as Android, and
+ready-made apps are called iPad apps everywhere. HaloPad's
+[0.3.14](https://github.com/chrissotraidis/projectreach/releases/tag/v0.3.14)
+finishes builds when Apple's `actool` crashes on its icon
+([#220](https://github.com/chrissotraidis/padmint/issues/220)); PadMint picks it
+up automatically, so this release changes nothing for HaloPad itself.
 
 **v0.5.30:** Adds NightPad (007: Nightfire, Xbox) to the Apple Silicon Mac → iPhone/iPad catalog, with its app icon, tool requirements and sideloading/import/update instructions. PadMint reads the player's own Xbox disc image during the build and hands over a personal unsigned IPA plus a NightPad game data folder, which the player imports in the app. NightPad releases contain only source, a recipe and checksums; PadMint builds the app on the player's Mac.
 
