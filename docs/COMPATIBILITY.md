@@ -134,8 +134,8 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 | [ottsel v0.1.0](https://github.com/chrissotraidis/ottsel/releases/tag/v0.1.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [ottsel v0.1.0](https://github.com/chrissotraidis/ottsel/releases/tag/v0.1.0) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [paperpad v0.2.3](https://github.com/chrissotraidis/paperpad/releases/tag/v0.2.3) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
-| [projectreach v0.3.13](https://github.com/chrissotraidis/projectreach/releases/tag/v0.3.13) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Project route |
-| [projectreach v0.3.13](https://github.com/chrissotraidis/projectreach/releases/tag/v0.3.13) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Project route |
+| [projectreach v0.3.14](https://github.com/chrissotraidis/projectreach/releases/tag/v0.3.14) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Project route |
+| [projectreach v0.3.14](https://github.com/chrissotraidis/projectreach/releases/tag/v0.3.14) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Project route |
 | [snappad v0.2.1](https://github.com/chrissotraidis/snappad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [snappad v0.2.1](https://github.com/chrissotraidis/snappad/releases/tag/v0.2.1) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [spaghettipad v0.2.1](https://github.com/chrissotraidis/spaghettipad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
