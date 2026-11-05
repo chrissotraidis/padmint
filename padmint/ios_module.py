@@ -731,6 +731,7 @@ def insert(app_ipa: Path, module: Path, into: str, output: Path, llvm: Path, wor
         subprocess.run([str(llvm_tool(llvm, "llvm-strip")), "-x", str(ready)], check=True)
         subprocess.run([str(llvm_tool(llvm, "llvm-install-name-tool")), "-id", f"@rpath/{ready.name}", str(ready)],
                        check=True)
+        align_string_pool(ready)
         check_compatibility(ready, minimum)
         return _insert_ready(app_ipa, ready, into, output, companions)
 
@@ -764,6 +765,49 @@ def _insert_ready(app_ipa, ready, into, output, companions):
                     target.writestr(info, path.read_bytes(), compress_type=zipfile.ZIP_DEFLATED)
             partial.replace(output)
     return output
+
+
+def align_string_pool(module: Path) -> bool:
+    """Start the string table on an 8-byte boundary, as dyld requires of libraries built with
+    recent iOS SDKs ("mis-aligned LINKEDIT string pool"). LLVM's strip and install-name-tool
+    place it right after the indirect symbols, 4-byte aligned. The table is the last thing in
+    an unsigned library, so padding before it moves nothing else. Any other layout (a signed
+    library, or data after the table) is left as it is. True if it was moved."""
+    import struct
+    data = bytearray(module.read_bytes())
+    if len(data) < 32 or data[:4] != b"\xcf\xfa\xed\xfe":
+        raise ModuleError(f"{module.name} is not a 64-bit little-endian Mach-O file")
+    count, size = struct.unpack_from("<2I", data, 16)
+    offset, end = 32, 32 + size
+    symtab = linkedit = None
+    for _ in range(count):
+        command, length = struct.unpack_from("<2I", data, offset)
+        if length < 8 or offset + length > end:
+            raise ModuleError(f"{module.name} has a damaged load command")
+        if command == 0x2:
+            symtab = offset
+        elif command == 0x19 and data[offset + 8:offset + 24].rstrip(b"\0") == b"__LINKEDIT":
+            linkedit = offset
+        elif command == 0x1D:
+            return False  # signed: changing it would break the signature
+        offset += length
+    if symtab is None or linkedit is None:
+        return False
+    stroff, strsize = struct.unpack_from("<2I", data, symtab + 16)
+    pad = -stroff % 8
+    if pad == 0:
+        return False
+    if stroff + strsize != len(data):
+        return False
+    data[stroff:stroff] = bytes(pad)
+    struct.pack_into("<I", data, symtab + 16, stroff + pad)
+    vmsize, fileoff, filesize = struct.unpack_from("<3Q", data, linkedit + 32)
+    filesize += pad
+    vmsize = max(vmsize, (filesize + 0x3FFF) & ~0x3FFF)
+    struct.pack_into("<Q", data, linkedit + 32, vmsize)
+    struct.pack_into("<Q", data, linkedit + 48, filesize)
+    module.write_bytes(bytes(data))
+    return True
 
 
 def linked(module: Path) -> dict:
