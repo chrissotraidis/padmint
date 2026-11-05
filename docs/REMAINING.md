@@ -147,16 +147,13 @@ problems:
   | Needs a Mac | *Apple Silicon Mac*, *Needs Apple Silicon Mac*, *Requires Apple Silicon*, *Other build computer*, *Build it on another computer*, *Other routes* |
   | Ready-made | *Ready-made apps*, *No build needed*, *Get the app*, *Download the app*, *ready-to-play app* |
 
-- **The home page promises "Runs only on this computer"** (`trust_local`) on
-  every host. That's false for the 17 games that build on GitHub's Mac. *Nothing
-  is uploaded* is still true.
-- **Ready-made apps are called "iPad apps" in one sentence and "apps for iPhone
-  and iPad" in another.** Seven of the eight run on iPad only; Emerald Tablet
-  also runs on iPhone.
-- **`why_2` points to KartPad's ready-to-play download** without saying it's
-  for Android only.
-- **`update_help` tells every player to download a new ZIP,** although Mac and
-  Linux update from the version button.
+- Fixed on main after 0.5.30 ([#236](https://github.com/chrissotraidis/padmint/pull/236)),
+  in all three languages: the home page now says *Your game file stays on this
+  computer* where it wrongly promised *Runs only on this computer* (false for the
+  17 games built on GitHub's Mac). Ready-made apps are called iPad apps
+  everywhere (seven of the eight run on iPad only; Emerald Tablet also runs on
+  iPhone). `why_2` names KartPad's ready-to-play download as Android, and
+  `update_help` tells Mac and Linux players to use the version button.
 - **The GitHub steps (`github_steps`) are one paragraph of about ten actions.**
   Make them numbered steps.
 - **"Copy", "app", "build" and ".ipa" are used interchangeably** for what the
