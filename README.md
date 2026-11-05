@@ -16,7 +16,7 @@
 </p>
 
 PadMint is a free app that builds the Pad game ports (KartPad, BlueWake, HaloPad
-and 30 more) for your iPhone, iPad, Mac or Android phone. You pick a game, give
+and three dozen more) for your iPhone, iPad, Mac or Android phone. You pick a game, give
 it your own disc image or ROM when the game needs one, and PadMint downloads the
 source and free tools, builds your copy and tells you how to install it.
 
@@ -178,6 +178,7 @@ To update later, press **Sync fork**, run the workflow again and install the new
 contains game code built for you, so keep it to yourself.
 
 <a id="darkpad-private-github-build"></a>
+
 Two games work differently: **HaloPad's Xbox edition** uses
 [its own workflow](docs/GUIDE.md#halopad-xbox-edition-on-github), and
 **DarkPad** needs [a private copy of PadMint](docs/GUIDE.md#darkpad-private-github-build).

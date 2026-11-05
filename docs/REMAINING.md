@@ -97,7 +97,7 @@ A game counts as done when its published recipe declares Windows hosts,
 
 | Game | What blocks it | Next step |
 |---|---|---|
-| BlueWake | Windows proof merged ([bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100), 2 h 19 min from the original disc), but the published 0.10.0 recipe lists only Mac | Release a recipe with Windows hosts, then a device check. PadMint's old drafts #135 and #136 were closed on 5 November; #136's module string-table alignment fix landed on its own in [#235](https://github.com/chrissotraidis/padmint/pull/235) |
+| BlueWake | Windows proof merged ([bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100), 2 h 19 min from the original disc), but the published 0.10.0 recipe lists only Mac | Release a recipe with Windows hosts, then a device check. PadMint's old drafts #135 and #136 were closed on 5 November; #136's module string-table alignment fix landed on its own in [#234](https://github.com/chrissotraidis/padmint/pull/234) |
 | SunPad | Two draft PRs | Merge [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57), then [#78](https://github.com/chrissotraidis/sunpad/pull/78), and publish |
 | SnapPad | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12) uses a private tool bundle | PadMint publishes its Windows IDO, binutils, Rabbitizer and asm-processor builds (**needs Chris's approval**). SnapPad's release pause still applies |
 | AnnePad | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20) built the ROM-to-module step on Windows in 25 min | The same tool publication, then the shell, recipe and device check |

@@ -10,6 +10,8 @@ queue. Older releases, from 0.5.22 back, and the October build evidence are in
 player page, with the details in a new [player guide](docs/GUIDE.md) and
 [developer guide](docs/DEVELOPING.md), and a [docs index](docs/README.md). The
 release ZIP now carries every guide. DarkPad's help link opens the guide.
+When PadMint puts a game module into its app, it now aligns the module's string
+table the way recent iOS versions require ([#234](https://github.com/chrissotraidis/padmint/pull/234)).
 
 **v0.5.30:** Adds NightPad (007: Nightfire, Xbox) to the Apple Silicon Mac → iPhone/iPad catalog, with its app icon, tool requirements and sideloading/import/update instructions. PadMint reads the player's own Xbox disc image during the build and hands over a personal unsigned IPA plus a NightPad game data folder, which the player imports in the app. NightPad releases contain only source, a recipe and checksums; PadMint builds the app on the player's Mac.
 
