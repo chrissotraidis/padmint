@@ -110,7 +110,7 @@ class LaterTests(unittest.TestCase):
         self.assertTrue(dark["cloud"]["private"])
         self.assertFalse(dark["cloud"]["external"])
         self.assertEqual(dark["cloud"]["url"],
-                         "https://github.com/chrissotraidis/padmint#darkpad-private-github-build")
+                         "https://github.com/chrissotraidis/padmint/blob/main/docs/GUIDE.md#darkpad-private-github-build")
         self.assertIn("private copy of PadMint", dark["text"])
         self.assertIn("experimental", dark["tag"])
         self.assertEqual(dark["steps"], [])

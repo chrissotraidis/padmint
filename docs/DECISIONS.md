@@ -93,7 +93,7 @@ manifest-only change rather than a new wrapper in every repository.
 
 **Historical scope:** this records the 29 September formula. Current authorized
 downloads and game-specific release arrangements are described in
-[the player guide](../README.md#what-you-can-make-and-where); do not use this
+[the player guide](../README.md#what-your-computer-can-build); do not use this
 older text to remove those downloads or infer permission for other outputs.
 [Build-route wording](BUILD_ROUTE_COPY.md#darkpad-is-not-technically-a-different-kind-of-personal-build)
 separates authorized ready-made apps from personal builds and records the

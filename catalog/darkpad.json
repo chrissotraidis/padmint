@@ -34,7 +34,7 @@
   "github_build": true,
   "github_build_private": true,
   "off_mac": {
-    "url": "https://github.com/chrissotraidis/padmint#darkpad-private-github-build",
+    "url": "https://github.com/chrissotraidis/padmint/blob/main/docs/GUIDE.md#darkpad-private-github-build",
     "tag": "GitHub Cloud Build (experimental)",
     "text": "DarkPad has an experimental build on GitHub's Mac for iPhone/iPad. This route currently requires a private copy of PadMint: follow the guide to import it, then run the build there. Private GitHub builds use your account's Actions allowance. After installing, add your own Perfect Dark ROM inside DarkPad. A clean hosted build passed; installing and playing it still need testing.",
     "translations": {

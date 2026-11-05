@@ -51,7 +51,7 @@ on October 29, 2026, using the v0.1.0 release, `macos-15`, Xcode 26.3 and
 `/usr/bin/python3` with an empty PadMint folder. The check tested PR #216 head
 `c211d36` through merge commit `f30cd6d`. Build and checksum steps passed;
 artifact upload was skipped. Public manual runs are refused. See the
-[private setup guide](../README.md#darkpad-private-github-build). This is the
+[private setup guide](GUIDE.md#darkpad-private-github-build). This is the
 current route restriction, not a technical distinction from every other personal
 cloud build. [Build-route wording](BUILD_ROUTE_COPY.md#darkpad-is-not-technically-a-different-kind-of-personal-build)
 records the inconsistent visibility settings as an open decision.
@@ -151,7 +151,7 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 Termux and a Linux ARM64 environment. It remains experimental: the recorded
 build/export/import check used a phone-sized emulator, not physical Android
 hardware or verified racing. Allow about 25 GB free and 8 GB RAM; follow the
-[phone guide](../README.md#android-phone-only-experimental). Linux ARM64 CI
+[phone guide](GUIDE.md#android-phone-only-experimental). Linux ARM64 CI
 does not establish Android/Termux acceptance.
 
 **Intel Mac:** KartPad's Android recipe declares it experimental. From KartPad 0.8.0 and

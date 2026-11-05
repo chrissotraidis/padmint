@@ -28,9 +28,8 @@ def payload():
     """(archive path, source path) for everything a player needs."""
     files = [ROOT / name for name in (
         "README.md", "STATUS.md", "STATUS-HISTORY.md",
-        "docs/COMPATIBILITY.md", "docs/WINDOWS.md", "docs/ADDING_A_GAME.md", "docs/DECISIONS.md",
-        "docs/BUILD_ROUTE_COPY.md", "docs/REMAINING.md",
     )]
+    files += sorted((ROOT / "docs").glob("*.md"), key=lambda path: path.name)  # every guide README links to
     # Sorted by name as text: Windows compares paths ignoring case, which would
     # put TargetConditionals.h elsewhere and change the ZIP's bytes.
     by_name = lambda path: path.name  # noqa: E731
