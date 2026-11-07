@@ -241,19 +241,21 @@ struct CoverFlow3D: UIViewRepresentable {
         private func slots(focus: Int) -> [(x: CGFloat, z: CGFloat, yaw: CGFloat)] {
             var result = Array(repeating: (x: CGFloat(0), z: CGFloat(0), yaw: CGFloat(0)), count: order.count)
             guard order.indices.contains(focus) else { return result }
-            let gap: CGFloat = 0.16, between: CGFloat = 0.012, back: CGFloat = -0.3
+            // Spines all sit on one plane (z = shelf); a box's centre is half its width
+            // behind it, so a wide N64 box can't stick out and cover its neighbours.
+            let gap: CGFloat = 0.16, between: CGFloat = 0.012, shelf: CGFloat = -0.05
             let half = size(order[focus]).width / 2
             var edge = half + gap
             for index in stride(from: focus + 1, to: order.count, by: 1) {
-                let depth = size(order[index]).depth
-                result[index] = (edge + depth / 2, back, -.pi / 2)  // right face (a spine) toward you
-                edge += depth + between
+                let box = size(order[index])
+                result[index] = (edge + box.depth / 2, shelf - box.width / 2, -.pi / 2)  // a spine toward you
+                edge += box.depth + between
             }
             edge = half + gap
             for index in stride(from: focus - 1, through: 0, by: -1) {
-                let depth = size(order[index]).depth
-                result[index] = (-(edge + depth / 2), back, .pi / 2)  // left face (a spine) toward you
-                edge += depth + between
+                let box = size(order[index])
+                result[index] = (-(edge + box.depth / 2), shelf - box.width / 2, .pi / 2)
+                edge += box.depth + between
             }
             return result
         }
