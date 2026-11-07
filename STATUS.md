@@ -6,6 +6,8 @@ What each recent PadMint release changed. Updated **7 November 2026**.
 queue. Older releases, from 0.5.22 back, and the October build evidence are in
 [STATUS-HISTORY.md](STATUS-HISTORY.md).
 
+**v0.5.33:** a game build no longer stops for good with *Backend has local changes* when PadMint's own download of the game's source has changed. PadMint names the changed files, keeps the old copy aside and builds from a fresh download. A SunPad 0.2.3 player hit this on every run. `build --repo` still refuses a changed checkout, and now lists the changed files ([#239](https://github.com/chrissotraidis/padmint/pull/239)).
+
 **v0.5.32:** adds **Lemonade Remixed** (Lemonade Tycoon Deluxe, Windows 2002) as a Mac app built on an Apple Silicon Mac, with no game file at build time: the player chooses their own Setup.exe in the app. Its recipe comes from the [Lemonade Remixed 1.0.1 release](https://github.com/chrissotraidis/lemonaderemixed/releases/tag/v1.0.1), and the player check passed before tagging and after publishing. On Intel Macs, Windows and Linux its card says the Mac version is made on an Apple Silicon Mac ([#238](https://github.com/chrissotraidis/padmint/pull/238)).
 
 **v0.5.31:** the README is rewritten as a short player page, with the details in a new [player guide](docs/GUIDE.md) and
