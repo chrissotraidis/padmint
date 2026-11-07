@@ -20,6 +20,11 @@ final class CoverStore: ObservableObject {
         folder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("Covers", isDirectory: true)
         try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        // Official titles come with official covers. Earlier versions kept them apart, so
+        // anyone who already chose box art gets the titles too, once.
+        if boxArt == .download, UserDefaults.standard.object(forKey: "officialTitles") == nil {
+            UserDefaults.standard.set(true, forKey: "officialTitles")
+        }
     }
 
     private func file(_ kind: String, _ game: Game) -> URL { folder.appendingPathComponent("\(kind)-\(game.id)") }
@@ -68,6 +73,8 @@ final class CoverStore: ObservableObject {
 
     func setBoxArt(_ choice: BoxArt, games: [Game]) async {
         boxArt = choice
+        // The titles follow the covers; either can still be changed on its own in Settings.
+        UserDefaults.standard.set(choice == .download, forKey: "officialTitles")
         objectWillChange.send()
         await fetch(games)
     }
