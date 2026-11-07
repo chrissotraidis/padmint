@@ -87,7 +87,38 @@ def check_checkout(repo, revision):
     if git(repo, "rev-parse", "HEAD") != revision:
         raise ValueError("Backend HEAD does not match --revision")
     if git(repo, "status", "--porcelain", "--untracked-files=normal"):
-        raise ValueError("Backend has local changes; use a clean reviewed checkout")
+        changed = changed_paths(Path(repo))
+        message = "Backend has local changes; use a clean reviewed checkout"
+        if changed:
+            message += ". Changed: " + ", ".join(changed)
+        games = (tools.tools_root().parent / "games").resolve()
+        if games in Path(repo).resolve().parents:
+            message += (f". This is PadMint's own download of the game's source: rename or move {repo}, "
+                        "then run PadMint again to download a fresh copy")
+        raise ValueError(message)
+
+
+def changed_paths(repo, prefix="", limit=5):
+    """The first few changed paths, following changed submodules down to the file that differs,
+    so a player's report names the cause instead of only a submodule (" M ref/engine")."""
+    try:
+        # Not git(): its strip() would cut the first status line's leading space.
+        status = subprocess.check_output(
+            [tools.executable("git", host_id()), "-C", str(repo), "status", "--porcelain=v1",
+             "--untracked-files=normal", "--ignore-submodules=none"], text=True, encoding="utf-8")
+        links = {line.split("\t", 1)[1] for line in git(repo, "ls-files", "--stage").splitlines()
+                 if line.startswith("160000 ")}
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    found = []
+    for line in status.splitlines():
+        path = line[3:]
+        inner = (changed_paths(repo / path, prefix + path + "/", limit - len(found))
+                 if path in links and (repo / path / ".git").exists() else [])
+        found.extend(inner or [f"{prefix}{path} ({line[:2].strip() or 'changed'})"])
+        if len(found) >= limit:
+            return found[:limit]
+    return found
 
 
 def selection(args, repo):
@@ -1718,13 +1749,17 @@ def _remove_tree(path):
         shutil.rmtree(path, onerror=writable_then_retry)
 
 
-def fetch_source(game, source, ref):
+def fetch_source(game, source, ref, changed=()):
     """Replace an incomplete download only after a new clone succeeds; preserve all old files.
 
     Missing tracked files can mean a user's edits, not just an interrupted clone.
     The source and any previous partial download may also contain private game data.
     """
-    if source.exists():
+    if changed:
+        print(f"PadMint's download in {source} has changed since PadMint made it "
+              f"({', '.join(changed)}). Downloading a fresh copy; the old one is kept, "
+              "and this build starts from the beginning.", flush=True)
+    elif source.exists():
         print(f"The earlier download in {source} is unfinished; downloading it again. "
               "Its existing files will be kept.", flush=True)
     partial = source.with_name(source.name + ".partial")
@@ -1760,10 +1795,16 @@ def release_source(game, ref=None, release=None, platform_name=None):
     if ref is None:
         ref, assets = release if release is not None else latest_release(entry["repo_url"])
     source = home / "games" / f"{game}-{re.sub(r'[^A-Za-z0-9._-]', '_', ref)}"
-    if not source_complete(source):
+    changed = []
+    if source_complete(source) and (source / ".git").exists():
+        # A download that stopped partway is finished in place; any other change
+        # (an interrupted checkout, a stray file) would stop every build, so start fresh.
+        finish_submodules(source)
+        changed = changed_paths(source)
+    if changed or not source_complete(source):
         check_free_space(home, player_free_space(entry, platform_name))
         report("source", state="running", repo=entry["repo_url"], version=ref)
-        fetch_source(game, source, ref)
+        fetch_source(game, source, ref, changed)
     return source, ref, assets
 
 
