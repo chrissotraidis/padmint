@@ -5,12 +5,14 @@ import io
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
 from unittest import mock
 
 from padmint import cli, ios_module, manifest, ui
+from padmint.package import add_launch_link
 from fixtures import entries, write_ipa
 
 
@@ -145,7 +147,11 @@ if '--source-only' not in sys.argv:
             self.assertEqual(json.loads(actual_args.read_text()),
                              ["--source-only" if source_only else "--train-pgo", "--no-mods"])
             if not source_only:
-                self.assertEqual(args.output_path.read_bytes(), app.read_bytes())
+                # The published app unchanged apart from its padmint-hostpad:// launch link.
+                expected = self.root / "expected.ipa"
+                shutil.copyfile(app, expected)
+                add_launch_link(expected, "hostpad")
+                self.assertEqual(args.output_path.read_bytes(), expected.read_bytes())
         records = [json.loads(path.read_text()) for path in (repo / "build/padmint").glob("*/runs/*/record.json")]
         self.assertEqual(len(records), 3)
         self.assertTrue(all(record["status"] == "completed" and "module_result_sha256" not in record

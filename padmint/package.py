@@ -1,8 +1,11 @@
 """Minimal IPA structure/provenance checks, not signing or gameplay acceptance."""
+import copy
 import hashlib
 import json
+import os
 from pathlib import PurePosixPath
 import plistlib
+import shutil
 import stat
 import zipfile
 from xml.parsers.expat import ExpatError
@@ -94,3 +97,50 @@ def validate_ipa(path, game, revision, disc_sha256):
     except (zipfile.BadZipFile, KeyError, plistlib.InvalidFileException,
             json.JSONDecodeError, UnicodeError, RuntimeError, ExpatError) as error:
         raise ValueError("IPA is malformed or missing required package metadata") from error
+
+
+def launch_link(game_id):
+    """The link (URL scheme) a PadMint-built game answers to, so the PadMint Library app
+    can tell it is installed and open it. Scheme names allow letters, digits, + - and ."""
+    return "padmint-" + game_id.lower()
+
+
+def add_launch_link(path, game_id):
+    """Register padmint-<game>:// in an unsigned IPA's app Info.plist; returns the scheme.
+    Every other entry is copied unchanged. The player's signing tool signs the result."""
+    scheme = launch_link(game_id)
+    path = str(path)
+    with zipfile.ZipFile(path) as archive:
+        plists = [name for name in archive.namelist() if name.startswith("Payload/")
+                  and name.count("/") == 2 and name.endswith(".app/Info.plist")]
+        if len(plists) != 1:
+            raise ValueError("IPA must contain exactly one top-level app Info.plist")
+        raw = archive.read(plists[0])
+        info = plistlib.loads(raw)
+        types = info.get("CFBundleURLTypes")
+        types = [item for item in types if isinstance(item, dict)] if isinstance(types, list) else []
+        if any(scheme in (item.get("CFBundleURLSchemes") or []) for item in types):
+            return scheme
+        info["CFBundleURLTypes"] = types + [{"CFBundleURLName": scheme, "CFBundleURLSchemes": [scheme]}]
+        updated = plistlib.dumps(info, fmt=plistlib.FMT_BINARY if raw.startswith(b"bplist")
+                                 else plistlib.FMT_XML, sort_keys=False)
+        temporary = path + ".linking"
+        try:
+            with zipfile.ZipFile(temporary, "w") as out:
+                for item in archive.infolist():
+                    entry = copy.copy(item)  # writing updates offsets and sizes; keep the reader's
+                    if item.filename == plists[0]:
+                        out.writestr(entry, updated)
+                    elif item.is_dir():
+                        out.writestr(entry, b"")
+                    else:
+                        # Streamed: a game module can be hundreds of MB.
+                        with archive.open(item) as source, \
+                                out.open(entry, "w", force_zip64=item.file_size >= 1 << 31) as target:
+                            shutil.copyfileobj(source, target, 1 << 20)
+        except BaseException:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+            raise
+    os.replace(temporary, path)
+    return scheme
