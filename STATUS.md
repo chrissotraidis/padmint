@@ -1,10 +1,12 @@
 # PadMint status
 
-What each recent PadMint release changed. Updated **5 November 2026**.
+What each recent PadMint release changed. Updated **7 November 2026**.
 
 **Next work:** [What PadMint still needs](docs/REMAINING.md) is the current
 queue. Older releases, from 0.5.22 back, and the October build evidence are in
 [STATUS-HISTORY.md](STATUS-HISTORY.md).
+
+**Catalog: Lemonade Remixed added (7 November):** Lemonade Tycoon Deluxe as a Mac app, built on an Apple Silicon Mac with no game file; the player chooses their own Setup.exe in the app. Its recipe comes from the [Lemonade Remixed 1.0.1 release](https://github.com/chrissotraidis/lemonaderemixed/releases/tag/v1.0.1), and the player check passed before tagging and after publishing.
 
 **v0.5.31:** the README is rewritten as a short player page, with the details in a new [player guide](docs/GUIDE.md) and
 [developer guide](docs/DEVELOPING.md), and a [docs index](docs/README.md). The
