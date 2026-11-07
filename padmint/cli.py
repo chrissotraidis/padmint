@@ -28,7 +28,7 @@ from .say import MESSAGES, localized, phrase, t
 from .manifest import (RUNNABLE_STATES, NeedsNewerPadMint, catalog, expand, host_id, ios_build_hosts, load_manifest,
                        manifest_for, manifest_sha256, module_here, needs_build_input, selected_inputs, on_android,
                        repository_manifest, steps_here)
-from .package import validate_ipa
+from .package import add_launch_link, validate_ipa
 
 
 def git(repo, *args):
@@ -588,6 +588,9 @@ def execute(args, repo, disc):
                     print("This iPhone app was built with the iOS 27 SDK and PadMint found no UIKit scene "
                           "startup in it. On iOS or iPadOS 27 it will probably close as soon as it opens, "
                           "before it can write a log; iOS 26 and earlier aren't affected.", flush=True)
+                if output.is_file() and output.suffix.lower() == ".ipa":
+                    # After validation, before the checksum: the record describes the final file.
+                    record["launch_link"] = add_launch_link(output, manifest["id"])
                 record["output_sha256"] = digest(output)
                 record["output"] = output.name
                 args.output_path = output
