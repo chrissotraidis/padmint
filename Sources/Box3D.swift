@@ -21,28 +21,31 @@ enum GameBox {
     }
 
     /// A holder node (placed by the caller) with the box as its child, standing on y = 0.
-    static func make(image: UIImage?, platform: String) -> SCNNode {
+    static func make(image: UIImage?, game: Game) -> SCNNode {
         let holder = SCNNode()
         let box = SCNNode()
         box.name = "box"
         holder.addChildNode(box)
-        dress(holder, image: image, platform: platform)
+        dress(holder, image: image, game: game)
         return holder
     }
 
-    static func dress(_ holder: SCNNode, image: UIImage?, platform: String) {
+    static func dress(_ holder: SCNNode, image: UIImage?, game: Game) {
         guard let box = holder.childNode(withName: "box", recursively: false) else { return }
+        let platform = game.platform
         let (width, height) = size(for: image)
         let depth = depth(for: platform) * max(height, 0.8)
         let geometry = SCNBox(width: width, height: height, length: depth, chamferRadius: min(depth, width) * 0.08)
         let average = image?.averageColor ?? UIColor(red: 0.13, green: 0.74, blue: 0.48, alpha: 1)
+        let spine = Spine.image(game: game, cover: average, length: height, depth: depth)
+        let lid = Spine.lid(platform: platform, cover: average)
         geometry.materials = [
             material(image ?? average, gloss: true),                         // front
-            material(image?.edgeStrip(left: false) ?? average),              // right spine
-            material(average.adjusted(brightness: 0.45)),                    // back
-            material(image?.edgeStrip(left: true) ?? average),               // left spine
-            material(average.adjusted(brightness: 0.6)),                     // top
-            material(average.adjusted(brightness: 0.35)),                    // bottom
+            material(spine),                                                 // right: spine too, so boxes on either side show it
+            material(Spine.back(platform: platform, cover: average)),        // back
+            material(spine),                                                 // left: the printed spine
+            material(lid),                                                   // top
+            material(lid),                                                   // bottom
         ]
         box.geometry = geometry
         box.position = SCNVector3(0, Float(height / 2), 0)
@@ -91,8 +94,8 @@ enum GameBox {
         return (scene, camera)
     }
 
-    static func view(scene: SCNScene, camera: SCNNode) -> SCNView {
-        let view = SCNView()
+    static func view(scene: SCNScene, camera: SCNNode) -> StageView {
+        let view = StageView()
         view.scene = scene
         view.pointOfView = camera
         view.backgroundColor = .clear
@@ -117,6 +120,20 @@ enum GameBox {
     }
 }
 
+/// An SCNView that reports its size, so the camera can frame the boxes for it.
+final class StageView: SCNView {
+    var onResize: ((CGSize) -> Void)?
+    private var lastSize: CGSize = .zero
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if bounds.size != lastSize, bounds.width > 0 {
+            lastSize = bounds.size
+            onResize?(bounds.size)
+        }
+    }
+}
+
 /// Cover flow with real boxes: swipe to move, tap a side box to bring it forward, tap the
 /// front box to open its page, double-tap it to spin it.
 struct CoverFlow3D: UIViewRepresentable {
@@ -127,9 +144,10 @@ struct CoverFlow3D: UIViewRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
 
-    func makeUIView(context: Context) -> SCNView {
+    func makeUIView(context: Context) -> StageView {
         let coordinator = context.coordinator
         let view = GameBox.view(scene: coordinator.scene, camera: coordinator.camera)
+        view.onResize = { [weak coordinator] size in coordinator?.fit(size) }
         view.addGestureRecognizer(UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.pan)))
         let double = UITapGestureRecognizer(target: coordinator, action: #selector(Coordinator.spin))
         double.numberOfTapsRequired = 2
@@ -142,7 +160,7 @@ struct CoverFlow3D: UIViewRepresentable {
         return view
     }
 
-    func updateUIView(_ view: SCNView, context: Context) {
+    func updateUIView(_ view: StageView, context: Context) {
         context.coordinator.parent = self
         context.coordinator.sync(animated: true)
     }
@@ -160,13 +178,31 @@ struct CoverFlow3D: UIViewRepresentable {
         private var panStart: CGFloat = 0
         private var panning = false
         private var swaying: String?
+        /// How far the first side box sits from the centre, and how tightly the rest stack.
+        private var side: CGFloat = 1.05
+        private var step: CGFloat = 0.3
         private let haptics = UISelectionFeedbackGenerator()
 
         init(parent: CoverFlow3D) {
             self.parent = parent
             (scene, camera) = GameBox.stage()
-            camera.position = SCNVector3(0, 0.55, 3.9)
-            camera.look(at: SCNVector3(0, 0.22, 0))
+            super.init()
+            fit(CGSize(width: 1000, height: 800))
+        }
+
+        /// Frames the front box large: three quarters of the stage height for a tall case,
+        /// and a wide N64 box within 80% of the width. Side boxes fill the rest.
+        func fit(_ size: CGSize) {
+            let aspect = size.width / max(size.height, 1)
+            let viewHeightPerUnit = 2 * tan(CGFloat(15) * .pi / 180)  // field of view 30°
+            let distance = max(1.0 / (0.66 * viewHeightPerUnit), 1.25 / (0.6 * viewHeightPerUnit * aspect))
+            camera.position = SCNVector3(0, 0.62, Float(distance))
+            camera.look(at: SCNVector3(0, 0.4, 0))
+            let halfWidth = viewHeightPerUnit * distance * aspect / 2
+            // Side boxes start just past a wide front box and stack so their spines show.
+            side = max(0.86, halfWidth * 0.62)
+            step = max(0.2, halfWidth * 0.11)
+            layout()
         }
 
         func sync(animated: Bool) {
@@ -181,9 +217,9 @@ struct CoverFlow3D: UIViewRepresentable {
                 let image = parent.image(game)
                 let identity = image.map(ObjectIdentifier.init)
                 if let node = nodes[game.id] {
-                    if dressedWith[game.id] != identity { GameBox.dress(node, image: image, platform: game.platform) }
+                    if dressedWith[game.id] != identity { GameBox.dress(node, image: image, game: game) }
                 } else {
-                    let node = GameBox.make(image: image, platform: game.platform)
+                    let node = GameBox.make(image: image, game: game)
                     scene.rootNode.addChildNode(node)
                     nodes[game.id] = node
                 }
@@ -201,7 +237,7 @@ struct CoverFlow3D: UIViewRepresentable {
                 guard let node = nodes[id] else { continue }
                 let distance = CGFloat(index) - offset
                 let near = max(-1, min(1, distance))
-                let x = near * 1.05 + (distance - near) * 0.34
+                let x = near * side + (distance - near) * step
                 node.position = SCNVector3(Float(x), 0, Float(-abs(near) * 0.75 - abs(distance - near) * 0.03))
                 node.eulerAngles = SCNVector3(0, Float(-near * .pi / 3), 0)
                 node.isHidden = abs(distance) > 10
@@ -281,16 +317,16 @@ struct SpinningBox: UIViewRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
-    func makeUIView(context: Context) -> SCNView {
+    func makeUIView(context: Context) -> StageView {
         let coordinator = context.coordinator
         let view = GameBox.view(scene: coordinator.scene, camera: coordinator.camera)
         view.addGestureRecognizer(UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.pan)))
-        coordinator.show(image: image, platform: game.platform)
+        coordinator.show(image: image, game: game)
         return view
     }
 
-    func updateUIView(_ view: SCNView, context: Context) {
-        context.coordinator.show(image: image, platform: game.platform)
+    func updateUIView(_ view: StageView, context: Context) {
+        context.coordinator.show(image: image, game: game)
     }
 
     @MainActor
@@ -306,16 +342,16 @@ struct SpinningBox: UIViewRepresentable {
             super.init()
         }
 
-        func show(image: UIImage?, platform: String) {
+        func show(image: UIImage?, game: Game) {
             let identity = image.map(ObjectIdentifier.init)
             guard shown == nil || shown! != identity else { return }
             shown = .some(identity)
             if holder == nil {
-                let node = GameBox.make(image: image, platform: platform)
+                let node = GameBox.make(image: image, game: game)
                 scene.rootNode.addChildNode(node)
                 holder = node
             } else if let holder {
-                GameBox.dress(holder, image: image, platform: platform)
+                GameBox.dress(holder, image: image, game: game)
             }
             let (width, height) = GameBox.size(for: image)
             // Frame the whole box, wide or tall.

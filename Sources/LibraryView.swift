@@ -165,7 +165,7 @@ private struct HeroBanner: View {
                 .onTapGesture { actions.open(game) }
             VStack(alignment: .leading, spacing: 10) {
                 Text(library.lastPlayed[game.id] == nil ? "READY TO PLAY" : "CONTINUE PLAYING")
-                    .font(.caption.weight(.heavy)).foregroundStyle(Color.padMintLight)
+                    .font(.caption.weight(.semibold)).foregroundStyle(.secondary).tracking(0.8)
                 Text(game.heading(official: official))
                     .font(sizeClass == .regular ? .largeTitle.bold() : .title2.bold())
                     .lineLimit(3).minimumScaleFactor(0.7)
@@ -174,8 +174,7 @@ private struct HeroBanner: View {
                 Button { actions.play(game) } label: {
                     Label("Play", systemImage: "play.fill").font(.headline).padding(.horizontal, 14)
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(PrimaryButtonStyle())
                 .padding(.top, 6)
             }
             Spacer(minLength: 0)
@@ -249,7 +248,7 @@ struct GameGrid: View {
             if let heading { Text(heading).font(.title2.bold()).padding(.horizontal) }
             ForEach(library.sections(games, by: sort), id: \.title) { section in
                 if let title = section.title {
-                    Text(title).font(.title3.bold()).foregroundStyle(Color.padMintLight).padding(.horizontal).padding(.top, 8)
+                    Text(title).font(.title3.bold()).foregroundStyle(.secondary).padding(.horizontal).padding(.top, 8)
                 }
                 // Cells align at the bottom, so covers of mixed shapes stand on one line and a
                 // row is only as tall as its tallest cover (a row of wide N64 boxes stays short).
@@ -311,7 +310,7 @@ private struct CarouselCaption: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(position).font(.caption.weight(.heavy)).foregroundStyle(Color.padMintLight)
+            Text(position).font(.caption.weight(.semibold)).foregroundStyle(.secondary).tracking(0.8)
             Text(game.heading(official: official))
                 .font(sizeClass == .regular ? .largeTitle.bold() : .title.bold())
                 .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.7)
@@ -328,11 +327,10 @@ private struct CarouselCaption: View {
                     Label(library.canTry(game) ? "Play" : "Get It", systemImage: library.canTry(game) ? "play.fill" : "arrow.down.circle")
                         .font(.headline).padding(.horizontal, 12)
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(PrimaryButtonStyle())
                 Button { actions.open(game) } label: { Label("Details", systemImage: "info.circle").font(.headline) }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(SecondaryButtonStyle())
             }
-            .controlSize(.large)
             .padding(.top, 6)
         }
         .padding(.horizontal)
@@ -358,17 +356,18 @@ private struct BoxCarousel: View {
                 if games.isEmpty {
                     ContentUnavailableView("No games match", systemImage: "magnifyingglass")
                 } else {
-                    VStack(spacing: 10) {
+                    VStack(spacing: 0) {
                         CoverFlow3D(games: games, focused: $focused, image: { covers.image(for: $0) }, open: actions.open)
-                            .frame(height: geo.size.height * 0.64)
+                            .frame(height: geo.size.height * 0.76)
                             // The reflection fades into the floor instead of ending at the edge.
                             .mask {
                                 LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.62),
-                                                       .init(color: .clear, location: 0.97)],
+                                                       .init(color: .clear, location: 0.98)],
                                                startPoint: .top, endPoint: .bottom)
                             }
                         if let current {
-                            CarouselCaption(game: current, position: "\(focused + 1) OF \(games.count)  ·  SWIPE, TAP TO OPEN, DOUBLE-TAP TO SPIN")
+                            CarouselCaption(game: current, position: "\(focused + 1) of \(games.count)")
+                                .padding(.top, -geo.size.height * 0.07)
                         }
                         Spacer(minLength: 0)
                     }
@@ -427,7 +426,7 @@ private struct FlatCarousel: View {
                     .contentMargins(.horizontal, max((geo.size.width - itemWidth) / 2, 0), for: .scrollContent)
                     .frame(height: height + 20)
                     if let current {
-                        CarouselCaption(game: current, position: "\((games.firstIndex(of: current) ?? 0) + 1) OF \(games.count)")
+                        CarouselCaption(game: current, position: "\((games.firstIndex(of: current) ?? 0) + 1) of \(games.count)")
                     }
                     Spacer(minLength: 0)
                 }
@@ -470,8 +469,7 @@ private struct ListLayout: View {
                             .buttonStyle(.plain)
                             if library.canTry(game) {
                                 Button("Play") { actions.play(game) }
-                                    .buttonStyle(.borderedProminent)
-                                    .controlSize(.small)
+                                    .buttonStyle(PrimaryButtonStyle(compact: true))
                             }
                         }
                         .contextMenu { GameMenu(game: game) }

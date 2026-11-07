@@ -17,8 +17,8 @@ struct PadMintMark: View {
                 .clipShape(RoundedRectangle(cornerRadius: size * 0.24, style: .continuous))
                 .shadow(color: .padMint.opacity(0.45), radius: 6)
             Text("PadMint")
-                .font(.system(size: size * 0.8, weight: .heavy, design: .rounded))
-                .foregroundStyle(LinearGradient(colors: [.padMintLight, .padMint], startPoint: .topLeading, endPoint: .bottomTrailing))
+                .font(.system(size: size * 0.72, weight: .bold, design: .rounded))
+                .foregroundStyle(.primary)
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("PadMint")
@@ -102,12 +102,46 @@ struct Chip: View {
             Text(text)
         }
         .font(.subheadline.weight(.semibold))
-        .padding(.horizontal, 13)
-        .padding(.vertical, 7)
-        .foregroundStyle(selected ? Color.black : Color.primary)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .foregroundStyle(selected ? Color(.systemBackground) : Color.primary.opacity(0.85))
         .background {
-            Capsule().fill(selected ? AnyShapeStyle(Color.padMintLight) : AnyShapeStyle(.thinMaterial))
+            Capsule().fill(selected ? AnyShapeStyle(Color.primary) : AnyShapeStyle(Color.primary.opacity(0.07)))
         }
+        .overlay { Capsule().strokeBorder(Color.primary.opacity(selected ? 0 : 0.1), lineWidth: 0.5) }
+    }
+}
+
+/// The main action: a solid, quiet button (white on dark, black on light).
+struct PrimaryButtonStyle: ButtonStyle {
+    var compact = false
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(compact ? .subheadline.weight(.semibold) : .headline)
+            .padding(.horizontal, compact ? 14 : 26)
+            .frame(minHeight: compact ? 32 : 50)
+            .foregroundStyle(Color(.systemBackground))
+            .background(Color.primary, in: RoundedRectangle(cornerRadius: compact ? 9 : 14, style: .continuous))
+            .opacity(configuration.isPressed ? 0.8 : 1)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
+    }
+}
+
+/// Everything else: frosted, with a hairline edge.
+struct SecondaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.headline)
+            .padding(.horizontal, 22)
+            .frame(minHeight: 50)
+            .foregroundStyle(.primary)
+            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay { RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(Color.primary.opacity(0.14), lineWidth: 0.5) }
+            .opacity(configuration.isPressed ? 0.75 : 1)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 

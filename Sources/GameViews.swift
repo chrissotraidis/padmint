@@ -55,8 +55,7 @@ struct GameDetail: View {
                     Button { actions.play(game) } label: {
                         Label("Play", systemImage: "play.fill").font(.title3.bold()).frame(maxWidth: 280)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
+                    .buttonStyle(PrimaryButtonStyle())
                 } else {
                     HowToGet(game: game)
                 }
@@ -68,7 +67,7 @@ struct GameDetail: View {
                         }
                     }
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(SecondaryButtonStyle())
                 Link("\(game.name) on GitHub", destination: game.repo).font(.footnote)
                 if let source = covers.source(for: game) {
                     Text("Box art from \(source)").font(.footnote).foregroundStyle(.secondary)
@@ -96,7 +95,7 @@ struct HowToGet: View {
                 .foregroundStyle(.secondary)
             Link(game.link == nil ? "Open \(game.name)'s page" : "How to get it with PadMint",
                  destination: game.link == nil ? game.repo : URL(string: "https://github.com/chrissotraidis/padmint")!)
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(PrimaryButtonStyle())
         }
         .frame(maxWidth: 440)
     }
@@ -139,8 +138,7 @@ struct BoxArtSheet: View {
                 dismiss()
                 Task { await covers.setBoxArt(.download, games: library.games) }
             } label: { Text("Use Official Covers and Titles").frame(maxWidth: 320) }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(PrimaryButtonStyle())
             Button("Keep PadMint Art and Names") {
                 dismiss()
                 Task { await covers.setBoxArt(.off, games: library.games) }
