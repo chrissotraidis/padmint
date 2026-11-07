@@ -1,8 +1,8 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **5 November 2026** for PadMint **0.5.31**,
-using the live catalog audit (40 entries, 0 problems) and the open pull requests
+continuing work. It was updated on **7 November 2026** for PadMint **0.5.32**,
+using the live catalog audit (41 entries, 0 problems) and the open pull requests
 in PadMint and each game's repository. Any PR that finishes an item below
 updates this page too.
 
