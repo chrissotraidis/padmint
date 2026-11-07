@@ -196,6 +196,14 @@ only.
 
 ### 8. Small items and drafts to reconcile
 
+- **Launch links and the PadMint library app.** Since [#242](https://github.com/chrissotraidis/padmint/pull/242),
+  every iPhone/iPad app PadMint builds answers to `padmint-<game>://`. On 7 November a
+  SunPad 0.2.3 build with the link was re-signed and installed on an iPad Pro; iOS opened
+  SunPad from the link. The library app that uses it lives in the private
+  `chrissotraidis/padmint-library` repository. Still open: the eight ready-made apps need
+  the link in their own repositories, games installed earlier show up only after a
+  rebuild, iOS 27 lets an app check at most 25 links, and how players get the library app
+  (it would use one of a free Apple ID's three sideload slots) is undecided.
 - **A SunPad 0.2.3 player's rebuild stopped with "Backend has local changes"**
   (7 November) without saying what changed. PadMint 0.5.31 did not reproduce it
   on an M3 Max: a first build (35 min), an interrupted dependency download and a
