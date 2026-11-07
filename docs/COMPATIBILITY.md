@@ -64,6 +64,27 @@ The library uses DarkPad's original app icon, copied unchanged from
 [art provenance](https://github.com/chrissotraidis/darkpad/blob/26ac4bd14d05ef353d0544767ad6b97ee98dbdf6/docs/ART.md)
 records its creation.
 
+## Lemonade Remixed route
+
+Lemonade Remixed (Lemonade Tycoon Deluxe, Windows, 2002) uses its own recipe from the
+[1.0.1 release](https://github.com/chrissotraidis/lemonaderemixed/releases/tag/v1.0.1).
+Apple Silicon Mac → Mac app passed `scripts/player-check.sh` on 7 November with
+Apple's Python 3.9.6 and an empty PadMint folder, both from a clean checkout
+(`13eecc8`) and after publication; the build takes about 75 seconds.
+
+The build needs no game file. `mac/bundle.sh` downloads a pinned Wine 9.0 runtime
+(hosted as a Lemonade Remixed release asset, LGPL), llvm-mingw and the embeddable
+Windows Python, each checked by SHA-256, and packs `Lemonade Remixed.app`. The
+player needs only Xcode's command-line tools and Rosetta 2, then chooses their own
+`Setup.exe` and registration key in the app, which installs the game in about 20
+seconds. The release contains only its recipe and checksum. The app built by the
+player check was opened and installed the game from a clean setup.
+
+The library uses Lemonade Remixed's own app icon, copied unchanged from
+`mac/Resources/icon/AppIcon-1024.png`.
+
+
+
 ## NightPad route
 
 NightPad (007: Nightfire, Xbox) uses its own recipe from the
@@ -126,6 +147,7 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 | [kartpad v0.8.7](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.7) | iPhone/iPad | Experimental | Experimental | Experimental / Experimental | Experimental / Experimental | — |
 | [kartpad v0.8.7](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.7) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [kartpad v0.8.7](https://github.com/chrissotraidis/kartpad/releases/tag/v0.8.7) | Android | Experimental | Experimental | Experimental / Experimental | Experimental / Experimental | — |
+| [lemonaderemixed v1.0.1](https://github.com/chrissotraidis/lemonaderemixed/releases/tag/v1.0.1) | macOS | Supported | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [maskpad v0.2.1](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | iPhone/iPad | Experimental | Unavailable | Experimental / Experimental | Unavailable / Unavailable | — |
 | [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |

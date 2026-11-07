@@ -182,10 +182,11 @@ def elsewhere_card(game, name, targets, lang):
         explicit_hosts = True
         route = "mac" if all(host.startswith("macos") for host in entry["ios_hosts"]) else "other"
     else:
-        text = phrase("w_needs_mac" if ios else "w_needs_windows", lang, name=name)
-        tag = phrase("w_needs_mac_tag", lang) if ios else None
+        mac_only = not ios and "macos" in targets   # a Mac app (Lemonade Remixed) seen on an Intel Mac
+        text = phrase("w_needs_mac" if ios else "w_github_build_mac" if mac_only else "w_needs_windows", lang, name=name)
+        tag = phrase("w_needs_mac_tag", lang) if ios or mac_only else None
         link = entry.get("player_help") or entry["repo_url"]
-        route = "mac" if ios else "other"
+        route = "mac" if ios or mac_only else "other"
     return {"id": game, "name": name, "about": entry.get("game") or (entry.get("manifest") or {}).get("game", ""),
             "text": text, "tag": tag, "plays_on": ["iphone", "ipad"] if ios else [], "link": link,
             "github": bool(entry.get("github_build") or (entry.get("off_mac") or {}).get("github_workflow")),

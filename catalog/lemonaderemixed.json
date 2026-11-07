@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "lemonaderemixed",
+  "repo_url": "https://github.com/chrissotraidis/lemonaderemixed",
+  "name": "Lemonade Remixed",
+  "game": "Lemonade Tycoon Deluxe (Windows)",
+  "player_targets": [
+    "macos"
+  ],
+  "player_game_file": "in-app",
+  "free_space_gb": 3,
+  "player_help": "https://github.com/chrissotraidis/lemonaderemixed#get-the-game",
+  "reviewed_revision": null,
+  "notes": "Lemonade Remixed owns its release recipe (LemonadeRemixed-v...-padmint.json). The build needs no game file: an Apple Silicon Mac builds LemonadeRemixed.app with a bundled Wine, and the player chooses their own Setup.exe in the app. Releases publish the recipe only.",
+  "manifest": null,
+  "before_build": {
+    "commands": [
+      "xcode-select --install",
+      "softwareupdate --install-rosetta --agree-to-license"
+    ]
+  },
+  "player_next": {
+    "macos": {
+      "steps": [
+        "Open {file} and move Lemonade Remixed.app to your Applications folder.",
+        "Open Lemonade Remixed and choose your own Lemonade Tycoon Deluxe installer (Setup.exe), then enter the registration name and key from its readme.txt. The game installs in about 20 seconds.",
+        "Updating? Replace the old Lemonade Remixed.app with the new one. Your saves and settings are kept."
+      ]
+    }
+  }
+}
