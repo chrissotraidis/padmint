@@ -7,6 +7,7 @@
       "game": "Age of Empires II: Definitive Edition (PC, Mac edition on Steam)",
       "repo": "https://github.com/chrissotraidis/agepad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/agepad.png",
+      "box_art": null,
       "link": "padmint-agepad",
       "checked": true
     },
@@ -16,6 +17,7 @@
       "game": "Pokémon Stadium (N64)",
       "repo": "https://github.com/chrissotraidis/annepad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/annepad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Stadium%20%28USA%29.png",
       "link": "padmint-annepad",
       "checked": true
     },
@@ -25,6 +27,7 @@
       "game": "Super Mario Strikers (GameCube)",
       "repo": "https://github.com/chrissotraidis/ballpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ballpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Strikers%20%28USA%29.png",
       "link": "padmint-ballpad",
       "checked": true
     },
@@ -34,6 +37,7 @@
       "game": "Donkey Kong 64 (N64)",
       "repo": "https://github.com/chrissotraidis/bananapad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bananapad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Donkey%20Kong%2064%20%28USA%29.png",
       "link": "padmint-bananapad",
       "checked": true
     },
@@ -43,6 +47,7 @@
       "game": "Diddy Kong Racing (N64)",
       "repo": "https://github.com/chrissotraidis/barrelpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/barrelpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Diddy%20Kong%20Racing%20%28USA%29%20%28En%2CFr%29.png",
       "link": "padmint-barrelpad",
       "checked": true
     },
@@ -52,6 +57,7 @@
       "game": "Banjo-Kazooie (N64)",
       "repo": "https://github.com/chrissotraidis/bearbirdpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bearbirdpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Banjo-Kazooie%20%28USA%29.png",
       "link": "padmint-bearbirdpad",
       "checked": true
     },
@@ -61,6 +67,7 @@
       "game": "Animal Crossing (GameCube)",
       "repo": "https://github.com/chrissotraidis/bellpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bellpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Animal%20Crossing%20%28USA%29.png",
       "link": "padmint-bellpad",
       "checked": true
     },
@@ -70,6 +77,7 @@
       "game": "The Legend of Zelda: The Wind Waker (GameCube)",
       "repo": "https://github.com/chrissotraidis/bluewake",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bluewake.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20The%20Wind%20Waker%20%28USA%29.png",
       "link": "padmint-bluewake",
       "checked": true
     },
@@ -79,6 +87,7 @@
       "game": "Super Smash Bros. (N64)",
       "repo": "https://github.com/chrissotraidis/brawlerpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/brawlerpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Super%20Smash%20Bros.%20%28USA%29.png",
       "link": "padmint-brawlerpad",
       "checked": true
     },
@@ -88,6 +97,7 @@
       "game": "Caesar III (PC)",
       "repo": "https://github.com/chrissotraidis/caesarpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/caesarpad.png",
+      "box_art": null,
       "link": null,
       "checked": false
     },
@@ -97,6 +107,7 @@
       "game": "Crash Team Racing (PlayStation)",
       "repo": "https://github.com/chrissotraidis/ctrpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ctrpad.png",
+      "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation/Named_Boxarts/CTR%20-%20Crash%20Team%20Racing%20%28USA%29.png",
       "link": "padmint-ctrpad",
       "checked": true
     },
@@ -106,6 +117,7 @@
       "game": "The Elder Scrolls II: Daggerfall (PC)",
       "repo": "https://github.com/chrissotraidis/daggerpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/daggerpad.png",
+      "box_art": null,
       "link": null,
       "checked": false
     },
@@ -115,6 +127,7 @@
       "game": "Perfect Dark (N64)",
       "repo": "https://github.com/chrissotraidis/darkpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/darkpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Perfect%20Dark%20%28USA%29.png",
       "link": "padmint-darkpad",
       "checked": true
     },
@@ -124,6 +137,7 @@
       "game": "Diablo (PC)",
       "repo": "https://github.com/chrissotraidis/deviltouch",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/deviltouch.png",
+      "box_art": null,
       "link": null,
       "checked": false
     },
@@ -133,6 +147,7 @@
       "game": "Dinosaur Planet (N64 prototype)",
       "repo": "https://github.com/chrissotraidis/dinopad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/dinopad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Dinosaur%20Planet%20%28USA%29%20%28Proto%29%20%282000-12-01%29.png",
       "link": "padmint-dinopad",
       "checked": true
     },
@@ -142,6 +157,7 @@
       "game": "Pharaoh + Cleopatra (PC)",
       "repo": "https://github.com/chrissotraidis/emeraldtablet",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/emeraldtablet.png",
+      "box_art": null,
       "link": null,
       "checked": false
     },
@@ -151,6 +167,7 @@
       "game": "F-Zero X (N64)",
       "repo": "https://github.com/chrissotraidis/f0x",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/f0x.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/F-Zero%20X%20%28USA%29.png",
       "link": "padmint-f0x",
       "checked": true
     },
@@ -160,6 +177,7 @@
       "game": "Super Mario Galaxy (Wii)",
       "repo": "https://github.com/chrissotraidis/galaxypad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/galaxypad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Super%20Mario%20Galaxy%20%28USA%29.png",
       "link": "padmint-galaxypad",
       "checked": true
     },
@@ -169,6 +187,7 @@
       "game": "GoldenEye 007 (N64)",
       "repo": "https://github.com/chrissotraidis/goldenpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/goldenpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/GoldenEye%20007%20%28USA%29.png",
       "link": "padmint-goldenpad",
       "checked": true
     },
@@ -178,6 +197,7 @@
       "game": "The Legend of Zelda: Ocarina of Time (N64)",
       "repo": "https://github.com/chrissotraidis/harkinianpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/harkinianpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Ocarina%20of%20Time%20%28USA%29.png",
       "link": "padmint-harkinianpad",
       "checked": true
     },
@@ -187,6 +207,7 @@
       "game": "Mario Kart Wii (Wii)",
       "repo": "https://github.com/chrissotraidis/kartpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/kartpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Mario%20Kart%20Wii%20%28Europe%29.png",
       "link": "padmint-kartpad",
       "checked": true
     },
@@ -196,6 +217,7 @@
       "game": "Kid Pix (PC)",
       "repo": "https://github.com/chrissotraidis/kidpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/kidpad.png",
+      "box_art": null,
       "link": null,
       "checked": false
     },
@@ -205,6 +227,7 @@
       "game": "The Legend of Zelda: Majora's Mask (N64)",
       "repo": "https://github.com/chrissotraidis/maskpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/maskpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Majora%27s%20Mask%20%28USA%29.png",
       "link": "padmint-maskpad",
       "checked": true
     },
@@ -214,6 +237,7 @@
       "game": "Super Smash Bros. Melee (GameCube)",
       "repo": "https://github.com/chrissotraidis/meleepad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/meleepad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Smash%20Bros.%20Melee%20%28USA%29%20%28En%2CJa%29.png",
       "link": "padmint-meleepad",
       "checked": true
     },
@@ -223,6 +247,7 @@
       "game": "007: Nightfire (Xbox)",
       "repo": "https://github.com/chrissotraidis/nightpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/nightpad.png",
+      "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/007%20-%20Nightfire%20%28USA%29.png",
       "link": "padmint-nightpad",
       "checked": true
     },
@@ -232,6 +257,7 @@
       "game": "RollerCoaster Tycoon 2 (PC)",
       "repo": "https://github.com/chrissotraidis/OpenRCT2Touch",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/openrct2touch.png",
+      "box_art": null,
       "link": "padmint-openrct2touch",
       "checked": true
     },
@@ -241,6 +267,7 @@
       "game": "Jak and Daxter: The Precursor Legacy (PS2)",
       "repo": "https://github.com/chrissotraidis/ottsel",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ottsel.png",
+      "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation%202/Named_Boxarts/Jak%20and%20Daxter%20-%20The%20Precursor%20Legacy%20%28USA%29%20%28En%2CFr%2CDe%2CEs%2CIt%29.png",
       "link": "padmint-ottsel",
       "checked": true
     },
@@ -250,6 +277,7 @@
       "game": "Paper Mario (N64)",
       "repo": "https://github.com/chrissotraidis/paperpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/paperpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Paper%20Mario%20%28USA%29.png",
       "link": "padmint-paperpad",
       "checked": true
     },
@@ -259,6 +287,7 @@
       "game": "Warcraft II (PC)",
       "repo": "https://github.com/chrissotraidis/peonpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/peonpad.png",
+      "box_art": null,
       "link": null,
       "checked": false
     },
@@ -268,6 +297,7 @@
       "game": "Halo: Combat Evolved (Xbox) or Halo: Custom Edition (PC)",
       "repo": "https://github.com/chrissotraidis/projectreach",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/projectreach.png",
+      "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/Halo%20-%20Combat%20Evolved%20%28USA%29.png",
       "link": "padmint-projectreach",
       "checked": true
     },
@@ -277,6 +307,7 @@
       "game": "Command & Conquer: Red Alert (PC)",
       "repo": "https://github.com/chrissotraidis/ratouch",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ratouch.png",
+      "box_art": null,
       "link": null,
       "checked": false
     },
@@ -286,6 +317,7 @@
       "game": "Pokémon Snap (N64)",
       "repo": "https://github.com/chrissotraidis/snappad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/snappad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Snap%20%28USA%29.png",
       "link": "padmint-snappad",
       "checked": true
     },
@@ -295,6 +327,7 @@
       "game": "Mario Kart 64 (N64)",
       "repo": "https://github.com/chrissotraidis/spaghettipad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/spaghettipad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Mario%20Kart%2064%20%28USA%29.png",
       "link": "padmint-spaghettipad",
       "checked": false
     },
@@ -304,6 +337,7 @@
       "game": "Conker's Bad Fur Day (N64)",
       "repo": "https://github.com/chrissotraidis/squirrelpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/squirrelpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Conker%27s%20Bad%20Fur%20Day%20%28USA%29.png",
       "link": "padmint-squirrelpad",
       "checked": false
     },
@@ -313,6 +347,7 @@
       "game": "Star Fox 64 (N64)",
       "repo": "https://github.com/chrissotraidis/starshippad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/starshippad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Star%20Fox%2064%20%28USA%29.png",
       "link": "padmint-starshippad",
       "checked": false
     },
@@ -322,6 +357,7 @@
       "game": "Super Mario Sunshine (GameCube)",
       "repo": "https://github.com/chrissotraidis/sunpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/sunpad.png",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Sunshine%20%28USA%29.png",
       "link": "padmint-sunpad",
       "checked": false
     },
@@ -331,6 +367,7 @@
       "game": "Tribes 2 (PC) and Starsiege: Tribes 1.41",
       "repo": "https://github.com/chrissotraidis/tribespad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/tribespad.png",
+      "box_art": null,
       "link": "padmint-tribespad",
       "checked": false
     },
@@ -340,6 +377,7 @@
       "game": "Unreal Tournament (PC)",
       "repo": "https://github.com/chrissotraidis/utp",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/utp.png",
+      "box_art": null,
       "link": "padmint-utp",
       "checked": false
     },
@@ -349,6 +387,7 @@
       "game": "Fallout 2 (PC)",
       "repo": "https://github.com/chrissotraidis/vaultpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/vaultpad.png",
+      "box_art": null,
       "link": null,
       "checked": false
     }

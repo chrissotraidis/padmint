@@ -7,12 +7,20 @@ struct Game: Codable, Identifiable, Hashable {
     let name: String
     let game: String
     let repo: URL
+    /// PadMint's own card art, shown until there is box art or a chosen picture.
     let art: URL
+    /// Where box art can be downloaded once the player agrees; nil when there is none.
+    let boxArt: URL?
     /// The link a PadMint-built copy answers to (padmint-<game>://); nil for ready-made apps.
     let link: String?
     /// Whether this app can ask iOS if the game is installed (its link is one of the
     /// first 25 in Info.plist); other games are found when the player opens them.
     let checked: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, game, repo, art, link, checked
+        case boxArt = "box_art"
+    }
 
     var linkURL: URL? { link.flatMap { URL(string: "\($0)://") } }
 }
@@ -29,6 +37,11 @@ final class LibraryModel: ObservableObject {
     @Published private var opened = Set(UserDefaults.standard.stringArray(forKey: "opened") ?? []) {
         didSet { UserDefaults.standard.set(Array(opened), forKey: "opened") }
     }
+    /// When each game was last opened from the library.
+    @Published private(set) var lastPlayed: [String: Date] =
+        (UserDefaults.standard.dictionary(forKey: "lastPlayed") as? [String: Date]) ?? [:] {
+        didSet { UserDefaults.standard.set(lastPlayed, forKey: "lastPlayed") }
+    }
 
     /// The newest list; the copy inside the app is used offline.
     private let remote = URL(string: "https://raw.githubusercontent.com/chrissotraidis/padmint-library/main/library.json")!
@@ -42,7 +55,12 @@ final class LibraryModel: ObservableObject {
         checkInstalled()
     }
 
-    var installedGames: [Game] { games.filter { installed.contains($0.id) } }
+    /// Installed games, the most recently played first.
+    var installedGames: [Game] {
+        games.filter { installed.contains($0.id) }.sorted {
+            (lastPlayed[$0.id] ?? .distantPast, $1.name) > (lastPlayed[$1.id] ?? .distantPast, $0.name)
+        }
+    }
 
     func refresh() async {
         checkInstalled()
@@ -63,10 +81,22 @@ final class LibraryModel: ObservableObject {
         })
     }
 
+    /// Whether Play can be tried: installed, or a game this app can't check (it may be there).
+    func canTry(_ game: Game) -> Bool {
+        installed.contains(game.id) || (!game.checked && game.link != nil)
+    }
+
+    func status(_ game: Game) -> String {
+        if installed.contains(game.id) { return "Installed" }
+        if game.link == nil { return "Ready-made app" }
+        return game.checked ? "Not installed" : "Tap Play to check"
+    }
+
     /// Opens the game; false when no app answers to its link.
     func play(_ game: Game) async -> Bool {
         guard let url = game.linkURL else { return false }
         let success = await UIApplication.shared.open(url)
+        if success { lastPlayed[game.id] = Date() }
         if !game.checked {
             if success { opened.insert(game.id) } else { opened.remove(game.id) }
             checkInstalled()
@@ -74,3 +104,4 @@ final class LibraryModel: ObservableObject {
         return success
     }
 }
+

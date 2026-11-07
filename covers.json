@@ -1,0 +1,140 @@
+{
+  "_about": "Where the app may download box art once the player agrees. Names follow libretro-thumbnails (thumbnails.libretro.com). This repository stores no images.",
+  "covers": {
+    "annepad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Pokemon Stadium (USA)"
+    },
+    "bananapad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Donkey Kong 64 (USA)"
+    },
+    "barrelpad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Diddy Kong Racing (USA) (En,Fr)"
+    },
+    "bearbirdpad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Banjo-Kazooie (USA)"
+    },
+    "brawlerpad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Super Smash Bros. (USA)"
+    },
+    "darkpad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Perfect Dark (USA)"
+    },
+    "dinopad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Dinosaur Planet (USA) (Proto) (2000-12-01)"
+    },
+    "f0x": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "F-Zero X (USA)"
+    },
+    "goldenpad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "GoldenEye 007 (USA)"
+    },
+    "harkinianpad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Legend of Zelda, The - Ocarina of Time (USA)"
+    },
+    "maskpad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Legend of Zelda, The - Majora's Mask (USA)"
+    },
+    "paperpad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Paper Mario (USA)"
+    },
+    "snappad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Pokemon Snap (USA)"
+    },
+    "spaghettipad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Mario Kart 64 (USA)"
+    },
+    "squirrelpad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Conker's Bad Fur Day (USA)"
+    },
+    "starshippad": {
+      "source": "libretro",
+      "system": "Nintendo - Nintendo 64",
+      "name": "Star Fox 64 (USA)"
+    },
+    "ballpad": {
+      "source": "libretro",
+      "system": "Nintendo - GameCube",
+      "name": "Super Mario Strikers (USA)"
+    },
+    "bellpad": {
+      "source": "libretro",
+      "system": "Nintendo - GameCube",
+      "name": "Animal Crossing (USA)"
+    },
+    "bluewake": {
+      "source": "libretro",
+      "system": "Nintendo - GameCube",
+      "name": "Legend of Zelda, The - The Wind Waker (USA)"
+    },
+    "meleepad": {
+      "source": "libretro",
+      "system": "Nintendo - GameCube",
+      "name": "Super Smash Bros. Melee (USA) (En,Ja)"
+    },
+    "sunpad": {
+      "source": "libretro",
+      "system": "Nintendo - GameCube",
+      "name": "Super Mario Sunshine (USA)"
+    },
+    "galaxypad": {
+      "source": "libretro",
+      "system": "Nintendo - Wii",
+      "name": "Super Mario Galaxy (USA)"
+    },
+    "kartpad": {
+      "source": "libretro",
+      "system": "Nintendo - Wii",
+      "name": "Mario Kart Wii (Europe)"
+    },
+    "ctrpad": {
+      "source": "libretro",
+      "system": "Sony - PlayStation",
+      "name": "CTR - Crash Team Racing (USA)"
+    },
+    "ottsel": {
+      "source": "libretro",
+      "system": "Sony - PlayStation 2",
+      "name": "Jak and Daxter - The Precursor Legacy (USA) (En,Fr,De,Es,It)"
+    },
+    "nightpad": {
+      "source": "libretro",
+      "system": "Microsoft - Xbox",
+      "name": "007 - Nightfire (USA)"
+    },
+    "projectreach": {
+      "source": "libretro",
+      "system": "Microsoft - Xbox",
+      "name": "Halo - Combat Evolved (USA)"
+    }
+  }
+}

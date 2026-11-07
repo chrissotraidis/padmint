@@ -11,15 +11,27 @@ needs no declaration, so games past the first 25 are found when the player opens
 """
 import json
 import plistlib
+import re
 import sys
+import urllib.parse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ART = "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/{id}.png"
+BOX_ART = "https://thumbnails.libretro.com/{system}/Named_Boxarts/{name}.png"
 CHECKED_LINKS = 25
 
 
-def games(padmint):
+def box_art(cover):
+    """The download link for a covers.json entry; libretro replaces &*/:`<>?\\|" with _."""
+    if not cover:
+        return None
+    name = re.sub(r'[&*/:`<>?\\|"]', "_", cover["name"])
+    return BOX_ART.format(system=urllib.parse.quote(cover["system"], safe=""),
+                          name=urllib.parse.quote(name, safe=""))
+
+
+def games(padmint, covers):
     found = []
     for path in sorted((padmint / "catalog").glob("*.json")):
         entry = json.loads(path.read_text(encoding="utf-8"))
@@ -33,6 +45,8 @@ def games(padmint):
             "game": entry["game"],
             "repo": entry["repo_url"],
             "art": ART.format(id=entry["id"]),
+            # Downloaded by the app only after the player agrees; never stored here.
+            "box_art": box_art(covers.get(entry["id"])),
             # Ready-made apps aren't built by PadMint, so they answer to no link yet.
             "link": f"padmint-{entry['id']}" if built else None,
         })
@@ -41,7 +55,8 @@ def games(padmint):
 
 def main():
     padmint = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT.parent / "padmint").resolve()
-    listed = games(padmint)
+    covers = json.loads((ROOT / "covers.json").read_text(encoding="utf-8"))["covers"]
+    listed = games(padmint, covers)
     links = [game["link"] for game in listed if game["link"]][:CHECKED_LINKS]
     for game in listed:
         game["checked"] = game["link"] in links

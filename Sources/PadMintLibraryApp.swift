@@ -3,13 +3,18 @@ import SwiftUI
 @main
 struct PadMintLibraryApp: App {
     @StateObject private var library = LibraryModel()
+    @StateObject private var covers = CoverStore()
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
             LibraryView()
                 .environmentObject(library)
-                .task { await library.refresh() }
+                .environmentObject(covers)
+                .task {
+                    await library.refresh()
+                    await covers.download(library.games)
+                }
                 // A game installed or deleted while PadMint was in the background.
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active { library.checkInstalled() }
@@ -17,3 +22,4 @@ struct PadMintLibraryApp: App {
         }
     }
 }
+
