@@ -8,7 +8,7 @@ struct PadMintLibraryApp: App {
 
     var body: some Scene {
         WindowGroup {
-            LibraryView()
+            root
                 .environmentObject(library)
                 .environmentObject(covers)
                 .task {
@@ -21,6 +21,23 @@ struct PadMintLibraryApp: App {
                     if phase == .active { library.checkInstalled() }
                 }
         }
+    }
+
+    @ViewBuilder private var root: some View {
+        #if DEBUG
+        if UserDefaults.standard.object(forKey: "boxGallery") != nil {
+            let yaw = UserDefaults.standard.double(forKey: "boxGallery")
+            let console = UserDefaults.standard.string(forKey: "galleryConsole") ?? ""
+            BoxGallery(games: library.sorted(library.games, by: .console, official: true)
+                .filter { console.isEmpty || $0.platform == console },
+                       image: { covers.image(for: $0) }, yaw: yaw)
+                .background(Color(white: 0.25)).ignoresSafeArea()
+        } else {
+            LibraryView()
+        }
+        #else
+        LibraryView()
+        #endif
     }
 }
 

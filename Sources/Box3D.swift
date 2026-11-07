@@ -37,7 +37,8 @@ enum GameBox {
         let depth = depth(for: platform) * max(height, 0.8)
         let geometry = SCNBox(width: width, height: height, length: depth, chamferRadius: min(depth, width) * 0.08)
         let average = image?.averageColor ?? UIColor(red: 0.13, green: 0.74, blue: 0.48, alpha: 1)
-        let spine = Spine.image(game: game, cover: average, length: height, depth: depth)
+        let accent = image?.vividColor ?? average
+        let spine = Spine.image(game: game, cover: accent, length: height, depth: depth)
         let lid = Spine.lid(platform: platform, cover: average)
         geometry.materials = [
             material(image ?? average, gloss: true),                         // front

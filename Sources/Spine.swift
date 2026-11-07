@@ -32,8 +32,9 @@ enum Spine {
         case .whiteCase: (base, ink) = (UIColor(white: 0.95, alpha: 1), UIColor(white: 0.12, alpha: 1))
         case .jewelCase: (base, ink) = (UIColor(white: 0.1, alpha: 1), .white)
         case .bigBox:
-            base = cover.adjusted(brightness: 0.8).adjusted(saturation: 1.15)
-            ink = cover.luminance > 0.55 ? UIColor(white: 0.08, alpha: 1) : .white
+            // One look for every big box: black spine and white title, coloured by an accent
+            // band below. The cover's average colour made each spine a different muddy shade.
+            (base, ink) = (UIColor(white: 0.07, alpha: 1), .white)
         }
         let image = UIGraphicsImageRenderer(size: size).image { context in
             let cg = context.cgContext
@@ -52,11 +53,11 @@ enum Spine {
                 top = 150
             }
             if kind == .bigBox {
-                // Coloured bands at both ends, as printed spines have.
-                cover.adjusted(brightness: 0.45).setFill()
-                cg.fill(CGRect(x: 0, y: 0, width: size.width, height: 110))
-                cg.fill(CGRect(x: 0, y: size.height - 70, width: size.width, height: 70))
-                top = 110
+                // An accent band in the cover's most vivid colour, as printed spines have.
+                cover.setFill()
+                cg.fill(CGRect(x: 0, y: 0, width: size.width, height: 130))
+                cg.fill(CGRect(x: 0, y: size.height - 26, width: size.width, height: 26))
+                top = 130
             }
             if kind == .whiteCase {
                 UIColor(white: 0.82, alpha: 1).setFill()
@@ -65,13 +66,15 @@ enum Spine {
             // Console name, small, across the top band.
             let label = NSAttributedString(string: game.platform.uppercased(), attributes: [
                 .font: UIFont.systemFont(ofSize: min(26, size.width * 0.16), weight: .heavy),
-                .foregroundColor: kind == .xboxCase ? UIColor.white : ink.withAlphaComponent(0.75),
+                .foregroundColor: (kind == .xboxCase || kind == .bigBox)
+                    ? (cover.luminance > 0.6 && kind == .bigBox ? UIColor(white: 0.08, alpha: 1) : .white)
+                    : ink.withAlphaComponent(0.75),
                 .kern: 1.5,
             ])
             drawVertical(label, in: CGRect(x: 0, y: 14, width: size.width, height: max(top - 20, 120)), context: cg)
             // The title, running down the rest of the spine.
             let available = size.height - top - 140
-            var fontSize = min(size.width * 0.5, 64)
+            var fontSize = min(size.width * 0.58, 72)
             var title = NSAttributedString(string: game.title, attributes: titleAttributes(fontSize, ink))
             while title.size().width > available, fontSize > 14 {
                 fontSize -= 2
@@ -97,18 +100,8 @@ enum Spine {
         context.restoreGState()
     }
 
-    /// The right face: a big box's printed side, or a case's hinge.
-    static func side(platform: String, cover: UIColor) -> UIColor {
-        switch kind(platform) {
-        case .bigBox: cover.adjusted(brightness: 0.6)
-        case .whiteCase: UIColor(white: 0.88, alpha: 1)
-        default: UIColor(white: 0.09, alpha: 1)
-        }
-    }
-
     static func back(platform: String, cover: UIColor) -> UIColor {
         switch kind(platform) {
-        case .bigBox: cover.adjusted(brightness: 0.4)
         case .whiteCase: UIColor(white: 0.9, alpha: 1)
         default: UIColor(white: 0.08, alpha: 1)
         }
@@ -116,10 +109,35 @@ enum Spine {
 
     static func lid(platform: String, cover: UIColor) -> UIColor {
         switch kind(platform) {
-        case .bigBox: cover.adjusted(brightness: 0.5)
         case .whiteCase: UIColor(white: 0.86, alpha: 1)
         default: UIColor(white: 0.11, alpha: 1)
         }
+    }
+}
+
+extension UIImage {
+    /// The cover's strongest colour (saturated and bright), for a spine's accent band.
+    var vividColor: UIColor? {
+        let side = 12
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let small = UIGraphicsImageRenderer(size: CGSize(width: side, height: side), format: format)
+            .image { _ in draw(in: CGRect(x: 0, y: 0, width: side, height: side)) }
+        guard let cg = small.cgImage, let data = cg.dataProvider?.data, let bytes = CFDataGetBytePtr(data) else { return nil }
+        var best: (score: CGFloat, color: UIColor)?
+        for y in 0..<cg.height {
+            for x in 0..<cg.width {
+                let offset = y * cg.bytesPerRow + x * (cg.bitsPerPixel / 8)
+                let color = UIColor(red: CGFloat(bytes[offset]) / 255, green: CGFloat(bytes[offset + 1]) / 255,
+                                    blue: CGFloat(bytes[offset + 2]) / 255, alpha: 1)
+                var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alpha: CGFloat = 0
+                color.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+                let score = saturation * brightness
+                if score > (best?.score ?? -1) { best = (score, color) }
+            }
+        }
+        guard let best, best.score > 0.25 else { return nil }
+        return best.color
     }
 }
 
