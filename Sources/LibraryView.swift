@@ -358,16 +358,15 @@ private struct BoxCarousel: View {
                 } else {
                     VStack(spacing: 0) {
                         CoverFlow3D(games: games, focused: $focused, image: { covers.image(for: $0) }, open: actions.open)
-                            .frame(height: geo.size.height * 0.76)
+                            .frame(height: geo.size.height * 0.7)
                             // The reflection fades into the floor instead of ending at the edge.
                             .mask {
-                                LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.62),
-                                                       .init(color: .clear, location: 0.98)],
+                                LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.7),
+                                                       .init(color: .clear, location: 0.88)],
                                                startPoint: .top, endPoint: .bottom)
                             }
                         if let current {
                             CarouselCaption(game: current, position: "\(focused + 1) of \(games.count)")
-                                .padding(.top, -geo.size.height * 0.07)
                         }
                         Spacer(minLength: 0)
                     }

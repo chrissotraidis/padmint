@@ -57,7 +57,7 @@ enum GameBox {
         reflection.name = "reflection"
         reflection.scale = SCNVector3(1, -1, 1)
         reflection.position = SCNVector3(0, Float(-height) - 0.004, 0)
-        reflection.opacity = 0.3
+        reflection.opacity = 0.22
         box.addChildNode(reflection)
     }
 
@@ -179,9 +179,8 @@ struct CoverFlow3D: UIViewRepresentable {
         private var panStart: CGFloat = 0
         private var panning = false
         private var swaying: String?
-        /// How far the first side box sits from the centre, and how tightly the rest stack.
-        private var side: CGFloat = 1.05
-        private var step: CGFloat = 0.3
+        /// Half the visible width at the boxes, to skip drawing boxes off screen.
+        private var halfWidth: CGFloat = 3
         private let haptics = UISelectionFeedbackGenerator()
 
         init(parent: CoverFlow3D) {
@@ -200,9 +199,7 @@ struct CoverFlow3D: UIViewRepresentable {
             camera.position = SCNVector3(0, 0.62, Float(distance))
             camera.look(at: SCNVector3(0, 0.4, 0))
             let halfWidth = viewHeightPerUnit * distance * aspect / 2
-            // Side boxes start just past a wide front box and stack so their spines show.
-            side = max(0.86, halfWidth * 0.62)
-            step = max(0.2, halfWidth * 0.11)
+            self.halfWidth = halfWidth
             layout()
         }
 
@@ -232,16 +229,50 @@ struct CoverFlow3D: UIViewRepresentable {
             if animated && target != offset { move(to: target) } else { offset = target; layout() }
         }
 
-        /// Cover Flow: the front box faces you; the others turn ±60° and stack to the sides.
+        private func size(_ id: String) -> (width: CGFloat, depth: CGFloat) {
+            guard let box = nodes[id]?.childNode(withName: "box", recursively: false)?.geometry as? SCNBox
+            else { return (0.71, 0.1) }
+            return (box.width, box.length)
+        }
+
+        /// Where every box stands while `focus` is in front: the front box faces you, and the
+        /// others stand like books on a shelf, spine out, each spaced by its own thickness so
+        /// no box covers another.
+        private func slots(focus: Int) -> [(x: CGFloat, z: CGFloat, yaw: CGFloat)] {
+            var result = Array(repeating: (x: CGFloat(0), z: CGFloat(0), yaw: CGFloat(0)), count: order.count)
+            guard order.indices.contains(focus) else { return result }
+            let gap: CGFloat = 0.16, between: CGFloat = 0.012, back: CGFloat = -0.3
+            let half = size(order[focus]).width / 2
+            var edge = half + gap
+            for index in stride(from: focus + 1, to: order.count, by: 1) {
+                let depth = size(order[index]).depth
+                result[index] = (edge + depth / 2, back, -.pi / 2)  // right face (a spine) toward you
+                edge += depth + between
+            }
+            edge = half + gap
+            for index in stride(from: focus - 1, through: 0, by: -1) {
+                let depth = size(order[index]).depth
+                result[index] = (-(edge + depth / 2), back, .pi / 2)  // left face (a spine) toward you
+                edge += depth + between
+            }
+            return result
+        }
+
+        /// Places the boxes for the current (possibly fractional) offset, moving smoothly
+        /// between the shelf layouts of the two nearest games.
         private func layout() {
+            guard !order.isEmpty else { return }
+            let clamped = max(0, min(CGFloat(order.count - 1), offset))
+            let low = Int(clamped.rounded(.down)), high = min(low + 1, order.count - 1)
+            let t = clamped - CGFloat(low)
+            let from = slots(focus: low), to = slots(focus: high)
             for (index, id) in order.enumerated() {
                 guard let node = nodes[id] else { continue }
-                let distance = CGFloat(index) - offset
-                let near = max(-1, min(1, distance))
-                let x = near * side + (distance - near) * step
-                node.position = SCNVector3(Float(x), 0, Float(-abs(near) * 0.75 - abs(distance - near) * 0.03))
-                node.eulerAngles = SCNVector3(0, Float(-near * .pi / 3), 0)
-                node.isHidden = abs(distance) > 10
+                let a = from[index], b = to[index]
+                let x = a.x + (b.x - a.x) * t
+                node.position = SCNVector3(Float(x), 0, Float(a.z + (b.z - a.z) * t))
+                node.eulerAngles = SCNVector3(0, Float(a.yaw + (b.yaw - a.yaw) * t), 0)
+                node.isHidden = abs(x) > halfWidth + 1
             }
             // Only the front box sways, and only while it rests.
             let front = panning || order.isEmpty ? nil : order[max(0, min(order.count - 1, Int(offset.rounded())))]

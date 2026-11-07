@@ -46,44 +46,58 @@ enum Spine {
                                                              UIColor(white: 0, alpha: 0.18).cgColor] as CFArray,
                                    locations: [0, 0.45, 1])!
             cg.drawLinearGradient(sheen, start: .zero, end: CGPoint(x: size.width, y: 0), options: [])
-            var top: CGFloat = 0
-            if kind == .xboxCase {
-                UIColor(red: 0.30, green: 0.66, blue: 0.13, alpha: 1).setFill()
-                cg.fill(CGRect(x: 0, y: 0, width: size.width, height: 150))
-                top = 150
+            // Every spine has a top section holding the console's name, then the title below
+            // it; the two never share space. Sizes are measured, not guessed.
+            let labelColor: UIColor
+            switch kind {
+            case .xboxCase: labelColor = .white
+            case .bigBox: labelColor = cover.luminance > 0.6 ? UIColor(white: 0.08, alpha: 1) : .white
+            default: labelColor = ink.withAlphaComponent(0.7)
             }
-            if kind == .bigBox {
+            var labelSize = min(24, size.width * 0.3)
+            var label = consoleLabel(game.platform, labelSize, labelColor)
+            while label.size().width > 170, labelSize > 9 {  // keep the section short
+                labelSize -= 1
+                label = consoleLabel(game.platform, labelSize, labelColor)
+            }
+            let top = label.size().width + 56
+            switch kind {
+            case .xboxCase:
+                UIColor(red: 0.30, green: 0.66, blue: 0.13, alpha: 1).setFill()
+                cg.fill(CGRect(x: 0, y: 0, width: size.width, height: top))
+            case .bigBox:
                 // An accent band in the cover's most vivid colour, as printed spines have.
                 cover.setFill()
-                cg.fill(CGRect(x: 0, y: 0, width: size.width, height: 130))
-                cg.fill(CGRect(x: 0, y: size.height - 26, width: size.width, height: 26))
-                top = 130
+                cg.fill(CGRect(x: 0, y: 0, width: size.width, height: top))
+                cg.fill(CGRect(x: 0, y: size.height - 24, width: size.width, height: 24))
+            default:
+                ink.withAlphaComponent(0.35).setFill()
+                cg.fill(CGRect(x: size.width * 0.18, y: top - 2, width: size.width * 0.64, height: 2))
             }
             if kind == .whiteCase {
                 UIColor(white: 0.82, alpha: 1).setFill()
                 cg.fill(CGRect(x: size.width - 6, y: 0, width: 6, height: size.height))
             }
-            // Console name, small, across the top band.
-            let label = NSAttributedString(string: game.platform.uppercased(), attributes: [
-                .font: UIFont.systemFont(ofSize: min(26, size.width * 0.16), weight: .heavy),
-                .foregroundColor: (kind == .xboxCase || kind == .bigBox)
-                    ? (cover.luminance > 0.6 && kind == .bigBox ? UIColor(white: 0.08, alpha: 1) : .white)
-                    : ink.withAlphaComponent(0.75),
-                .kern: 1.5,
-            ])
-            drawVertical(label, in: CGRect(x: 0, y: 14, width: size.width, height: max(top - 20, 120)), context: cg)
-            // The title, running down the rest of the spine.
-            let available = size.height - top - 140
-            var fontSize = min(size.width * 0.58, 72)
+            drawVertical(label, in: CGRect(x: 0, y: 28, width: size.width, height: top - 56), context: cg)
+            // The title, below the top section, shrunk until it fits with margin at both ends.
+            let start = top + 36
+            let available = size.height - start - 60
+            var fontSize = min(size.width * 0.56, 70)
             var title = NSAttributedString(string: game.title, attributes: titleAttributes(fontSize, ink))
-            while title.size().width > available, fontSize > 14 {
-                fontSize -= 2
+            while (title.size().width > available || title.size().height > size.width * 0.86), fontSize > 12 {
+                fontSize -= 1
                 title = NSAttributedString(string: game.title, attributes: titleAttributes(fontSize, ink))
             }
-            drawVertical(title, in: CGRect(x: 0, y: top + 40, width: size.width, height: available), context: cg)
+            drawVertical(title, in: CGRect(x: 0, y: start, width: size.width, height: available), context: cg)
         }
         cache[key] = image
         return image
+    }
+
+    private static func consoleLabel(_ platform: String, _ size: CGFloat, _ color: UIColor) -> NSAttributedString {
+        NSAttributedString(string: platform.uppercased(), attributes: [
+            .font: UIFont.systemFont(ofSize: size, weight: .heavy), .foregroundColor: color, .kern: 1.2,
+        ])
     }
 
     private static func titleAttributes(_ size: CGFloat, _ ink: UIColor) -> [NSAttributedString.Key: Any] {
