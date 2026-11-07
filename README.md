@@ -1,20 +1,34 @@
 # PadMint Library
 
-An iPhone and iPad app that gathers the games you've built with
-[PadMint](https://github.com/chrissotraidis/padmint) and installed on the device
-in one library:
+PadMint for iPhone and iPad: one library for the games you've built with
+[PadMint](https://github.com/chrissotraidis/padmint) and installed on the device.
+It uses PadMint's icon and lists only games from PadMint's catalog.
 
-- **Your games:** your installed games as large covers you swipe through, the
-  most recently played first. Tap a cover to play.
-- **All games:** PadMint's whole catalog in a grid, with search and an
-  All / Installed filter. Games you don't have are greyed out.
-- **A page for each game,** with its cover, when you last played it, a Play
-  button, or how to get it with PadMint.
-- **Covers:** box art you choose to download, or any picture from Photos
-  (long-press a game, or use its page).
+- **Four layouts.** *Shelf* has a banner for the game you played last, your
+  installed games and then everything. *Grid* shows every cover. *Carousel* is a
+  3D cover flow with the focused game's art blurred behind it. *List* is compact,
+  with a Play button on each row. Switch layouts from the toolbar.
+- **Sorting and filters.** Sort by recently played, title or console (with a
+  heading per console), search by title, PadMint name or console, and show only
+  installed games.
+- **Installed games** carry a green check mark. Tap a cover in *Your games* to
+  play; tap a game anywhere else to open its page.
+- **A page for each game,** with its cover over a blurred copy of it, its console,
+  when you last played it, Play (or how to get it with PadMint) and cover options.
+- **Official covers and titles, if you want them.** On first launch the app asks.
+  If you agree, it downloads box art for every game and shows each game's official
+  title (*The Legend of Zelda: The Wind Waker*) with the PadMint name (*BlueWake*)
+  underneath. Until then it shows PadMint's own card art and names.
+- **Your own covers.** Long-press any game, or use its page, to pick a picture from
+  Photos.
+- **Settings** for the layout, sort order, covers and titles, and what the app
+  opens to: the library or the last game you played.
 
-**Status: early prototype.** In the iOS 27 simulator it finds games that answer
-to PadMint's links and opens them. On 7 November it was installed on an iPad Pro
+Covers keep their real shapes: wide N64 boxes, square PlayStation cases and tall
+GameCube, Wii, PS2, Xbox and PC boxes all stand on one line.
+
+**Status: prototype.** The layouts, box art, game pages and launching work in the
+iOS 27 simulator on iPad and iPhone. On 7 November it was installed on an iPad Pro
 next to a SunPad build with the link, but the iPad's screen was off, so nothing
 has been checked on the device yet.
 
@@ -27,30 +41,29 @@ them. The library asks iOS which of those links it can open.
 
 iOS answers that question only for links the app declares, and iOS 27 answers
 for the first 25 only. PadMint builds 31 iPhone/iPad games, so the app checks
-the first 25 in the catalog. Each of the others shows **Tap to open**: the
+the first 25 in the catalog. Each of the others shows **Tap Play to check**: the
 library tries its link, and if the game opens it's remembered as installed.
 Opening a link needs no declaration, so every game can be launched from here.
 
 Ready-made apps (the ones you download instead of building) don't answer to a
 link yet, so the library lists them without knowing whether they're installed.
 
-## What it shows
+## Covers and titles
 
-Only games in PadMint's catalog, which lists Chris's own ports. The list comes
-from `library.json`, which `scripts/sync-catalog.py` makes from a PadMint
-checkout. The app fetches the newest copy from this repository and falls back to
-the copy inside the app when offline.
+This repository holds no game art. `covers.json` gives each game's official
+title, console and the address of its box art:
 
-## Covers
+| Source | Games |
+|---|---|
+| [libretro-thumbnails](https://github.com/libretro/libretro-thumbnails) | The 27 console games, plus Warcraft II and Red Alert (DOS) |
+| Steam | Age of Empires II, Daggerfall, RollerCoaster Tycoon 2, Unreal Tournament, Fallout 2 |
+| GOG | Caesar III, Pharaoh + Cleopatra |
+| Wikipedia | Diablo, Tribes 2, Kid Pix (its title screen: no box scan is available) |
 
-This repository holds no game art. Each game starts with PadMint's card art,
-loaded from PadMint's repository. On first launch, the app asks whether to
-download box art. If the player agrees, it fetches box art for the 27 console
-games from [libretro-thumbnails](https://github.com/libretro/libretro-thumbnails)
-(`thumbnails.libretro.com`) and keeps it on the device. `covers.json` stores
-only each game's system and file name there. The PC games have no box art
-source yet, so for those the player can choose a picture from Photos. A chosen
-picture works for any game and comes first.
+The app downloads them only after the player agrees and keeps them on the device.
+A game's page names where its box art came from. A picture the player chooses
+always comes first. `scripts/check-covers.py` checks that every address still
+loads and prints each cover's shape.
 
 ## Build
 
@@ -60,17 +73,20 @@ xcodegen generate
 open PadMintLibrary.xcodeproj
 ```
 
-A UI test opens the library and a game's page. Run it with `xcodebuild test
--scheme PadMintLibrary -destination 'platform=iOS Simulator,name=iPad Air
-11-inch (M4)'`.
-
 Needs Xcode 26 or newer and XcodeGen (`brew install xcodegen`). The app targets
-iOS 17 and later.
+iOS 17 and later. The icon is `Icon/AppIcon.svg`, PadMint's own icon drawn edge
+to edge. `swift scripts/render-icon.swift` renders it into the asset catalog;
+then flatten it with `magick Assets.xcassets/AppIcon.appiconset/AppIcon.png
+-alpha off Assets.xcassets/AppIcon.appiconset/AppIcon.png`.
+
+A UI test opens the grid and a game's page:
+`xcodebuild test -scheme PadMintLibrary -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)'`.
 
 ## Next
 
-- Install it on an iPad next to a game built with padmint#242, signed with
-  Sideloadly, and check that the link survives re-signing.
-- Box art for the PC games (SteamGridDB needs each player's own API key).
+- Check it on an iPad next to a game built with padmint#242, signed with
+  Sideloadly, including that the link survives re-signing.
+- Give the ready-made apps a `padmint-<game>://` link in their own repositories.
 - Decide how players get the app. With a free Apple ID, iOS allows three
   sideloaded apps at a time, and the library would use one of them.
+

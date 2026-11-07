@@ -4,16 +4,20 @@
     {
       "id": "agepad",
       "name": "AgePad",
+      "title": "Age of Empires II: Definitive Edition",
+      "platform": "PC",
       "game": "Age of Empires II: Definitive Edition (PC, Mac edition on Steam)",
       "repo": "https://github.com/chrissotraidis/agepad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/agepad.png",
-      "box_art": null,
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813780/library_600x900_2x.jpg",
       "link": "padmint-agepad",
       "checked": true
     },
     {
       "id": "annepad",
       "name": "AnnePad",
+      "title": "Pokémon Stadium",
+      "platform": "Nintendo 64",
       "game": "Pokémon Stadium (N64)",
       "repo": "https://github.com/chrissotraidis/annepad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/annepad.png",
@@ -24,6 +28,8 @@
     {
       "id": "ballpad",
       "name": "BallPad",
+      "title": "Super Mario Strikers",
+      "platform": "GameCube",
       "game": "Super Mario Strikers (GameCube)",
       "repo": "https://github.com/chrissotraidis/ballpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ballpad.png",
@@ -34,6 +40,8 @@
     {
       "id": "bananapad",
       "name": "BananaPad",
+      "title": "Donkey Kong 64",
+      "platform": "Nintendo 64",
       "game": "Donkey Kong 64 (N64)",
       "repo": "https://github.com/chrissotraidis/bananapad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bananapad.png",
@@ -44,6 +52,8 @@
     {
       "id": "barrelpad",
       "name": "BarrelPad",
+      "title": "Diddy Kong Racing",
+      "platform": "Nintendo 64",
       "game": "Diddy Kong Racing (N64)",
       "repo": "https://github.com/chrissotraidis/barrelpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/barrelpad.png",
@@ -54,6 +64,8 @@
     {
       "id": "bearbirdpad",
       "name": "BearBirdPad",
+      "title": "Banjo-Kazooie",
+      "platform": "Nintendo 64",
       "game": "Banjo-Kazooie (N64)",
       "repo": "https://github.com/chrissotraidis/bearbirdpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bearbirdpad.png",
@@ -64,6 +76,8 @@
     {
       "id": "bellpad",
       "name": "BellPad",
+      "title": "Animal Crossing",
+      "platform": "GameCube",
       "game": "Animal Crossing (GameCube)",
       "repo": "https://github.com/chrissotraidis/bellpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bellpad.png",
@@ -74,6 +88,8 @@
     {
       "id": "bluewake",
       "name": "BlueWake",
+      "title": "The Legend of Zelda: The Wind Waker",
+      "platform": "GameCube",
       "game": "The Legend of Zelda: The Wind Waker (GameCube)",
       "repo": "https://github.com/chrissotraidis/bluewake",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bluewake.png",
@@ -84,6 +100,8 @@
     {
       "id": "brawlerpad",
       "name": "BrawlerPad",
+      "title": "Super Smash Bros.",
+      "platform": "Nintendo 64",
       "game": "Super Smash Bros. (N64)",
       "repo": "https://github.com/chrissotraidis/brawlerpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/brawlerpad.png",
@@ -94,16 +112,20 @@
     {
       "id": "caesarpad",
       "name": "CaesarPad",
+      "title": "Caesar III",
+      "platform": "PC",
       "game": "Caesar III (PC)",
       "repo": "https://github.com/chrissotraidis/caesarpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/caesarpad.png",
-      "box_art": null,
+      "box_art": "https://images.gog-statics.com/f1309e35fc9db9fb4fe280bc3a99c6029b63af50554cbee494ac0bffec444608_glx_vertical_cover.jpg",
       "link": null,
       "checked": false
     },
     {
       "id": "ctrpad",
       "name": "CTRPad",
+      "title": "Crash Team Racing",
+      "platform": "PlayStation",
       "game": "Crash Team Racing (PlayStation)",
       "repo": "https://github.com/chrissotraidis/ctrpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ctrpad.png",
@@ -114,16 +136,20 @@
     {
       "id": "daggerpad",
       "name": "DaggerPad",
+      "title": "The Elder Scrolls II: Daggerfall",
+      "platform": "PC",
       "game": "The Elder Scrolls II: Daggerfall (PC)",
       "repo": "https://github.com/chrissotraidis/daggerpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/daggerpad.png",
-      "box_art": null,
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1812390/library_600x900_2x.jpg",
       "link": null,
       "checked": false
     },
     {
       "id": "darkpad",
       "name": "DarkPad",
+      "title": "Perfect Dark",
+      "platform": "Nintendo 64",
       "game": "Perfect Dark (N64)",
       "repo": "https://github.com/chrissotraidis/darkpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/darkpad.png",
@@ -134,16 +160,20 @@
     {
       "id": "deviltouch",
       "name": "DevilTouch",
+      "title": "Diablo",
+      "platform": "PC",
       "game": "Diablo (PC)",
       "repo": "https://github.com/chrissotraidis/deviltouch",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/deviltouch.png",
-      "box_art": null,
+      "box_art": "https://upload.wikimedia.org/wikipedia/en/3/3a/Diablo_Coverart.png",
       "link": null,
       "checked": false
     },
     {
       "id": "dinopad",
       "name": "DinoPad",
+      "title": "Dinosaur Planet",
+      "platform": "Nintendo 64",
       "game": "Dinosaur Planet (N64 prototype)",
       "repo": "https://github.com/chrissotraidis/dinopad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/dinopad.png",
@@ -154,16 +184,20 @@
     {
       "id": "emeraldtablet",
       "name": "Emerald Tablet",
+      "title": "Pharaoh + Cleopatra",
+      "platform": "PC",
       "game": "Pharaoh + Cleopatra (PC)",
       "repo": "https://github.com/chrissotraidis/emeraldtablet",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/emeraldtablet.png",
-      "box_art": null,
+      "box_art": "https://images.gog-statics.com/bf97d30ca61ed4a8ffbb75380a2a8f59ac3efabdb9cf6c9a397d53a652df9fcb_glx_vertical_cover.jpg",
       "link": null,
       "checked": false
     },
     {
       "id": "f0x",
       "name": "F0X",
+      "title": "F-Zero X",
+      "platform": "Nintendo 64",
       "game": "F-Zero X (N64)",
       "repo": "https://github.com/chrissotraidis/f0x",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/f0x.png",
@@ -174,6 +208,8 @@
     {
       "id": "galaxypad",
       "name": "GalaxyPad",
+      "title": "Super Mario Galaxy",
+      "platform": "Wii",
       "game": "Super Mario Galaxy (Wii)",
       "repo": "https://github.com/chrissotraidis/galaxypad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/galaxypad.png",
@@ -184,6 +220,8 @@
     {
       "id": "goldenpad",
       "name": "GoldenPad",
+      "title": "GoldenEye 007",
+      "platform": "Nintendo 64",
       "game": "GoldenEye 007 (N64)",
       "repo": "https://github.com/chrissotraidis/goldenpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/goldenpad.png",
@@ -194,6 +232,8 @@
     {
       "id": "harkinianpad",
       "name": "HarkinianPad",
+      "title": "The Legend of Zelda: Ocarina of Time",
+      "platform": "Nintendo 64",
       "game": "The Legend of Zelda: Ocarina of Time (N64)",
       "repo": "https://github.com/chrissotraidis/harkinianpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/harkinianpad.png",
@@ -204,6 +244,8 @@
     {
       "id": "kartpad",
       "name": "KartPad",
+      "title": "Mario Kart Wii",
+      "platform": "Wii",
       "game": "Mario Kart Wii (Wii)",
       "repo": "https://github.com/chrissotraidis/kartpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/kartpad.png",
@@ -214,16 +256,20 @@
     {
       "id": "kidpad",
       "name": "KidPad",
+      "title": "Kid Pix",
+      "platform": "PC",
       "game": "Kid Pix (PC)",
       "repo": "https://github.com/chrissotraidis/kidpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/kidpad.png",
-      "box_art": null,
+      "box_art": "https://upload.wikimedia.org/wikipedia/en/1/15/Kid_Pix_1.0_About.png",
       "link": null,
       "checked": false
     },
     {
       "id": "maskpad",
       "name": "MaskPad",
+      "title": "The Legend of Zelda: Majora's Mask",
+      "platform": "Nintendo 64",
       "game": "The Legend of Zelda: Majora's Mask (N64)",
       "repo": "https://github.com/chrissotraidis/maskpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/maskpad.png",
@@ -234,6 +280,8 @@
     {
       "id": "meleepad",
       "name": "MeleePad",
+      "title": "Super Smash Bros. Melee",
+      "platform": "GameCube",
       "game": "Super Smash Bros. Melee (GameCube)",
       "repo": "https://github.com/chrissotraidis/meleepad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/meleepad.png",
@@ -244,6 +292,8 @@
     {
       "id": "nightpad",
       "name": "NightPad",
+      "title": "007: Nightfire",
+      "platform": "Xbox",
       "game": "007: Nightfire (Xbox)",
       "repo": "https://github.com/chrissotraidis/nightpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/nightpad.png",
@@ -254,16 +304,20 @@
     {
       "id": "openrct2touch",
       "name": "OpenRCT2 Touch",
+      "title": "RollerCoaster Tycoon 2",
+      "platform": "PC",
       "game": "RollerCoaster Tycoon 2 (PC)",
       "repo": "https://github.com/chrissotraidis/OpenRCT2Touch",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/openrct2touch.png",
-      "box_art": null,
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285330/library_600x900_2x.jpg",
       "link": "padmint-openrct2touch",
       "checked": true
     },
     {
       "id": "ottsel",
       "name": "Ottsel",
+      "title": "Jak and Daxter: The Precursor Legacy",
+      "platform": "PlayStation 2",
       "game": "Jak and Daxter: The Precursor Legacy (PS2)",
       "repo": "https://github.com/chrissotraidis/ottsel",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ottsel.png",
@@ -274,6 +328,8 @@
     {
       "id": "paperpad",
       "name": "PaperPad",
+      "title": "Paper Mario",
+      "platform": "Nintendo 64",
       "game": "Paper Mario (N64)",
       "repo": "https://github.com/chrissotraidis/paperpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/paperpad.png",
@@ -284,16 +340,20 @@
     {
       "id": "peonpad",
       "name": "PeonPad",
+      "title": "Warcraft II: Tides of Darkness",
+      "platform": "PC",
       "game": "Warcraft II (PC)",
       "repo": "https://github.com/chrissotraidis/peonpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/peonpad.png",
-      "box_art": null,
+      "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Warcraft%20II%20-%20Tides%20of%20Darkness.png",
       "link": null,
       "checked": false
     },
     {
       "id": "projectreach",
       "name": "HaloPad",
+      "title": "Halo: Combat Evolved",
+      "platform": "Xbox",
       "game": "Halo: Combat Evolved (Xbox) or Halo: Custom Edition (PC)",
       "repo": "https://github.com/chrissotraidis/projectreach",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/projectreach.png",
@@ -304,16 +364,20 @@
     {
       "id": "ratouch",
       "name": "RAtouch",
+      "title": "Command & Conquer: Red Alert",
+      "platform": "PC",
       "game": "Command & Conquer: Red Alert (PC)",
       "repo": "https://github.com/chrissotraidis/ratouch",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ratouch.png",
-      "box_art": null,
+      "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Command%20and%20Conquer%20-%20Red%20Alert.png",
       "link": null,
       "checked": false
     },
     {
       "id": "snappad",
       "name": "SnapPad",
+      "title": "Pokémon Snap",
+      "platform": "Nintendo 64",
       "game": "Pokémon Snap (N64)",
       "repo": "https://github.com/chrissotraidis/snappad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/snappad.png",
@@ -324,6 +388,8 @@
     {
       "id": "spaghettipad",
       "name": "SpaghettiPad",
+      "title": "Mario Kart 64",
+      "platform": "Nintendo 64",
       "game": "Mario Kart 64 (N64)",
       "repo": "https://github.com/chrissotraidis/spaghettipad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/spaghettipad.png",
@@ -334,6 +400,8 @@
     {
       "id": "squirrelpad",
       "name": "SquirrelPad",
+      "title": "Conker's Bad Fur Day",
+      "platform": "Nintendo 64",
       "game": "Conker's Bad Fur Day (N64)",
       "repo": "https://github.com/chrissotraidis/squirrelpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/squirrelpad.png",
@@ -344,6 +412,8 @@
     {
       "id": "starshippad",
       "name": "StarshipPad",
+      "title": "Star Fox 64",
+      "platform": "Nintendo 64",
       "game": "Star Fox 64 (N64)",
       "repo": "https://github.com/chrissotraidis/starshippad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/starshippad.png",
@@ -354,6 +424,8 @@
     {
       "id": "sunpad",
       "name": "SunPad",
+      "title": "Super Mario Sunshine",
+      "platform": "GameCube",
       "game": "Super Mario Sunshine (GameCube)",
       "repo": "https://github.com/chrissotraidis/sunpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/sunpad.png",
@@ -364,30 +436,36 @@
     {
       "id": "tribespad",
       "name": "TribesPad",
+      "title": "Tribes 2",
+      "platform": "PC",
       "game": "Tribes 2 (PC) and Starsiege: Tribes 1.41",
       "repo": "https://github.com/chrissotraidis/tribespad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/tribespad.png",
-      "box_art": null,
+      "box_art": "https://upload.wikimedia.org/wikipedia/en/0/01/Tribes_2_cover.jpg",
       "link": "padmint-tribespad",
       "checked": false
     },
     {
       "id": "utp",
       "name": "UTP",
+      "title": "Unreal Tournament",
+      "platform": "PC",
       "game": "Unreal Tournament (PC)",
       "repo": "https://github.com/chrissotraidis/utp",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/utp.png",
-      "box_art": null,
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/13240/library_600x900_2x.jpg",
       "link": "padmint-utp",
       "checked": false
     },
     {
       "id": "vaultpad",
       "name": "VaultPad",
+      "title": "Fallout 2",
+      "platform": "PC",
       "game": "Fallout 2 (PC)",
       "repo": "https://github.com/chrissotraidis/vaultpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/vaultpad.png",
-      "box_art": null,
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/38410/library_600x900_2x.jpg",
       "link": null,
       "checked": false
     }

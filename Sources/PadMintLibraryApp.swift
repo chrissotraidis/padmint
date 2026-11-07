@@ -12,8 +12,9 @@ struct PadMintLibraryApp: App {
                 .environmentObject(library)
                 .environmentObject(covers)
                 .task {
+                    await covers.fetch(library.games)
                     await library.refresh()
-                    await covers.download(library.games)
+                    await covers.fetch(library.games)
                 }
                 // A game installed or deleted while PadMint was in the background.
                 .onChange(of: scenePhase) { _, phase in
