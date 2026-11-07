@@ -283,6 +283,16 @@ class FinishSubmodulesTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "local changes"):
             cli.check_checkout(folder, git(folder, "rev-parse", "HEAD"))
 
+    def test_the_refusal_names_the_changed_file_inside_a_submodule(self):
+        folder = self.download(self.root / "home/games")
+        (folder / "lib/library/.DS_Store").write_text("finder\n")
+        self.assertEqual(cli.finish_submodules(folder, stream=io.StringIO()), [])
+        with self.assertRaises(ValueError) as caught:
+            cli.check_checkout(folder, git(folder, "rev-parse", "HEAD"))
+        self.assertIn("local changes", str(caught.exception))
+        self.assertIn("Changed: lib/library/.DS_Store (??)", str(caught.exception))
+        self.assertIn("PadMint's own download", str(caught.exception))
+
     def test_a_folder_the_player_passed_in_is_never_changed(self):
         folder = self.download(self.root / "elsewhere")
         self.assertEqual(cli.finish_submodules(folder, stream=io.StringIO()), [])

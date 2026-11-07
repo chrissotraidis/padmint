@@ -196,6 +196,13 @@ only.
 
 ### 8. Small items and drafts to reconcile
 
+- **A SunPad 0.2.3 player's rebuild stopped with "Backend has local changes"**
+  (7 November) without saying what changed. PadMint 0.5.31 did not reproduce it
+  on an M3 Max: a first build (35 min), an interrupted dependency download and a
+  rebuild all passed, with Homebrew Git and with Apple's `/usr/bin/git`. The
+  refusal now names up to five changed paths, following submodules down to the
+  file, and tells players to move PadMint's own download aside. Next: get the
+  changed paths from the player and fix whatever writes them.
 - Replace HarkinianPad's card art (`art/harkinianpad.png`, still the old
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):

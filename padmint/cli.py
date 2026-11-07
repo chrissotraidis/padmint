@@ -87,7 +87,38 @@ def check_checkout(repo, revision):
     if git(repo, "rev-parse", "HEAD") != revision:
         raise ValueError("Backend HEAD does not match --revision")
     if git(repo, "status", "--porcelain", "--untracked-files=normal"):
-        raise ValueError("Backend has local changes; use a clean reviewed checkout")
+        changed = changed_paths(Path(repo))
+        message = "Backend has local changes; use a clean reviewed checkout"
+        if changed:
+            message += ". Changed: " + ", ".join(changed)
+        games = (tools.tools_root().parent / "games").resolve()
+        if games in Path(repo).resolve().parents:
+            message += (f". This is PadMint's own download of the game's source: rename or move {repo}, "
+                        "then run PadMint again to download a fresh copy")
+        raise ValueError(message)
+
+
+def changed_paths(repo, prefix="", limit=5):
+    """The first few changed paths, following changed submodules down to the file that differs,
+    so a player's report names the cause instead of only a submodule (" M ref/engine")."""
+    try:
+        # Not git(): its strip() would cut the first status line's leading space.
+        status = subprocess.check_output(
+            [tools.executable("git", host_id()), "-C", str(repo), "status", "--porcelain=v1",
+             "--untracked-files=normal", "--ignore-submodules=none"], text=True, encoding="utf-8")
+        links = {line.split("\t", 1)[1] for line in git(repo, "ls-files", "--stage").splitlines()
+                 if line.startswith("160000 ")}
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    found = []
+    for line in status.splitlines():
+        path = line[3:]
+        inner = (changed_paths(repo / path, prefix + path + "/", limit - len(found))
+                 if path in links and (repo / path / ".git").exists() else [])
+        found.extend(inner or [f"{prefix}{path} ({line[:2].strip() or 'changed'})"])
+        if len(found) >= limit:
+            return found[:limit]
+    return found
 
 
 def selection(args, repo):
