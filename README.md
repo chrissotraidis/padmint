@@ -5,8 +5,12 @@ PadMint for iPhone and iPad: one library for the games you've built with
 It uses PadMint's icon and lists only games from PadMint's catalog.
 
 - **Four layouts.** *Shelf* has a banner for the game you played last, your
-  installed games and then everything. *Grid* shows every cover. *Carousel* is a
-  3D cover flow with the focused game's art blurred behind it. *List* is compact,
+  installed games and then everything. *Grid* shows every cover. *Carousel* shows
+  each game as a 3D box on a reflective floor, sized to fill the screen: swipe
+  through them, tap the front box to open it, double-tap to spin it. Each box's
+  depth and spines follow its console (black GameCube and PS2 cases with the
+  title down the spine, white Wii cases, Xbox's green band, deep printed N64 and
+  PC boxes). A flat cover flow is available in Settings. *List* is compact,
   with a Play button on each row. Switch layouts from the toolbar.
 - **Sorting and filters.** Sort by recently played, title or console (with a
   heading per console), search by title, PadMint name or console, and show only
