@@ -1749,13 +1749,17 @@ def _remove_tree(path):
         shutil.rmtree(path, onerror=writable_then_retry)
 
 
-def fetch_source(game, source, ref):
+def fetch_source(game, source, ref, changed=()):
     """Replace an incomplete download only after a new clone succeeds; preserve all old files.
 
     Missing tracked files can mean a user's edits, not just an interrupted clone.
     The source and any previous partial download may also contain private game data.
     """
-    if source.exists():
+    if changed:
+        print(f"PadMint's download in {source} has changed since PadMint made it "
+              f"({', '.join(changed)}). Downloading a fresh copy; the old one is kept, "
+              "and this build starts from the beginning.", flush=True)
+    elif source.exists():
         print(f"The earlier download in {source} is unfinished; downloading it again. "
               "Its existing files will be kept.", flush=True)
     partial = source.with_name(source.name + ".partial")
@@ -1791,10 +1795,16 @@ def release_source(game, ref=None, release=None, platform_name=None):
     if ref is None:
         ref, assets = release if release is not None else latest_release(entry["repo_url"])
     source = home / "games" / f"{game}-{re.sub(r'[^A-Za-z0-9._-]', '_', ref)}"
-    if not source_complete(source):
+    changed = []
+    if source_complete(source) and (source / ".git").exists():
+        # A download that stopped partway is finished in place; any other change
+        # (an interrupted checkout, a stray file) would stop every build, so start fresh.
+        finish_submodules(source)
+        changed = changed_paths(source)
+    if changed or not source_complete(source):
         check_free_space(home, player_free_space(entry, platform_name))
         report("source", state="running", repo=entry["repo_url"], version=ref)
-        fetch_source(game, source, ref)
+        fetch_source(game, source, ref, changed)
     return source, ref, assets
 
 

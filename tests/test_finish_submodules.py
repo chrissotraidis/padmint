@@ -293,6 +293,22 @@ class FinishSubmodulesTests(unittest.TestCase):
         self.assertIn("Changed: lib/library/.DS_Store (??)", str(caught.exception))
         self.assertIn("PadMint's own download", str(caught.exception))
 
+    def test_a_changed_download_is_kept_aside_and_downloaded_fresh(self):
+        git(self.source, "tag", "v1")
+        folder = self.download(self.root / "home/games", rewind=False)
+        (folder / "lib/library/stray.txt").write_text("not from the release\n")
+        output = io.StringIO()
+        with mock.patch.object(cli, "catalog", return_value={"game": {"repo_url": self.source.as_uri()}}), \
+                mock.patch.object(cli, "check_free_space"), mock.patch("sys.stdout", output):
+            source, ref, _assets = cli.release_source("game", ref="v1")
+        self.assertEqual((source, ref), (folder, "v1"))
+        self.assertIn("lib/library/stray.txt (??)", output.getvalue())
+        self.assertEqual(git(source, "status", "--porcelain"), "")
+        cli.check_checkout(source, git(source, "rev-parse", "HEAD"))
+        kept = [path for path in folder.parent.iterdir() if ".recovered-" in path.name]
+        self.assertEqual(len(kept), 1)
+        self.assertTrue((kept[0] / "lib/library/stray.txt").is_file())  # nothing is deleted
+
     def test_a_folder_the_player_passed_in_is_never_changed(self):
         folder = self.download(self.root / "elsewhere")
         self.assertEqual(cli.finish_submodules(folder, stream=io.StringIO()), [])
