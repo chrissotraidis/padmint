@@ -101,6 +101,10 @@ final class LibraryModel: ObservableObject {
            let file = try? JSONDecoder().decode(LibraryFile.self, from: data) {
             games = file.games
         }
+        #if DEBUG
+        // Demo recordings in the simulator: -demoLastPlayed <id> puts a game in the shelf banner.
+        if let id = UserDefaults.standard.string(forKey: "demoLastPlayed") { lastPlayed[id] = Date().addingTimeInterval(-3600) }
+        #endif
         checkInstalled()
     }
 
@@ -160,6 +164,12 @@ final class LibraryModel: ObservableObject {
             if game.checked { return UIApplication.shared.canOpenURL(url) ? game.id : nil }
             return opened.contains(game.id) ? game.id : nil
         })
+        #if DEBUG
+        // Demo recordings in the simulator, where no game is installed: -demoInstalled id,id,...
+        if let demo = UserDefaults.standard.string(forKey: "demoInstalled") {
+            installed = Set(demo.split(separator: ",").map(String.init))
+        }
+        #endif
     }
 
     /// Whether Play can be tried: installed, or a game this app can't check (it may be there).
