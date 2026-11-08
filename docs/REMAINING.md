@@ -39,7 +39,11 @@ which Sideloadly installs from an Intel Mac too. Earlier versions of this page
 counted only Apple Silicon Macs under "Mac".
 
 The Mac's one miss is **AgePad**: 6 of its 8 pinned Steam files no longer match
-an installed Steam, so v0.1.0 stops after Steam updates. HaloPad's `actool`
+an installed Steam, so v0.1.0 stops after Steam updates (reproduced on 8
+November). [agepad#15](https://github.com/chrissotraidis/agepad/pull/15) fixes it
+for 0.1.1: the build downloads the pinned Steam for Mac libraries from Valve
+instead of reading the installed Steam, and the player check passed with it in
+21 s. Its release waits for an iPad run of a 0.1.1 build. HaloPad's `actool`
 failure ([#220](https://github.com/chrissotraidis/padmint/issues/220)) is fixed
 in [HaloPad 0.3.14](https://github.com/chrissotraidis/projectreach/releases/tag/v0.3.14)
 (5 November).
@@ -57,6 +61,29 @@ The Windows counts break down as follows:
 Linux builds KartPad locally (x64 and ARM64 in its recipe) and can start the
 same 17 cloud builds.
 
+**Linux test builds, 8 November.** The six N64 and GameCube Windows routes also
+build on Linux with a two-line recipe change: the Windows module steps run on
+Linux too. In clean Debian 12 containers on a Mac (ARM64, and x86-64 under
+Rosetta), PadMint 0.5.34 built each one from its latest release, the owner's
+game file and the published base app. Each IPA was the published app plus the
+game module, with only `Info.plist` changed (the launch link). Linux players
+need a C++ compiler (`build-essential`), because the route builds small
+generator tools natively, the same reason Windows asks for Visual Studio.
+
+| Game | Linux ARM64 | Linux x86-64 | Recipe PR |
+|---|---|---|---|
+| BearBirdPad | 34 s | 841 s | [bearbirdpad#29](https://github.com/chrissotraidis/bearbirdpad/pull/29) |
+| GoldenPad | 24 s | 56 s | [goldenpad#54](https://github.com/chrissotraidis/goldenpad/pull/54) |
+| BananaPad | 282 s | 95 s | [bananapad#24](https://github.com/chrissotraidis/bananapad/pull/24) |
+| SquirrelPad | 316 s | 89 s | [squirrelpad#11](https://github.com/chrissotraidis/squirrelpad/pull/11) |
+| DinoPad | 317 s | 117 s | [dinopad#22](https://github.com/chrissotraidis/dinopad/pull/22) |
+| MeleePad | 885 s | 1,116 s | [meleepad#60](https://github.com/chrissotraidis/meleepad/pull/60) |
+
+Times include fresh tool downloads on ARM64 but not on x86-64, so they don't
+compare. Players get Linux for each game with its next release, whose recipe
+PadMint reads; until then the counts above stay at KartPad only. No Linux-built
+copy has been played on a device, and no run used a native Linux PC.
+
 ## Chromebooks
 
 No Chromebook has been tested, and the README says so. The answer below follows
@@ -72,8 +99,9 @@ from the routes that exist.
   Python 3.9+ and Git). The player then gets the Linux routes: KartPad locally,
   plus the 17 cloud builds. KartPad's first build needs about 12 GB free on a
   Mac, and Linux probably needs about as much, which is a lot for a cheap
-  Chromebook. Many cheap Chromebooks have ARM chips; Linux ARM64 has had only
-  small compiler checks, not a full game build.
+  Chromebook. Many cheap Chromebooks have ARM chips. Full game builds have now
+  passed on Linux ARM64 in containers (see the table above), but not on a
+  Chromebook.
 - **To do:** one KartPad build and one cloud build on an Intel/AMD Chromebook
   and on an ARM Chromebook. Then update the README row from "untested".
 
@@ -128,9 +156,10 @@ GitHub's Mac keeps these games available from Windows.
 
 - Find and test one way to install an iPhone app from Linux. Until then, the
   Linux pages send the `.ipa` to a Windows PC or Mac.
-- The six newer Windows routes don't declare Linux hosts. Adding them needs Linux
-  runs, because Windows evidence doesn't qualify Linux. Record x64 and ARM64
-  separately.
+- The six newer Windows routes now have Linux ARM64 and x86-64 container runs
+  and recipe PRs (table above). Next: release each game with its Linux recipe
+  (`scripts/player-check.sh` before and after), then one device check of a
+  Linux-built copy and one run on a native Linux PC.
 - Test Chromebooks as described [above](#chromebooks).
 
 ### 5. UI text that makes sense everywhere
