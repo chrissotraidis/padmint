@@ -1,6 +1,6 @@
-# PadMint Library
+# PadMint for iPhone and iPad
 
-PadMint for iPhone and iPad: one library for the games you've built with
+One library for the games you've built with
 [PadMint](https://github.com/chrissotraidis/padmint) and installed on the device.
 It uses PadMint's icon and lists only games from PadMint's catalog.
 
@@ -33,8 +33,8 @@ GameCube, Wii, PS2, Xbox and PC boxes all stand on one line.
 
 ## Install
 
-1. Download `PadMint-Library-v…-ios-unsigned.ipa` from the
-   [latest release](https://github.com/chrissotraidis/padmint-library/releases/latest).
+1. Download `PadMint-ios-unsigned.ipa` from the
+   [latest PadMint release](https://github.com/chrissotraidis/padmint/releases/latest).
 2. Sign and install it with the same tool you use for your games (Sideloadly,
    AltStore or SideStore). It needs iOS or iPadOS 17 or later.
 3. Rebuild your games with PadMint 0.5.34 or newer so they answer to their
@@ -86,7 +86,8 @@ loads and prints each cover's shape.
 ## Build
 
 ```sh
-python3 scripts/sync-catalog.py ../padmint   # library.json and Sources/Info.plist
+cd ios
+python3 scripts/sync-catalog.py   # library.json and Sources/Info.plist, from ../catalog
 xcodegen generate
 open PadMintLibrary.xcodeproj
 ```
@@ -100,10 +101,12 @@ then flatten it with `magick Assets.xcassets/AppIcon.appiconset/AppIcon.png
 A UI test opens the grid and a game's page:
 `xcodebuild test -scheme PadMintLibrary -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)'`.
 
-A release: `scripts/package-release.sh OUTPUT` syncs the catalog, builds the
-unsigned IPA in `build/release` and writes `SHA256SUMS`. Two runs give
-identical files. Check the IPA with PadMint's `python3 -m padmint audit` before
-publishing.
+The app ships with each PadMint release and carries PadMint's version
+(`MARKETING_VERSION` in `project.yml` must match `padmint/__init__.py`).
+`ios/scripts/package-release.sh OUTPUT` syncs the catalog and builds the unsigned
+`PadMint-ios-unsigned.ipa` in `build/release`; two runs give identical files.
+Then `scripts/package-release.py OUTPUT` makes the Mac, Windows and Linux ZIPs
+and adds the IPA to `SHA256SUMS` and the release gate.
 
 ## Next
 

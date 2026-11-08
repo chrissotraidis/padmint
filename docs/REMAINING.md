@@ -235,10 +235,10 @@ only.
 - **Launch links and the PadMint library app.** Since 0.5.34 ([#242](https://github.com/chrissotraidis/padmint/pull/242)),
   every iPhone/iPad app PadMint builds answers to `padmint-<game>://`. On 7 November a
   SunPad 0.2.3 build with the link was re-signed and installed on an iPad Pro; iOS opened
-  SunPad from the link. PadMint 0.6.0 introduces the library app that uses it,
-  [PadMint Library 1.0.0](https://github.com/chrissotraidis/padmint-library) (experimental,
-  an unsigned IPA the player sideloads, using one of a free Apple ID's three slots).
-  Earlier builds ran on an iPad Pro; 1.0.0 has passed simulator UI tests only.
+  SunPad from the link. PadMint 0.6.0 ships the library app that uses it, built from
+  [ios/](../ios/README.md), as `PadMint-ios-unsigned.ipa` in each release (experimental;
+  the player sideloads it, using one of a free Apple ID's three slots).
+  Earlier builds ran on an iPad Pro; the 0.6.0 build has passed simulator UI tests only.
   Still open: the eight ready-made apps need the link in their own repositories, games
   installed earlier show up only after a rebuild, and iOS 27 lets an app check at most
   25 links, so six games say *Tap Play to check*.

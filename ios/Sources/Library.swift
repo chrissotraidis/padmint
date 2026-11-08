@@ -92,7 +92,7 @@ final class LibraryModel: ObservableObject {
     }
 
     /// The newest list; the copy inside the app is used offline.
-    private let remote = URL(string: "https://raw.githubusercontent.com/chrissotraidis/padmint-library/main/library.json")!
+    private let remote = URL(string: "https://raw.githubusercontent.com/chrissotraidis/padmint/main/ios/library.json")!
     static let consoles = ["Nintendo 64", "GameCube", "Wii", "PlayStation", "PlayStation 2", "Xbox", "PC"]
 
     init() {

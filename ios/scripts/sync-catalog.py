@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write library.json and the app's Info.plist from PadMint's catalog.
 
-Usage: scripts/sync-catalog.py [PADMINT_CHECKOUT]   (default: ../padmint)
+Usage: ios/scripts/sync-catalog.py   (reads the catalog of the PadMint checkout it is in)
 
 The library lists only games in PadMint's catalog (Chris's own ports). PadMint-built
 iPhone/iPad apps answer to padmint-<game>:// (padmint#242). The app may only ask iOS
@@ -51,7 +51,7 @@ def games(padmint, covers):
 
 
 def main():
-    padmint = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT.parent / "padmint").resolve()
+    padmint = ROOT.parent
     covers = json.loads((ROOT / "covers.json").read_text(encoding="utf-8"))["games"]
     listed = games(padmint, covers)
     links = [game["link"] for game in listed if game["link"]][:CHECKED_LINKS]

@@ -6,6 +6,8 @@ Writes PadMint-windows.zip, PadMint-macos.zip, PadMint-linux.zip and SHA256SUMS,
 then runs PadMint's own release gate on them (ZIP everywhere: the gate opens
 ZIP archives only). The names carry no version, so .../releases/latest/download/PadMint-macos.zip
 always gets the newest one; the folder inside is still PadMint-vX.Y.Z.
+If ios/scripts/package-release.sh already put PadMint-ios-unsigned.ipa (the iPhone/iPad
+app) in OUTPUT_FOLDER, it is added to SHA256SUMS and the gate too.
 """
 import hashlib
 import io
@@ -30,6 +32,7 @@ def payload():
         "README.md", "STATUS.md", "STATUS-HISTORY.md",
     )]
     files += sorted((ROOT / "docs").glob("*.md"), key=lambda path: path.name)  # every guide README links to
+    files.append(ROOT / "ios/README.md")  # the iPhone/iPad app's page, which README links to
     # Sorted by name as text: Windows compares paths ignoring case, which would
     # put TargetConditionals.h elsewhere and change the ZIP's bytes.
     by_name = lambda path: path.name  # noqa: E731
@@ -130,6 +133,9 @@ def main():
     make_zip(made[0], top, launchers / "PadMint.cmd", windows_python())
     make_zip(made[1], top, launchers / "PadMint.command")
     make_zip(made[2], top, launchers / "padmint.sh")
+    ipa = out / "PadMint-ios-unsigned.ipa"
+    if ipa.exists():
+        made.append(ipa)
     sums = "".join(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}\n" for p in made)
     (out / "SHA256SUMS").write_bytes(sums.encode("utf-8"))
     print(sums, end="")

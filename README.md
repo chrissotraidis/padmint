@@ -207,15 +207,15 @@ it, and don't ask others for theirs.
 
 ## PadMint on your iPhone or iPad
 
-[PadMint Library](https://github.com/chrissotraidis/padmint-library) is PadMint's
-app for iPhone and iPad. It gathers the games you've built and installed into one
+PadMint also comes as an app for iPhone and iPad. It gathers the games you've
+built and installed into one
 library: your games as 3D boxes you swipe through, a grid of the whole catalog,
 search and console filters, and a page for each game with a Play button. Official
 box art and titles are optional and download only if you agree. Install its
-`.ipa` from the [latest release](https://github.com/chrissotraidis/padmint-library/releases/latest)
+`PadMint-ios-unsigned.ipa` from the [latest release](https://github.com/chrissotraidis/padmint/releases/latest)
 the same way as a game. It finds games built with PadMint 0.5.34 or newer, which
 answer to a link such as `padmint-sunpad://`. With a free Apple ID it uses one of
-your three sideloaded app slots. Experimental.
+your three sideloaded app slots. Experimental. Its source is in [ios/](ios/README.md).
 
 ## Help
 

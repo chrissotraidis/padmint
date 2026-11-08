@@ -6,7 +6,7 @@ queue, the decisions only Chris can make and the evidence each step needs. Keep
 it current in the same PR as the work. [STATUS.md](STATUS.md) says what each
 release changed; [Resume work](docs/ROADMAP.md#resume-work) keeps earlier handoffs.
 
-- This repository holds only the shared Builder: its pipeline, profiles, tests and docs. Never commit or upload game code (translated or decompiled), disc images, ROMs, extracted game files, saves, console keys or personal builds.
+- This repository holds the shared Builder (its pipeline, profiles, tests and docs) and, in `ios/`, PadMint's iPhone/iPad library app (see [ios/AGENTS.md](ios/AGENTS.md)). Never commit or upload game code (translated or decompiled), disc images, ROMs, extracted game files, box art, saves, console keys or personal builds.
 - Before any public release, every asset must pass `python3 -m padmint audit <asset>` (and the private `~/.codex/release-gate/release_gate.py` while it remains the reference). A failure is a stop, not a note.
 - Before announcing a game release PadMint builds on a Mac, `scripts/player-check.sh` must pass for it (with the checkout before tagging, without it after publishing). A build through `python3 -m padmint` with a newer Python and warm caches is not player evidence. A failure is a stop.
 - Never commit key bytes, key hex or key byte lists, even in tests or gate code. Identify keys by prefix + SHA-256 only (see `padmint/gate.py`). Build detector strings at runtime so this repository passes its own gate.
