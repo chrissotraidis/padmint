@@ -53,12 +53,14 @@ enum GameBox {
         // A faint mirror image under the box stands in for a reflective floor; as a child
         // of the box it turns and spins with it.
         box.childNode(withName: "reflection", recursively: false)?.removeFromParentNode()
-        let reflection = SCNNode(geometry: geometry)
-        reflection.name = "reflection"
-        reflection.scale = SCNVector3(1, -1, 1)
-        reflection.position = SCNVector3(0, Float(-height) - 0.004, 0)
-        reflection.opacity = 0.22
-        box.addChildNode(reflection)
+        if UserDefaults.standard.flag("reflections") {
+            let reflection = SCNNode(geometry: geometry)
+            reflection.name = "reflection"
+            reflection.scale = SCNVector3(1, -1, 1)
+            reflection.position = SCNVector3(0, Float(-height) - 0.004, 0)
+            reflection.opacity = 0.22
+            box.addChildNode(reflection)
+        }
     }
 
     private static func material(_ contents: Any, gloss: Bool = false) -> SCNMaterial {
@@ -96,27 +98,41 @@ enum GameBox {
     }
 
     static func view(scene: SCNScene, camera: SCNNode) -> StageView {
-        let view = StageView()
+        let view = StageView(frame: .zero, options: nil)
         view.scene = scene
         view.pointOfView = camera
         view.backgroundColor = .clear
         view.antialiasingMode = .multisampling4X
-        view.isPlaying = true
+        view.preferredFramesPerSecond = 60
         return view
     }
 
-    static func sway(_ holder: SCNNode, on: Bool) {
-        guard let box = holder.childNode(withName: "box", recursively: false) else { return }
-        if on {
-            guard box.action(forKey: "sway") == nil else { return }
+    /// Whether boxes may sway at rest: the player's setting, and never with Reduce Motion.
+    static var motion: Bool {
+        (UserDefaults.standard.flag("boxMotion")) && !UIAccessibility.isReduceMotionEnabled
+    }
+
+    /// A resting box sways for three slow cycles, then settles: after that nothing moves,
+    /// so nothing is drawn and the stage costs no power.
+    static let swayTime: TimeInterval = 3 * 4.8 + 1.2
+
+    @discardableResult
+    static func sway(_ holder: SCNNode, on: Bool) -> Bool {
+        guard let box = holder.childNode(withName: "box", recursively: false) else { return false }
+        if on && motion {
+            guard box.action(forKey: "sway") == nil else { return false }
             let left = SCNAction.rotateTo(x: 0, y: 0.16, z: 0, duration: 2.4, usesShortestUnitArc: true)
             let right = SCNAction.rotateTo(x: 0, y: -0.16, z: 0, duration: 2.4, usesShortestUnitArc: true)
+            let settle = SCNAction.rotateTo(x: 0, y: 0, z: 0, duration: 1.2, usesShortestUnitArc: true)
             left.timingMode = .easeInEaseOut
             right.timingMode = .easeInEaseOut
-            box.runAction(.repeatForever(.sequence([left, right])), forKey: "sway")
+            settle.timingMode = .easeInEaseOut
+            box.runAction(.sequence([.repeat(.sequence([left, right]), count: 3), settle]), forKey: "sway")
+            return true
         } else {
             box.removeAction(forKey: "sway")
             box.runAction(.rotateTo(x: 0, y: 0, z: 0, duration: 0.3, usesShortestUnitArc: true))
+            return false
         }
     }
 }
@@ -125,6 +141,47 @@ enum GameBox {
 final class StageView: SCNView {
     var onResize: ((CGSize) -> Void)?
     private var lastSize: CGSize = .zero
+    private var active = true
+    private var holding = false
+    private var busyUntil = Date.distantPast
+
+    override init(frame: CGRect, options: [String: Any]? = nil) {
+        super.init(frame: frame, options: options)
+        let center = NotificationCenter.default
+        center.addObserver(self, selector: #selector(stagePause), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        center.addObserver(self, selector: #selector(stageResume), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+
+    required init?(coder: NSCoder) { super.init(coder: coder) }
+
+    /// Plays (and draws) only while on screen with the app in front: a hidden carousel or
+    /// a page you've left costs nothing.
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        update()
+    }
+
+    @objc private func stagePause() { active = false; update() }
+    @objc private func stageResume() { active = true; update() }
+
+    /// Keep drawing for a while: a box is sliding, spinning or swaying.
+    func play(for seconds: TimeInterval) {
+        busyUntil = max(busyUntil, Date().addingTimeInterval(seconds))
+        update()
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds + 0.05) { [weak self] in self?.update() }
+    }
+
+    /// Keep drawing while a finger is on the stage.
+    func hold(_ on: Bool) {
+        holding = on
+        update()
+    }
+
+    private func update() {
+        let wanted = window != nil && active && (holding || Date() < busyUntil)
+        if isPlaying != wanted { isPlaying = wanted }
+        if !wanted { setNeedsDisplay() }  // draw the final resting frame
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -171,7 +228,7 @@ struct CoverFlow3D: UIViewRepresentable {
         var parent: CoverFlow3D
         let scene: SCNScene
         let camera: SCNNode
-        weak var view: SCNView?
+        weak var view: StageView?
         private var nodes: [String: SCNNode] = [:]
         private var dressedWith: [String: ObjectIdentifier] = [:]
         private var order: [String] = []
@@ -215,7 +272,10 @@ struct CoverFlow3D: UIViewRepresentable {
                 let image = parent.image(game)
                 let identity = image.map(ObjectIdentifier.init)
                 if let node = nodes[game.id] {
-                    if dressedWith[game.id] != identity { GameBox.dress(node, image: image, game: game) }
+                    if dressedWith[game.id] != identity {
+                        GameBox.dress(node, image: image, game: game)
+                        view?.play(for: 0.2)  // a cover arrived while resting
+                    }
                 } else {
                     let node = GameBox.make(image: image, game: game)
                     scene.rootNode.addChildNode(node)
@@ -280,7 +340,7 @@ struct CoverFlow3D: UIViewRepresentable {
             let front = panning || order.isEmpty ? nil : order[max(0, min(order.count - 1, Int(offset.rounded())))]
             if front != swaying {
                 if let old = swaying, let node = nodes[old] { GameBox.sway(node, on: false) }
-                if let front, let node = nodes[front] { GameBox.sway(node, on: true) }
+                if let front, let node = nodes[front], GameBox.sway(node, on: true) { view?.play(for: GameBox.swayTime) }
                 swaying = front
             }
         }
@@ -288,6 +348,7 @@ struct CoverFlow3D: UIViewRepresentable {
         private func move(to target: CGFloat) {
             SCNTransaction.begin()
             SCNTransaction.animationDuration = 0.5
+            view?.play(for: 0.6)
             SCNTransaction.animationTimingFunction = CAMediaTimingFunction(controlPoints: 0.2, 0.9, 0.25, 1)
             offset = target
             layout()
@@ -306,6 +367,7 @@ struct CoverFlow3D: UIViewRepresentable {
             case .began:
                 panStart = offset
                 panning = true
+                (view as? StageView)?.hold(true)
             case .changed:
                 SCNTransaction.begin()
                 SCNTransaction.disableActions = true
@@ -313,11 +375,12 @@ struct CoverFlow3D: UIViewRepresentable {
                 offset = max(-0.45, min(CGFloat(order.count) - 0.55, panStart - gesture.translation(in: view).x / unit))
                 layout()
                 SCNTransaction.commit()
-                if Int(offset.rounded()) != before, UserDefaults.standard.object(forKey: "haptics") as? Bool ?? true {
+                if Int(offset.rounded()) != before, UserDefaults.standard.flag("haptics") {
                     haptics.selectionChanged()
                 }
             default:
                 panning = false
+                (view as? StageView)?.hold(false)
                 let flick = gesture.velocity(in: view).x / unit * 0.22
                 focus(Int(max(0, min(CGFloat(order.count - 1), (offset - flick).rounded()))))
             }
@@ -332,7 +395,8 @@ struct CoverFlow3D: UIViewRepresentable {
         @objc func spin(_ gesture: UITapGestureRecognizer) {
             guard let index = index(at: gesture), index == parent.focused,
                   let box = nodes[order[index]]?.childNode(withName: "box", recursively: false) else { return }
-            box.runAction(.rotateBy(x: 0, y: .pi * 2, z: 0, duration: 0.9))
+            view?.play(for: 1)
+                        box.runAction(.rotateBy(x: 0, y: .pi * 2, z: 0, duration: 0.9))
         }
 
         private func index(at gesture: UIGestureRecognizer) -> Int? {
@@ -354,6 +418,7 @@ struct SpinningBox: UIViewRepresentable {
     func makeUIView(context: Context) -> StageView {
         let coordinator = context.coordinator
         let view = GameBox.view(scene: coordinator.scene, camera: coordinator.camera)
+        coordinator.view = view
         view.addGestureRecognizer(UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.pan)))
         coordinator.show(image: image, game: game)
         return view
@@ -367,6 +432,7 @@ struct SpinningBox: UIViewRepresentable {
     final class Coordinator: NSObject {
         let scene: SCNScene
         let camera: SCNNode
+        weak var view: StageView?
         private var holder: SCNNode?
         private var shown: ObjectIdentifier??
         private var start: Float = 0
@@ -392,7 +458,8 @@ struct SpinningBox: UIViewRepresentable {
             let distance = max(Float(height) * 2.3, Float(width) * 1.9) + 0.4
             camera.position = SCNVector3(0, Float(height) * 0.62, distance)
             camera.look(at: SCNVector3(0, Float(height) * 0.5, 0))
-            if let holder { GameBox.sway(holder, on: true) }
+            view?.play(for: 0.5)
+            if let holder, GameBox.sway(holder, on: true) { view?.play(for: GameBox.swayTime) }
         }
 
         @objc func pan(_ gesture: UIPanGestureRecognizer) {
@@ -400,19 +467,24 @@ struct SpinningBox: UIViewRepresentable {
             switch gesture.state {
             case .began:
                 GameBox.sway(holder, on: false)
+                self.view?.hold(true)
                 holder.removeAllActions()
                 start = holder.eulerAngles.y
             case .changed:
                 holder.eulerAngles.y = start + Float(gesture.translation(in: view).x / view.bounds.width) * .pi * 1.6
             default:
                 // Coast with the flick, then settle facing front.
+                self.view?.hold(false)
+                self.view?.play(for: 0.8)
                 let coast = holder.eulerAngles.y + Float(gesture.velocity(in: view).x / view.bounds.width) * 0.6
                 let turns = (coast / (.pi * 2)).rounded() * .pi * 2
                 holder.runAction(.sequence([
                     .rotateTo(x: 0, y: CGFloat(turns), z: 0, duration: 0.7, usesShortestUnitArc: false),
                     .run { node in node.eulerAngles.y = 0 },
                 ])) { [weak self] in
-                    Task { @MainActor in if let holder = self?.holder { GameBox.sway(holder, on: true) } }
+                    Task { @MainActor in
+                        if let self, let holder = self.holder, GameBox.sway(holder, on: true) { self.view?.play(for: GameBox.swayTime) }
+                    }
                 }
             }
         }

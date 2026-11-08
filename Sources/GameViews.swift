@@ -22,6 +22,8 @@ struct GameMenu: View {
 }
 
 struct GameDetail: View {
+    @AppStorage("boxMotion") private var boxMotion = true
+    @AppStorage("reflections") private var reflections = true
     @EnvironmentObject private var library: LibraryModel
     @EnvironmentObject private var covers: CoverStore
     @Environment(\.gameActions) private var actions
@@ -33,6 +35,7 @@ struct GameDetail: View {
         ScrollView {
             VStack(spacing: 18) {
                 SpinningBox(game: game, image: covers.image(for: game))
+                .id("\(reflections)-\(boxMotion)")
                     .frame(height: sizeClass == .regular ? 440 : 330)
                     .overlay(alignment: .bottom) {
                         Text("Drag to turn the box").font(.caption).foregroundStyle(.secondary).padding(.bottom, 4)
@@ -72,6 +75,8 @@ struct GameDetail: View {
                 if let source = covers.source(for: game) {
                     Text("Box art from \(source)").font(.footnote).foregroundStyle(.secondary)
                 }
+                MoreOnConsole(game: game)
+                    .padding(.top, 12)
             }
             .padding(24)
             .frame(maxWidth: 680)
@@ -98,6 +103,40 @@ struct HowToGet: View {
                 .buttonStyle(PrimaryButtonStyle())
         }
         .frame(maxWidth: 440)
+    }
+}
+
+/// Other games on the same console, so a game's page leads somewhere.
+private struct MoreOnConsole: View {
+    @EnvironmentObject private var library: LibraryModel
+    @Environment(\.gameActions) private var actions
+    @AppStorage("officialTitles") private var official = false
+    let game: Game
+
+    var body: some View {
+        let others = library.sorted(library.games.filter { $0.platform == game.platform && $0.id != game.id },
+                                    by: .recent, official: official)
+        if !others.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("More on \(game.platform)").font(.title3.bold())
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(alignment: .bottom, spacing: 16) {
+                        ForEach(others) { other in
+                            Button { actions.open(other) } label: {
+                                VStack(alignment: .leading, spacing: 6) {
+                                    CoverArt(game: other).frame(width: 120, height: 150, alignment: .bottom)
+                                    Text(other.heading(official: official)).font(.caption.weight(.semibold))
+                                        .lineLimit(2, reservesSpace: true).frame(width: 120, alignment: .leading)
+                                }
+                            }
+                            .buttonStyle(PressableStyle())
+                        }
+                    }
+                    .padding(.vertical, 6)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }
 
@@ -164,6 +203,10 @@ struct SettingsView: View {
     @AppStorage("showNames") private var showNames = true
     @AppStorage("appearance") private var appearance: Appearance = .dark
     @AppStorage("haptics") private var haptics = true
+    @AppStorage("boxMotion") private var boxMotion = true
+    @AppStorage("reflections") private var reflections = true
+    @AppStorage("backdrop") private var backdrop: BackdropStyle = .glow
+    @AppStorage("showReadyMade") private var showReadyMade = true
 
     var body: some View {
         NavigationStack {
@@ -179,6 +222,7 @@ struct SettingsView: View {
                         ForEach(SortOrder.allCases) { Text($0.label).tag($0) }
                     }
                     Toggle("Installed games only", isOn: $onlyInstalled)
+                    Toggle("Show ready-made apps", isOn: $showReadyMade)
                     Picker("When PadMint opens", selection: $startOn) {
                         ForEach(StartOn.allCases) { Text($0.label).tag($0) }
                     }
@@ -191,6 +235,11 @@ struct SettingsView: View {
                         ForEach(CoverSize.allCases) { Text($0.label).tag($0) }
                     }
                     Toggle("Names under covers", isOn: $showNames)
+                    Picker("Background", selection: $backdrop) {
+                        ForEach(BackdropStyle.allCases) { Text($0.label).tag($0) }
+                    }
+                    Toggle("Boxes sway", isOn: $boxMotion)
+                    Toggle("Reflections", isOn: $reflections)
                     Toggle("Haptics", isOn: $haptics)
                 }
                 Section {

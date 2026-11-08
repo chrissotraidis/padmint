@@ -1,6 +1,12 @@
 import SwiftUI
 import UIKit
 
+extension UserDefaults {
+    /// An on/off setting that defaults to on. bool(forKey:) also reads "0"/"NO" text,
+    /// which is how a value passed at launch arrives.
+    func flag(_ key: String) -> Bool { object(forKey: key) == nil ? true : bool(forKey: key) }
+}
+
 extension Color {
     /// PadMint's mint, from the icon's gradient.
     static let padMint = Color(red: 0.13, green: 0.74, blue: 0.48)

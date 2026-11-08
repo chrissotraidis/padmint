@@ -10,6 +10,7 @@ struct LibraryView: View {
     @AppStorage("officialTitles") private var official = false
     @AppStorage("onlyInstalled") private var onlyInstalled = false
     @AppStorage("console") private var console = ""
+    @AppStorage("showReadyMade") private var showReadyMade = true
     @AppStorage("appearance") private var appearance: Appearance = .dark
     @AppStorage("carouselStyle") private var carouselStyle: CarouselStyle = .boxes
     @State private var path: [Game] = []
@@ -26,6 +27,7 @@ struct LibraryView: View {
         let matching = library.games.filter { game in
             (!onlyInstalled || library.installed.contains(game.id))
                 && (console.isEmpty || game.platform == console)
+                && (showReadyMade || game.link != nil)
                 && (search.isEmpty || [game.name, game.title, game.platform].contains {
                     $0.localizedCaseInsensitiveContains(search)
                 })
@@ -150,6 +152,8 @@ private struct ShelfLayout: View {
 }
 
 private struct HeroBanner: View {
+    @AppStorage("boxMotion") private var boxMotion = true
+    @AppStorage("reflections") private var reflections = true
     @EnvironmentObject private var library: LibraryModel
     @EnvironmentObject private var covers: CoverStore
     @Environment(\.gameActions) private var actions
@@ -161,6 +165,7 @@ private struct HeroBanner: View {
         let height: CGFloat = sizeClass == .regular ? 300 : 210
         HStack(alignment: .bottom, spacing: 24) {
             SpinningBox(game: game, image: covers.image(for: game))
+                .id("\(reflections)-\(boxMotion)")
                 .frame(width: height * 0.95, height: height)
                 .onTapGesture { actions.open(game) }
             VStack(alignment: .leading, spacing: 10) {
@@ -341,6 +346,8 @@ private struct CarouselCaption: View {
 
 /// Real 3D boxes on a reflective floor.
 private struct BoxCarousel: View {
+    @AppStorage("boxMotion") private var boxMotion = true
+    @AppStorage("reflections") private var reflections = true
     @EnvironmentObject private var covers: CoverStore
     @Environment(\.gameActions) private var actions
     @AppStorage("haptics") private var haptics = true
@@ -358,6 +365,7 @@ private struct BoxCarousel: View {
                 } else {
                     VStack(spacing: 0) {
                         CoverFlow3D(games: games, focused: $focused, image: { covers.image(for: $0) }, open: actions.open)
+                            .id("\(reflections)-\(boxMotion)")
                             .frame(height: geo.size.height * 0.7)
                             // The reflection fades into the floor instead of ending at the edge.
                             .mask {

@@ -1,3 +1,4 @@
+import ImageIO
 import SwiftUI
 import UIKit
 
@@ -13,6 +14,10 @@ final class CoverStore: ObservableObject {
     }
     @Published private(set) var downloading = false
     private var images: [String: UIImage] = [:]
+    /// Files known not to exist, so a redraw doesn't ask the disk again.
+    private var missing: Set<String> = []
+    private var chosen: Set<String> = []
+    private var glows: [String: UIImage] = [:]
     private let folder: URL
 
     init() {
@@ -20,6 +25,8 @@ final class CoverStore: ObservableObject {
         folder = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("Covers", isDirectory: true)
         try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let files = (try? FileManager.default.contentsOfDirectory(atPath: folder.path)) ?? []
+        chosen = Set(files.filter { $0.hasPrefix("chosen-") }.map { String($0.dropFirst("chosen-".count)) })
         // Official titles come with official covers. Earlier versions kept them apart, so
         // anyone who already chose box art gets the titles too, once.
         if boxArt == .download, UserDefaults.standard.object(forKey: "officialTitles") == nil {
@@ -32,9 +39,54 @@ final class CoverStore: ObservableObject {
     private func load(_ kind: String, _ game: Game) -> UIImage? {
         let key = kind + "-" + game.id
         if let image = images[key] { return image }
-        guard let image = UIImage(contentsOfFile: file(kind, game).path) else { return nil }
+        if missing.contains(key) { return nil }
+        guard let image = Self.decode(file(kind, game)) else {
+            missing.insert(key)
+            return nil
+        }
         images[key] = image
         return image
+    }
+
+    /// Reads a cover already decoded and no larger than needed, so drawing it later
+    /// doesn't decode it on the main thread mid-scroll.
+    nonisolated static func decode(_ url: URL, maxPixels: Int = 1200) -> UIImage? {
+        guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
+        let options: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxPixels,
+        ]
+        guard let image = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else { return nil }
+        return UIImage(cgImage: image)
+    }
+
+    /// Decodes every game's cover in the background, then redraws once.
+    func warm(_ games: [Game]) async {
+        let wanted = games.flatMap { game in ["chosen", "boxart", "card"].map { ($0 + "-" + game.id, file($0, game)) } }
+            .filter { images[$0.0] == nil && !missing.contains($0.0) }
+        let decoded = await Task.detached(priority: .userInitiated) {
+            wanted.map { key, url in (key, FileManager.default.fileExists(atPath: url.path) ? Self.decode(url) : nil) }
+        }.value
+        for (key, image) in decoded {
+            if let image { images[key] = image } else { missing.insert(key) }
+        }
+        objectWillChange.send()
+    }
+
+    /// A 24-pixel copy of the cover: scaled up behind the screen it is already a soft glow,
+    /// so the background needs only a light blur instead of re-blurring a full cover.
+    func glow(for game: Game) -> UIImage? {
+        guard let image = image(for: game) else { return nil }
+        let key = game.id + "-\(ObjectIdentifier(image).hashValue)"
+        if let glow = glows[key] { return glow }
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let glow = UIGraphicsImageRenderer(size: CGSize(width: 24, height: 24), format: format)
+            .image { _ in image.draw(in: CGRect(x: 0, y: 0, width: 24, height: 24)) }
+        glows[key] = glow
+        return glow
     }
 
     /// The chosen picture, then box art (when allowed), then PadMint's card art.
@@ -48,7 +100,7 @@ final class CoverStore: ObservableObject {
         return size.width / size.height
     }
 
-    func hasChosen(_ game: Game) -> Bool { FileManager.default.fileExists(atPath: file("chosen", game).path) }
+    func hasChosen(_ game: Game) -> Bool { chosen.contains(game.id) }
 
     /// Where the shown cover comes from, for the credit on a game's page.
     func source(for game: Game) -> String? {
@@ -63,11 +115,13 @@ final class CoverStore: ObservableObject {
     func choose(_ data: Data, for game: Game) {
         guard let jpeg = UIImage(data: data)?.jpegData(compressionQuality: 0.9) else { return }
         try? jpeg.write(to: file("chosen", game), options: .atomic)
+        chosen.insert(game.id)
         changed("chosen", game)
     }
 
     func removeChosen(_ game: Game) {
         try? FileManager.default.removeItem(at: file("chosen", game))
+        chosen.remove(game.id)
         changed("chosen", game)
     }
 
@@ -98,16 +152,26 @@ final class CoverStore: ObservableObject {
                     return (kind, game, data)
                 }
             }
+            // Redraw every eight covers instead of after each one.
+            var pending = 0
             for await (kind, game, data) in group {
                 guard let data, UIImage(data: data) != nil else { continue }
                 try? data.write(to: file(kind, game), options: .atomic)
-                changed(kind, game)
+                images[kind + "-" + game.id] = nil
+                missing.remove(kind + "-" + game.id)
+                pending += 1
+                if pending >= 8 {
+                    pending = 0
+                    objectWillChange.send()
+                }
             }
+            objectWillChange.send()
         }
     }
 
     private func changed(_ kind: String, _ game: Game) {
         images[kind + "-" + game.id] = nil
+        missing.remove(kind + "-" + game.id)
         objectWillChange.send()
     }
 }
@@ -138,7 +202,7 @@ struct CoverArt: View {
                         .accessibilityLabel("Installed")
                 }
             }
-            .shadow(color: .black.opacity(0.35), radius: 10, y: 6)
+            .shadow(color: .black.opacity(0.32), radius: 7, y: 5)
     }
 
     @ViewBuilder private var picture: some View {
@@ -167,15 +231,16 @@ struct CoverSlot: View {
 /// The current game's art, blurred behind everything.
 struct Backdrop: View {
     @EnvironmentObject private var covers: CoverStore
+    @AppStorage("backdrop") private var style: BackdropStyle = .glow
     let game: Game?
 
     var body: some View {
         Color.clear
             .overlay {
-                if let game, let image = covers.image(for: game) {
-                    Image(uiImage: image).resizable().scaledToFill()
-                        .blur(radius: 60)
-                        .opacity(0.55)
+                if style == .glow, let game, let image = covers.glow(for: game) {
+                    Image(uiImage: image).resizable().interpolation(.medium).scaledToFill()
+                        .blur(radius: 18)
+                        .opacity(0.6)
                         .id(game.id)
                         .transition(.opacity)
                 }
@@ -185,6 +250,12 @@ struct Backdrop: View {
             .ignoresSafeArea()
             .animation(.easeInOut(duration: 0.45), value: game?.id)
     }
+}
+
+enum BackdropStyle: String, CaseIterable, Identifiable {
+    case glow, plain
+    var id: Self { self }
+    var label: String { self == .glow ? "Cover colours" : "Plain" }
 }
 
 /// Covers shrink a little under the finger.

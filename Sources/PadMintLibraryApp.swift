@@ -12,6 +12,7 @@ struct PadMintLibraryApp: App {
                 .environmentObject(library)
                 .environmentObject(covers)
                 .task {
+                    await covers.warm(library.games)
                     await covers.fetch(library.games)
                     await library.refresh()
                     await covers.fetch(library.games)
