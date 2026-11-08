@@ -1,0 +1,200 @@
+{
+  "_about": "Official titles, consoles and where the app may download box art once the player agrees: libretro-thumbnails, Steam, GOG or Wikipedia. This repository stores no images.",
+  "games": {
+    "agepad": {
+      "title": "Age of Empires II: Definitive Edition",
+      "platform": "PC",
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813780/library_600x900_2x.jpg"
+    },
+    "annepad": {
+      "title": "Pokémon Stadium",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Stadium%20%28USA%29.png"
+    },
+    "ballpad": {
+      "title": "Super Mario Strikers",
+      "platform": "GameCube",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Strikers%20%28USA%29.png"
+    },
+    "bananapad": {
+      "title": "Donkey Kong 64",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Donkey%20Kong%2064%20%28USA%29.png"
+    },
+    "barrelpad": {
+      "title": "Diddy Kong Racing",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Diddy%20Kong%20Racing%20%28USA%29%20%28En%2CFr%29.png"
+    },
+    "bearbirdpad": {
+      "title": "Banjo-Kazooie",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Banjo-Kazooie%20%28USA%29.png"
+    },
+    "bellpad": {
+      "title": "Animal Crossing",
+      "platform": "GameCube",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Animal%20Crossing%20%28USA%29.png"
+    },
+    "bluewake": {
+      "title": "The Legend of Zelda: The Wind Waker",
+      "platform": "GameCube",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20The%20Wind%20Waker%20%28USA%29.png"
+    },
+    "brawlerpad": {
+      "title": "Super Smash Bros.",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Super%20Smash%20Bros.%20%28USA%29.png"
+    },
+    "caesarpad": {
+      "title": "Caesar III",
+      "platform": "PC",
+      "box_art": "https://images.gog-statics.com/f1309e35fc9db9fb4fe280bc3a99c6029b63af50554cbee494ac0bffec444608_glx_vertical_cover.jpg"
+    },
+    "ctrpad": {
+      "title": "Crash Team Racing",
+      "platform": "PlayStation",
+      "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation/Named_Boxarts/CTR%20-%20Crash%20Team%20Racing%20%28USA%29.png"
+    },
+    "daggerpad": {
+      "title": "The Elder Scrolls II: Daggerfall",
+      "platform": "PC",
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1812390/library_600x900_2x.jpg"
+    },
+    "darkpad": {
+      "title": "Perfect Dark",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Perfect%20Dark%20%28USA%29.png"
+    },
+    "deviltouch": {
+      "title": "Diablo",
+      "platform": "PC",
+      "box_art": "https://upload.wikimedia.org/wikipedia/en/3/3a/Diablo_Coverart.png"
+    },
+    "dinopad": {
+      "title": "Dinosaur Planet",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Dinosaur%20Planet%20%28USA%29%20%28Proto%29%20%282000-12-01%29.png"
+    },
+    "emeraldtablet": {
+      "title": "Pharaoh + Cleopatra",
+      "platform": "PC",
+      "box_art": "https://images.gog-statics.com/bf97d30ca61ed4a8ffbb75380a2a8f59ac3efabdb9cf6c9a397d53a652df9fcb_glx_vertical_cover.jpg"
+    },
+    "f0x": {
+      "title": "F-Zero X",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/F-Zero%20X%20%28USA%29.png"
+    },
+    "galaxypad": {
+      "title": "Super Mario Galaxy",
+      "platform": "Wii",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Super%20Mario%20Galaxy%20%28USA%29.png"
+    },
+    "goldenpad": {
+      "title": "GoldenEye 007",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/GoldenEye%20007%20%28USA%29.png"
+    },
+    "harkinianpad": {
+      "title": "The Legend of Zelda: Ocarina of Time",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Ocarina%20of%20Time%20%28USA%29.png"
+    },
+    "kartpad": {
+      "title": "Mario Kart Wii",
+      "platform": "Wii",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Mario%20Kart%20Wii%20%28Europe%29.png"
+    },
+    "kidpad": {
+      "title": "Kid Pix",
+      "platform": "PC",
+      "box_art": "https://upload.wikimedia.org/wikipedia/en/1/15/Kid_Pix_1.0_About.png"
+    },
+    "maskpad": {
+      "title": "The Legend of Zelda: Majora's Mask",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Majora%27s%20Mask%20%28USA%29.png"
+    },
+    "meleepad": {
+      "title": "Super Smash Bros. Melee",
+      "platform": "GameCube",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Smash%20Bros.%20Melee%20%28USA%29%20%28En%2CJa%29.png"
+    },
+    "nightpad": {
+      "title": "007: Nightfire",
+      "platform": "Xbox",
+      "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/007%20-%20Nightfire%20%28USA%29.png"
+    },
+    "openrct2touch": {
+      "title": "RollerCoaster Tycoon 2",
+      "platform": "PC",
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285330/library_600x900_2x.jpg"
+    },
+    "ottsel": {
+      "title": "Jak and Daxter: The Precursor Legacy",
+      "platform": "PlayStation 2",
+      "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation%202/Named_Boxarts/Jak%20and%20Daxter%20-%20The%20Precursor%20Legacy%20%28USA%29%20%28En%2CFr%2CDe%2CEs%2CIt%29.png"
+    },
+    "paperpad": {
+      "title": "Paper Mario",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Paper%20Mario%20%28USA%29.png"
+    },
+    "peonpad": {
+      "title": "Warcraft II: Tides of Darkness",
+      "platform": "PC",
+      "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Warcraft%20II%20-%20Tides%20of%20Darkness.png"
+    },
+    "projectreach": {
+      "title": "Halo: Combat Evolved",
+      "platform": "Xbox",
+      "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/Halo%20-%20Combat%20Evolved%20%28USA%29.png"
+    },
+    "ratouch": {
+      "title": "Command & Conquer: Red Alert",
+      "platform": "PC",
+      "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Command%20and%20Conquer%20-%20Red%20Alert.png"
+    },
+    "snappad": {
+      "title": "Pokémon Snap",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Snap%20%28USA%29.png"
+    },
+    "spaghettipad": {
+      "title": "Mario Kart 64",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Mario%20Kart%2064%20%28USA%29.png"
+    },
+    "squirrelpad": {
+      "title": "Conker's Bad Fur Day",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Conker%27s%20Bad%20Fur%20Day%20%28USA%29.png"
+    },
+    "starshippad": {
+      "title": "Star Fox 64",
+      "platform": "Nintendo 64",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Star%20Fox%2064%20%28USA%29.png"
+    },
+    "sunpad": {
+      "title": "Super Mario Sunshine",
+      "platform": "GameCube",
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Sunshine%20%28USA%29.png"
+    },
+    "tribespad": {
+      "title": "Tribes 2",
+      "platform": "PC",
+      "box_art": "https://upload.wikimedia.org/wikipedia/en/0/01/Tribes_2_cover.jpg"
+    },
+    "utp": {
+      "title": "Unreal Tournament",
+      "platform": "PC",
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/13240/library_600x900_2x.jpg"
+    },
+    "vaultpad": {
+      "title": "Fallout 2",
+      "platform": "PC",
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/38410/library_600x900_2x.jpg"
+    }
+  }
+}

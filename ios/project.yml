@@ -1,0 +1,47 @@
+name: PadMintLibrary
+options:
+  bundleIdPrefix: com.chrissotraidis
+  deploymentTarget:
+    iOS: "17.0"
+settings:
+  base:
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "5"
+    SWIFT_VERSION: "5.0"
+targets:
+  PadMintLibrary:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: library.json
+        buildPhase: resources
+      - path: Assets.xcassets
+    settings:
+      base:
+        PRODUCT_NAME: PadMint
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        PRODUCT_BUNDLE_IDENTIFIER: com.chrissotraidis.padmintlibrary
+        INFOPLIST_FILE: Sources/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGNING_ALLOWED: NO
+  PadMintLibraryUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: PadMintLibrary
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.chrissotraidis.padmintlibrary.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: PadMintLibrary
+        CODE_SIGNING_ALLOWED: NO
+schemes:
+  PadMintLibrary:
+    build:
+      targets:
+        PadMintLibrary: all
+    test:
+      targets: [PadMintLibraryUITests]
