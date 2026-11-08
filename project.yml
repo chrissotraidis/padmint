@@ -5,8 +5,8 @@ options:
     iOS: "17.0"
 settings:
   base:
-    MARKETING_VERSION: "0.3.0"
-    CURRENT_PROJECT_VERSION: "4"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "5"
     SWIFT_VERSION: "5.0"
 targets:
   PadMintLibrary:

@@ -31,17 +31,31 @@ It uses PadMint's icon and lists only games from PadMint's catalog.
 Covers keep their real shapes: wide N64 boxes, square PlayStation cases and tall
 GameCube, Wii, PS2, Xbox and PC boxes all stand on one line.
 
-**Status: prototype.** The layouts, box art, game pages and launching work in the
-iOS 27 simulator on iPad and iPhone. On 7 November it was installed on an iPad Pro
-next to a SunPad build with the link, but the iPad's screen was off, so nothing
-has been checked on the device yet.
+## Install
+
+1. Download `PadMint-Library-v…-ios-unsigned.ipa` from the
+   [latest release](https://github.com/chrissotraidis/padmint-library/releases/latest).
+2. Sign and install it with the same tool you use for your games (Sideloadly,
+   AltStore or SideStore). It needs iOS or iPadOS 17 or later.
+3. Rebuild your games with PadMint 0.5.34 or newer so they answer to their
+   links. Games built earlier still launch from their own icons but don't show
+   up as installed here.
+
+With a free Apple ID, iOS lets you keep three sideloaded apps at a time, and
+this app is one of them. With a paid developer account there's no such limit.
+
+**Status: experimental.** The layouts, box art, game pages and launching pass
+UI tests in the iOS 27 simulator on iPad and iPhone. On an iPad Pro with iPadOS
+27, the app was installed and shown working through screen mirroring, and iOS
+opened SunPad from its `padmint-sunpad://` link. Playing a game launched from
+the app hasn't been checked on a device yet.
 
 ## How it finds your games
 
 Each iPhone/iPad app PadMint builds answers to a link named after its game, such
-as `padmint-sunpad://` ([padmint#242](https://github.com/chrissotraidis/padmint/pull/242),
-not yet released). Games installed before that release show up after you rebuild
-them. The library asks iOS which of those links it can open.
+as `padmint-sunpad://` (since [PadMint 0.5.34](https://github.com/chrissotraidis/padmint/releases/tag/v0.5.34)).
+Games installed before that release show up after you rebuild them. The library
+asks iOS which of those links it can open.
 
 iOS answers that question only for links the app declares, and iOS 27 answers
 for the first 25 only. PadMint builds 31 iPhone/iPad games, so the app checks
@@ -86,11 +100,13 @@ then flatten it with `magick Assets.xcassets/AppIcon.appiconset/AppIcon.png
 A UI test opens the grid and a game's page:
 `xcodebuild test -scheme PadMintLibrary -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)'`.
 
+A release: `scripts/package-release.sh OUTPUT` syncs the catalog, builds the
+unsigned IPA in `build/release` and writes `SHA256SUMS`. Two runs give
+identical files. Check the IPA with PadMint's `python3 -m padmint audit` before
+publishing.
+
 ## Next
 
-- Check it on an iPad next to a game built with padmint#242, signed with
-  Sideloadly, including that the link survives re-signing.
+- Play a game launched from the app on a device.
 - Give the ready-made apps a `padmint-<game>://` link in their own repositories.
-- Decide how players get the app. With a free Apple ID, iOS allows three
-  sideloaded apps at a time, and the library would use one of them.
 
