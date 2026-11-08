@@ -13,6 +13,8 @@ import stat
 import subprocess
 import sys
 import tarfile
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import zipfile
@@ -25,6 +27,10 @@ LOCK = Path(__file__).with_name("tools.lock.json")
 DIGESTS = ("sha512", "sha256", "sha1")
 # Seconds without any data before a download counts as stalled.
 TIMEOUT = 60
+# GitHub's release downloads sometimes answer 502, 503 or 504 for a minute or two. Wait
+# and try again these many seconds apart before telling the player it failed.
+RETRY_WAITS = (5, 15, 30)
+RETRY_STATUS = {429, 500, 502, 503, 504}
 # .NET reserves 256 GB of address space for its heap unless the heap has a limit;
 # Android kernels give a program less ("GC heap initialization failed"), so on a
 # phone the heap gets a limit above any phone's memory.
@@ -32,11 +38,18 @@ ANDROID_DOTNET_HEAP = "0x400000000"
 
 
 def open_url(url):
-    """urlopen that gives up on a stalled connection and explains failures plainly."""
-    try:
-        return urllib.request.urlopen(url, timeout=TIMEOUT)
-    except OSError as error:  # URLError, timeouts and SSL errors are all OSErrors
-        raise RuntimeError(download_problem(url, error)) from error
+    """urlopen that gives up on a stalled connection and explains failures plainly. A
+    server that is briefly overloaded (429, 5xx) gets a few more tries first; anything
+    else (a missing file, a certificate problem, no connection at all) fails at once."""
+    for wait in (*RETRY_WAITS, None):
+        try:
+            return urllib.request.urlopen(url, timeout=TIMEOUT)
+        except urllib.error.HTTPError as error:
+            if error.code not in RETRY_STATUS or wait is None:
+                raise RuntimeError(download_problem(url, error)) from error
+            time.sleep(wait)
+        except OSError as error:  # URLError, timeouts and SSL errors are all OSErrors
+            raise RuntimeError(download_problem(url, error)) from error
 
 
 def download_problem(url, error):
