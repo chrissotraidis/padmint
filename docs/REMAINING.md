@@ -1,7 +1,7 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **8 November 2026** for PadMint **0.5.34**,
+continuing work. It was updated on **8 November 2026** for PadMint **0.6.0**,
 using the live catalog audit (41 entries, 0 problems) and the open pull requests
 in PadMint and each game's repository. Any PR that finishes an item below
 updates this page too.
@@ -235,11 +235,13 @@ only.
 - **Launch links and the PadMint library app.** Since 0.5.34 ([#242](https://github.com/chrissotraidis/padmint/pull/242)),
   every iPhone/iPad app PadMint builds answers to `padmint-<game>://`. On 7 November a
   SunPad 0.2.3 build with the link was re-signed and installed on an iPad Pro; iOS opened
-  SunPad from the link. The library app that uses it lives in the private
-  `chrissotraidis/padmint-library` repository. Still open: the eight ready-made apps need
-  the link in their own repositories, games installed earlier show up only after a
-  rebuild, iOS 27 lets an app check at most 25 links, and how players get the library app
-  (it would use one of a free Apple ID's three sideload slots) is undecided.
+  SunPad from the link. PadMint 0.6.0 ships the library app that uses it, built from
+  [ios/](../ios/README.md), as `PadMint-ios-unsigned.ipa` in each release (experimental;
+  the player sideloads it, using one of a free Apple ID's three slots).
+  Earlier builds ran on an iPad Pro; the 0.6.0 build has passed simulator UI tests only.
+  Still open: the eight ready-made apps need the link in their own repositories, games
+  installed earlier show up only after a rebuild, and iOS 27 lets an app check at most
+  25 links, so six games say *Tap Play to check*.
 - **A SunPad 0.2.3 player's rebuild stopped with "Backend has local changes"**
   (7 November) without saying what changed. PadMint 0.5.31 did not reproduce it
   on an M3 Max: a first build (35 min), an interrupted dependency download and a
