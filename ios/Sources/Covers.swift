@@ -145,11 +145,16 @@ final class CoverStore: ObservableObject {
         await withTaskGroup(of: (String, Game, Data?).self) { group in
             for (kind, game, url) in wanted {
                 group.addTask {
-                    var request = URLRequest(url: url)
-                    request.setValue("PadMintLibrary", forHTTPHeaderField: "User-Agent")
-                    guard let (data, response) = try? await URLSession.shared.data(for: request),
-                          (response as? HTTPURLResponse)?.statusCode == 200 else { return (kind, game, nil) }
-                    return (kind, game, data)
+                    // libretro's server is sometimes too slow to answer; its GitHub copy is the fallback.
+                    for source in [url, Self.libretroMirror(url)].compactMap({ $0 }) {
+                        var request = URLRequest(url: source, timeoutInterval: 20)
+                        request.setValue("PadMintLibrary", forHTTPHeaderField: "User-Agent")
+                        if let (data, response) = try? await URLSession.shared.data(for: request),
+                           (response as? HTTPURLResponse)?.statusCode == 200, UIImage(data: data) != nil {
+                            return (kind, game, data)
+                        }
+                    }
+                    return (kind, game, nil)
                 }
             }
             // Redraw every eight covers instead of after each one.
@@ -173,6 +178,19 @@ final class CoverStore: ObservableObject {
         images[kind + "-" + game.id] = nil
         missing.remove(kind + "-" + game.id)
         objectWillChange.send()
+    }
+
+    /// The same libretro thumbnail on GitHub, where libretro keeps one repository per system:
+    /// thumbnails.libretro.com/Nintendo - Nintendo 64/Named_Boxarts/X.png becomes
+    /// raw.githubusercontent.com/libretro-thumbnails/Nintendo_-_Nintendo_64/master/Named_Boxarts/X.png
+    nonisolated static func libretroMirror(_ url: URL) -> URL? {
+        let parts = url.pathComponents.filter { $0 != "/" }
+        guard url.host == "thumbnails.libretro.com", parts.count == 3 else { return nil }
+        var mirror = URLComponents()
+        mirror.scheme = "https"
+        mirror.host = "raw.githubusercontent.com"
+        mirror.path = "/libretro-thumbnails/\(parts[0].replacingOccurrences(of: " ", with: "_"))/master/\(parts[1])/\(parts[2])"
+        return mirror.url
     }
 }
 

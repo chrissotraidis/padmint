@@ -1,7 +1,7 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **8 November 2026** for PadMint **0.6.0**,
+continuing work. It was updated on **9 November 2026** for PadMint **0.6.1**,
 using the live catalog audit (41 entries, 0 problems) and the open pull requests
 in PadMint and each game's repository. Any PR that finishes an item below
 updates this page too.
@@ -238,7 +238,8 @@ only.
   SunPad from the link. PadMint 0.6.0 ships the library app that uses it, built from
   [ios/](../ios/README.md), as `PadMint-ios-unsigned.ipa` in each release (experimental;
   the player sideloads it, using one of a free Apple ID's three slots).
-  Earlier builds ran on an iPad Pro; the 0.6.0 build has passed simulator UI tests only.
+  The 0.6.0 app was installed on an iPad Pro and opened; launching a game from it on a
+  device is still unchecked.
   Still open: the eight ready-made apps need the link in their own repositories, games
   installed earlier show up only after a rebuild, and iOS 27 lets an app check at most
   25 links, so six games say *Tap Play to check*.

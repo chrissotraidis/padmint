@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Check that every box-art link in covers.json loads as an image, and print its shape.
+libretro links are checked on GitHub too: the app falls back to that copy (Covers.swift).
 
 Usage: scripts/check-covers.py   (exits 1 when a link fails)
 """
 import json
 import struct
 import sys
+import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -29,14 +31,34 @@ def size(data):
     raise ValueError("not a PNG or JPEG")
 
 
+def mirror(url):
+    """The GitHub copy of a libretro thumbnail, as CoverStore.libretroMirror builds it."""
+    parts = urllib.parse.urlsplit(url)
+    if parts.netloc != "thumbnails.libretro.com":
+        return None
+    system, folder, name = parts.path.strip("/").split("/")
+    system = urllib.parse.quote(urllib.parse.unquote(system).replace(" ", "_"))
+    return f"https://raw.githubusercontent.com/libretro-thumbnails/{system}/master/{folder}/{name}"
+
+
+def load(url):
+    request = urllib.request.Request(url, headers={"User-Agent": "PadMintLibrary"})
+    return size(urllib.request.urlopen(request, timeout=30).read())
+
+
 def check(item):
     game, entry = item
-    try:
-        request = urllib.request.Request(entry["box_art"], headers={"User-Agent": "PadMintLibrary"})
-        width, height = size(urllib.request.urlopen(request, timeout=30).read())
-        return f"{game:14} {width}x{height} {width / height:.2f}", True
-    except Exception as error:  # noqa: BLE001 - report every failure
-        return f"{game:14} FAILED {error}", False
+    lines, ok = [], True
+    for label, url in (("", entry["box_art"]), (" (GitHub copy)", mirror(entry["box_art"]))):
+        if url is None:
+            continue
+        try:
+            width, height = load(url)
+            lines.append(f"{game + label:28} {width}x{height} {width / height:.2f}")
+        except Exception as error:  # noqa: BLE001 - report every failure
+            lines.append(f"{game + label:28} FAILED {error}")
+            ok = False
+    return "\n".join(lines), ok
 
 
 def main():
