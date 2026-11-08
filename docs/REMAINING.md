@@ -1,7 +1,7 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **7 November 2026** for PadMint **0.5.33**,
+continuing work. It was updated on **8 November 2026** for PadMint **0.5.34**,
 using the live catalog audit (41 entries, 0 problems) and the open pull requests
 in PadMint and each game's repository. Any PR that finishes an item below
 updates this page too.
@@ -26,12 +26,17 @@ Portuguese.
 These counts cover the 39 entries players can use: 31 games PadMint builds and 8
 ready-made apps. EctoPad is paused and not counted.
 
-| Measure | Mac (Apple Silicon) | Windows PC | Linux |
-|---|---|---|---|
-| The player can end up with an iPhone/iPad app by any route, including GitHub's Mac | 38/39 (97%) | 32/39 (82%) | 26/39 (67%), but installing needs a Windows PC or Mac |
-| The player's own computer builds it (ready-made apps count) | 38/39 (97%) | 15/39 (38%) | 9/39 (23%) |
-| Built games only, on the player's own computer | 30/31 (97%) | 7/31 (23%) | 1/31 (3%) |
-| A copy built there has been installed and opened or played on a device | Every game's latest build as of 18–21 October opened on an iPad with iPadOS 27; NightPad, added in 0.5.30, has been installed on an iPad, with broad gameplay checks still open | 0 of 7 | 0 of 1 |
+| Measure | Mac (Apple Silicon) | Mac (Intel) | Windows PC | Linux |
+|---|---|---|---|---|
+| The player can end up with an iPhone/iPad app by any route, including GitHub's Mac | 38/39 (97%) | 26/39 (67%) | 32/39 (82%) | 26/39 (67%), but installing needs a Windows PC or Mac |
+| The player's own computer builds it (ready-made apps count) | 38/39 (97%) | 9/39 (23%) | 15/39 (38%) | 9/39 (23%) |
+| Built games only, on the player's own computer | 30/31 (97%) | 1/31 (3%) | 7/31 (23%) | 1/31 (3%) |
+| A copy built there has been installed and opened or played on a device | Every game's latest build as of 18–21 October opened on an iPad with iPadOS 27; NightPad, added in 0.5.30, has been installed on an iPad, with broad gameplay checks still open | 0 of 1 | 0 of 7 | 0 of 1 |
+
+An Intel Mac builds only KartPad itself (its recipe is the only one declaring
+`macos-x86_64`); everything else comes from GitHub's Mac or the ready-made apps,
+which Sideloadly installs from an Intel Mac too. Earlier versions of this page
+counted only Apple Silicon Macs under "Mac".
 
 The Mac's one miss is **AgePad**: 6 of its 8 pinned Steam files no longer match
 an installed Steam, so v0.1.0 stops after Steam updates. HaloPad's `actool`
@@ -42,6 +47,8 @@ in [HaloPad 0.3.14](https://github.com/chrissotraidis/projectreach/releases/tag/
 The Windows counts break down as follows:
 
 - 7 games build locally, all experimental and all built only on Windows 11 ARM64.
+  Their recipes also declare Windows x64, but no recorded build has run on a
+  native x64 PC (SunPad's still-draft route had one emulated x64 run).
 - 17 build on GitHub's Mac.
 - All 8 ready-made apps install with Sideloadly.
 - 7 games still need an Apple Silicon Mac: SunPad, SnapPad, AnnePad, BlueWake's
@@ -94,7 +101,7 @@ A game counts as done when its published recipe declares Windows hosts,
 
 | Game | What blocks it | Next step |
 |---|---|---|
-| BlueWake | Windows proof merged ([bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100), 2 h 19 min from the original disc), but the published 0.10.0 recipe lists only Mac | Release a recipe with Windows hosts, then a device check. PadMint's old drafts #135 and #136 were closed on 5 November; #136's module string-table alignment fix landed on its own in [#234](https://github.com/chrissotraidis/padmint/pull/234) |
+| BlueWake | Windows proof merged ([bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100), 2 h 19 min from the original disc), but the published 0.10.0 recipe lists only Mac. BlueWake's `main` recipe declares Windows ARM64 and x64 for iPhone/iPad, and a 0.11.0 GitHub release is drafted (8 November) | Publish 0.11.0 (with `scripts/player-check.sh` before and after), then a device check of a Windows-built copy |
 | SunPad | Two draft PRs | Merge [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57), then [#78](https://github.com/chrissotraidis/sunpad/pull/78), and publish |
 | SnapPad | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12) uses a private tool bundle | PadMint publishes its Windows IDO, binutils, Rabbitizer and asm-processor builds (**needs Chris's approval**). SnapPad's release pause still applies |
 | AnnePad | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20) built the ROM-to-module step on Windows in 25 min | The same tool publication, then the shell, recipe and device check |
@@ -196,7 +203,7 @@ only.
 
 ### 8. Small items and drafts to reconcile
 
-- **Launch links and the PadMint library app.** Since [#242](https://github.com/chrissotraidis/padmint/pull/242),
+- **Launch links and the PadMint library app.** Since 0.5.34 ([#242](https://github.com/chrissotraidis/padmint/pull/242)),
   every iPhone/iPad app PadMint builds answers to `padmint-<game>://`. On 7 November a
   SunPad 0.2.3 build with the link was re-signed and installed on an iPad Pro; iOS opened
   SunPad from the link. The library app that uses it lives in the private

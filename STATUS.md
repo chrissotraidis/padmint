@@ -1,10 +1,12 @@
 # PadMint status
 
-What each recent PadMint release changed. Updated **7 November 2026**.
+What each recent PadMint release changed. Updated **8 November 2026**.
 
 **Next work:** [What PadMint still needs](docs/REMAINING.md) is the current
 queue. Older releases, from 0.5.22 back, and the October build evidence are in
 [STATUS-HISTORY.md](STATUS-HISTORY.md).
+
+**v0.5.34:** every iPhone/iPad app PadMint builds now answers to a link named after its game, such as `padmint-sunpad://`, so another app can tell it is installed and open it ([#242](https://github.com/chrissotraidis/padmint/pull/242)). PadMint adds the link to the app's `Info.plist` after checking the finished IPA and before recording its checksum; nothing else in the app changes, and builds on GitHub's Mac get it too. A SunPad build with the link was re-signed and installed on an iPad Pro, and iOS opened SunPad from the link. [What PadMint still needs](docs/REMAINING.md) now counts Intel Macs separately (they build only KartPad themselves) and notes that no Windows route has run on a native x64 PC yet.
 
 **v0.5.33:** a game build no longer stops for good with *Backend has local changes* when PadMint's own download of the game's source has changed. PadMint names the changed files, keeps the old copy aside and builds from a fresh download. A SunPad 0.2.3 player hit this on every run. `build --repo` still refuses a changed checkout, and now lists the changed files ([#239](https://github.com/chrissotraidis/padmint/pull/239)).
 
