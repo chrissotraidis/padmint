@@ -7,6 +7,24 @@
   "player_targets": [
     "ios"
   ],
+  "ios_hosts": [
+    "macos-arm64",
+    "windows-arm64",
+    "windows-x86_64"
+  ],
+  "host_notes": {
+    "windows": {
+      "text": "Experimental on Windows, since BlueWake 0.11.0. It needs Visual Studio Build Tools with C++ Clang. A build has finished on Windows 11 ARM64 (about 2 h 20 min), and a player built it on a Windows 11 x64 PC and played it on an iPhone. A Windows build skips the Mac's training step, so it may run a little slower than a copy made on a Mac.",
+      "translations": {
+        "es": {
+          "text": "Experimental en Windows desde BlueWake 0.11.0. Necesita Visual Studio Build Tools con C++ Clang. Se ha completado una compilaci\u00f3n en Windows 11 ARM64 (unas 2 h 20 min), y un jugador lo compil\u00f3 en un PC con Windows 11 x64 y lo jug\u00f3 en un iPhone. La compilaci\u00f3n en Windows omite el paso de entrenamiento del Mac, as\u00ed que puede ir un poco m\u00e1s lenta que una copia hecha en un Mac."
+        },
+        "pt": {
+          "text": "Experimental no Windows desde o BlueWake 0.11.0. Precisa do Visual Studio Build Tools com C++ Clang. Uma compila\u00e7\u00e3o foi conclu\u00edda no Windows 11 ARM64 (cerca de 2 h 20 min), e um jogador compilou num PC com Windows 11 x64 e jogou num iPhone. A compila\u00e7\u00e3o no Windows pula a etapa de treino do Mac, ent\u00e3o pode rodar um pouco mais devagar que uma c\u00f3pia feita num Mac."
+        }
+      }
+    }
+  },
   "unoffered_targets": {
     "linux": "PadMint doesn't build BlueWake for Linux; BlueWake's own release has a ready-to-play Linux AppImage, and docs/LINUX.md builds it from source."
   },
@@ -18,20 +36,20 @@
   "off_mac": {
     "url": "https://github.com/chrissotraidis/bluewake#install",
     "tag": "Windows and Linux downloads",
-    "text": "BlueWake has ready-to-play downloads for Windows and Linux in its latest release; PadMint isn't needed for those. On Windows, unzip it, open BlueWake.exe and choose your own disc. On Linux (x86-64), make the AppImage executable, open it and choose your own disc. Both need a CPU with AVX2. For iPhone and iPad, PadMint builds BlueWake on a Mac with Apple Silicon (M1 or newer) and Xcode. GitHub Cloud Build can't make it, because the build turns code from your own disc into the app.",
+    "text": "BlueWake has ready-to-play downloads for Windows and Linux in its latest release; PadMint isn't needed for those. On Windows, unzip it, open BlueWake.exe and choose your own disc. On Linux (x86-64), make the AppImage executable, open it and choose your own disc. Both need a CPU with AVX2. For iPhone and iPad, PadMint builds BlueWake on a Mac with Apple Silicon (M1 or newer) and Xcode, or experimentally on a Windows PC. GitHub Cloud Build can't make it, because the build turns code from your own disc into the app.",
     "translations": {
       "es": {
         "tag": "Descargas para Windows y Linux",
-        "text": "BlueWake tiene descargas listas para jugar en Windows y Linux en su \u00faltima versi\u00f3n; para eso no necesitas PadMint. En Windows, descompr\u00edmelo, abre BlueWake.exe y elige tu propio disco. En Linux (x86-64), haz ejecutable el AppImage, \u00e1brelo y elige tu propio disco. Ambos necesitan un procesador con AVX2. Para iPhone y iPad, PadMint crea BlueWake en un Mac con Apple Silicon (M1 o posterior) y Xcode. GitHub Cloud Build no puede crearlo, porque la compilaci\u00f3n convierte c\u00f3digo de tu propio disco en la app."
+        "text": "BlueWake tiene descargas listas para jugar en Windows y Linux en su \u00faltima versi\u00f3n; para eso no necesitas PadMint. En Windows, descompr\u00edmelo, abre BlueWake.exe y elige tu propio disco. En Linux (x86-64), haz ejecutable el AppImage, \u00e1brelo y elige tu propio disco. Ambos necesitan un procesador con AVX2. Para iPhone y iPad, PadMint crea BlueWake en un Mac con Apple Silicon (M1 o posterior) y Xcode, o de forma experimental en un PC con Windows. GitHub Cloud Build no puede crearlo, porque la compilaci\u00f3n convierte c\u00f3digo de tu propio disco en la app."
       },
       "pt": {
         "tag": "Downloads para Windows e Linux",
-        "text": "O BlueWake tem downloads prontos para jogar no Windows e no Linux na vers\u00e3o mais recente; para isso voc\u00ea n\u00e3o precisa do PadMint. No Windows, descompacte, abra o BlueWake.exe e escolha o seu pr\u00f3prio disco. No Linux (x86-64), torne o AppImage execut\u00e1vel, abra e escolha o seu pr\u00f3prio disco. Ambos precisam de um processador com AVX2. Para iPhone e iPad, o PadMint cria o BlueWake num Mac com Apple Silicon (M1 ou mais novo) e Xcode. O GitHub Cloud Build n\u00e3o consegue cri\u00e1-lo, porque a compila\u00e7\u00e3o transforma c\u00f3digo do seu pr\u00f3prio disco no app."
+        "text": "O BlueWake tem downloads prontos para jogar no Windows e no Linux na vers\u00e3o mais recente; para isso voc\u00ea n\u00e3o precisa do PadMint. No Windows, descompacte, abra o BlueWake.exe e escolha o seu pr\u00f3prio disco. No Linux (x86-64), torne o AppImage execut\u00e1vel, abra e escolha o seu pr\u00f3prio disco. Ambos precisam de um processador com AVX2. Para iPhone e iPad, o PadMint cria o BlueWake num Mac com Apple Silicon (M1 ou mais novo) e Xcode, ou de forma experimental num PC com Windows. O GitHub Cloud Build n\u00e3o consegue cri\u00e1-lo, porque a compila\u00e7\u00e3o transforma c\u00f3digo do seu pr\u00f3prio disco no app."
       }
     }
   },
   "reviewed_revision": null,
-  "notes": "BlueWake publishes padmint.json with each release, and PadMint builds from the latest release's recipe; the manifest here is the fallback. No revision is marked reviewed, so the checkout preflight only checks for a clean checkout. GitHub Cloud Build is unavailable because the build reads the disc.",
+  "notes": "BlueWake publishes padmint.json with each release, and PadMint builds from the latest release's recipe; the manifest here is the fallback (Mac only). Since 0.11.0 that recipe also builds the iPhone app on Windows ARM64 and x64, so ios_hosts lists them. No revision is marked reviewed, so the checkout preflight only checks for a clean checkout. GitHub Cloud Build is unavailable because the build reads the disc.",
   "manifest": {
     "schema_version": 1,
     "id": "bluewake",

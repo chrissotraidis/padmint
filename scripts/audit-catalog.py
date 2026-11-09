@@ -49,6 +49,10 @@ def route_problems(entry, recipe):
         for host in ios_build_hosts(entry):
             if ios_hosts.get(host) not in cli.RUNNABLE_STATES:
                 problems.append(f"catalog offers iPhone on {host}, but the published recipe does not")
+        for host in OFF_MAC_HOSTS:
+            if ios_hosts.get(host) in cli.RUNNABLE_STATES and host not in ios_build_hosts(entry):
+                problems.append(f"the published recipe builds iPhone on {host}, but the catalog hides it "
+                                "(add it to ios_hosts)")
     if entry.get("github_build"):
         try:
             validate_github_build(entry, recipe)

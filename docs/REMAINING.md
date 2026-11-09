@@ -50,13 +50,14 @@ in [HaloPad 0.3.14](https://github.com/chrissotraidis/projectreach/releases/tag/
 
 The Windows counts break down as follows:
 
-- 7 games build locally, all experimental and all built only on Windows 11 ARM64.
-  Their recipes also declare Windows x64, but no recorded build has run on a
-  native x64 PC (SunPad's still-draft route had one emulated x64 run).
+- 8 games build locally, all experimental and all built by a maintainer only on
+  Windows 11 ARM64. Their recipes also declare Windows x64, but no maintainer's
+  build has run on a native x64 PC (SunPad's still-draft route had one emulated
+  x64 run; a BlueWake contributor built and played an x64 copy).
 - 17 build on GitHub's Mac.
 - All 8 ready-made apps install with Sideloadly.
-- 7 games still need an Apple Silicon Mac: SunPad, SnapPad, AnnePad, BlueWake's
-  iPhone app, Ottsel, AgePad and NightPad. HaloPad's Custom Edition also needs a Mac.
+- 6 games still need an Apple Silicon Mac: SunPad, SnapPad, AnnePad, Ottsel,
+  AgePad and NightPad. HaloPad's Custom Edition also needs a Mac.
 
 Linux builds KartPad locally (x64 and ARM64 in its recipe) and can start the
 same 17 cloud builds.
@@ -129,7 +130,7 @@ A game counts as done when its published recipe declares Windows hosts,
 
 | Game | What blocks it | Next step |
 |---|---|---|
-| BlueWake | Windows proof merged ([bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100), 2 h 19 min from the original disc), but the published 0.10.0 recipe lists only Mac. BlueWake's `main` recipe declares Windows ARM64 and x64 for iPhone/iPad, and a 0.11.0 GitHub release is drafted (8 November) | Publish 0.11.0 (with `scripts/player-check.sh` before and after), then a device check of a Windows-built copy |
+| BlueWake | Done except the device check: 0.11.0 (8 November) publishes a recipe with Windows ARM64 and x64 for iPhone/iPad, and the catalog lists them (\`ios_hosts\`) from PadMint 0.6.2. Between the release and that change, Windows showed BlueWake dimmed | A maintainer installs and plays a Windows-built copy on an iPhone or iPad |
 | SunPad | Two draft PRs | Merge [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57), then [#78](https://github.com/chrissotraidis/sunpad/pull/78), and publish |
 | SnapPad | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12) uses a private tool bundle | PadMint publishes its Windows IDO, binutils, Rabbitizer and asm-processor builds (**needs Chris's approval**). SnapPad's release pause still applies |
 | AnnePad | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20) built the ROM-to-module step on Windows in 25 min | The same tool publication, then the shell, recipe and device check |
