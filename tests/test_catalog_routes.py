@@ -126,8 +126,11 @@ class CatalogRouteTests(unittest.TestCase):
         self.assertEqual(audit_catalog.route_problems(data, released), [])
         released["targets"]["ios"]["hosts"] = {"windows-x86_64": "experimental"}
         problems = audit_catalog.route_problems(data, released)
-        self.assertEqual(len(problems), 1)
+        self.assertEqual(len(problems), 2)
         self.assertIn("windows-arm64", problems[0])
+        # The recipe builds on x64, which the catalog hides.
+        self.assertIn("windows-x86_64", problems[1])
+        self.assertIn("hides", problems[1])
 
     def test_audit_rejects_a_release_recipe_for_a_different_game(self):
         findings = audit_catalog.route_problems(dict(entry(), github_build=False), dict(recipe(), id="otherpad"))
