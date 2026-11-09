@@ -15,10 +15,10 @@ final class ShowcaseUITests: XCTestCase {
     }
 
     /// A launch argument outranks what the app saves, so pass console: nil when the test taps the filter bar.
-    private func launch(_ layout: String, console: String? = "", sort: String = "title", _ extra: [String] = []) -> XCUIApplication {
+    private func launch(_ layout: String, console: String? = "", sort: String = "title", installed: Bool = false, _ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments += ["-boxArt", "download", "-officialTitles", "1", "-layout", layout,
-                                "-sort", sort, "-onlyInstalled", "0", "-appearance", "dark",
+                                "-sort", sort, "-onlyInstalled", installed ? "1" : "0", "-appearance", "dark",
                                 "-carouselStyle", "boxes", "-coverSize", "medium",
                                 "-demoInstalled", Self.installed, "-demoLastPlayed", "vaultpad"]
             + (console.map { ["-console", $0] } ?? []) + extra
@@ -89,5 +89,13 @@ final class ShowcaseUITests: XCTestCase {
         drag(app, CGVector(dx: 0.8, dy: 0.62), CGVector(dx: 0.3, dy: 0.62), velocity: 700); pause(1.5)
         drag(app, CGVector(dx: 0.5, dy: 0.8), CGVector(dx: 0.5, dy: 0.4), velocity: 400)
         pause(2.5)
+    }
+
+    /// The installed games in console order: Rare's N64 games, then PlayStation, Xbox and PC.
+    func testFInstalled() {
+        let app = launch("carousel", sort: "console", installed: true)
+        XCTAssertTrue(app.staticTexts["carousel-title"].waitForExistence(timeout: 10))
+        pause(2.5)
+        for _ in 0..<8 { drag(app, CGVector(dx: 0.72, dy: 0.45), CGVector(dx: 0.42, dy: 0.45), velocity: 900); pause(1.4) }
     }
 }
