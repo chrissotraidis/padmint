@@ -165,8 +165,8 @@ alongside the game's other targets. Intel Macs show why the Mac target is unavai
 | [starshippad v0.2.1](https://github.com/chrissotraidis/starshippad/releases/tag/v0.2.1) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 | [sunpad v0.2.3](https://github.com/chrissotraidis/sunpad/releases/tag/v0.2.3) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [sunpad v0.2.3](https://github.com/chrissotraidis/sunpad/releases/tag/v0.2.3) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
-| [tribespad v0.2.0](https://github.com/chrissotraidis/tribespad/releases/tag/v0.2.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
-| [tribespad v0.2.0](https://github.com/chrissotraidis/tribespad/releases/tag/v0.2.0) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
+| [tribespad v0.3.0](https://github.com/chrissotraidis/tribespad/releases/tag/v0.3.0) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
+| [tribespad v0.3.0](https://github.com/chrissotraidis/tribespad/releases/tag/v0.3.0) | macOS | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | — |
 | [utp v0.1.2](https://github.com/chrissotraidis/utp/releases/tag/v0.1.2) | iPhone/iPad | Experimental | Unavailable | Unavailable / Unavailable | Unavailable / Unavailable | Yes, iPhone/iPad |
 
 **Android as the build host:** only KartPad's phone route is offered, through

@@ -260,13 +260,6 @@ only.
   a 144×144 PNG made from HarkinianPad's `assets/AppIcon.appiconset/AppIcon.png`,
   shipped in the first PadMint release after HarkinianPad v0.2.3 publishes the
   new icon. The latest release is still v0.2.2.
-- [#232](https://github.com/chrissotraidis/padmint/pull/232): TribesPad's
-  Vengeance in the default build (draft). Its game-side change,
-  [tribespad#36](https://github.com/chrissotraidis/tribespad/pull/36), merged on
-  2 November, but TribesPad's latest release is still v0.2.0, and the iPad
-  performance follow-up [tribespad#37](https://github.com/chrissotraidis/tribespad/pull/37)
-  still needs its manual iPad checks. Merge #232 after a TribesPad release with
-  Vengeance passes `scripts/player-check.sh`.
 - [#172](https://github.com/chrissotraidis/padmint/pull/172): iPhone SDK headers
   for game modules (draft). It belongs to step 3 and waits for the first game
   that needs it.
