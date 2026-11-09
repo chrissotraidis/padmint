@@ -194,7 +194,9 @@ final class LibraryModel: ObservableObject {
         let success = await UIApplication.shared.open(url)
         if success { lastPlayed[game.id] = Date() }
         if !game.checked {
-            if success { opened.insert(game.id) } else { opened.remove(game.id) }
+            // Every game inside the same app (TribesPad's three) shares its answer.
+            let siblings = games.filter { $0.link == game.link }.map(\.id)
+            if success { opened.formUnion(siblings) } else { opened.subtract(siblings) }
             checkInstalled()
         }
         return success

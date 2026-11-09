@@ -130,7 +130,7 @@ column works from any computer with a browser.
 | SquirrelPad | Conker's Bad Fur Day (N64) | ✓ | Exp. | — |
 | StarshipPad | Star Fox 64 (N64) | ✓ | — | ✓ |
 | SunPad | Super Mario Sunshine (GameCube) | ✓ + Mac app | — | — |
-| TribesPad | Tribes 2 (PC) and Starsiege: Tribes | ✓ + Mac app | — | ✓ |
+| TribesPad | Tribes 2 (PC), Starsiege: Tribes and Tribes: Vengeance | ✓ + Mac app | — | ✓ |
 | UTP | Unreal Tournament (PC) | ✓ | — | ✓ |
 
 1. AgePad's current release can stop after Steam updates its files

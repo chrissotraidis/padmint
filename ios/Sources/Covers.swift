@@ -114,9 +114,10 @@ final class CoverStore: ObservableObject {
     func source(for game: Game) -> String? {
         guard !hasChosen(game), boxArt == .download, load("boxart", game) != nil, let host = game.boxArt?.host else { return nil }
         let front = host.contains("libretro") ? "libretro-thumbnails"
-            : host.contains("steam") ? "Steam" : host.contains("gog") ? "GOG" : host.contains("wiki") ? "Wikipedia" : host
+            : host.contains("steam") ? "Steam" : host.contains("gog") ? "GOG" : host.contains("wiki") ? "Wikipedia"
+            : host.contains("launchbox") ? "LaunchBox" : host
         let faces = faces(for: game)
-        return faces.back != nil || faces.spine != nil ? "\(front), back and spine from LaunchBox" : front
+        return front != "LaunchBox" && (faces.back != nil || faces.spine != nil) ? "\(front), back and spine from LaunchBox" : front
     }
 
     func choose(_ data: Data, for game: Game) {
@@ -158,7 +159,8 @@ final class CoverStore: ObservableObject {
                 group.addTask {
                     // libretro's server is sometimes too slow to answer; its GitHub copy is the fallback.
                     for source in [url, Self.libretroMirror(url)].compactMap({ $0 }) {
-                        var request = URLRequest(url: source, timeoutInterval: 20)
+                        // libretro gets 20 s before its GitHub copy is tried; LaunchBox's big scans get longer.
+                        var request = URLRequest(url: source, timeoutInterval: source.host == "thumbnails.libretro.com" ? 20 : 60)
                         request.setValue("PadMintLibrary", forHTTPHeaderField: "User-Agent")
                         if let (data, response) = try? await URLSession.shared.data(for: request),
                            (response as? HTTPURLResponse)?.statusCode == 200, UIImage(data: data) != nil {
