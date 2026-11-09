@@ -22,7 +22,8 @@ It uses PadMint's icon and lists only games from PadMint's catalog.
 - **Official covers and titles, if you want them.** On first launch the app asks.
   If you agree, it downloads box art for every game and shows each game's official
   title (*The Legend of Zelda: The Wind Waker*) with the PadMint name (*BlueWake*)
-  underneath. Until then it shows PadMint's own card art and names.
+  underneath, and the 3D boxes get their real backs (36 games) and spines (29).
+  Until then it shows PadMint's own card art and names.
 - **Your own covers.** Long-press any game, or use its page, to pick a picture from
   Photos.
 - **Settings** for the layout, sort order, covers and titles, and what the app
@@ -66,10 +67,16 @@ Opening a link needs no declaration, so every game can be launched from here.
 Ready-made apps (the ones you download instead of building) don't answer to a
 link yet, so the library lists them without knowing whether they're installed.
 
+One app can hold several games. TribesPad is listed as Starsiege: Tribes, Tribes 2
+and Tribes: Vengeance (the `also` entries in `covers.json`): all three share
+TribesPad's link, so they show as installed together, and Play opens TribesPad's
+game picker.
+
 ## Covers and titles
 
 This repository holds no game art. `covers.json` gives each game's official
-title, console and the address of its box art:
+title, console and the addresses of its box art, back (`box_back`) and spine
+(`box_spine`):
 
 | Source | Games |
 |---|---|
@@ -77,11 +84,14 @@ title, console and the address of its box art:
 | Steam | Age of Empires II, Daggerfall, RollerCoaster Tycoon 2, Unreal Tournament, Fallout 2 |
 | GOG | Caesar III, Pharaoh + Cleopatra |
 | Wikipedia | Diablo, Tribes 2, Kid Pix (its title screen: no box scan is available) |
+| [LaunchBox Games Database](https://gamesdb.launchbox-app.com) | Fronts of Starsiege: Tribes and Tribes: Vengeance; every back and spine, matched by title and console in its `Metadata.zip`, North American scans first. Spines printed in another language are left out |
 
 The app downloads them only after the player agrees and keeps them on the device.
 A game's page names where its box art came from. A picture the player chooses
-always comes first. `scripts/check-covers.py` checks that every address still
-loads and prints each cover's shape.
+always comes first, and then the box keeps its plain back and drawn spine.
+Games with no scan (Kid Pix, Pharaoh + Cleopatra, Dinosaur Planet's back) keep
+them too. `scripts/check-covers.py` checks that every address, including backs,
+spines and the GitHub copy of each libretro cover, still loads.
 
 ## Build
 

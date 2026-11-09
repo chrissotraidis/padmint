@@ -49,7 +49,8 @@ def load(url):
 def check(item):
     game, entry = item
     lines, ok = [], True
-    for label, url in (("", entry["box_art"]), (" (GitHub copy)", mirror(entry["box_art"]))):
+    for label, url in (("", entry["box_art"]), (" (GitHub copy)", mirror(entry["box_art"])),
+                       (" back", entry.get("box_back")), (" spine", entry.get("box_spine"))):
         if url is None:
             continue
         try:
@@ -63,6 +64,8 @@ def check(item):
 
 def main():
     games = json.loads((ROOT / "covers.json").read_text(encoding="utf-8"))["games"]
+    for entry in list(games.values()):
+        games.update({extra["id"]: extra for extra in entry.get("also", [])})
     with ThreadPoolExecutor(8) as pool:
         results = list(pool.map(check, sorted(games.items())))
     for line, _ok in results:
