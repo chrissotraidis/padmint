@@ -11,6 +11,12 @@
 # an empty PadMint folder, and builds a fresh copy of the source. Run it with CHECKOUT before
 # tagging and without it after publishing. The folder it prints holds your personal build
 # and translated game code: keep it private and delete it when you are done.
+#
+# It also compares PadMint's catalog entry for the game with the game's recipe, because the
+# menu offers a game only where the catalog says (BlueWake 0.11.0 built on Windows, and the
+# catalog still said Mac only, so Windows players saw it dimmed). After publishing, a catalog
+# that doesn't match the release fails this check: fix catalog/GAME.json and release PadMint.
+# Before tagging it only lists what the catalog will need, since it can't change until then.
 set -euo pipefail
 if [ $# -lt 3 ] || [ $# -gt 5 ]; then
   sed -n 4,5p "$0" | sed 's/^# *//'
@@ -27,6 +33,14 @@ echo "Python: $("$player_python" --version 2>&1) at $player_python, as PadMint.c
 echo "Folder: $check_folder"
 cd "$padmint_root"
 if [ -n "$checkout" ]; then
+  if [ -f "$checkout/padmint.json" ]; then
+    hidden=$("$player_python" scripts/audit-catalog.py --game "$game" --recipe "$checkout/padmint.json")
+    if [ -n "$hidden" ]; then
+      echo "$hidden"
+      echo "Before announcing this release: change catalog/$game.json to match, and release PadMint with it."
+      echo "The check after publishing fails until then."
+    fi
+  fi
   revision=$(git -C "$checkout" rev-parse HEAD)
   git clone --quiet --no-hardlinks "$checkout" "$check_folder/source"
   git -C "$check_folder/source" checkout --quiet --detach "$revision"
@@ -44,6 +58,13 @@ if [ -n "$checkout" ]; then
   PADMINT_HOME="$check_folder/padmint" "$player_python" -m padmint build "$game" \
     "${build_args[@]}"
 else
+  # The catalog check takes seconds and the build hours, so it goes first. It keeps its own
+  # folder, so the build still starts from an empty PadMint folder like a player's.
+  if ! PADMINT_HOME="$check_folder/catalog-check" "$player_python" scripts/audit-catalog.py --game "$game"; then
+    echo "PadMint's catalog doesn't match $game's published release (above). Players would not be"
+    echo "offered what the release builds. Fix catalog/$game.json, release PadMint, then run this again."
+    exit 1
+  fi
   make_args=(--out "$check_folder/out")
   if [ "$game_file" != - ]; then
     make_args+=(--disc "$game_file")

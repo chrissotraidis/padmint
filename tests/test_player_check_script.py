@@ -30,6 +30,14 @@ if sys.argv[1] == 'tools':
     home.mkdir(parents=True)
     sys.exit(int(os.environ.get('FAIL_TOOLS', '0')))
 ''')
+        # The catalog audit: logged apart from PadMint's calls, failing or naming hidden hosts on request.
+        (self.root / "scripts/audit-catalog.py").write_text('''import json, os, sys
+with open(os.environ['AUDIT_LOG'], 'a') as f:
+    f.write(json.dumps(sys.argv[1:]) + '\\n')
+if '--recipe' in sys.argv:
+    print(os.environ.get('HIDDEN', ''), end='')
+sys.exit(int(os.environ.get('FAIL_AUDIT', '0')))
+''')
         self.checkout = self.root / "game source"
         self.checkout.mkdir()
         subprocess.run(["git", "init", "-q", str(self.checkout)], check=True)
@@ -37,16 +45,18 @@ if sys.argv[1] == 'tools':
                         "-c", "user.email=fixture@example.invalid", "commit", "-qm", "fixture",
                         "--allow-empty"], check=True)
         self.log = self.root / "calls.jsonl"
+        self.audit_log = self.root / "audit.jsonl"
 
-    def run_check(self, checkout=True, app=None, fail=0, game_file="disc with spaces.iso"):
+    def run_check(self, checkout=True, app=None, fail=0, game_file="disc with spaces.iso", **extra):
         args = ["/bin/bash", str(self.root / "scripts/player-check.sh"), "fixture", "ios", game_file]
         if checkout:
             args.append(str(self.checkout))
         if app:
             args.append(app)
-        env = dict(os.environ, TEST_LOG=str(self.log), TMPDIR=str(self.root), FAIL_TOOLS=str(fail))
+        env = dict(os.environ, TEST_LOG=str(self.log), TMPDIR=str(self.root), FAIL_TOOLS=str(fail),
+                   AUDIT_LOG=str(self.audit_log), **extra)
         result = subprocess.run(args, cwd=self.root, env=env, capture_output=True, text=True)
-        calls = [json.loads(row) for row in self.log.read_text().splitlines()]
+        calls = [json.loads(row) for row in self.log.read_text().splitlines()] if self.log.exists() else []
         return result, calls
 
     def test_checkout_prepares_tools_then_passes_exact_app_path(self):
@@ -96,6 +106,23 @@ if sys.argv[1] == 'tools':
         self.assertEqual(len(calls), 1)
         self.assertEqual(calls[0]['args'][:3], ['make', 'fixture', 'ios'])
         self.assertTrue(calls[0]['fresh'])
+        self.assertEqual(json.loads(self.audit_log.read_text()), ['--game', 'fixture'])
+
+    def test_published_release_whose_catalog_differs_fails_before_building(self):
+        result, calls = self.run_check(checkout=False, FAIL_AUDIT="1")
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(calls, [])
+        self.assertIn("catalog doesn't match", result.stdout)
+        self.assertNotIn('Player check passed', result.stdout)
+
+    def test_checkout_names_the_hosts_the_catalog_will_need_and_still_builds(self):
+        (self.checkout / "padmint.json").write_text("{}")
+        result, calls = self.run_check(HIDDEN="fixture: the published recipe builds iPhone on windows-x86_64, "
+                                              "but the catalog hides it")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("windows-x86_64", result.stdout)
+        self.assertIn("release PadMint with it", result.stdout)
+        self.assertEqual([c['args'][0] for c in calls], ['tools', 'build'])
 
 
 if __name__ == '__main__':

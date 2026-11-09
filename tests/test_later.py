@@ -78,8 +78,10 @@ class LaterTests(unittest.TestCase):
         self.assertIn("Builds here make iPhone/iPad apps or Android game data", data["text"]["here_other_hosts"])
         self.assertIn("nothing compiles on this computer", data["text"]["github_note"])
         self.assertNotIn("Windows", data["text"]["needs_mac_note"])
-        self.assertEqual(waiting["bluewake"]["tag"], "Windows and Linux downloads")
-        self.assertIn("BlueWake.exe", waiting["bluewake"]["text"])
+        # BlueWake's recipe builds the iPhone app on Windows since 0.11.0, so Windows offers it.
+        bluewake = next(game for game in data["games"] if game["id"] == "bluewake")
+        self.assertIn("Experimental on Windows", bluewake["note"])
+        self.assertNotIn("bluewake", waiting)
 
     def test_halopad_external_workflow_is_discoverable_on_mac_and_off_mac(self):
         from padmint import cli
@@ -97,8 +99,13 @@ class LaterTests(unittest.TestCase):
                 self.assertTrue(halo["github"])
                 self.assertEqual(halo["tag"], "GitHub Cloud Build (Xbox edition)")
                 self.assertEqual(halo["steps"], [])
-            bluewake = next(item for item in data[group] if item["id"] == "bluewake")
+            bluewake_group = "games" if host in ("macos-arm64", "windows-x86_64") else "later"
+            bluewake = next(item for item in data[bluewake_group] if item["id"] == "bluewake")
             self.assertIsNone(bluewake["cloud"])
+            if bluewake_group == "later":
+                self.assertEqual(bluewake["tag"], "Windows and Linux downloads")
+                self.assertIn("BlueWake.exe", bluewake["text"])
+                self.assertIn("experimentally on a Windows PC", bluewake["text"])
 
     def test_darkpad_cloud_route_requires_the_private_guide(self):
         from padmint import cli
