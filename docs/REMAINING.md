@@ -1,7 +1,7 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **9 November 2026** for PadMint **0.6.1**,
+continuing work. It was updated on **9 November 2026** for PadMint **0.6.2**,
 using the live catalog audit (41 entries, 0 problems) and the open pull requests
 in PadMint and each game's repository. Any PR that finishes an item below
 updates this page too.
@@ -130,7 +130,7 @@ A game counts as done when its published recipe declares Windows hosts,
 
 | Game | What blocks it | Next step |
 |---|---|---|
-| BlueWake | Done except the device check: 0.11.0 (8 November) publishes a recipe with Windows ARM64 and x64 for iPhone/iPad, and the catalog lists them (\`ios_hosts\`) from PadMint 0.6.2. Between the release and that change, Windows showed BlueWake dimmed | A maintainer installs and plays a Windows-built copy on an iPhone or iPad |
+| BlueWake | Done except the device check: 0.11.0 (8 November) publishes a recipe with Windows ARM64 and x64 for iPhone/iPad, and the catalog lists them (`ios_hosts`) from PadMint 0.6.2. Between the release and that change, Windows showed BlueWake dimmed | A maintainer installs and plays a Windows-built copy on an iPhone or iPad |
 | SunPad | Two draft PRs | Merge [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57), then [#78](https://github.com/chrissotraidis/sunpad/pull/78), and publish |
 | SnapPad | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12) uses a private tool bundle | PadMint publishes its Windows IDO, binutils, Rabbitizer and asm-processor builds (**needs Chris's approval**). SnapPad's release pause still applies |
 | AnnePad | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20) built the ROM-to-module step on Windows in 25 min | The same tool publication, then the shell, recipe and device check |

@@ -1,10 +1,12 @@
 # PadMint status
 
-What each recent PadMint release changed. Updated **8 November 2026**.
+What each recent PadMint release changed. Updated **9 November 2026**.
 
 **Next work:** [What PadMint still needs](docs/REMAINING.md) is the current
 queue. Older releases, from 0.5.22 back, and the October build evidence are in
 [STATUS-HISTORY.md](STATUS-HISTORY.md).
+
+**v0.6.2:** BlueWake (Wind Waker) can be built for iPhone and iPad on a Windows PC, as BlueWake 0.11.0 allows (experimental; Windows 11 ARM64 and x64, with Visual Studio Build Tools and C++ Clang). PadMint 0.6.1 still listed BlueWake as Mac only, so Windows players saw it dimmed. A game release can no longer leave PadMint behind like that: `scripts/player-check.sh`, which every game release must pass, now fails after publishing when PadMint's catalog hides or offers something the release doesn't build, and lists what the catalog will need before tagging. The daily catalog check looks for the same mismatch and opens an issue when it fails ([#250](https://github.com/chrissotraidis/padmint/pull/250)).
 
 **v0.6.1:** the iPhone/iPad app now gets its box art even when libretro's thumbnail server is slow or down. For a libretro cover, it tries the same picture in libretro's GitHub repositories when that server fails or gives no answer within 20 seconds; on 8 November libretro's server stopped answering for 27 of the 39 covers. `ios/scripts/check-covers.py` now checks the GitHub copy of every libretro cover too. The recorded tours for release videos are in `ios/UITests/ShowcaseUITests.swift` ([#247](https://github.com/chrissotraidis/padmint/pull/247)).
 
