@@ -15,6 +15,9 @@ struct Game: Codable, Identifiable, Hashable {
     let art: URL
     /// Where box art can be downloaded once the player agrees.
     let boxArt: URL?
+    /// The back of the box and its spine, with the box art (LaunchBox Games Database).
+    let boxBack: URL?
+    let boxSpine: URL?
     /// The link a PadMint-built copy answers to (padmint-<game>://); nil for ready-made apps.
     let link: String?
     /// Whether this app can ask iOS if the game is installed (its link is one of the
@@ -24,6 +27,8 @@ struct Game: Codable, Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case id, name, title, platform, game, repo, art, link, checked
         case boxArt = "box_art"
+        case boxBack = "box_back"
+        case boxSpine = "box_spine"
     }
 
     var linkURL: URL? { link.flatMap { URL(string: "\($0)://") } }

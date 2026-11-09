@@ -6,14 +6,14 @@ import SwiftUI
 /// at once. Launch with -boxGallery 40 (right spines) or -boxGallery -40 (left spines).
 struct BoxGallery: UIViewRepresentable {
     let games: [Game]
-    let image: (Game) -> UIImage?
+    let faces: (Game) -> BoxFaces
     let yaw: Double
 
     func makeUIView(context: Context) -> StageView {
         let (scene, camera) = GameBox.stage()
         let columns = 4
         for (index, game) in games.enumerated() {
-            let node = GameBox.make(image: image(game), game: game)
+            let node = GameBox.make(faces: faces(game), game: game)
             node.position = SCNVector3(Float(index % columns) * 1.6, Float(-(index / columns)) * 1.5, 0)
             node.eulerAngles.y = Float(yaw * .pi / 180)
             scene.rootNode.addChildNode(node)

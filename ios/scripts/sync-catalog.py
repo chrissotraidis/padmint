@@ -42,6 +42,8 @@ def games(padmint, covers):
             "art": ART.format(id=entry["id"]),
             # Downloaded by the app only after the player agrees; never stored here.
             "box_art": cover["box_art"],
+            "box_back": cover.get("box_back"),
+            "box_spine": cover.get("box_spine"),
             # Ready-made apps aren't built by PadMint, so they answer to no link yet.
             "link": f"padmint-{entry['id']}" if built else None,
         })

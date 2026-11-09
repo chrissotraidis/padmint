@@ -2,6 +2,16 @@ import SceneKit
 import SwiftUI
 import UIKit
 
+/// The printed faces of a game box. A missing back or spine is drawn by the app.
+struct BoxFaces {
+    var front: UIImage?
+    var back: UIImage? = nil
+    var spine: UIImage? = nil
+
+    /// Changes when any face's picture changes, so a box is redressed only then.
+    var identity: [ObjectIdentifier?] { [front, back, spine].map { $0.map(ObjectIdentifier.init) } }
+}
+
 /// Game cases in 3D: the cover on the front, spines cut from the cover's edges, and a
 /// depth that matches the console (deep N64 and PC big boxes, slim disc cases).
 @MainActor
@@ -21,29 +31,30 @@ enum GameBox {
     }
 
     /// A holder node (placed by the caller) with the box as its child, standing on y = 0.
-    static func make(image: UIImage?, game: Game) -> SCNNode {
+    static func make(faces: BoxFaces, game: Game) -> SCNNode {
         let holder = SCNNode()
         let box = SCNNode()
         box.name = "box"
         holder.addChildNode(box)
-        dress(holder, image: image, game: game)
+        dress(holder, faces: faces, game: game)
         return holder
     }
 
-    static func dress(_ holder: SCNNode, image: UIImage?, game: Game) {
+    static func dress(_ holder: SCNNode, faces: BoxFaces, game: Game) {
         guard let box = holder.childNode(withName: "box", recursively: false) else { return }
+        let image = faces.front
         let platform = game.platform
         let (width, height) = size(for: image)
         let depth = depth(for: platform) * max(height, 0.8)
         let geometry = SCNBox(width: width, height: height, length: depth, chamferRadius: min(depth, width) * 0.08)
         let average = image?.averageColor ?? UIColor(red: 0.13, green: 0.74, blue: 0.48, alpha: 1)
         let accent = image?.vividColor ?? average
-        let spine = Spine.image(game: game, cover: accent, length: height, depth: depth)
+        let spine: UIImage = faces.spine ?? Spine.image(game: game, cover: accent, length: height, depth: depth)
         let lid = Spine.lid(platform: platform, cover: average)
         geometry.materials = [
             material(image ?? average, gloss: true),                         // front
             material(spine),                                                 // right: spine too, so boxes on either side show it
-            material(Spine.back(platform: platform, cover: average)),        // back
+            material(faces.back ?? Spine.back(platform: platform, cover: average), gloss: faces.back != nil),  // back
             material(spine),                                                 // left: the printed spine
             material(lid),                                                   // top
             material(lid),                                                   // bottom
@@ -197,7 +208,7 @@ final class StageView: SCNView {
 struct CoverFlow3D: UIViewRepresentable {
     let games: [Game]
     @Binding var focused: Int
-    let image: (Game) -> UIImage?
+    let faces: (Game) -> BoxFaces
     let open: (Game) -> Void
 
     func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
@@ -230,7 +241,7 @@ struct CoverFlow3D: UIViewRepresentable {
         let camera: SCNNode
         weak var view: StageView?
         private var nodes: [String: SCNNode] = [:]
-        private var dressedWith: [String: ObjectIdentifier] = [:]
+        private var dressedWith: [String: [ObjectIdentifier?]] = [:]
         private var order: [String] = []
         private var offset: CGFloat = 0
         private var panStart: CGFloat = 0
@@ -269,15 +280,15 @@ struct CoverFlow3D: UIViewRepresentable {
                 dressedWith[id] = nil
             }
             for game in games {
-                let image = parent.image(game)
-                let identity = image.map(ObjectIdentifier.init)
+                let faces = parent.faces(game)
+                let identity = faces.identity
                 if let node = nodes[game.id] {
                     if dressedWith[game.id] != identity {
-                        GameBox.dress(node, image: image, game: game)
+                        GameBox.dress(node, faces: faces, game: game)
                         view?.play(for: 0.2)  // a cover arrived while resting
                     }
                 } else {
-                    let node = GameBox.make(image: image, game: game)
+                    let node = GameBox.make(faces: faces, game: game)
                     scene.rootNode.addChildNode(node)
                     nodes[game.id] = node
                 }
@@ -411,7 +422,7 @@ struct CoverFlow3D: UIViewRepresentable {
 /// One game's box that you turn with your finger; it settles back and keeps swaying.
 struct SpinningBox: UIViewRepresentable {
     let game: Game
-    let image: UIImage?
+    let faces: BoxFaces
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -420,12 +431,12 @@ struct SpinningBox: UIViewRepresentable {
         let view = GameBox.view(scene: coordinator.scene, camera: coordinator.camera)
         coordinator.view = view
         view.addGestureRecognizer(UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.pan)))
-        coordinator.show(image: image, game: game)
+        coordinator.show(faces: faces, game: game)
         return view
     }
 
     func updateUIView(_ view: StageView, context: Context) {
-        context.coordinator.show(image: image, game: game)
+        context.coordinator.show(faces: faces, game: game)
     }
 
     @MainActor
@@ -434,7 +445,7 @@ struct SpinningBox: UIViewRepresentable {
         let camera: SCNNode
         weak var view: StageView?
         private var holder: SCNNode?
-        private var shown: ObjectIdentifier??
+        private var shown: [ObjectIdentifier?]?
         private var start: Float = 0
 
         override init() {
@@ -442,18 +453,18 @@ struct SpinningBox: UIViewRepresentable {
             super.init()
         }
 
-        func show(image: UIImage?, game: Game) {
-            let identity = image.map(ObjectIdentifier.init)
-            guard shown == nil || shown! != identity else { return }
-            shown = .some(identity)
+        func show(faces: BoxFaces, game: Game) {
+            let identity = faces.identity
+            guard shown != identity else { return }
+            shown = identity
             if holder == nil {
-                let node = GameBox.make(image: image, game: game)
+                let node = GameBox.make(faces: faces, game: game)
                 scene.rootNode.addChildNode(node)
                 holder = node
             } else if let holder {
-                GameBox.dress(holder, image: image, game: game)
+                GameBox.dress(holder, faces: faces, game: game)
             }
-            let (width, height) = GameBox.size(for: image)
+            let (width, height) = GameBox.size(for: faces.front)
             // Frame the whole box, wide or tall.
             let distance = max(Float(height) * 2.3, Float(width) * 1.9) + 0.4
             camera.position = SCNVector3(0, Float(height) * 0.62, distance)

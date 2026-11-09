@@ -64,7 +64,7 @@ final class CoverStore: ObservableObject {
 
     /// Decodes every game's cover in the background, then redraws once.
     func warm(_ games: [Game]) async {
-        let wanted = games.flatMap { game in ["chosen", "boxart", "card"].map { ($0 + "-" + game.id, file($0, game)) } }
+        let wanted = games.flatMap { game in ["chosen", "boxart", "back", "spine", "card"].map { ($0 + "-" + game.id, file($0, game)) } }
             .filter { images[$0.0] == nil && !missing.contains($0.0) }
         let decoded = await Task.detached(priority: .userInitiated) {
             wanted.map { key, url in (key, FileManager.default.fileExists(atPath: url.path) ? Self.decode(url) : nil) }
@@ -94,6 +94,14 @@ final class CoverStore: ObservableObject {
         load("chosen", game) ?? (boxArt == .download ? load("boxart", game) : nil) ?? load("card", game)
     }
 
+    /// Every printed face of the box. The back and spine come with official box art, and
+    /// only when the front is the official one too.
+    func faces(for game: Game) -> BoxFaces {
+        let front = image(for: game)
+        guard boxArt == .download, !hasChosen(game), load("boxart", game) != nil else { return BoxFaces(front: front) }
+        return BoxFaces(front: front, back: load("back", game), spine: load("spine", game))
+    }
+
     /// Width over height of the cover shown for a game.
     func aspect(for game: Game) -> CGFloat {
         guard let size = image(for: game)?.size, size.height > 0 else { return 0.71 }
@@ -105,11 +113,10 @@ final class CoverStore: ObservableObject {
     /// Where the shown cover comes from, for the credit on a game's page.
     func source(for game: Game) -> String? {
         guard !hasChosen(game), boxArt == .download, load("boxart", game) != nil, let host = game.boxArt?.host else { return nil }
-        if host.contains("libretro") { return "libretro-thumbnails" }
-        if host.contains("steam") { return "Steam" }
-        if host.contains("gog") { return "GOG" }
-        if host.contains("wiki") { return "Wikipedia" }
-        return host
+        let front = host.contains("libretro") ? "libretro-thumbnails"
+            : host.contains("steam") ? "Steam" : host.contains("gog") ? "GOG" : host.contains("wiki") ? "Wikipedia" : host
+        let faces = faces(for: game)
+        return faces.back != nil || faces.spine != nil ? "\(front), back and spine from LaunchBox" : front
     }
 
     func choose(_ data: Data, for game: Game) {
@@ -140,7 +147,11 @@ final class CoverStore: ObservableObject {
         downloading = true
         defer { downloading = false }
         var wanted: [(String, Game, URL)] = games.map { ("card", $0, $0.art) }
-        if boxArt == .download { wanted += games.compactMap { game in game.boxArt.map { ("boxart", game, $0) } } }
+        if boxArt == .download {
+            for (kind, url) in [("boxart", \Game.boxArt), ("back", \Game.boxBack), ("spine", \Game.boxSpine)] {
+                wanted += games.compactMap { game in game[keyPath: url].map { (kind, game, $0) } }
+            }
+        }
         wanted = wanted.filter { !FileManager.default.fileExists(atPath: file($0.0, $0.1).path) }
         await withTaskGroup(of: (String, Game, Data?).self) { group in
             for (kind, game, url) in wanted {
