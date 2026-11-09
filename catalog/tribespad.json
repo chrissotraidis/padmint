@@ -3,7 +3,7 @@
   "id": "tribespad",
   "repo_url": "https://github.com/chrissotraidis/tribespad",
   "name": "TribesPad",
-  "game": "Tribes 2 (PC) and Starsiege: Tribes 1.41",
+  "game": "Tribes 2 (PC), Starsiege: Tribes 1.41 and Tribes: Vengeance",
   "player_targets": [
     "ios",
     "macos"

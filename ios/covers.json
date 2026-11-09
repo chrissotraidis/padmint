@@ -1,80 +1,106 @@
 {
-  "_about": "Official titles, consoles and where the app may download box art once the player agrees: libretro-thumbnails, Steam, GOG or Wikipedia. This repository stores no images.",
+  "_about": "Official titles, consoles and where the app may download box art once the player agrees: fronts from libretro-thumbnails, Steam, GOG or Wikipedia; backs (box_back) and spines (box_spine) from the LaunchBox Games Database. \"also\" lists the other games inside the same app (TribesPad holds three). This repository stores no images.",
   "games": {
     "agepad": {
       "title": "Age of Empires II: Definitive Edition",
       "platform": "PC",
-      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813780/library_600x900_2x.jpg"
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813780/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/r2_d69c33f8-1f92-40fe-9b74-5b7ec854b538.jpg"
     },
     "annepad": {
       "title": "Pokémon Stadium",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Stadium%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Stadium%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/244181b9-52eb-47ad-be4a-b5bc28057d86.jpg",
+      "box_spine": "https://images.launchbox-app.com/d223ab81-ab77-4879-887b-7c891eff9fa5.png"
     },
     "ballpad": {
       "title": "Super Mario Strikers",
       "platform": "GameCube",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Strikers%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Strikers%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/2be148c9-a44a-4a8f-a431-0dc0cd0eebeb.jpg",
+      "box_spine": "https://images.launchbox-app.com/98cce7e1-5daa-456d-a530-f0531d9f36ff.png"
     },
     "bananapad": {
       "title": "Donkey Kong 64",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Donkey%20Kong%2064%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Donkey%20Kong%2064%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/705424fe-ce0d-436e-9e3b-f7255ce5d92b.jpg",
+      "box_spine": "https://images.launchbox-app.com/6436ca34-e999-42d6-bb3b-f403562aed74.jpg"
     },
     "barrelpad": {
       "title": "Diddy Kong Racing",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Diddy%20Kong%20Racing%20%28USA%29%20%28En%2CFr%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Diddy%20Kong%20Racing%20%28USA%29%20%28En%2CFr%29.png",
+      "box_back": "https://images.launchbox-app.com/b0c5070a-d643-41bc-b064-bad81883fc4d.jpg",
+      "box_spine": "https://images.launchbox-app.com/ab43f7cd-4344-413a-9c7d-3474a3a0a972.jpg"
     },
     "bearbirdpad": {
       "title": "Banjo-Kazooie",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Banjo-Kazooie%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Banjo-Kazooie%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/95329c58-3b58-4b81-8fc0-080e03ef1a39.jpg",
+      "box_spine": "https://images.launchbox-app.com/ef403706-2cdb-4b13-9a97-124f93308179.jpg"
     },
     "bellpad": {
       "title": "Animal Crossing",
       "platform": "GameCube",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Animal%20Crossing%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Animal%20Crossing%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/553e1075-f455-4d79-9cdc-91ca45dc8fc1.jpg",
+      "box_spine": "https://images.launchbox-app.com/abf4f274-0399-4fcb-a500-c8559e3c1fda.jpg"
     },
     "bluewake": {
       "title": "The Legend of Zelda: The Wind Waker",
       "platform": "GameCube",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20The%20Wind%20Waker%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20The%20Wind%20Waker%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/7c7a127b-d52d-4d6b-9634-4af22408e1f8.jpg",
+      "box_spine": "https://images.launchbox-app.com/60ffaa6c-04f6-4620-835b-a46d4b412192.jpg"
     },
     "brawlerpad": {
       "title": "Super Smash Bros.",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Super%20Smash%20Bros.%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Super%20Smash%20Bros.%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/5017129b-878a-47ac-85de-1a93ced8c0c8.jpg",
+      "box_spine": "https://images.launchbox-app.com/738a4536-a231-4ba9-bd24-40eb49e9751e.jpg"
     },
     "caesarpad": {
       "title": "Caesar III",
       "platform": "PC",
-      "box_art": "https://images.gog-statics.com/f1309e35fc9db9fb4fe280bc3a99c6029b63af50554cbee494ac0bffec444608_glx_vertical_cover.jpg"
+      "box_art": "https://images.gog-statics.com/f1309e35fc9db9fb4fe280bc3a99c6029b63af50554cbee494ac0bffec444608_glx_vertical_cover.jpg",
+      "box_back": "https://images.launchbox-app.com/bcde06e0-42ff-47ab-ba30-676eb7ae739e.jpg"
     },
     "ctrpad": {
       "title": "Crash Team Racing",
       "platform": "PlayStation",
-      "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation/Named_Boxarts/CTR%20-%20Crash%20Team%20Racing%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation/Named_Boxarts/CTR%20-%20Crash%20Team%20Racing%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/e388a631-2d11-44fd-a0ec-fb80b016ffdc.jpg",
+      "box_spine": "https://images.launchbox-app.com/r2_7447b4ac-5ba9-4318-9b9b-4e62c1a4cabe.jpg"
     },
     "daggerpad": {
       "title": "The Elder Scrolls II: Daggerfall",
       "platform": "PC",
-      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1812390/library_600x900_2x.jpg"
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1812390/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/2da5be0e-e80a-44f9-aae1-514f945dd0bc.jpg"
     },
     "darkpad": {
       "title": "Perfect Dark",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Perfect%20Dark%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Perfect%20Dark%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/ce290d78-734d-4c61-a5e8-b522a56d6613.jpg",
+      "box_spine": "https://images.launchbox-app.com/cbe971ee-8fc6-4106-8798-61a493c5743e.jpg"
     },
     "deviltouch": {
       "title": "Diablo",
       "platform": "PC",
-      "box_art": "https://upload.wikimedia.org/wikipedia/en/3/3a/Diablo_Coverart.png"
+      "box_art": "https://upload.wikimedia.org/wikipedia/en/3/3a/Diablo_Coverart.png",
+      "box_back": "https://images.launchbox-app.com/ac0ae857-cbeb-48b6-97c7-0fcb17bc925e.jpg",
+      "box_spine": "https://images.launchbox-app.com/28322126-9208-43d7-a735-bb96d08b1641.jpg"
     },
     "dinopad": {
       "title": "Dinosaur Planet",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Dinosaur%20Planet%20%28USA%29%20%28Proto%29%20%282000-12-01%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Dinosaur%20Planet%20%28USA%29%20%28Proto%29%20%282000-12-01%29.png",
+      "box_spine": "https://images.launchbox-app.com/bab661a8-b5c7-44e8-beb1-5005dd0a5a0d.png"
     },
     "emeraldtablet": {
       "title": "Pharaoh + Cleopatra",
@@ -84,27 +110,37 @@
     "f0x": {
       "title": "F-Zero X",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/F-Zero%20X%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/F-Zero%20X%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/400f0659-3477-4026-9e1e-a36154acf645.jpg",
+      "box_spine": "https://images.launchbox-app.com/c2a32fe1-be34-4bd8-a81a-4630abd287e3.jpg"
     },
     "galaxypad": {
       "title": "Super Mario Galaxy",
       "platform": "Wii",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Super%20Mario%20Galaxy%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Super%20Mario%20Galaxy%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/020f1bcd-1e9d-4a9e-91dd-a322480f78fa.jpg",
+      "box_spine": "https://images.launchbox-app.com/2060e1c3-63f5-4077-b84d-26947a8fc975.jpg"
     },
     "goldenpad": {
       "title": "GoldenEye 007",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/GoldenEye%20007%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/GoldenEye%20007%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/73fc17b7-f85c-4991-9e75-91d3da68cc55.jpg",
+      "box_spine": "https://images.launchbox-app.com/4230648f-ad04-4b28-8ad5-382808e5f703.jpg"
     },
     "harkinianpad": {
       "title": "The Legend of Zelda: Ocarina of Time",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Ocarina%20of%20Time%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Ocarina%20of%20Time%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/17f2de32-a3a4-44bf-a868-0b54640e26ef.jpg",
+      "box_spine": "https://images.launchbox-app.com/ce26333d-438c-4795-86a7-9657494805a8.jpg"
     },
     "kartpad": {
       "title": "Mario Kart Wii",
       "platform": "Wii",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Mario%20Kart%20Wii%20%28Europe%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Mario%20Kart%20Wii%20%28Europe%29.png",
+      "box_back": "https://images.launchbox-app.com/f0431bc9-fc95-47b0-b09c-857a34598f96.jpg",
+      "box_spine": "https://images.launchbox-app.com/fb5ef3e6-1ed9-417d-8266-c7d2f2d53779.jpg"
     },
     "kidpad": {
       "title": "Kid Pix",
@@ -114,87 +150,130 @@
     "maskpad": {
       "title": "The Legend of Zelda: Majora's Mask",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Majora%27s%20Mask%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Majora%27s%20Mask%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/d4b46f48-bcd3-4b7a-b96a-cdeed0a8550f.jpg",
+      "box_spine": "https://images.launchbox-app.com/4e76d309-68d8-4b8d-8c30-9f1fd9bf29cd.jpg"
     },
     "meleepad": {
       "title": "Super Smash Bros. Melee",
       "platform": "GameCube",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Smash%20Bros.%20Melee%20%28USA%29%20%28En%2CJa%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Smash%20Bros.%20Melee%20%28USA%29%20%28En%2CJa%29.png",
+      "box_back": "https://images.launchbox-app.com/a7ffaa59-34d7-419d-b2dd-1e166894350a.jpg",
+      "box_spine": "https://images.launchbox-app.com/9b3eb70f-5fe3-4e04-a933-6574e4d81d85.jpg"
     },
     "nightpad": {
       "title": "007: Nightfire",
       "platform": "Xbox",
-      "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/007%20-%20Nightfire%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/007%20-%20Nightfire%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/9461edc6-9f58-4bc3-82d1-b107059bbf5d.jpg",
+      "box_spine": "https://images.launchbox-app.com/ebab5dc1-26b1-4753-bbc2-3522c2827e20.jpg"
     },
     "openrct2touch": {
       "title": "RollerCoaster Tycoon 2",
       "platform": "PC",
-      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285330/library_600x900_2x.jpg"
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285330/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/0353bd99-b1f0-45f5-9a00-8d4f57d83012.jpg"
     },
     "ottsel": {
       "title": "Jak and Daxter: The Precursor Legacy",
       "platform": "PlayStation 2",
-      "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation%202/Named_Boxarts/Jak%20and%20Daxter%20-%20The%20Precursor%20Legacy%20%28USA%29%20%28En%2CFr%2CDe%2CEs%2CIt%29.png"
+      "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation%202/Named_Boxarts/Jak%20and%20Daxter%20-%20The%20Precursor%20Legacy%20%28USA%29%20%28En%2CFr%2CDe%2CEs%2CIt%29.png",
+      "box_back": "https://images.launchbox-app.com/281f9b62-0636-4660-be27-9e854f915ab1.jpg",
+      "box_spine": "https://images.launchbox-app.com/r2_8c35f05a-9878-484b-aa9c-69941d67354b.png"
     },
     "paperpad": {
       "title": "Paper Mario",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Paper%20Mario%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Paper%20Mario%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/0edddd5d-4175-423d-8418-9340c9eae803.jpg",
+      "box_spine": "https://images.launchbox-app.com/d5755b52-d75c-405d-98e7-20e54526bed3.jpg"
     },
     "peonpad": {
       "title": "Warcraft II: Tides of Darkness",
       "platform": "PC",
-      "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Warcraft%20II%20-%20Tides%20of%20Darkness.png"
+      "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Warcraft%20II%20-%20Tides%20of%20Darkness.png",
+      "box_back": "https://images.launchbox-app.com/48af818b-5be3-4766-b075-552ef12b7d56.jpg"
     },
     "projectreach": {
       "title": "Halo: Combat Evolved",
       "platform": "Xbox",
-      "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/Halo%20-%20Combat%20Evolved%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/Halo%20-%20Combat%20Evolved%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/3c79936a-0aec-4df9-bc55-34284fa00979.jpg",
+      "box_spine": "https://images.launchbox-app.com/0ccb6a54-93b1-4233-ac14-3a00e13fcfa4.jpg"
     },
     "ratouch": {
       "title": "Command & Conquer: Red Alert",
       "platform": "PC",
-      "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Command%20and%20Conquer%20-%20Red%20Alert.png"
+      "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Command%20and%20Conquer%20-%20Red%20Alert.png",
+      "box_back": "https://images.launchbox-app.com/d5dff873-1b2c-473d-9e90-50c2aec6ae24.jpg"
     },
     "snappad": {
       "title": "Pokémon Snap",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Snap%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Snap%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/57b30e6f-c14e-4ace-84e5-cde12f114fcc.jpg",
+      "box_spine": "https://images.launchbox-app.com/19adedb1-360f-44e8-aa37-5a5b8d341e64.jpg"
     },
     "spaghettipad": {
       "title": "Mario Kart 64",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Mario%20Kart%2064%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Mario%20Kart%2064%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/ca69050d-d670-4924-aca5-8a1b6b5086c6.jpg",
+      "box_spine": "https://images.launchbox-app.com/811058cb-8b83-47e4-9263-76860f58f9fa.jpg"
     },
     "squirrelpad": {
       "title": "Conker's Bad Fur Day",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Conker%27s%20Bad%20Fur%20Day%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Conker%27s%20Bad%20Fur%20Day%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/d2fd8492-88ce-4924-a857-2bccafa1b762.jpg",
+      "box_spine": "https://images.launchbox-app.com/3fa9547c-bbd2-4594-97f2-03d77135af80.jpg"
     },
     "starshippad": {
       "title": "Star Fox 64",
       "platform": "Nintendo 64",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Star%20Fox%2064%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Star%20Fox%2064%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/6944a6ca-3027-453b-9722-68e4d6779e33.jpg",
+      "box_spine": "https://images.launchbox-app.com/ada605f2-f4da-47a9-965b-638776e60f67.jpg"
     },
     "sunpad": {
       "title": "Super Mario Sunshine",
       "platform": "GameCube",
-      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Sunshine%20%28USA%29.png"
+      "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Sunshine%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/fd508c64-464d-4d1f-9579-ca487af3b6eb.jpg",
+      "box_spine": "https://images.launchbox-app.com/63ff4db4-76a8-4b93-9dca-9a00d2106c34.jpg"
     },
     "tribespad": {
       "title": "Tribes 2",
       "platform": "PC",
-      "box_art": "https://upload.wikimedia.org/wikipedia/en/0/01/Tribes_2_cover.jpg"
+      "box_art": "https://upload.wikimedia.org/wikipedia/en/0/01/Tribes_2_cover.jpg",
+      "box_back": "https://images.launchbox-app.com/a755c71f-e9fe-4b9c-a909-1244166eb793.jpg",
+      "also": [
+        {
+          "id": "tribespad-starsiege",
+          "title": "Starsiege: Tribes",
+          "box_art": "https://images.launchbox-app.com/99d3b861-70e0-4f82-9917-e76c0dae8e0c.jpg",
+          "box_back": "https://images.launchbox-app.com/e2304dbe-5d83-47ef-8f39-a9354eb10283.jpg"
+        },
+        {
+          "id": "tribespad-vengeance",
+          "title": "Tribes: Vengeance",
+          "box_art": "https://images.launchbox-app.com/0e5d2789-de2d-4f15-9518-53ce3d4c25ba.jpg",
+          "box_back": "https://images.launchbox-app.com/4f68f4a9-d6b7-4d12-abf7-134a569db594.jpg"
+        }
+      ]
     },
     "utp": {
       "title": "Unreal Tournament",
       "platform": "PC",
-      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/13240/library_600x900_2x.jpg"
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/13240/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/5e2203a3-5298-4685-add6-58b420342591.jpg"
     },
     "vaultpad": {
       "title": "Fallout 2",
       "platform": "PC",
-      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/38410/library_600x900_2x.jpg"
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/38410/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/dd089bf6-9747-41bd-9c67-162cc3d8c715.jpg",
+      "box_spine": "https://images.launchbox-app.com/f625b944-b2b9-41d7-9271-63e81e441990.jpg"
     }
   }
 }

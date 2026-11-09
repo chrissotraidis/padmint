@@ -32,7 +32,7 @@ def games(padmint, covers):
         if not cover:
             missing.append(entry["id"])
             continue
-        found.append({
+        game = {
             "id": entry["id"],
             "name": (entry.get("manifest") or {}).get("name") or entry.get("name") or entry["id"],
             "title": cover["title"],
@@ -42,9 +42,16 @@ def games(padmint, covers):
             "art": ART.format(id=entry["id"]),
             # Downloaded by the app only after the player agrees; never stored here.
             "box_art": cover["box_art"],
+            "box_back": cover.get("box_back"),
+            "box_spine": cover.get("box_spine"),
             # Ready-made apps aren't built by PadMint, so they answer to no link yet.
             "link": f"padmint-{entry['id']}" if built else None,
-        })
+        }
+        found.append(game)
+        # One app holding several games (TribesPad: Starsiege: Tribes, Tribes 2 and
+        # Tribes: Vengeance) lists each game; they share the app, its link and its art.
+        for extra in cover.get("also", []):
+            found.append({**game, **{key: extra.get(key) for key in ("id", "title", "box_art", "box_back", "box_spine")}})
     if missing:
         raise SystemExit("add these games to covers.json (title, platform, box_art): " + ", ".join(missing))
     return found
@@ -54,7 +61,7 @@ def main():
     padmint = ROOT.parent
     covers = json.loads((ROOT / "covers.json").read_text(encoding="utf-8"))["games"]
     listed = games(padmint, covers)
-    links = [game["link"] for game in listed if game["link"]][:CHECKED_LINKS]
+    links = list(dict.fromkeys(game["link"] for game in listed if game["link"]))[:CHECKED_LINKS]
     for game in listed:
         game["checked"] = game["link"] in links
     (ROOT / "library.json").write_text(json.dumps({"schema_version": 1, "games": listed},

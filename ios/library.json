@@ -10,6 +10,8 @@
       "repo": "https://github.com/chrissotraidis/agepad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/agepad.png",
       "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813780/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/r2_d69c33f8-1f92-40fe-9b74-5b7ec854b538.jpg",
+      "box_spine": null,
       "link": "padmint-agepad",
       "checked": true
     },
@@ -22,6 +24,8 @@
       "repo": "https://github.com/chrissotraidis/annepad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/annepad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Stadium%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/244181b9-52eb-47ad-be4a-b5bc28057d86.jpg",
+      "box_spine": "https://images.launchbox-app.com/d223ab81-ab77-4879-887b-7c891eff9fa5.png",
       "link": "padmint-annepad",
       "checked": true
     },
@@ -34,6 +38,8 @@
       "repo": "https://github.com/chrissotraidis/ballpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ballpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Strikers%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/2be148c9-a44a-4a8f-a431-0dc0cd0eebeb.jpg",
+      "box_spine": "https://images.launchbox-app.com/98cce7e1-5daa-456d-a530-f0531d9f36ff.png",
       "link": "padmint-ballpad",
       "checked": true
     },
@@ -46,6 +52,8 @@
       "repo": "https://github.com/chrissotraidis/bananapad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bananapad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Donkey%20Kong%2064%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/705424fe-ce0d-436e-9e3b-f7255ce5d92b.jpg",
+      "box_spine": "https://images.launchbox-app.com/6436ca34-e999-42d6-bb3b-f403562aed74.jpg",
       "link": "padmint-bananapad",
       "checked": true
     },
@@ -58,6 +66,8 @@
       "repo": "https://github.com/chrissotraidis/barrelpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/barrelpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Diddy%20Kong%20Racing%20%28USA%29%20%28En%2CFr%29.png",
+      "box_back": "https://images.launchbox-app.com/b0c5070a-d643-41bc-b064-bad81883fc4d.jpg",
+      "box_spine": "https://images.launchbox-app.com/ab43f7cd-4344-413a-9c7d-3474a3a0a972.jpg",
       "link": "padmint-barrelpad",
       "checked": true
     },
@@ -70,6 +80,8 @@
       "repo": "https://github.com/chrissotraidis/bearbirdpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bearbirdpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Banjo-Kazooie%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/95329c58-3b58-4b81-8fc0-080e03ef1a39.jpg",
+      "box_spine": "https://images.launchbox-app.com/ef403706-2cdb-4b13-9a97-124f93308179.jpg",
       "link": "padmint-bearbirdpad",
       "checked": true
     },
@@ -82,6 +94,8 @@
       "repo": "https://github.com/chrissotraidis/bellpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bellpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Animal%20Crossing%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/553e1075-f455-4d79-9cdc-91ca45dc8fc1.jpg",
+      "box_spine": "https://images.launchbox-app.com/abf4f274-0399-4fcb-a500-c8559e3c1fda.jpg",
       "link": "padmint-bellpad",
       "checked": true
     },
@@ -94,6 +108,8 @@
       "repo": "https://github.com/chrissotraidis/bluewake",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/bluewake.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20The%20Wind%20Waker%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/7c7a127b-d52d-4d6b-9634-4af22408e1f8.jpg",
+      "box_spine": "https://images.launchbox-app.com/60ffaa6c-04f6-4620-835b-a46d4b412192.jpg",
       "link": "padmint-bluewake",
       "checked": true
     },
@@ -106,6 +122,8 @@
       "repo": "https://github.com/chrissotraidis/brawlerpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/brawlerpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Super%20Smash%20Bros.%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/5017129b-878a-47ac-85de-1a93ced8c0c8.jpg",
+      "box_spine": "https://images.launchbox-app.com/738a4536-a231-4ba9-bd24-40eb49e9751e.jpg",
       "link": "padmint-brawlerpad",
       "checked": true
     },
@@ -118,6 +136,8 @@
       "repo": "https://github.com/chrissotraidis/caesarpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/caesarpad.png",
       "box_art": "https://images.gog-statics.com/f1309e35fc9db9fb4fe280bc3a99c6029b63af50554cbee494ac0bffec444608_glx_vertical_cover.jpg",
+      "box_back": "https://images.launchbox-app.com/bcde06e0-42ff-47ab-ba30-676eb7ae739e.jpg",
+      "box_spine": null,
       "link": null,
       "checked": false
     },
@@ -130,6 +150,8 @@
       "repo": "https://github.com/chrissotraidis/ctrpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ctrpad.png",
       "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation/Named_Boxarts/CTR%20-%20Crash%20Team%20Racing%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/e388a631-2d11-44fd-a0ec-fb80b016ffdc.jpg",
+      "box_spine": "https://images.launchbox-app.com/r2_7447b4ac-5ba9-4318-9b9b-4e62c1a4cabe.jpg",
       "link": "padmint-ctrpad",
       "checked": true
     },
@@ -142,6 +164,8 @@
       "repo": "https://github.com/chrissotraidis/daggerpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/daggerpad.png",
       "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1812390/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/2da5be0e-e80a-44f9-aae1-514f945dd0bc.jpg",
+      "box_spine": null,
       "link": null,
       "checked": false
     },
@@ -154,6 +178,8 @@
       "repo": "https://github.com/chrissotraidis/darkpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/darkpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Perfect%20Dark%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/ce290d78-734d-4c61-a5e8-b522a56d6613.jpg",
+      "box_spine": "https://images.launchbox-app.com/cbe971ee-8fc6-4106-8798-61a493c5743e.jpg",
       "link": "padmint-darkpad",
       "checked": true
     },
@@ -166,6 +192,8 @@
       "repo": "https://github.com/chrissotraidis/deviltouch",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/deviltouch.png",
       "box_art": "https://upload.wikimedia.org/wikipedia/en/3/3a/Diablo_Coverart.png",
+      "box_back": "https://images.launchbox-app.com/ac0ae857-cbeb-48b6-97c7-0fcb17bc925e.jpg",
+      "box_spine": "https://images.launchbox-app.com/28322126-9208-43d7-a735-bb96d08b1641.jpg",
       "link": null,
       "checked": false
     },
@@ -178,6 +206,8 @@
       "repo": "https://github.com/chrissotraidis/dinopad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/dinopad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Dinosaur%20Planet%20%28USA%29%20%28Proto%29%20%282000-12-01%29.png",
+      "box_back": null,
+      "box_spine": "https://images.launchbox-app.com/bab661a8-b5c7-44e8-beb1-5005dd0a5a0d.png",
       "link": "padmint-dinopad",
       "checked": true
     },
@@ -190,6 +220,8 @@
       "repo": "https://github.com/chrissotraidis/emeraldtablet",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/emeraldtablet.png",
       "box_art": "https://images.gog-statics.com/bf97d30ca61ed4a8ffbb75380a2a8f59ac3efabdb9cf6c9a397d53a652df9fcb_glx_vertical_cover.jpg",
+      "box_back": null,
+      "box_spine": null,
       "link": null,
       "checked": false
     },
@@ -202,6 +234,8 @@
       "repo": "https://github.com/chrissotraidis/f0x",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/f0x.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/F-Zero%20X%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/400f0659-3477-4026-9e1e-a36154acf645.jpg",
+      "box_spine": "https://images.launchbox-app.com/c2a32fe1-be34-4bd8-a81a-4630abd287e3.jpg",
       "link": "padmint-f0x",
       "checked": true
     },
@@ -214,6 +248,8 @@
       "repo": "https://github.com/chrissotraidis/galaxypad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/galaxypad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Super%20Mario%20Galaxy%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/020f1bcd-1e9d-4a9e-91dd-a322480f78fa.jpg",
+      "box_spine": "https://images.launchbox-app.com/2060e1c3-63f5-4077-b84d-26947a8fc975.jpg",
       "link": "padmint-galaxypad",
       "checked": true
     },
@@ -226,6 +262,8 @@
       "repo": "https://github.com/chrissotraidis/goldenpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/goldenpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/GoldenEye%20007%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/73fc17b7-f85c-4991-9e75-91d3da68cc55.jpg",
+      "box_spine": "https://images.launchbox-app.com/4230648f-ad04-4b28-8ad5-382808e5f703.jpg",
       "link": "padmint-goldenpad",
       "checked": true
     },
@@ -238,6 +276,8 @@
       "repo": "https://github.com/chrissotraidis/harkinianpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/harkinianpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Ocarina%20of%20Time%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/17f2de32-a3a4-44bf-a868-0b54640e26ef.jpg",
+      "box_spine": "https://images.launchbox-app.com/ce26333d-438c-4795-86a7-9657494805a8.jpg",
       "link": "padmint-harkinianpad",
       "checked": true
     },
@@ -250,6 +290,8 @@
       "repo": "https://github.com/chrissotraidis/kartpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/kartpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Wii/Named_Boxarts/Mario%20Kart%20Wii%20%28Europe%29.png",
+      "box_back": "https://images.launchbox-app.com/f0431bc9-fc95-47b0-b09c-857a34598f96.jpg",
+      "box_spine": "https://images.launchbox-app.com/fb5ef3e6-1ed9-417d-8266-c7d2f2d53779.jpg",
       "link": "padmint-kartpad",
       "checked": true
     },
@@ -262,6 +304,8 @@
       "repo": "https://github.com/chrissotraidis/kidpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/kidpad.png",
       "box_art": "https://upload.wikimedia.org/wikipedia/en/1/15/Kid_Pix_1.0_About.png",
+      "box_back": null,
+      "box_spine": null,
       "link": null,
       "checked": false
     },
@@ -274,6 +318,8 @@
       "repo": "https://github.com/chrissotraidis/maskpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/maskpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Legend%20of%20Zelda%2C%20The%20-%20Majora%27s%20Mask%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/d4b46f48-bcd3-4b7a-b96a-cdeed0a8550f.jpg",
+      "box_spine": "https://images.launchbox-app.com/4e76d309-68d8-4b8d-8c30-9f1fd9bf29cd.jpg",
       "link": "padmint-maskpad",
       "checked": true
     },
@@ -286,6 +332,8 @@
       "repo": "https://github.com/chrissotraidis/meleepad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/meleepad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Smash%20Bros.%20Melee%20%28USA%29%20%28En%2CJa%29.png",
+      "box_back": "https://images.launchbox-app.com/a7ffaa59-34d7-419d-b2dd-1e166894350a.jpg",
+      "box_spine": "https://images.launchbox-app.com/9b3eb70f-5fe3-4e04-a933-6574e4d81d85.jpg",
       "link": "padmint-meleepad",
       "checked": true
     },
@@ -298,6 +346,8 @@
       "repo": "https://github.com/chrissotraidis/nightpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/nightpad.png",
       "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/007%20-%20Nightfire%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/9461edc6-9f58-4bc3-82d1-b107059bbf5d.jpg",
+      "box_spine": "https://images.launchbox-app.com/ebab5dc1-26b1-4753-bbc2-3522c2827e20.jpg",
       "link": "padmint-nightpad",
       "checked": true
     },
@@ -310,6 +360,8 @@
       "repo": "https://github.com/chrissotraidis/OpenRCT2Touch",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/openrct2touch.png",
       "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285330/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/0353bd99-b1f0-45f5-9a00-8d4f57d83012.jpg",
+      "box_spine": null,
       "link": "padmint-openrct2touch",
       "checked": true
     },
@@ -322,6 +374,8 @@
       "repo": "https://github.com/chrissotraidis/ottsel",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ottsel.png",
       "box_art": "https://thumbnails.libretro.com/Sony%20-%20PlayStation%202/Named_Boxarts/Jak%20and%20Daxter%20-%20The%20Precursor%20Legacy%20%28USA%29%20%28En%2CFr%2CDe%2CEs%2CIt%29.png",
+      "box_back": "https://images.launchbox-app.com/281f9b62-0636-4660-be27-9e854f915ab1.jpg",
+      "box_spine": "https://images.launchbox-app.com/r2_8c35f05a-9878-484b-aa9c-69941d67354b.png",
       "link": "padmint-ottsel",
       "checked": true
     },
@@ -334,6 +388,8 @@
       "repo": "https://github.com/chrissotraidis/paperpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/paperpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Paper%20Mario%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/0edddd5d-4175-423d-8418-9340c9eae803.jpg",
+      "box_spine": "https://images.launchbox-app.com/d5755b52-d75c-405d-98e7-20e54526bed3.jpg",
       "link": "padmint-paperpad",
       "checked": true
     },
@@ -346,6 +402,8 @@
       "repo": "https://github.com/chrissotraidis/peonpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/peonpad.png",
       "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Warcraft%20II%20-%20Tides%20of%20Darkness.png",
+      "box_back": "https://images.launchbox-app.com/48af818b-5be3-4766-b075-552ef12b7d56.jpg",
+      "box_spine": null,
       "link": null,
       "checked": false
     },
@@ -358,6 +416,8 @@
       "repo": "https://github.com/chrissotraidis/projectreach",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/projectreach.png",
       "box_art": "https://thumbnails.libretro.com/Microsoft%20-%20Xbox/Named_Boxarts/Halo%20-%20Combat%20Evolved%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/3c79936a-0aec-4df9-bc55-34284fa00979.jpg",
+      "box_spine": "https://images.launchbox-app.com/0ccb6a54-93b1-4233-ac14-3a00e13fcfa4.jpg",
       "link": "padmint-projectreach",
       "checked": true
     },
@@ -370,6 +430,8 @@
       "repo": "https://github.com/chrissotraidis/ratouch",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ratouch.png",
       "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Command%20and%20Conquer%20-%20Red%20Alert.png",
+      "box_back": "https://images.launchbox-app.com/d5dff873-1b2c-473d-9e90-50c2aec6ae24.jpg",
+      "box_spine": null,
       "link": null,
       "checked": false
     },
@@ -382,6 +444,8 @@
       "repo": "https://github.com/chrissotraidis/snappad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/snappad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Pokemon%20Snap%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/57b30e6f-c14e-4ace-84e5-cde12f114fcc.jpg",
+      "box_spine": "https://images.launchbox-app.com/19adedb1-360f-44e8-aa37-5a5b8d341e64.jpg",
       "link": "padmint-snappad",
       "checked": true
     },
@@ -394,6 +458,8 @@
       "repo": "https://github.com/chrissotraidis/spaghettipad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/spaghettipad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Mario%20Kart%2064%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/ca69050d-d670-4924-aca5-8a1b6b5086c6.jpg",
+      "box_spine": "https://images.launchbox-app.com/811058cb-8b83-47e4-9263-76860f58f9fa.jpg",
       "link": "padmint-spaghettipad",
       "checked": false
     },
@@ -406,6 +472,8 @@
       "repo": "https://github.com/chrissotraidis/squirrelpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/squirrelpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Conker%27s%20Bad%20Fur%20Day%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/d2fd8492-88ce-4924-a857-2bccafa1b762.jpg",
+      "box_spine": "https://images.launchbox-app.com/3fa9547c-bbd2-4594-97f2-03d77135af80.jpg",
       "link": "padmint-squirrelpad",
       "checked": false
     },
@@ -418,6 +486,8 @@
       "repo": "https://github.com/chrissotraidis/starshippad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/starshippad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20Nintendo%2064/Named_Boxarts/Star%20Fox%2064%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/6944a6ca-3027-453b-9722-68e4d6779e33.jpg",
+      "box_spine": "https://images.launchbox-app.com/ada605f2-f4da-47a9-965b-638776e60f67.jpg",
       "link": "padmint-starshippad",
       "checked": false
     },
@@ -430,6 +500,8 @@
       "repo": "https://github.com/chrissotraidis/sunpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/sunpad.png",
       "box_art": "https://thumbnails.libretro.com/Nintendo%20-%20GameCube/Named_Boxarts/Super%20Mario%20Sunshine%20%28USA%29.png",
+      "box_back": "https://images.launchbox-app.com/fd508c64-464d-4d1f-9579-ca487af3b6eb.jpg",
+      "box_spine": "https://images.launchbox-app.com/63ff4db4-76a8-4b93-9dca-9a00d2106c34.jpg",
       "link": "padmint-sunpad",
       "checked": false
     },
@@ -438,10 +510,40 @@
       "name": "TribesPad",
       "title": "Tribes 2",
       "platform": "PC",
-      "game": "Tribes 2 (PC) and Starsiege: Tribes 1.41",
+      "game": "Tribes 2 (PC), Starsiege: Tribes 1.41 and Tribes: Vengeance",
       "repo": "https://github.com/chrissotraidis/tribespad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/tribespad.png",
       "box_art": "https://upload.wikimedia.org/wikipedia/en/0/01/Tribes_2_cover.jpg",
+      "box_back": "https://images.launchbox-app.com/a755c71f-e9fe-4b9c-a909-1244166eb793.jpg",
+      "box_spine": null,
+      "link": "padmint-tribespad",
+      "checked": false
+    },
+    {
+      "id": "tribespad-starsiege",
+      "name": "TribesPad",
+      "title": "Starsiege: Tribes",
+      "platform": "PC",
+      "game": "Tribes 2 (PC), Starsiege: Tribes 1.41 and Tribes: Vengeance",
+      "repo": "https://github.com/chrissotraidis/tribespad",
+      "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/tribespad.png",
+      "box_art": "https://images.launchbox-app.com/99d3b861-70e0-4f82-9917-e76c0dae8e0c.jpg",
+      "box_back": "https://images.launchbox-app.com/e2304dbe-5d83-47ef-8f39-a9354eb10283.jpg",
+      "box_spine": null,
+      "link": "padmint-tribespad",
+      "checked": false
+    },
+    {
+      "id": "tribespad-vengeance",
+      "name": "TribesPad",
+      "title": "Tribes: Vengeance",
+      "platform": "PC",
+      "game": "Tribes 2 (PC), Starsiege: Tribes 1.41 and Tribes: Vengeance",
+      "repo": "https://github.com/chrissotraidis/tribespad",
+      "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/tribespad.png",
+      "box_art": "https://images.launchbox-app.com/0e5d2789-de2d-4f15-9518-53ce3d4c25ba.jpg",
+      "box_back": "https://images.launchbox-app.com/4f68f4a9-d6b7-4d12-abf7-134a569db594.jpg",
+      "box_spine": null,
       "link": "padmint-tribespad",
       "checked": false
     },
@@ -454,6 +556,8 @@
       "repo": "https://github.com/chrissotraidis/utp",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/utp.png",
       "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/13240/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/5e2203a3-5298-4685-add6-58b420342591.jpg",
+      "box_spine": null,
       "link": "padmint-utp",
       "checked": false
     },
@@ -466,6 +570,8 @@
       "repo": "https://github.com/chrissotraidis/vaultpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/vaultpad.png",
       "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/38410/library_600x900_2x.jpg",
+      "box_back": "https://images.launchbox-app.com/dd089bf6-9747-41bd-9c67-162cc3d8c715.jpg",
+      "box_spine": "https://images.launchbox-app.com/f625b944-b2b9-41d7-9271-63e81e441990.jpg",
       "link": null,
       "checked": false
     }

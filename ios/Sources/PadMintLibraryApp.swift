@@ -31,7 +31,7 @@ struct PadMintLibraryApp: App {
             let console = UserDefaults.standard.string(forKey: "galleryConsole") ?? ""
             BoxGallery(games: library.sorted(library.games, by: .console, official: true)
                 .filter { console.isEmpty || $0.platform == console },
-                       image: { covers.image(for: $0) }, yaw: yaw)
+                       faces: { covers.faces(for: $0) }, yaw: yaw)
                 .background(Color(white: 0.25)).ignoresSafeArea()
         } else {
             LibraryView()

@@ -164,7 +164,7 @@ private struct HeroBanner: View {
     var body: some View {
         let height: CGFloat = sizeClass == .regular ? 300 : 210
         HStack(alignment: .bottom, spacing: 24) {
-            SpinningBox(game: game, image: covers.image(for: game))
+            SpinningBox(game: game, faces: covers.faces(for: game))
                 .id("\(reflections)-\(boxMotion)")
                 .frame(width: height * 0.95, height: height)
                 .onTapGesture { actions.open(game) }
@@ -364,7 +364,7 @@ private struct BoxCarousel: View {
                     ContentUnavailableView("No games match", systemImage: "magnifyingglass")
                 } else {
                     VStack(spacing: 0) {
-                        CoverFlow3D(games: games, focused: $focused, image: { covers.image(for: $0) }, open: actions.open)
+                        CoverFlow3D(games: games, focused: $focused, faces: { covers.faces(for: $0) }, open: actions.open)
                             .id("\(reflections)-\(boxMotion)")
                             .frame(height: geo.size.height * 0.7)
                             // The reflection fades into the floor instead of ending at the edge.

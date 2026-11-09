@@ -34,7 +34,7 @@ struct GameDetail: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 18) {
-                SpinningBox(game: game, image: covers.image(for: game))
+                SpinningBox(game: game, faces: covers.faces(for: game))
                 .id("\(reflections)-\(boxMotion)")
                     .frame(height: sizeClass == .regular ? 440 : 330)
                     .overlay(alignment: .bottom) {
