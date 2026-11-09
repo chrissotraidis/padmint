@@ -62,6 +62,32 @@ extract it and open PadMint from the **new folder**. The game list ships inside
 that folder, so refreshing the browser or opening the old folder keeps the old
 list. Your game files, builds and saves stay where they are.
 
+## How it works
+
+No PadMint download contains a game. Each Pad port is open source code without
+the game in it, and PadMint combines that code with your own copy of the game on
+your computer:
+
+1. **You bring the game.** When a game needs your disc image or ROM, PadMint
+   checks its fingerprint (SHA-256) against the exact versions the port
+   supports. It reads the file where it is and never uploads it.
+2. **PadMint fetches the port.** It downloads the game's source code from its
+   own repository, along with the free tools needed to build it.
+3. **The port's recipe builds your copy.** Every port keeps a small
+   `padmint.json` recipe that lists its build steps. PadMint runs them, shows
+   the progress and keeps a log. For many ports, this is where the game's own
+   code is translated from your disc, so that part only ever exists on your
+   computer.
+4. **PadMint checks the result.** It confirms that the app is complete and
+   built for a real iPhone or iPad, and runs the same check PadMint uses on its
+   own releases. Then it saves the `.ipa` in your Downloads folder.
+5. **You install it with your own Apple ID**, using Sideloadly. The copy is
+   yours, so keep it to yourself.
+
+Games built on GitHub's Mac, and the ready-made apps, work the other way round:
+the app holds only the port's code, and you add your game files inside it after
+installing.
+
 ## What your computer can build
 
 Every game is built one of three ways, and each game's page shows only the ways
