@@ -93,6 +93,12 @@ PADMINT_HOME=$(mktemp -d) python3 scripts/audit-catalog.py   # every game's publ
    with a newer Python and warm caches doesn't count, and a failure blocks the
    release.
 3. Every public asset must pass `python3 -m padmint audit <asset>`.
+4. If the release changes where or what the recipe builds (a host, a target),
+   change `catalog/GAME.json` to match on the day it is published and release
+   PadMint with it: the menu offers a game only where the catalog says. The
+   player check lists what the catalog will need before tagging, and fails after
+   publishing until the catalog matches (BlueWake 0.11.0 built on Windows for
+   a day while PadMint still showed it as Mac only).
 
 Players get the update the next time they build. PadMint itself only needs a
 release when what the catalog describes changes: hosts, requirements, the game

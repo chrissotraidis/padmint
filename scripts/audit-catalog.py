@@ -136,10 +136,21 @@ def anchor(heading):
     return re.sub(r"[^\w\- ]", "", heading.strip().lower()).replace(" ", "-")
 
 
-def audit(json_output=False):
+def checkout_hidden_hosts(game, recipe_path):
+    """Before a game is tagged: the hosts its new recipe builds on that the catalog doesn't
+    offer yet. The catalog can't list them until the release is out (the daily check would
+    then fail on the old release), so these are a reminder, not a failure."""
+    entry = catalog()[game]
+    recipe = json.loads(Path(recipe_path).read_text())
+    return [problem for problem in route_problems(entry, recipe) if "hides" in problem]
+
+
+def audit(json_output=False, only=None):
     problems = []
     rows = []
     for game, entry in sorted(catalog().items()):
+        if only and game != only:
+            continue
         targets = entry.get("player_targets") or []
         row = {"game": game, "repo_url": entry["repo_url"], "player_targets": targets,
                "route": "build" if targets else "download" if entry.get("download") else "paused",
@@ -264,4 +275,16 @@ def audit(json_output=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json", action="store_true", help="emit the release/host/target matrix and findings as JSON")
-    sys.exit(audit(json_output=parser.parse_args().json))
+    parser.add_argument("--game", help="audit only this game (scripts/player-check.sh uses it)")
+    parser.add_argument("--recipe", help="with --game: compare an unpublished padmint.json instead, and only "
+                                         "list the hosts the catalog will have to add once it is published")
+    args = parser.parse_args()
+    if args.game and args.game not in catalog():
+        parser.error(f"{args.game} is not in the catalog")
+    if args.recipe:
+        if not args.game:
+            parser.error("--recipe needs --game")
+        for problem in checkout_hidden_hosts(args.game, args.recipe):
+            print(f"{args.game}: {problem}")
+        sys.exit(0)
+    sys.exit(audit(json_output=args.json, only=args.game))
