@@ -116,6 +116,13 @@ commit disc contents, translated code, keys or personal builds.
   [COMPATIBILITY.md](COMPATIBILITY.md), [REMAINING.md](REMAINING.md) and
   `STATUS.md`. Release PadMint with it. **Done when** the post-release player
   check reports no catalog mismatch.
+  - 10 Nov: drafted as [padmint#257](https://github.com/chrissotraidis/padmint/pull/257).
+    The recipe also declares Linux, so `ios_hosts` lists both Linux hosts
+    too, with a Linux note (container builds only; installing needs a Windows
+    PC or Mac); otherwise the post-release check fails. SnapPad replaces
+    SunPad in `tests/test_later.py`. 520 tests pass and the catalog audit
+    against #78's recipe reports nothing. Merge only after S5's release;
+    update the notes and docs from S4's result first.
 - [ ] **S7. Build as a player would.** In the VM, with a fresh PadMint folder,
   run `padmint make sunpad ios --disc DISC` against the published release.
   **Done when** it produces the IPA and the Windows game page shows **Build on
