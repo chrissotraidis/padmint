@@ -53,19 +53,51 @@ commit disc contents, translated code, keys or personal builds.
 
 ## Steps
 
-- [ ] **S1. Bring #57 up to date.** Rebase `codex/padmint-ios-module` on
+- [x] **S1. Bring #57 up to date.** Rebase `codex/padmint-ios-module` on
   SunPad `main` and resolve conflicts, keeping `main`'s 0.2.3 behavior.
   **Done when** CI is green and `scripts/player-check.sh sunpad ios DISC
   CHECKOUT` passes on the Mac with the rebased checkout.
-- [ ] **S2. Bring #78 up to date.** Rebase it on the new #57. Make the Windows
+  - 10 Nov: `main` merged into #57 (no conflicts; merging avoids
+    force-pushing a stacked branch). #57 had also moved the Mac to PadMint's
+    LLVM module build, which would change the Mac's output without a device
+    check. [065f76c](https://github.com/chrissotraidis/sunpad/commit/065f76c)
+    keeps the Mac on 0.2.3's Xcode steps and uses `ios_module` only off the
+    Mac (recipe schema 2), as BlueWake 0.11.0 does. A Mac player downloads no
+    LLVM. CI green (iOS, tvOS, safety). Mac player check at 065f76c **passed**
+    (Apple Python 3.9.6, empty PadMint 0.6.3 folder, published v0.2.3 app as
+    APP; 4,576 s). A first run without APP failed at packaging: a checkout
+    build gets no published app unless given one, while `padmint make`
+    downloads it, so players are unaffected.
+- [x] **S2. Bring #78 up to date.** Rebase it on the new #57. Make the Windows
   module and package steps build the bundled xxHash the same way `main` now
   does for the Mac. **Done when** CI, including `windows-route`, is green, and
   the Mac player check from S1 still passes on this branch.
-- [ ] **S3. Build on Windows from the branch.** In the Windows 11 ARM64 VM,
+  - 10 Nov: #57 merged into #78 at
+    [4b7c2d7](https://github.com/chrissotraidis/sunpad/commit/4b7c2d7); only
+    `padmint.json` conflicted (Windows steps kept, Mac on Xcode, `ios_module`
+    on Windows and Linux). The xxHash fix needs no Windows change: it touches
+    only the Xcode core build, the iOS module template uses no xxHash, and the
+    Windows desktop tools already build every bundled library
+    (`-DUSE_SYSTEM_LIBS=OFF`). 19 Windows builder tests pass locally. Mac
+    steps are identical to #57's, so S1's player check covers this branch.
+    The only Mac-relevant recipe difference is that `python3` and `rg` now
+    list their hosts (Mac included); the four Mac scripts are unchanged. CI
+    green, including `windows-route` (22 min).
+- [x] **S3. Build on Windows from the branch.** In the Windows 11 ARM64 VM,
   with a fresh PadMint folder and the released PadMint for Windows, build
   SunPad for iOS from the #78 checkout and the player's disc. **Done when** the
   IPA passes the publication gate and differs from the published app only by
   the game module, its identity file and the launch link. Record build time.
+  - 10 Nov: released PadMint 0.6.3 for Windows (its bundled Python 3.13.15,
+    reported host `windows-arm64`), fresh PadMint folder on a new local NTFS
+    disk, clean clone at 4b7c2d7, published v0.2.3 app, disc read from the Mac
+    share. `padmint tools` 1,591 s; `padmint build` 8,556 s (2 jobs; module
+    stage 77 min). Record `completed`, publication gate PASS (0 findings),
+    IPA SHA-256 409ae0e9…720b. Readback: 2,796 of 2,797 published entries
+    identical; `Info.plist` changes only `CFBundleURLTypes` (padmint-sunpad);
+    one entry added, `gGMSE01_recomp.dylib` (arm64, iOS 16.0, libSystem only,
+    imports `ldexp`, `ldexpf`, `dyld_stub_binder`). Not checked: install,
+    launch, audio, saves. The IPA stays private on the Mac.
 - [ ] **S4. Launch it on an iPad. (Chris)** Install the S3 IPA with Sideloadly.
   **Done when** it reaches gameplay. Note audio, a save and reload, and
   controller input if checked. This is a stop before release because a
