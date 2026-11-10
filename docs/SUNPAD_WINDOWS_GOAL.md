@@ -102,6 +102,17 @@ commit disc contents, translated code, keys or personal builds.
   **Done when** it reaches gameplay. Note audio, a save and reload, and
   controller input if checked. This is a stop before release because a
   Windows-only compiler difference would show up here first.
+  - 10 Nov: saves backed up from the iPad Pro 12.9 (6th gen) first, including
+    `GC/USA/Card A/01-GMSE-super_mario_sunshine.gci`. The S3 IPA was signed
+    with the team's development profile and installed in place over 0.2.3
+    with `devicectl`. Launched with `DYLD_PRINT_LIBRARIES=1`: dyld loaded
+    `SunPad.app/gGMSE01_recomp.dylib` from the app bundle (UUID
+    4C4C44D3-5555-3144-A185-F1293527A62D, the Windows-built module), and the
+    runtime logged `module loaded … entry=0x8000522C`. SunPad reported 30.0 fps,
+    59.9 VPS, speed ratio 1.003, thermal nominal; audio RemoteIO running at
+    48 kHz on the speaker. Mirrored screen: the attract scene and then the
+    title screen. Not yet checked: gameplay after START, hearing the sound,
+    saving and reloading. These need touch or controller input on the iPad.
 - [ ] **S5. Release SunPad with Windows hosts. (Chris approves)** Mark #57 and
   #78 ready, merge them in order, and prepare the next SunPad release with
   `windows-arm64` and `windows-x86_64` marked experimental in `padmint.json`.
