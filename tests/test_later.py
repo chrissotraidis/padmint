@@ -52,10 +52,10 @@ class LaterTests(unittest.TestCase):
         built = {game["id"] for game in data["games"]}
         waiting = {game["id"]: game for game in data["later"]}
         self.assertIn("kartpad", built)
-        self.assertNotIn("sunpad", built)
-        self.assertIn("Apple Silicon", waiting["sunpad"]["text"])
-        self.assertEqual(waiting["sunpad"]["tag"], "Needs Apple Silicon Mac")
-        self.assertEqual(waiting["sunpad"]["about"], "Super Mario Sunshine (GameCube)")
+        self.assertNotIn("snappad", built)
+        self.assertIn("Apple Silicon", waiting["snappad"]["text"])
+        self.assertEqual(waiting["snappad"]["tag"], "Needs Apple Silicon Mac")
+        self.assertEqual(waiting["snappad"]["about"], "Pokémon Snap (N64)")
         # A game that takes its game file in the app points to GitHub Cloud Build instead.
         self.assertNotIn("bellpad", built)
         self.assertEqual(waiting["bellpad"]["tag"], "GitHub Cloud Build")
@@ -64,7 +64,7 @@ class LaterTests(unittest.TestCase):
         self.assertTrue(waiting["bellpad"]["github"])
         self.assertEqual(len(waiting["bellpad"]["steps"]), 5)
         self.assertIn("pick bellpad", waiting["bellpad"]["steps"][2])
-        self.assertFalse(waiting["sunpad"]["github"])
+        self.assertFalse(waiting["snappad"]["github"])
         everything = built | set(waiting) | {app["id"] for app in data["downloads"]}
         self.assertEqual(everything, set(manifest.catalog()))
         self.assertEqual(data["host_name"], "Windows x64")
