@@ -171,8 +171,11 @@ commit disc contents, translated code, keys or personal builds.
     the app, 3 runtime names). The released code's page data on
     `windows-arm64` and `windows-x86_64` lists SunPad as buildable, titles the
     card **Build on this Windows PC** and shows the Windows note.
-- [ ] **S8. Tell players. (Chris)** Chris posts the news. The note says it is
+- [x] **S8. Tell players. (Chris)** Chris posts the news. The note says it is
   experimental on Windows and asks for reports from native x64 PCs.
+  - 10 Nov: the Discord announcement was written and handed to Chris to post.
+    Build folders, worktrees and the extra VM disk from this goal were removed;
+    device save backups are in `~/Documents/SunPad save backups`.
 
 ## After the goal
 
