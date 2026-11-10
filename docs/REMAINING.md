@@ -131,7 +131,7 @@ A game counts as done when its published recipe declares Windows hosts,
 | Game | What blocks it | Next step |
 |---|---|---|
 | BlueWake | Done except the device check: 0.11.0 (8 November) publishes a recipe with Windows ARM64 and x64 for iPhone/iPad, and the catalog lists them (`ios_hosts`) from PadMint 0.6.2. Between the release and that change, Windows showed BlueWake dimmed | A maintainer installs and plays a Windows-built copy on an iPhone or iPad |
-| SunPad | Two draft PRs | Merge [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57), then [#78](https://github.com/chrissotraidis/sunpad/pull/78), and publish |
+| SunPad | Two draft PRs, 11 commits behind SunPad 0.2.3; players are asking for it | Work through [the SunPad Windows goal](SUNPAD_WINDOWS_GOAL.md): rebase [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57) and [#78](https://github.com/chrissotraidis/sunpad/pull/78), rebuild on Windows, launch on an iPad, release, then add `ios_hosts` to the catalog |
 | SnapPad | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12) uses a private tool bundle | PadMint publishes its Windows IDO, binutils, Rabbitizer and asm-processor builds (**needs Chris's approval**). SnapPad's release pause still applies |
 | AnnePad | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20) built the ROM-to-module step on Windows in 25 min | The same tool publication, then the shell, recipe and device check |
 | Ottsel | [ottsel#7](https://github.com/chrissotraidis/ottsel/pull/7): Windows output matches the Mac byte for byte | Device-check the changed Mac output, then a game-free app with a private game library |
