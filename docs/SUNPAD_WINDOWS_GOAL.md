@@ -98,7 +98,7 @@ commit disc contents, translated code, keys or personal builds.
     one entry added, `gGMSE01_recomp.dylib` (arm64, iOS 16.0, libSystem only,
     imports `ldexp`, `ldexpf`, `dyld_stub_binder`). Not checked: install,
     launch, audio, saves. The IPA stays private on the Mac.
-- [ ] **S4. Launch it on an iPad. (Chris)** Install the S3 IPA with Sideloadly.
+- [x] **S4. Launch it on an iPad. (Chris)** Install the S3 IPA with Sideloadly.
   **Done when** it reaches gameplay. Note audio, a save and reload, and
   controller input if checked. This is a stop before release because a
   Windows-only compiler difference would show up here first.
@@ -111,8 +111,18 @@ commit disc contents, translated code, keys or personal builds.
     runtime logged `module loaded … entry=0x8000522C`. SunPad reported 30.0 fps,
     59.9 VPS, speed ratio 1.003, thermal nominal; audio RemoteIO running at
     48 kHz on the speaker. Mirrored screen: the attract scene and then the
-    title screen. Not yet checked: gameplay after START, hearing the sound,
-    saving and reloading. These need touch or controller input on the iPad.
+    title screen.
+  - Gameplay, save and reload (Chris asked for this to be done without him):
+    LLDB attached to the development-signed app and fed buttons and stick
+    through SunPad's own input mixer (`setInputState:fromTouch:NO`, the
+    controller slot), so input took the same pipe as touch. A QuickTime mirror
+    caused an audio interruption that paused the runtime; `devicectl`
+    screenshots do not. Results: the memory card listed File A (1 Shine) and
+    File B (94); File A loaded into Delfino Plaza; Mario walked; pause → Save
+    → Yes showed "Save complete." After a cold relaunch (new process, module
+    reloaded from the bundle, audio route Speaker) File A loaded into Delfino
+    Plaza again. Not checked by ear: sound (RemoteIO output was running).
+    Screens and logs stay private in `~/.codex/worktrees/sunpad-windows-goal-vm`.
 - [ ] **S5. Release SunPad with Windows hosts. (Chris approves)** Mark #57 and
   #78 ready, merge them in order, and prepare the next SunPad release with
   `windows-arm64` and `windows-x86_64` marked experimental in `padmint.json`.
