@@ -1,10 +1,12 @@
 # PadMint status
 
-What each recent PadMint release changed. Updated **9 November 2026**.
+What each recent PadMint release changed. Updated **10 November 2026**.
 
 **Next work:** [What PadMint still needs](docs/REMAINING.md) is the current
 queue. Older releases, from 0.5.22 back, and the October build evidence are in
 [STATUS-HISTORY.md](STATUS-HISTORY.md).
+
+**v0.6.4:** SunPad (Super Mario Sunshine) can be built for iPhone and iPad on a Windows PC, as [SunPad 0.3.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.3.0) allows (experimental; Windows 11 ARM64 and x64 with Visual Studio Build Tools, and Linux ARM64 and x86-64). Players asked for this. PadMint 0.6.3 for Windows built it on Windows 11 ARM64 from the original disc in about 2 h 50 min, and that copy was installed and played on an iPad Pro, including a save and a reload. A native x64 PC hasn't been tried. Macs build SunPad exactly as before. The [SunPad Windows goal](docs/SUNPAD_WINDOWS_GOAL.md) records each step ([#257](https://github.com/chrissotraidis/padmint/pull/257)).
 
 **v0.6.3:** the iPhone/iPad app's 3D boxes get real backs and spines. When official box art is on, the app now also downloads each game's back cover (36 games) and spine (29 games) from the LaunchBox Games Database, matched by title and console, North American scans first; spines printed in another language are left out, and a game without a scan keeps the plain back or drawn spine. TribesPad now shows up as the three games it holds, Starsiege: Tribes, Tribes 2 and Tribes: Vengeance, each with its own box; all three are installed when TribesPad is and open TribesPad. LaunchBox's large scans get 60 seconds to download; libretro keeps 20 before its GitHub copy is tried ([#252](https://github.com/chrissotraidis/padmint/pull/252)).
 

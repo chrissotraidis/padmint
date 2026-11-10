@@ -53,7 +53,7 @@ has been installed on an iPhone or iPad yet.
 | GoldenEye 007 (GoldenPad) | **Build here** (experimental), [goldenpad v0.3.0](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (126 s). Next: install and play a Windows-built copy on a device |
 | Banjo-Kazooie (BearBirdPad) | **Build here** (experimental), [bearbirdpad v0.3.0](https://github.com/chrissotraidis/bearbirdpad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (155 s). Next: install and play a Windows-built copy on a device |
 | Donkey Kong 64 (BananaPad) | **Build here** (experimental), [bananapad v0.3.0](https://github.com/chrissotraidis/bananapad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (134 s). Next: install and play a Windows-built copy on a device |
-| Super Mario Sunshine (SunPad) | Apple Silicon Mac | Reads the disc while compiling | Merge [sunpad#57](https://github.com/chrissotraidis/sunpad/pull/57), then [#78](https://github.com/chrissotraidis/sunpad/pull/78); publish, device check |
+| Super Mario Sunshine (SunPad) | **Build here** (experimental), [sunpad v0.3.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.3.0) | — | PadMint 0.6.3 for Windows built it on Windows 11 ARM64 (2 h 23 min plus 26 min of tools), and that copy was installed and played on an iPad Pro: gameplay, a save and a reload after a cold relaunch. Next: a native x64 Windows PC |
 | Super Smash Bros. Melee (MeleePad) | **Build here** (experimental), [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (3,863 s). Next: install and play a Windows-built copy on a device |
 | Pokémon Snap (SnapPad) | Apple Silicon Mac | Reads the ROM while compiling; its decompilation tools still come from a private, locally verified bundle | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12): publish those tools through PadMint's managed tools, then add Windows hosts to the recipe. SnapPad's release pause still applies |
 | The Wind Waker (BlueWake) | Ready-to-play **Windows and Linux desktop** downloads; iPhone/iPad needs a Mac | Reads the disc while compiling | [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100) is merged: the Windows proof took 2 h 19 min on Windows 11 ARM64 from the original disc. Published 0.10.0 still declares only Mac for iPhone/iPad; release a Windows-enabled recipe, then a device check |
@@ -156,7 +156,6 @@ and ARM64 need their own complete builds and acceptance checks.
 | Game | Proven on the build side | Missing before Windows can be selected |
 |---|---|---|
 | [SnapPad #12](https://github.com/chrissotraidis/snappad/pull/12) | Full Windows ARM64 ROM-to-IPA pipeline; byte-identical generated output; warm rebuild performs no compilation | Add Windows hosts to the recipe, publish it, device check; current recipe has no Windows host |
-| [SunPad #78](https://github.com/chrissotraidis/sunpad/pull/78) | Windows ARM64 and emulated x64 backend; PRs #57 and #78 pass | Merge prerequisite [#57](https://github.com/chrissotraidis/sunpad/pull/57) and then #78, publish the recipe, device check |
 
 ## Remaining local-Windows work
 
@@ -189,8 +188,8 @@ and recheck each affected PR and release before using this per-game queue.
    (its backend still reads a private, locally verified bundle), then add
    Windows x64 and ARM64 to the recipe, publish it and run the physical-device
    check. SnapPad's release pause still applies.
-3. Merge SunPad #57 and #78, publish the recipe, and run the physical-device
-   check.
+3. SunPad: done in 0.3.0 (10 November), including a device check of a
+   Windows-built copy. A native x64 PC remains.
 4. BlueWake: publish an iPhone recipe with Windows hosts and the matching app,
    then a device check. The current 0.10.0 desktop downloads are already published.
    AnnePad (#20) and SnapPad (#12) wait for the published IDO, binutils and

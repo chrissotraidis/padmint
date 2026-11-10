@@ -123,12 +123,22 @@ commit disc contents, translated code, keys or personal builds.
     reloaded from the bundle, audio route Speaker) File A loaded into Delfino
     Plaza again. Not checked by ear: sound (RemoteIO output was running).
     Screens and logs stay private in `~/.codex/worktrees/sunpad-windows-goal-vm`.
-- [ ] **S5. Release SunPad with Windows hosts. (Chris approves)** Mark #57 and
+- [x] **S5. Release SunPad with Windows hosts. (Chris approves)** Mark #57 and
   #78 ready, merge them in order, and prepare the next SunPad release with
   `windows-arm64` and `windows-x86_64` marked experimental in `padmint.json`.
   Every asset passes `python3 -m padmint audit` and the release gate. Ask Chris
   before tagging and publishing. **Done when** the release is published and
   `scripts/player-check.sh sunpad ios DISC` (no checkout) passes against it.
+  - 10 Nov (Chris: "finish this and finalize the build"): #57 and #78 merged
+    ([ce32298](https://github.com/chrissotraidis/sunpad/commit/ce32298)), with
+    0.3.0 / build 18, release notes and a README section for Windows players.
+    The app was built from dadb177 (same tree as ce32298); its IPA, recipe and
+    SHA256SUMS pass `python3 -m padmint audit` and the release gate, and the
+    package audit finds no game module. The player check before tagging passed
+    with that checkout and app (Apple Python 3.9.6, 3,286 s).
+    [v0.3.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.3.0) is
+    published and latest; downloaded assets match SHA256SUMS. The check after
+    publishing needs the catalog from S6 first.
 - [ ] **S6. Show it in PadMint.** Add `ios_hosts` (`macos-arm64`,
   `windows-arm64`, `windows-x86_64`) and a Windows `host_notes` entry in
   English, Spanish and Portuguese to `catalog/sunpad.json`, as MeleePad does.
