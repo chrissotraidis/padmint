@@ -155,7 +155,7 @@ column works from any computer with a browser.
 | SpaghettiPad | Mario Kart 64 (N64) | ✓ | — | ✓ |
 | SquirrelPad | Conker's Bad Fur Day (N64) | ✓ | Exp. | — |
 | StarshipPad | Star Fox 64 (N64) | ✓ | — | ✓ |
-| SunPad | Super Mario Sunshine (GameCube) | ✓ + Mac app | — | — |
+| SunPad | Super Mario Sunshine (GameCube) | ✓ + Mac app | Exp. | — |
 | TribesPad | Tribes 2 (PC), Starsiege: Tribes and Tribes: Vengeance | ✓ + Mac app | — | ✓ |
 | UTP | Unreal Tournament (PC) | ✓ | — | ✓ |
 

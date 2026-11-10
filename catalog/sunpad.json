@@ -17,13 +17,13 @@
   ],
   "host_notes": {
     "windows": {
-      "text": "Experimental on Windows: this build has completed on Windows 11 ARM64, but a Windows-built copy hasn't been installed and played on an iPhone or iPad yet, and a native x64 Windows PC hasn't been tried.",
+      "text": "Experimental on Windows: a copy built on Windows 11 ARM64 has been installed and played on an iPad, but a native x64 Windows PC hasn't been tried yet. The first build takes a few hours.",
       "translations": {
         "es": {
-          "text": "Experimental en Windows: esta compilación se completó en Windows 11 ARM64, pero todavía no se ha instalado ni jugado en un iPhone o iPad una copia creada en Windows, y no se ha probado en un PC con Windows x64 nativo."
+          "text": "Experimental en Windows: una copia creada en Windows 11 ARM64 se instaló y se jugó en un iPad, pero todavía no se ha probado en un PC con Windows x64 nativo. La primera compilación tarda unas horas."
         },
         "pt": {
-          "text": "Experimental no Windows: esta compilação foi concluída no Windows 11 ARM64, mas uma cópia criada no Windows ainda não foi instalada e jogada num iPhone ou iPad, e um PC com Windows x64 nativo ainda não foi testado."
+          "text": "Experimental no Windows: uma cópia criada no Windows 11 ARM64 foi instalada e jogada num iPad, mas um PC com Windows x64 nativo ainda não foi testado. A primeira compilação leva algumas horas."
         }
       }
     },

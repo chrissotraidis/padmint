@@ -262,11 +262,12 @@ nothing to build or download yet.
 <details>
 <summary><strong>Can I build iPhone apps on Windows or Linux?</strong></summary>
 
-Yes. A Windows PC builds seven games itself, experimentally: KartPad, GoldenPad,
-BearBirdPad, BananaPad, SquirrelPad, DinoPad and MeleePad. Linux builds KartPad.
+Yes. A Windows PC builds nine games itself, experimentally: KartPad, GoldenPad,
+BearBirdPad, BananaPad, SquirrelPad, DinoPad, MeleePad, BlueWake and SunPad.
+Linux builds KartPad and SunPad.
 From either, 17 more build on [GitHub's Mac](../README.md#github-cloud-build-no-mac-needed).
-The other seven (AgePad, AnnePad, BlueWake, NightPad, Ottsel, SnapPad and
-SunPad) still need an Apple Silicon Mac; [Building games on Windows](WINDOWS.md)
+The other five (AgePad, AnnePad, NightPad, Ottsel and SnapPad) still need an
+Apple Silicon Mac; [Building games on Windows](WINDOWS.md)
 tracks each one.
 
 </details>
