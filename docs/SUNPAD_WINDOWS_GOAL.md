@@ -139,7 +139,7 @@ commit disc contents, translated code, keys or personal builds.
     [v0.3.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.3.0) is
     published and latest; downloaded assets match SHA256SUMS. The check after
     publishing needs the catalog from S6 first.
-- [ ] **S6. Show it in PadMint.** Add `ios_hosts` (`macos-arm64`,
+- [x] **S6. Show it in PadMint.** Add `ios_hosts` (`macos-arm64`,
   `windows-arm64`, `windows-x86_64`) and a Windows `host_notes` entry in
   English, Spanish and Portuguese to `catalog/sunpad.json`, as MeleePad does.
   `tests/test_later.py` uses SunPad as its *Needs Apple Silicon Mac* example;
@@ -154,10 +154,23 @@ commit disc contents, translated code, keys or personal builds.
     SunPad in `tests/test_later.py`. 520 tests pass and the catalog audit
     against #78's recipe reports nothing. Merge only after S5's release;
     update the notes and docs from S4's result first.
-- [ ] **S7. Build as a player would.** In the VM, with a fresh PadMint folder,
+  - 10 Nov: #257 merged with the updated Windows note and docs;
+    [PadMint 0.6.4](https://github.com/chrissotraidis/padmint/releases/tag/v0.6.4)
+    published (all five assets pass the audit and release gate). The player
+    check after publishing, from PadMint main with no checkout, reported
+    0 catalog problems and built SunPad 0.3.0 from the published release
+    (1,721 s, 16 jobs).
+- [x] **S7. Build as a player would.** In the VM, with a fresh PadMint folder,
   run `padmint make sunpad ios --disc DISC` against the published release.
   **Done when** it produces the IPA and the Windows game page shows **Build on
   this Windows PC** with the experimental note.
+  - 10 Nov: in the Windows 11 ARM64 VM, PadMint 0.6.4's release ZIP (checksum
+    verified) with a fresh PadMint folder ran `padmint make sunpad ios`: it
+    downloaded SunPad 0.3.0 and its published app and wrote
+    `SunPad-v0.3.0-ios-personal.ipa` (2,779 s, 8 jobs; module imports: 0 from
+    the app, 3 runtime names). The released code's page data on
+    `windows-arm64` and `windows-x86_64` lists SunPad as buildable, titles the
+    card **Build on this Windows PC** and shows the Windows note.
 - [ ] **S8. Tell players. (Chris)** Chris posts the news. The note says it is
   experimental on Windows and asks for reports from native x64 PCs.
 
