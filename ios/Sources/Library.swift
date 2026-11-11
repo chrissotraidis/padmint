@@ -20,12 +20,9 @@ struct Game: Codable, Identifiable, Hashable {
     let boxSpine: URL?
     /// The link a PadMint-built copy answers to (padmint-<game>://); nil for ready-made apps.
     let link: String?
-    /// Whether this app can ask iOS if the game is installed (its link is one of the
-    /// first 25 in Info.plist); other games are found when the player opens them.
-    let checked: Bool
 
     enum CodingKeys: String, CodingKey {
-        case id, name, title, platform, game, repo, art, link, checked
+        case id, name, title, platform, game, repo, art, link
         case boxArt = "box_art"
         case boxBack = "box_back"
         case boxSpine = "box_spine"
@@ -98,6 +95,8 @@ final class LibraryModel: ObservableObject {
 
     /// The newest list; the copy inside the app is used offline.
     private let remote = URL(string: "https://raw.githubusercontent.com/chrissotraidis/padmint/main/ios/library.json")!
+    /// The links this copy of the app declares in Info.plist: the only ones iOS answers for.
+    private let declared = Set(Bundle.main.object(forInfoDictionaryKey: "LSApplicationQueriesSchemes") as? [String] ?? [])
     static let consoles = ["Nintendo 64", "GameCube", "Wii", "PlayStation", "PlayStation 2", "Xbox", "PC"]
 
     init() {
@@ -162,11 +161,16 @@ final class LibraryModel: ObservableObject {
         checkInstalled()
     }
 
-    /// iOS answers only for links this app declares in Info.plist (LSApplicationQueriesSchemes).
+    /// Whether this copy of the app can ask iOS if the game is installed; other games are
+    /// found when the player opens them. The list's own "checked" describes the newest app,
+    /// and the list downloaded from GitHub can be newer than the app reading it: a game
+    /// added since would always look not installed, with no Play button to try it.
+    func checked(_ game: Game) -> Bool { game.link.map(declared.contains) ?? false }
+
     func checkInstalled() {
         installed = Set(games.compactMap { game in
             guard let url = game.linkURL else { return nil }
-            if game.checked { return UIApplication.shared.canOpenURL(url) ? game.id : nil }
+            if checked(game) { return UIApplication.shared.canOpenURL(url) ? game.id : nil }
             return opened.contains(game.id) ? game.id : nil
         })
         #if DEBUG
@@ -179,13 +183,13 @@ final class LibraryModel: ObservableObject {
 
     /// Whether Play can be tried: installed, or a game this app can't check (it may be there).
     func canTry(_ game: Game) -> Bool {
-        installed.contains(game.id) || (!game.checked && game.link != nil)
+        installed.contains(game.id) || (!checked(game) && game.link != nil)
     }
 
     func status(_ game: Game) -> String {
         if installed.contains(game.id) { return lastPlayedText(lastPlayed[game.id]) }
         if game.link == nil { return "Ready-made app" }
-        return game.checked ? "Not installed" : "Tap Play to check"
+        return checked(game) ? "Not installed" : "Tap Play to check"
     }
 
     /// Opens the game; false when no app answers to its link.
@@ -193,7 +197,7 @@ final class LibraryModel: ObservableObject {
         guard let url = game.linkURL else { return false }
         let success = await UIApplication.shared.open(url)
         if success { lastPlayed[game.id] = Date() }
-        if !game.checked {
+        if !checked(game) {
             // Every game inside the same app (TribesPad's three) shares its answer.
             let siblings = games.filter { $0.link == game.link }.map(\.id)
             if success { opened.formUnion(siblings) } else { opened.subtract(siblings) }
