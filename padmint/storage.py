@@ -8,6 +8,7 @@ PadMint versions can all be fetched again, so they may go. Installed copies, gam
 and saves are never in this folder.
 """
 import os
+from pathlib import Path
 import shutil
 import threading
 import time
@@ -18,7 +19,7 @@ from .manifest import catalog
 
 def size(path):
     """Bytes the folder takes on disk, without following links."""
-    total, stack = 0, [str(path)]
+    total, stack = 0, [tools._long(path)]
     while stack:
         try:
             with os.scandir(stack.pop()) as entries:
@@ -50,18 +51,19 @@ def items(latest=None):
     games = home / "games"
     folders = sorted((p for p in games.iterdir() if p.is_dir()), key=lambda p: p.stat().st_mtime) \
         if games.is_dir() else []
+    owner = {path.name: game_of(path.name) for path in folders}
     newest = {}
     for path in folders:
-        game = game_of(path.name)
+        game = owner[path.name]
         if game and not path.name.endswith(".partial"):
             newest[game] = path.name
     for path in folders:
-        game = game_of(path.name)
+        game = owner[path.name]
         version = path.name[len(game) + 1:] if game else path.name
         partial = path.name.endswith(".partial")
         keep = not partial and game is not None and (
             version == latest.get(game) if latest.get(game) in
-            {p.name[len(game) + 1:] for p in folders if game_of(p.name) == game}
+            {p.name[len(game) + 1:] for p in folders if owner[p.name] == game}
             else newest.get(game) == path.name)
         found.append({"id": "games/" + path.name, "kind": "game", "game": game,
                       "version": version.removesuffix(".partial"),
@@ -119,6 +121,7 @@ def measure(latest=None):
 
 def remove(ids, latest=None):
     """Remove the listed folders that may be removed; returns the bytes freed."""
+    from . import cli
     allowed = {item["id"] for item in items(latest) if item["removable"]}
     home = tools.home().resolve()
     freed = 0
@@ -129,6 +132,8 @@ def remove(ids, latest=None):
         if home not in path.parents:
             raise ValueError(f"{item_id} is outside PadMint's folder")
         freed += size(path)
-        shutil.rmtree(path)
+        # A game's download holds Git's read-only files, and the Android NDK's paths are longer
+        # than Windows allows: a plain rmtree stops at either, with the folder half removed.
+        cli._remove_tree(Path(tools._long(path)))
     return freed
 
