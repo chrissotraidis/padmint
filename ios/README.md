@@ -63,6 +63,9 @@ for the first 25 only. PadMint builds 31 iPhone/iPad games, so the app checks
 the first 25 in the catalog. Each of the others shows **Tap Play to check**: the
 library tries its link, and if the game opens it's remembered as installed.
 Opening a link needs no declaration, so every game can be launched from here.
+The app decides this from the links its own copy declares, since the game list
+it downloads can be newer than the app: a game added later shows **Tap Play to
+check** in an older copy too.
 
 Ready-made apps (the ones you download instead of building) don't answer to a
 link yet, so the library lists them without knowing whether they're installed.
