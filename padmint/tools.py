@@ -230,6 +230,20 @@ def _long(path):
     return "\\\\?\\" + full
 
 
+def replace_folder(source, target):
+    """Rename a folder PadMint has just written. Windows refuses while any file inside is
+    open, and antivirus (Microsoft Defender) opens new files to scan them, so a rename
+    straight after writing hundreds of files can fail with "Access is denied" on a fast
+    PC (padmint#255). There, wait and try again for about 15 seconds before giving up."""
+    for wait in (0.2, 0.5, 1, 2, 4, 8, None):
+        try:
+            return os.replace(source, target)
+        except PermissionError:
+            if os.name != "nt" or wait is None:
+                raise
+            time.sleep(wait)
+
+
 # Libraries a downloaded tool loads from the system, per host. Checked before any
 # download: LLVM's linker for Linux arm64 needs libxml2.so.2, which minimal Linux
 # installs lack and Ubuntu 25.10 and later no longer ship (they have libxml2.so.16).
@@ -401,7 +415,7 @@ def install(names, host, stream=None, any_host=False, report=None):
         _check_members(staging, entry.get("members"))
         if folder.exists():
             shutil.rmtree(_long(folder))
-        staging.replace(folder)
+        replace_folder(staging, folder)
         _marker(folder).write_text(json.dumps(entry) + "\n")
         report(state="ready", **about)
         print(t("tool_got", name=name, version=version(tool, host)), file=stream)

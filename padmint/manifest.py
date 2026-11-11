@@ -279,8 +279,24 @@ def load_manifest(path):
         return validate_manifest(json.load(stream))
 
 
+_SHIPPED = CATALOG
+_checked = None  # PadMint's own catalog as JSON text, once it has been read and checked
+
+
 def catalog():
-    """Return catalog entries keyed by game ID."""
+    """Return catalog entries keyed by game ID. PadMint's own catalog cannot change while
+    PadMint runs (an update starts PadMint again), so its files are read and checked once:
+    one page of the window asks for the catalog over a hundred times. Every caller still
+    gets its own copy, so changing an entry never changes it for anyone else."""
+    global _checked
+    if CATALOG != _SHIPPED:
+        return _read_catalog()
+    if _checked is None:
+        _checked = json.dumps(_read_catalog())
+    return json.loads(_checked)
+
+
+def _read_catalog():
     entries = {}
     for path in sorted(CATALOG.glob("*.json")):
         with path.open(encoding="utf-8") as stream:

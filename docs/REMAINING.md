@@ -1,7 +1,7 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **10 November 2026** for PadMint **0.6.4**,
+continuing work. It was updated on **11 November 2026** for PadMint **0.6.4**,
 using the live catalog audit (41 entries, 0 problems) and the open pull requests
 in PadMint and each game's repository. Any PR that finishes an item below
 updates this page too.
@@ -255,6 +255,21 @@ only.
   `build --repo` still refuses, now with the changed files listed. If the same
   files reappear after a fresh copy, the game's build writes them and needs its
   own fix.
+- **A first BlueWake build on a fast Windows x64 PC stopped with "Access is
+  denied"** ([#255](https://github.com/chrissotraidis/padmint/issues/255), 9
+  November): Windows refuses to rename a folder while antivirus still has a new
+  file in it open. [bluewake#596](https://github.com/chrissotraidis/bluewake/pull/596)
+  makes BlueWake's builder wait and try again; it needs a BlueWake release to
+  reach players. On `main` after 0.6.4, PadMint does the same for its own
+  renames after unpacking a tool and after downloading a game's source, where a
+  failure meant downloading again. Checked on Windows 11 ARM64 with a file held
+  open; the x64 PC that reported it hasn't built with either change.
+- **Also on `main` after 0.6.4, for the next release:** Storage's Remove now
+  works on Windows for game downloads (Git's read-only files) and tools with
+  paths over 260 characters, which it also measured as 0 bytes; both failed
+  with the folder half removed (reproduced and fixed on Windows 11 ARM64). The
+  catalog is read once per run instead of on every lookup: listing Storage with
+  21 downloads read it 489 times (1.1 s on an M3 Max, 2 s on the Windows VM).
 - Replace HarkinianPad's card art (`art/harkinianpad.png`, still the old
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):

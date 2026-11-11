@@ -285,7 +285,6 @@ MESSAGES = {
         "pt": "Cancelado. O que já foi feito fica guardado, então a próxima tentativa é mais rápida.",
     },
     "w_details": {"en": "Details", "es": "Detalles", "pt": "Detalhes"},
-    "w_copy": {"en": "Copy details", "es": "Copiar detalles", "pt": "Copiar detalhes"},
     "w_copied": {"en": "Copied", "es": "Copiado", "pt": "Copiado"},
     "w_failed": {
         "en": ("The build stopped. The details below say why. For help, copy them and post them with "

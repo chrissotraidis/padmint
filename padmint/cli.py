@@ -1775,7 +1775,7 @@ def fetch_source(game, source, ref, changed=()):
                          f"{source}; the new attempt is in {partial}. Run PadMint again to retry.")
     if source.exists() or source.is_symlink():
         _preserve_download(source)
-    os.replace(partial, source)
+    tools.replace_folder(partial, source)
     print(f"{game} source in {source}", flush=True)
 
 

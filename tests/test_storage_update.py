@@ -49,6 +49,16 @@ class StorageTests(FolderTests):
         self.assertFalse((self.home / "games/kartpad-v0.7.9").exists())
         self.assertTrue((self.home / "games/kartpad-v0.8.3").exists())
 
+    def test_an_old_download_is_removed_with_gits_read_only_files(self):
+        # Git marks its object files read-only, and Windows refuses to delete those until
+        # they are made writable: Remove stopped there, with the folder half gone.
+        self.make("games/kartpad-v0.7.9/.git/objects/ab")
+        (self.home / "games/kartpad-v0.7.9/.git/objects/ab/file.bin").chmod(0o444)
+        self.make("games/kartpad-v0.8.3")
+        with mock.patch.object(storage, "_host", return_value="macos-arm64"):
+            storage.remove(["games/kartpad-v0.7.9"], {"kartpad": "v0.8.3"})
+        self.assertFalse((self.home / "games/kartpad-v0.7.9").exists())
+
 
 class UpdateTests(FolderTests):
     def release(self, version, payload_version=None):
