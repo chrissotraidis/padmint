@@ -276,6 +276,16 @@ only.
   ([#262](https://github.com/chrissotraidis/padmint/pull/262), checked in the
   iOS 27 simulator, not on a device). The README, the player guide and the docs
   index now explain the iPhone/iPad app from download to first launch.
+- **A GoldenPad 0.3.0 build stopped at Package after 16 minutes** on a Mac whose
+  `PATH` puts Homebrew's GNU coreutils first
+  ([#263](https://github.com/chrissotraidis/padmint/issues/263),
+  [goldenpad#55](https://github.com/chrissotraidis/goldenpad/issues/55), 11 November):
+  GoldenPad's `stat -f '%z'` is BSD-only. On `main` after 0.6.4, a backend on a Mac
+  runs without Homebrew's `…/libexec/gnubin` folders, and the build log says which
+  it left out. Checked with a GoldenPad 0.3.0 build on an Apple Silicon Mac with
+  all five GNU tool folders first on `PATH`.
+  [goldenpad#56](https://github.com/chrissotraidis/goldenpad/pull/56) fixes the
+  script itself; it needs a GoldenPad release to reach players.
 - Replace HarkinianPad's card art (`art/harkinianpad.png`, still the old
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):

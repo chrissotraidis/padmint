@@ -14,7 +14,7 @@ import unittest
 from unittest import mock
 
 from fixtures import entries, write_ipa
-from padmint.cli import execute, validate
+from padmint.cli import execute, gnu_tool_folders, validate
 
 MAC_SDK = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
 SHIM = {"SDKROOT": MAC_SDK, "CPATH": "/usr/local/include", "LIBRARY_PATH": "/usr/local/lib"}
@@ -64,7 +64,7 @@ class DeviceEnvironmentTests(unittest.TestCase):
             env, printed, log = self.build("ios", steps)
             for key in SHIM:
                 self.assertNotIn(key, env)
-            self.assertEqual(env["PATH"], os.environ["PATH"])
+            self.assertEqual(env["PATH"], gnu_tool_folders(os.environ["PATH"])[0])
             note = "PadMint ignores SDKROOT, CPATH, LIBRARY_PATH for iPhone builds"
             self.assertIn(note, printed)
             self.assertIn(note, log)
@@ -78,6 +78,31 @@ class DeviceEnvironmentTests(unittest.TestCase):
             env, printed, log = self.build(target)
             self.assertEqual({key: env.get(key) for key in SHIM}, SHIM)
             self.assertNotIn("PadMint ignores", printed + log)
+
+    def test_a_mac_build_runs_without_homebrews_gnu_tools(self):
+        gnu = "/opt/homebrew/opt/coreutils/libexec/gnubin"
+        path = os.pathsep.join([gnu, "/opt/homebrew/opt/gnu-sed/libexec/gnubin/", gnu_tool_folders(os.environ["PATH"])[0]])
+        for target in ("ios", "macos"):
+            with mock.patch.dict(os.environ, {"PATH": path}), \
+                    mock.patch("padmint.cli.sys.platform", "darwin"):
+                env, printed, log = self.build(target)
+            self.assertNotIn("gnubin", env["PATH"])
+            self.assertIn("/usr/bin", env["PATH"].split(os.pathsep))
+            note = f"PadMint leaves {gnu}, /opt/homebrew/opt/gnu-sed/libexec/gnubin/ off PATH for this build"
+            self.assertIn(note, printed)
+            self.assertIn(note, log)
+            for stale in (self.repo / "build/padmint").glob("*/runs/*"):
+                for item in stale.iterdir():
+                    item.unlink()
+                stale.rmdir()
+
+    def test_gnu_tool_folders_are_only_left_out_on_a_mac(self):
+        path = os.pathsep.join(["/opt/homebrew/opt/findutils/libexec/gnubin", "/usr/bin", "/opt/homebrew/bin", "/home/me/gnubin-tools"])
+        self.assertEqual(gnu_tool_folders(path, "darwin"),
+                         (os.pathsep.join(["/usr/bin", "/opt/homebrew/bin", "/home/me/gnubin-tools"]),
+                          ["/opt/homebrew/opt/findutils/libexec/gnubin"]))
+        self.assertEqual(gnu_tool_folders(path, "linux"), (path, []))
+        self.assertEqual(gnu_tool_folders("/usr/bin:/bin", "darwin"), ("/usr/bin:/bin", []))
 
     def test_nothing_to_say_when_nothing_was_set(self):
         with mock.patch.dict(os.environ, {}, clear=False):
