@@ -20,7 +20,9 @@ and three dozen more) for your iPhone, iPad, Mac or Android phone. You pick a ga
 it your own disc image or ROM when the game needs one, and PadMint downloads the
 source and free tools, builds your copy and tells you how to install it.
 
-PadMint contains no games, and your game file never leaves your computer.
+PadMint contains no games, and your game file never leaves your computer. Once
+your games are on your iPhone or iPad, the
+[PadMint app](#padmint-on-your-iphone-or-ipad) keeps them in one library.
 
 <p align="center">
   <img src="docs/images/padmint-library.jpg" width="820" alt="PadMint on a Mac: the sidebar with My games, Updates, All games, devices and Storage, and the game library with search, a systems menu and groups">
@@ -55,6 +57,10 @@ copy**. A first build takes from a few minutes to a few hours.
 **4. Install it** on your iPhone or iPad with Sideloadly
 ([steps below](#install-on-iphone-or-ipad)). The page also explains Mac and
 Android installs.
+
+**5. Optional: add the PadMint app** to the same iPhone or iPad
+([steps below](#padmint-on-your-iphone-or-ipad)). It lines up every game you've
+installed in one library, each with a Play button.
 
 **Updating PadMint:** on a Mac or Linux, click the version button at the bottom
 of the sidebar when it offers an update. On Windows, download the ZIP again,
@@ -102,9 +108,9 @@ that work on the computer you're using:
 
 | Your computer | Builds here | Builds on GitHub's Mac |
 |---|---|---|
-| **Mac with Apple Silicon** (M1 or newer) | All 31 games for iPhone/iPad, 12 of them also as Mac apps | 17 games, under **Other ways to build** |
-| **Windows PC** | 7 games, experimental | 17 games |
-| **Linux** | KartPad, experimental | 17 games |
+| **Mac with Apple Silicon** (M1 or newer) | All 31 games for iPhone/iPad, 12 of them also as Mac apps, and Lemonade Remixed for Mac | 17 games, under **Other ways to build** |
+| **Windows PC** | 9 games, experimental | 17 games |
+| **Linux** | KartPad and SunPad, experimental | 17 games |
 | **Intel Mac** | KartPad, experimental | 17 games |
 | **Android phone**, no computer | KartPad's game data, [experimental](docs/GUIDE.md#android-phone-only-experimental) | — |
 | **Chromebook** (untested) | With Linux turned on, the same as Linux | 17 games |
@@ -134,7 +140,7 @@ column works from any computer with a browser.
 | BarrelPad | Diddy Kong Racing (N64) | ✓ | — | ✓ |
 | BearBirdPad | Banjo-Kazooie (N64) | ✓ | Exp. | — |
 | BellPad | Animal Crossing (GameCube) | ✓ + Mac app | — | ✓ |
-| BlueWake | The Legend of Zelda: The Wind Waker (GameCube) | ✓ | — | — |
+| BlueWake | The Legend of Zelda: The Wind Waker (GameCube) | ✓ | Exp. | — |
 | BrawlerPad | Super Smash Bros. (N64) | ✓ + Mac app | — | ✓ |
 | CTRPad | Crash Team Racing (PlayStation) | ✓ + Mac app | — | ✓ |
 | DarkPad | Perfect Dark (N64) | ✓ | — | Exp. ² |
@@ -155,7 +161,7 @@ column works from any computer with a browser.
 | SpaghettiPad | Mario Kart 64 (N64) | ✓ | — | ✓ |
 | SquirrelPad | Conker's Bad Fur Day (N64) | ✓ | Exp. | — |
 | StarshipPad | Star Fox 64 (N64) | ✓ | — | ✓ |
-| SunPad | Super Mario Sunshine (GameCube) | ✓ + Mac app | Exp. | — |
+| SunPad | Super Mario Sunshine (GameCube) | ✓ + Mac app | Exp. ⁴ | — |
 | TribesPad | Tribes 2 (PC), Starsiege: Tribes and Tribes: Vengeance | ✓ + Mac app | — | ✓ |
 | UTP | Unreal Tournament (PC) | ✓ | — | ✓ |
 
@@ -164,7 +170,12 @@ column works from any computer with a browser.
 2. DarkPad builds from a private copy of PadMint: [steps](docs/GUIDE.md#darkpad-private-github-build).
 3. With HaloPad's own workflow: [steps](docs/GUIDE.md#halopad-xbox-edition-on-github).
 4. KartPad also builds for iPhone/iPad on Linux and Intel Macs (experimental),
-   and its Android game data builds on any of them.
+   and its Android game data builds on any of them. SunPad also builds for
+   iPhone/iPad on Linux (experimental).
+
+**Mac only:** Lemonade Remixed (Lemonade Tycoon Deluxe, the 2002 Windows game)
+builds as a Mac app on an Apple Silicon Mac. You choose your own Setup.exe in
+the app.
 
 **Ready-made apps** (download, no build): CaesarPad (Caesar III), DaggerPad
 (Daggerfall), DevilTouch (Diablo), Emerald Tablet (Pharaoh + Cleopatra), KidPad
@@ -233,16 +244,48 @@ it, and don't ask others for theirs.
 
 ## PadMint on your iPhone or iPad
 
-PadMint also comes as an app for iPhone and iPad. It gathers the games you've
-built and installed into one
-library: your games as 3D boxes you swipe through, a grid of the whole catalog,
-search and console filters, and a page for each game with a Play button. Official
-box art and titles are optional and download only if you agree; most boxes then
-show their real back and spine too. TribesPad appears as the three games it holds. Install its
-`PadMint-ios-unsigned.ipa` from the [latest release](https://github.com/chrissotraidis/padmint/releases/latest)
-the same way as a game. It finds games built with PadMint 0.5.34 or newer, which
-answer to a link such as `padmint-sunpad://`. With a free Apple ID it uses one of
-your three sideloaded app slots. Experimental. Its source is in [ios/](ios/README.md).
+<p align="center">
+  <img src="docs/images/padmint-ios-library.jpg" width="420" alt="PadMint on an iPad: a Continue Playing banner with a Play button, a Your games row and the All games grid, with a green check mark on each installed game">
+</p>
+
+PadMint also comes as an app for iPhone and iPad: one library for the games
+you've built and installed. It doesn't build or download games. You make each
+game on your computer as above, and the app then shows it with a green check
+mark and a Play button.
+
+1. Download `PadMint-ios-unsigned.ipa` from the
+   [latest release](https://github.com/chrissotraidis/padmint/releases/latest).
+2. Install it with Sideloadly and your Apple ID,
+   [the same way as a game](#install-on-iphone-or-ipad). It needs iOS or iPadOS
+   17 or later.
+3. Open it. It asks once whether to download official box art and titles. If
+   you agree, each game gets its real cover and name, and most 3D boxes their
+   real back and spine. Otherwise it keeps PadMint's own art and names, as in
+   the picture.
+4. Games you built with PadMint 0.5.34 or newer show up as installed. Rebuild
+   an older game once and it joins them.
+
+In the app:
+
+- **Four layouts**, switched from the toolbar: a shelf with the game you played
+  last, a grid of every game, a carousel of 3D boxes you swipe through, and a
+  compact list.
+- **Search, sorting and console filters**, and a switch to show only installed
+  games.
+- **A page for each game** with Play. A game you haven't installed says how to
+  build it with PadMint instead.
+- TribesPad appears as the three games it holds.
+
+Good to know:
+
+- With a free Apple ID the app uses one of your three sideloaded app slots, and
+  like a game it runs for 7 days before you install it again.
+- iOS lets the app check 25 games. The others say **Tap Play to check** and
+  count as installed once they have opened from the app.
+- The eight ready-made apps are listed, but the app can't tell whether they're
+  installed.
+- The app is experimental. [PadMint for iPhone and iPad](ios/README.md) has the
+  details and its source.
 
 ## Help
 
