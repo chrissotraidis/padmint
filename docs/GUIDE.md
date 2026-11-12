@@ -10,6 +10,7 @@ questions.
 - [Where PadMint keeps its files](#where-padmint-keeps-its-files)
 - [More about GitHub Cloud Build](#more-about-github-cloud-build)
 - [Installing what you made](#installing-what-you-made)
+- [PadMint on your iPhone or iPad](#padmint-on-your-iphone-or-ipad)
 - [Android phone only (experimental)](#android-phone-only-experimental)
 - [Removing PadMint](#removing-padmint)
 - [Questions](#questions)
@@ -186,6 +187,47 @@ has every step.
 
 The `…-ios-unsigned.ipa` on a game's release page is PadMint's starting point.
 It contains no game code and can't play by itself.
+
+## PadMint on your iPhone or iPad
+
+PadMint also comes as an app for iPhone and iPad (experimental). It is a library
+for the games you've already built and installed. It doesn't build or download
+games: you make each one on your computer first.
+
+**Install it.** Download `PadMint-ios-unsigned.ipa` from the
+[latest PadMint release](https://github.com/chrissotraidis/padmint/releases/latest)
+and install it with Sideloadly, like a game. It needs iOS or iPadOS 17 or
+later. With a free Apple ID it takes one of your three sideloaded app slots and
+runs for 7 days before you install it again. To update it, install the
+`PadMint-ios-unsigned.ipa` from a newer PadMint release over it.
+
+**First launch.** The app asks once whether to use official covers and titles.
+If you agree, it downloads box art for every game and shows each game's
+official title with its PadMint name underneath. If you don't, it shows
+PadMint's own art and names. You can change this in the app's settings, or
+long-press any game to choose your own picture.
+
+**Finding your games.** A game with a green check mark is installed; tap it to
+play. The app knows a game is installed when the game answers to its own link,
+which every game built with PadMint 0.5.34 or newer does.
+
+- A game you built before 0.5.34 still opens from its own icon. Build it again
+  and install it over the old one to see it in the library.
+- iOS lets the app ask about 25 games. Six others say **Tap Play to check**:
+  tap Play, and if the game opens, the library remembers it.
+- The eight ready-made apps are listed, but the app can't tell whether they're
+  installed.
+- A game you haven't installed shows **Get It**, which says how to build it
+  with PadMint.
+
+**Looking around.** The toolbar switches between four layouts: Shelf (the game
+you played last, your games, then everything), Grid, Carousel (3D boxes you
+swipe through; tap the front box to open its page) and List. The bar under the
+PadMint name sorts by recently played, title or console, shows only installed
+games, and filters by console.
+
+[PadMint for iPhone and iPad](../ios/README.md) has more, including where the
+covers come from.
 
 ## Android phone only (experimental)
 

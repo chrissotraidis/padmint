@@ -4,6 +4,7 @@
 |---|---|
 | [README](../README.md) | What PadMint is, how to download it and install your first game |
 | [Player guide](GUIDE.md) | The PadMint window, every install route, removing PadMint, common questions |
+| [PadMint for iPhone and iPad](../ios/README.md) | The library app: what it shows, how to install it, how it finds your games, where covers come from |
 | [What PadMint still needs](REMAINING.md) | The current work queue and the decisions waiting on Chris. Start here when continuing work |
 | [Building games on Windows](WINDOWS.md) | Which games build on a Windows PC, with the evidence for each |
 | [Build compatibility](COMPATIBILITY.md) | Each game's published recipe, hosts and known problems |

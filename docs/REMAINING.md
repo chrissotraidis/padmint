@@ -28,10 +28,10 @@ ready-made apps. EctoPad is paused and not counted.
 
 | Measure | Mac (Apple Silicon) | Mac (Intel) | Windows PC | Linux |
 |---|---|---|---|---|
-| The player can end up with an iPhone/iPad app by any route, including GitHub's Mac | 38/39 (97%) | 26/39 (67%) | 33/39 (85%) | 27/39 (69%), but installing needs a Windows PC or Mac |
-| The player's own computer builds it (ready-made apps count) | 38/39 (97%) | 9/39 (23%) | 16/39 (41%) | 10/39 (26%) |
-| Built games only, on the player's own computer | 30/31 (97%) | 1/31 (3%) | 8/31 (26%) | 2/31 (6%) |
-| A copy built there has been installed and opened or played on a device | Every game's latest build as of 18–21 October opened on an iPad with iPadOS 27; NightPad, added in 0.5.30, has been installed on an iPad, with broad gameplay checks still open | 0 of 1 | 1 of 8 (SunPad, 10 November) | 0 of 2 |
+| The player can end up with an iPhone/iPad app by any route, including GitHub's Mac | 38/39 (97%) | 26/39 (67%) | 34/39 (87%) | 27/39 (69%), but installing needs a Windows PC or Mac |
+| The player's own computer builds it (ready-made apps count) | 38/39 (97%) | 9/39 (23%) | 17/39 (44%) | 10/39 (26%) |
+| Built games only, on the player's own computer | 30/31 (97%) | 1/31 (3%) | 9/31 (29%) | 2/31 (6%) |
+| A copy built there has been installed and opened or played on a device | Every game's latest build as of 18–21 October opened on an iPad with iPadOS 27; NightPad, added in 0.5.30, has been installed on an iPad, with broad gameplay checks still open | 0 of 1 | 1 of 9 (SunPad, 10 November) | 0 of 2 |
 
 An Intel Mac builds only KartPad itself (its recipe is the only one declaring
 `macos-x86_64`); everything else comes from GitHub's Mac or the ready-made apps,
@@ -270,6 +270,12 @@ only.
   with the folder half removed (reproduced and fixed on Windows 11 ARM64). The
   catalog is read once per run instead of on every lookup: listing Storage with
   21 downloads read it 489 times (1.1 s on an M3 Max, 2 s on the Windows VM).
+  In the iPhone/iPad app, double-tapping the carousel's front box now spins it
+  while the box sways; with Box motion on (the default) the sway cancelled the
+  spin for the first 16 seconds after a box came to the front
+  ([#262](https://github.com/chrissotraidis/padmint/pull/262), checked in the
+  iOS 27 simulator, not on a device). The README, the player guide and the docs
+  index now explain the iPhone/iPad app from download to first launch.
 - Replace HarkinianPad's card art (`art/harkinianpad.png`, still the old
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):

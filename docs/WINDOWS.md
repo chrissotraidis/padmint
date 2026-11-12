@@ -35,13 +35,15 @@ Updated **1 November 2026** for PadMint **0.5.29**, from the live catalog audit
 work queue for "every game can be built from Windows". A game moves to **Build
 here** only after the gates in [Active queue](#active-queue) are met.
 
-**Today, from Windows:** 24 of the 30 ports with build routes can produce an
-iPhone/iPad app (7 built locally, 17 on GitHub's Mac), and all 8 ready-made apps
-install with Sideloadly. Six other ports declare Apple Silicon Mac routes for
-iPhone/iPad (AgePad has a known Steam-version blocker), and EctoPad is a separate
-paused entry. The six new local Windows builds are experimental: each built on
-Windows 11 ARM64 from its published release, but no Windows-built copy
-has been installed on an iPhone or iPad yet.
+**Today, from Windows** (counts updated 12 November for PadMint 0.6.4): 26 of
+the 31 games with build routes can produce an iPhone/iPad app (9 built locally,
+17 on GitHub's Mac), and all 8 ready-made apps install with Sideloadly. Five
+other games still need an Apple Silicon Mac for iPhone/iPad: SnapPad, AnnePad,
+Ottsel, AgePad (which has a known Steam-version blocker) and NightPad. EctoPad
+is a separate paused entry. The nine local Windows builds are experimental:
+a maintainer has built each one only on Windows 11 ARM64, and SunPad is the
+only one whose Windows-built copy a maintainer has installed and played on an
+iPad.
 
 | Game (port) | From Windows today | Why there is no local Windows build yet | Next fix |
 |---|---|---|---|
@@ -56,11 +58,12 @@ has been installed on an iPhone or iPad yet.
 | Super Mario Sunshine (SunPad) | **Build here** (experimental), [sunpad v0.3.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.3.0) | — | PadMint 0.6.3 for Windows built it on Windows 11 ARM64 (2 h 23 min plus 26 min of tools), and that copy was installed and played on an iPad Pro: gameplay, a save and a reload after a cold relaunch. Next: a native x64 Windows PC |
 | Super Smash Bros. Melee (MeleePad) | **Build here** (experimental), [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (3,863 s). Next: install and play a Windows-built copy on a device |
 | Pokémon Snap (SnapPad) | Apple Silicon Mac | Reads the ROM while compiling; its decompilation tools still come from a private, locally verified bundle | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12): publish those tools through PadMint's managed tools, then add Windows hosts to the recipe. SnapPad's release pause still applies |
-| The Wind Waker (BlueWake) | Ready-to-play **Windows and Linux desktop** downloads; iPhone/iPad needs a Mac | Reads the disc while compiling | [bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100) is merged: the Windows proof took 2 h 19 min on Windows 11 ARM64 from the original disc. Published 0.10.0 still declares only Mac for iPhone/iPad; release a Windows-enabled recipe, then a device check |
+| The Wind Waker (BlueWake) | **Build here** (experimental), [bluewake v0.11.0](https://github.com/chrissotraidis/bluewake/releases/tag/v0.11.0). BlueWake also has ready-to-play Windows and Linux desktop downloads | — | The recipe declares Windows ARM64 and x64 since 0.11.0 (8 November), and PadMint lists them from 0.6.2. The Windows proof ([bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100)) took 2 h 19 min on Windows 11 ARM64 from the original disc, and a contributor built and played an x64 copy. Next: a maintainer installs and plays a Windows-built copy on a device |
 | Pokémon Stadium (AnnePad) | Apple Silicon Mac | Reads the ROM while compiling | [annepad#20](https://github.com/chrissotraidis/annepad/pull/20): on 1 Nov one Windows script took the ROM to the game module in 25 min on Windows 11 ARM64 (exact ROM rebuild, generated code matching Mac, module accepted by a matching shell). Next: publish PadMint's IDO, binutils and Rabbitizer builds, then the shell, recipe and device check |
 | Dinosaur Planet (DinoPad) | **Build here** (experimental), [dinopad v0.3.1](https://github.com/chrissotraidis/dinopad/releases/tag/v0.3.1) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (196 s). Next: install and play a Windows-built copy on a device |
 | Jak and Daxter (Ottsel) | Apple Silicon Mac | Reads the disc while compiling, and its iOS app links the compiled game code | [ottsel#7](https://github.com/chrissotraidis/ottsel/pull/7): on 31 Oct Windows 11 ARM64 extracted, decompiled and compiled the owner's disc, and the game code matched the Mac byte for byte after two compiler fixes. Next: a device check of the changed Mac output, then a game-free app with the compiled game in a private library |
 | Age of Empires II: DE (AgePad) | Apple Silicon Mac | Adds the player's installed **Mac** Steam edition and Steam for Mac's libraries to the app | [agepad#15](https://github.com/chrissotraidis/agepad/pull/15): the Steam libraries now download from Valve's public packages on any computer. On 31 Oct, 6 of 8 pinned Steam files no longer matched an installed Steam, so the v0.1.0 Mac route currently fails after Steam updates. Next: an iPad run, a base-app release with the new pins, then the Mac game via SteamCMD on Windows |
+| 007: Nightfire (NightPad) | Apple Silicon Mac | Added in 0.5.30; its recipe declares only Mac | Finish its iPad gameplay check first, then assess a Windows route |
 | Metroid Prime (EctoPad) | Paused | Its engine (Metaforce) is private until its developers publish it | Wait for Metaforce |
 | 8 ready-made apps: CaesarPad, DaggerPad, DevilTouch, Emerald Tablet, KidPad, PeonPad, RAtouch, VaultPad | **No build needed**: download and install with Sideloadly | — | — |
 
