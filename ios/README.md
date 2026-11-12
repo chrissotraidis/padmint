@@ -115,7 +115,7 @@ A UI test opens the grid and a game's page:
 `xcodebuild test -scheme PadMintLibrary -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)'`.
 
 `UITests/ShowcaseUITests.swift` holds the scripted tours used for release videos (the
-carousel, a game page, the shelf and the grid). They run only with
+carousel, a game page, the shelf, the grid, a box spinning and Get It). They run only with
 `TEST_RUNNER_PADMINT_SHOWCASE=1`; record each with `xcrun simctl io <device> recordVideo`.
 Debug builds accept `-demoInstalled id,id,...` and `-demoLastPlayed id` so the
 simulator, where no game is installed, shows a real player's library.

@@ -15,11 +15,11 @@ final class ShowcaseUITests: XCTestCase {
     }
 
     /// A launch argument outranks what the app saves, so pass console: nil when the test taps the filter bar.
-    private func launch(_ layout: String, console: String? = "", sort: String = "title", installed: Bool = false, _ extra: [String] = []) -> XCUIApplication {
+    private func launch(_ layout: String, console: String? = "", sort: String = "title", installed: Bool = false, coverSize: String = "medium", _ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments += ["-boxArt", "download", "-officialTitles", "1", "-layout", layout,
                                 "-sort", sort, "-onlyInstalled", installed ? "1" : "0", "-appearance", "dark",
-                                "-carouselStyle", "boxes", "-coverSize", "medium",
+                                "-carouselStyle", "boxes", "-coverSize", coverSize,
                                 "-demoInstalled", Self.installed, "-demoLastPlayed", "vaultpad"]
             + (console.map { ["-console", $0] } ?? []) + extra
         app.launch()
@@ -97,5 +97,56 @@ final class ShowcaseUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["carousel-title"].waitForExistence(timeout: 10))
         pause(2.5)
         for _ in 0..<8 { drag(app, CGVector(dx: 0.72, dy: 0.45), CGVector(dx: 0.42, dy: 0.45), velocity: 900); pause(1.4) }
+    }
+
+    // MARK: - The 25-second clip: it opens on the library already scrolling.
+
+    /// Large covers, flicked from the top to the bottom and back.
+    func testGLibraryScroll() {
+        let app = launch("grid", coverSize: "large")
+        pause(4)
+        for _ in 0..<6 { drag(app, CGVector(dx: 0.5, dy: 0.70), CGVector(dx: 0.5, dy: 0.50), velocity: 1100) }
+        pause(2)
+        for _ in 0..<6 { drag(app, CGVector(dx: 0.5, dy: 0.50), CGVector(dx: 0.5, dy: 0.70), velocity: 1100) }
+        pause(2)
+    }
+
+    /// The installed boxes one at a time, then one hard flick back through them and forward again.
+    func testHCarouselFly() {
+        let app = launch("carousel", sort: "console", installed: true)
+        XCTAssertTrue(app.staticTexts["carousel-title"].waitForExistence(timeout: 10))
+        pause(2.5)
+        for _ in 0..<9 { drag(app, CGVector(dx: 0.6, dy: 0.45), CGVector(dx: 0.45, dy: 0.45), velocity: 600) }
+        pause(1.5)
+        drag(app, CGVector(dx: 0.3, dy: 0.45), CGVector(dx: 0.8, dy: 0.45), velocity: 3200); pause(2)
+        drag(app, CGVector(dx: 0.8, dy: 0.45), CGVector(dx: 0.3, dy: 0.45), velocity: 3200); pause(2)
+    }
+
+    /// Double-tap spins the front box (GoldenEye, then Crash Team Racing), showing its real spine and back.
+    func testISpin() {
+        let app = launch("carousel", sort: "console", installed: true)
+        XCTAssertTrue(app.staticTexts["carousel-title"].waitForExistence(timeout: 10))
+        pause(2)
+        let box = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.42))
+        for _ in 0..<2 {
+            for _ in 0..<2 { drag(app, CGVector(dx: 0.6, dy: 0.45), CGVector(dx: 0.45, dy: 0.45), velocity: 600) }
+            pause(1)
+            box.doubleTap(); pause(2.5)
+        }
+    }
+
+    /// A game that isn't installed: Get It says how to build it with PadMint.
+    func testKGetIt() {
+        let app = launch("carousel", console: "Xbox")
+        XCTAssertTrue(app.staticTexts["carousel-title"].waitForExistence(timeout: 10))
+        pause(2)
+        drag(app, CGVector(dx: 0.7, dy: 0.45), CGVector(dx: 0.44, dy: 0.45), velocity: 1400)
+        pause(2)
+        let get = app.buttons["Get It"]
+        XCTAssertTrue(get.waitForExistence(timeout: 5))
+        get.tap()
+        pause(4)
+        app.buttons["Done"].tap()
+        pause(1.5)
     }
 }
