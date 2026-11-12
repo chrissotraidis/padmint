@@ -337,12 +337,28 @@ DEVICE_TARGETS = {"ios": "iPhone", "tvos": "Apple TV"}
 HOST_BUILD_VARIABLES = ("SDKROOT", "CPATH", "LIBRARY_PATH")
 
 
+# Homebrew's coreutils, findutils, gnu-sed, grep and gnu-tar put Linux versions of stat, find,
+# sed, grep and tar in .../libexec/gnubin folders, which some players put first on PATH. Game
+# builds on a Mac are written for Apple's own tools: GoldenPad's `stat -f '%z'` fails with GNU
+# stat after a 16-minute build. So a backend on a Mac runs without those folders.
+def gnu_tool_folders(path, platform=None):
+    """(PATH without Homebrew's GNU tool folders on a Mac, the folders left out)."""
+    if (platform or sys.platform) != "darwin":
+        return path, []
+    parts = path.split(os.pathsep)
+    gnu = [part for part in parts if part.rstrip("/").endswith("/libexec/gnubin")]
+    return os.pathsep.join(part for part in parts if part not in gnu), gnu
+
+
 def inherited_env(target_name=None):
-    """(this process's environment without host build variables for a device target, their names)."""
+    """(this process's environment without host build variables for a device target, their names).
+    On a Mac, PATH also leaves out Homebrew's GNU tool folders (see gnu_tool_folders)."""
     env = dict(os.environ)
     removed = [key for key in HOST_BUILD_VARIABLES if key in env] if target_name in DEVICE_TARGETS else []
     for key in removed:
         del env[key]
+    if "PATH" in env:
+        env["PATH"] = gnu_tool_folders(env["PATH"])[0]
     return env, removed
 
 
@@ -520,6 +536,13 @@ def execute(args, repo, disc):
         if removed:
             note = (f"PadMint ignores {', '.join(removed)} for {DEVICE_TARGETS[target_name]} builds: "
                     "they point at this Mac's own SDK or libraries.")
+            print(note, flush=True)
+            with (attempt / "backend.log").open("a") as log:
+                log.write(note + "\n")
+        gnu = gnu_tool_folders(os.environ.get("PATH", ""))[1]
+        if gnu:
+            note = (f"PadMint leaves {', '.join(gnu)} off PATH for this build: "
+                    "game builds on a Mac use Apple's own stat, sed, find, grep and tar.")
             print(note, flush=True)
             with (attempt / "backend.log").open("a") as log:
                 log.write(note + "\n")
