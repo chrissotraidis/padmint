@@ -5,8 +5,8 @@ options:
     iOS: "17.0"
 settings:
   base:
-    MARKETING_VERSION: "0.6.4"  # PadMint's version (padmint/__init__.py); package-release.sh checks
-    CURRENT_PROJECT_VERSION: "10"
+    MARKETING_VERSION: "0.6.5"  # PadMint's version (padmint/__init__.py); package-release.sh checks
+    CURRENT_PROJECT_VERSION: "11"
     SWIFT_VERSION: "5.0"
 targets:
   PadMintLibrary:
