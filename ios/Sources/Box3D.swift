@@ -407,7 +407,12 @@ struct CoverFlow3D: UIViewRepresentable {
             guard let index = index(at: gesture), index == parent.focused,
                   let box = nodes[order[index]]?.childNode(withName: "box", recursively: false) else { return }
             view?.play(for: 1)
-                        box.runAction(.rotateBy(x: 0, y: .pi * 2, z: 0, duration: 0.9))
+            // The sway turns the box to fixed angles, which cancelled the spin while it ran.
+            box.removeAction(forKey: "sway")
+            box.runAction(.sequence([
+                .rotateTo(x: 0, y: .pi * 2, z: 0, duration: 0.9, usesShortestUnitArc: false),
+                .run { node in node.eulerAngles.y = 0 },
+            ]))
         }
 
         private func index(at gesture: UIGestureRecognizer) -> Int? {
