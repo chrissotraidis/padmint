@@ -1,10 +1,12 @@
 # PadMint status
 
-What each recent PadMint release changed. Updated **10 November 2026**.
+What each recent PadMint release changed. Updated **12 November 2026**.
 
 **Next work:** [What PadMint still needs](docs/REMAINING.md) is the current
 queue. Older releases, from 0.5.22 back, and the October build evidence are in
 [STATUS-HISTORY.md](STATUS-HISTORY.md).
+
+**v0.6.5:** on a Mac where Homebrew's GNU tools come first on `PATH`, game builds now get Apple's own `stat`, `sed`, `find`, `grep` and `tar`, which their scripts are written for: PadMint leaves Homebrew's `…/libexec/gnubin` folders off the build's `PATH` and the build log names them. On such a Mac a GoldenPad 0.3.0 build stopped at Package after 16 minutes ([goldenpad#55](https://github.com/chrissotraidis/goldenpad/issues/55)); [GoldenPad 0.3.1](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.3.1) fixes its own scripts too. Both fixes came from DoubleGate ([#264](https://github.com/chrissotraidis/padmint/pull/264), [goldenpad#56](https://github.com/chrissotraidis/goldenpad/pull/56)). Storage's Remove now works on Windows for game downloads (Git's read-only files) and for tools with paths over 260 characters, the catalog is read once per run (listing Storage with 21 downloads went from 1.1 s to 0.01 s on an M3 Max), and on Windows PadMint waits and tries again when antivirus holds a folder it renames after unpacking a tool or downloading a game ([#260](https://github.com/chrissotraidis/padmint/pull/260), [#255](https://github.com/chrissotraidis/padmint/issues/255)). In the iPhone/iPad app, an older copy keeps its Play button when a new game joins the links the newest app checks ([#261](https://github.com/chrissotraidis/padmint/pull/261)), and double-tapping the front box spins it while it sways ([#262](https://github.com/chrissotraidis/padmint/pull/262)); both were checked in the iOS 27 simulator, not on a device. The README and the player guide now explain the iPhone/iPad app from download to first launch.
 
 **v0.6.4:** SunPad (Super Mario Sunshine) can be built for iPhone and iPad on a Windows PC, as [SunPad 0.3.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.3.0) allows (experimental; Windows 11 ARM64 and x64 with Visual Studio Build Tools, and Linux ARM64 and x86-64). Players asked for this. PadMint 0.6.3 for Windows built it on Windows 11 ARM64 from the original disc in about 2 h 50 min, and that copy was installed and played on an iPad Pro, including a save and a reload. A native x64 PC hasn't been tried. Macs build SunPad exactly as before. The [SunPad Windows goal](docs/SUNPAD_WINDOWS_GOAL.md) records each step ([#257](https://github.com/chrissotraidis/padmint/pull/257)).
 

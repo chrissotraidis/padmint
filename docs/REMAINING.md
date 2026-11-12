@@ -1,7 +1,7 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **11 November 2026** for PadMint **0.6.4**,
+continuing work. It was updated on **12 November 2026** for PadMint **0.6.5**,
 using the live catalog audit (41 entries, 0 problems) and the open pull requests
 in PadMint and each game's repository. Any PR that finishes an item below
 updates this page too.
@@ -260,32 +260,14 @@ only.
   November): Windows refuses to rename a folder while antivirus still has a new
   file in it open. [bluewake#596](https://github.com/chrissotraidis/bluewake/pull/596)
   makes BlueWake's builder wait and try again; it needs a BlueWake release to
-  reach players. On `main` after 0.6.4, PadMint does the same for its own
+  reach players. Since 0.6.5, PadMint does the same for its own
   renames after unpacking a tool and after downloading a game's source, where a
   failure meant downloading again. Checked on Windows 11 ARM64 with a file held
   open; the x64 PC that reported it hasn't built with either change.
-- **Also on `main` after 0.6.4, for the next release:** Storage's Remove now
-  works on Windows for game downloads (Git's read-only files) and tools with
-  paths over 260 characters, which it also measured as 0 bytes; both failed
-  with the folder half removed (reproduced and fixed on Windows 11 ARM64). The
-  catalog is read once per run instead of on every lookup: listing Storage with
-  21 downloads read it 489 times (1.1 s on an M3 Max, 2 s on the Windows VM).
-  In the iPhone/iPad app, double-tapping the carousel's front box now spins it
-  while the box sways; with Box motion on (the default) the sway cancelled the
-  spin for the first 16 seconds after a box came to the front
-  ([#262](https://github.com/chrissotraidis/padmint/pull/262), checked in the
-  iOS 27 simulator, not on a device). The README, the player guide and the docs
-  index now explain the iPhone/iPad app from download to first launch.
-- **A GoldenPad 0.3.0 build stopped at Package after 16 minutes** on a Mac whose
-  `PATH` puts Homebrew's GNU coreutils first
-  ([#263](https://github.com/chrissotraidis/padmint/issues/263),
-  [goldenpad#55](https://github.com/chrissotraidis/goldenpad/issues/55), 11 November):
-  GoldenPad's `stat -f '%z'` is BSD-only. On `main` after 0.6.4, a backend on a Mac
-  runs without Homebrew's `…/libexec/gnubin` folders, and the build log says which
-  it left out. Checked with a GoldenPad 0.3.0 build on an Apple Silicon Mac with
-  all five GNU tool folders first on `PATH`.
-  [goldenpad#56](https://github.com/chrissotraidis/goldenpad/pull/56) fixes the
-  script itself; it needs a GoldenPad release to reach players.
+- The iPhone/iPad app changes in 0.6.5 (an older copy keeps Play when a game
+  joins the checked links, [#261](https://github.com/chrissotraidis/padmint/pull/261);
+  double-tap spins a swaying box, [#262](https://github.com/chrissotraidis/padmint/pull/262))
+  were checked in the iOS 27 simulator only: check both on a device.
 - Replace HarkinianPad's card art (`art/harkinianpad.png`, still the old
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):
