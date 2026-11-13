@@ -218,6 +218,12 @@ struct CoverFlow3D: UIViewRepresentable {
         let view = GameBox.view(scene: coordinator.scene, camera: coordinator.camera)
         view.onResize = { [weak coordinator] size in coordinator?.fit(size) }
         view.addGestureRecognizer(UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.pan)))
+        // A trackpad or mouse scroll turns the carousel too. This one takes no touches, so a
+        // finger drag works exactly as before.
+        let scroll = UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.pan))
+        scroll.allowedScrollTypesMask = .all
+        scroll.maximumNumberOfTouches = 0
+        view.addGestureRecognizer(scroll)
         let double = UITapGestureRecognizer(target: coordinator, action: #selector(Coordinator.spin))
         double.numberOfTapsRequired = 2
         view.addGestureRecognizer(double)
@@ -374,6 +380,9 @@ struct CoverFlow3D: UIViewRepresentable {
         @objc func pan(_ gesture: UIPanGestureRecognizer) {
             guard let view = gesture.view, !order.isEmpty else { return }
             let unit = view.bounds.width * 0.2
+            // A scroll counts along whichever way it mostly went, so a mouse wheel turns it too.
+            let scrolling = gesture.maximumNumberOfTouches == 0
+            func along(_ point: CGPoint) -> CGFloat { scrolling && abs(point.y) > abs(point.x) ? point.y : point.x }
             switch gesture.state {
             case .began:
                 panStart = offset
@@ -383,7 +392,7 @@ struct CoverFlow3D: UIViewRepresentable {
                 SCNTransaction.begin()
                 SCNTransaction.disableActions = true
                 let before = Int(offset.rounded())
-                offset = max(-0.45, min(CGFloat(order.count) - 0.55, panStart - gesture.translation(in: view).x / unit))
+                offset = max(-0.45, min(CGFloat(order.count) - 0.55, panStart - along(gesture.translation(in: view)) / unit))
                 layout()
                 SCNTransaction.commit()
                 if Int(offset.rounded()) != before, UserDefaults.standard.flag("haptics") {
@@ -392,7 +401,7 @@ struct CoverFlow3D: UIViewRepresentable {
             default:
                 panning = false
                 (view as? StageView)?.hold(false)
-                let flick = gesture.velocity(in: view).x / unit * 0.22
+                let flick = along(gesture.velocity(in: view)) / unit * 0.22
                 focus(Int(max(0, min(CGFloat(order.count - 1), (offset - flick).rounded()))))
             }
         }
