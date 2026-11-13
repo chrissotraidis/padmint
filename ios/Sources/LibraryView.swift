@@ -5,6 +5,7 @@ struct LibraryView: View {
     @EnvironmentObject private var library: LibraryModel
     @EnvironmentObject private var covers: CoverStore
     @EnvironmentObject private var focus: ControllerFocus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("layout") private var layout: Layout = .grid
     @AppStorage("sort") private var sort: SortOrder = .recent
     @AppStorage("startOn") private var startOn: StartOn = .library
@@ -96,7 +97,8 @@ struct LibraryView: View {
         .sheet(isPresented: $showSettings) { SettingsView().environmentObject(focus) }
         .onChange(of: activeScope, initial: true) { _, scope in focus.scope = scope }
         .onReceive(focus.back) { back() }
-        .onReceive(focus.menu) { if !askBoxArt { showSettings.toggle() } }
+        // Settings can't open over another sheet; Menu there would only take its focus.
+        .onReceive(focus.menu) { if !askBoxArt && missing == nil { showSettings.toggle() } }
         .photosPicker(isPresented: $pickingCover, selection: $picked, matching: .images)
         .onChange(of: picked) { _, item in
             guard let item, let game = coverTarget else { return }
@@ -140,7 +142,7 @@ struct LibraryView: View {
     private func showConsole(_ name: String) {
         var filter = filter
         filter.show(console: name, in: library.games, installed: library.installed)
-        withAnimation(.snappy) {
+        withAnimation(reduceMotion ? nil : .snappy) {
             console = filter.console
             search = filter.search
             onlyInstalled = filter.onlyInstalled
@@ -443,6 +445,7 @@ private struct BoxCarousel: View {
 private struct FlatCarousel: View {
     @Environment(\.gameActions) private var actions
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("haptics") private var haptics = true
     let games: [Game]
     @State private var focused: String?
@@ -488,7 +491,7 @@ private struct FlatCarousel: View {
                         let index = games.firstIndex(of: current) ?? 0
                         CarouselCaption(game: current, position: "\(index + 1) of \(games.count)") { delta in
                             let next = min(max(index + delta, 0), games.count - 1)
-                            withAnimation(.snappy) { focused = games[next].id }
+                            withAnimation(reduceMotion ? nil : .snappy) { focused = games[next].id }
                         }
                     }
                     Spacer(minLength: 0)

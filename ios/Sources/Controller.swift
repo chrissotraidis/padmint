@@ -219,7 +219,7 @@ final class ControllerFocus: ObservableObject {
             if room.height > 0 { offset.y = min(max(offset.y + frame.midY - visible.midY, -inset.top), room.height - inset.top) }
             let moved = CGPoint(x: offset.x - scroll.contentOffset.x, y: offset.y - scroll.contentOffset.y)
             guard moved != .zero else { continue }
-            scroll.setContentOffset(offset, animated: true)
+            scroll.setContentOffset(offset, animated: !UIAccessibility.isReduceMotionEnabled)
             frame = frame.offsetBy(dx: -moved.x, dy: -moved.y)
         }
     }
