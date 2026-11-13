@@ -4,6 +4,7 @@ import SwiftUI
 struct PadMintLibraryApp: App {
     @StateObject private var library = LibraryModel()
     @StateObject private var covers = CoverStore()
+    @StateObject private var focus = ControllerFocus()
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
@@ -11,6 +12,7 @@ struct PadMintLibraryApp: App {
             root
                 .environmentObject(library)
                 .environmentObject(covers)
+                .environmentObject(focus)
                 .task {
                     await covers.warm(library.games)
                     await covers.fetch(library.games)

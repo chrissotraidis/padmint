@@ -77,6 +77,9 @@ def main():
         "CFBundleShortVersionString": "$(MARKETING_VERSION)",
         "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
         "LSApplicationQueriesSchemes": links,
+        # The library can be used with a game controller (ios/Sources/Controller.swift).
+        "GCSupportsControllerUserInteraction": True,
+        "GCSupportedGameControllers": [{"ProfileName": "ExtendedGamepad"}],
         "LSRequiresIPhoneOS": True,
         "UIApplicationSceneManifest": {"UIApplicationSupportsMultipleScenes": False},
         "UILaunchScreen": {},
