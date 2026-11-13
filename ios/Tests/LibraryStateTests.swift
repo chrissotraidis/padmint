@@ -107,4 +107,40 @@ final class LibraryStateTests: XCTestCase {
         focus.scope = "library"
         XCTAssertEqual(focus.selected, "library/carousel", "back from a game's page, the selection returns")
     }
+
+    /// The D-pad and left stick pushed the same way are one push: one move, one repeat.
+    @MainActor
+    func testDpadAndStickTogetherMoveOnce() async throws {
+        let focus = ControllerFocus()
+        focus.scope = "library"
+        for index in 0..<8 {
+            focus.update("library/\(index)", .init(frame: CGRect(x: index * 120, y: 0, width: 100, height: 140), scope: "library"))
+        }
+        focus.select("library/0")
+        focus.repeatDelay = .milliseconds(300)
+        focus.repeatInterval = .milliseconds(300)
+        // Kept alive to the end, so no two of them can share an identifier.
+        let objects = (0..<4).map { _ in NSObject() }
+        let (pad, dpad, stick, other) = (ObjectIdentifier(objects[0]), ObjectIdentifier(objects[1]),
+                                         ObjectIdentifier(objects[2]), ObjectIdentifier(objects[3]))
+
+        focus.point(dpad, on: pad, x: 1, y: 0)
+        focus.point(stick, on: pad, x: 1, y: 0)
+        XCTAssertEqual(focus.selected, "library/1", "one move for both")
+        try await Task.sleep(for: .milliseconds(450))
+        XCTAssertEqual(focus.selected, "library/2", "one repeat at 300 ms, not two")
+
+        // Letting go of the D-pad while the stick still points right keeps the same push going.
+        focus.point(dpad, on: pad, x: 0, y: 0)
+        XCTAssertEqual(focus.selected, "library/2")
+        focus.point(stick, on: pad, x: 0, y: 0)
+        try await Task.sleep(for: .milliseconds(400))
+        XCTAssertEqual(focus.selected, "library/2", "released: no more repeats")
+
+        // Another gamepad is its own push.
+        focus.point(dpad, on: other, x: 1, y: 0)
+        XCTAssertEqual(focus.selected, "library/3")
+        focus.point(dpad, on: other, x: 0, y: 0)
+        withExtendedLifetime(objects) {}
+    }
 }

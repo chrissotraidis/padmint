@@ -77,8 +77,14 @@ final class ControllerFocus: ObservableObject {
 
     private(set) var targets: [String: Target] = [:]
     private var remembered: [String: String] = [:]
+    /// Where each gamepad's D-pad and stick point, by gamepad and then by source.
+    private var pushed: [ObjectIdentifier: [ObjectIdentifier: MoveDirection]] = [:]
+    /// The one direction each gamepad holds, and its repeat.
     private var held: [ObjectIdentifier: MoveDirection] = [:]
     private var repeats: [ObjectIdentifier: Task<Void, Never>] = [:]
+    /// How long a held direction waits before repeating, then between repeats.
+    var repeatDelay = Duration.milliseconds(420)
+    var repeatInterval = Duration.milliseconds(130)
     private var observers: [NSObjectProtocol] = []
     #if DEBUG
     /// -virtualController 1: Apple's on-screen controller, so the simulator can drive the
@@ -114,9 +120,10 @@ final class ControllerFocus: ObservableObject {
         release()
         let pads = GCController.controllers().compactMap(\.extendedGamepad)
         for pad in pads {
+            let id = ObjectIdentifier(pad)
             for stick in [pad.dpad, pad.leftThumbstick] {
                 stick.valueChangedHandler = { [weak self] element, x, y in
-                    MainActor.assumeIsolated { self?.point(ObjectIdentifier(element), x: x, y: y) }
+                    MainActor.assumeIsolated { self?.point(ObjectIdentifier(element), on: id, x: x, y: y) }
                 }
             }
             pad.buttonA.pressedChangedHandler = { [weak self] _, _, pressed in
@@ -138,22 +145,28 @@ final class ControllerFocus: ObservableObject {
         repeats.values.forEach { $0.cancel() }
         repeats = [:]
         held = [:]
+        pushed = [:]
     }
 
-    /// A held direction moves once, then repeats after a short pause.
-    private func point(_ source: ObjectIdentifier, x: Float, y: Float) {
-        let now = MoveDirection.resolve(x: x, y: y, holding: held[source])
-        guard now != held[source] else { return }
-        held[source] = now
-        repeats[source]?.cancel()
-        repeats[source] = nil
+    /// A held direction moves once, then repeats after a short pause. A gamepad holds one
+    /// direction: its D-pad and stick pushed the same way are one push with one repeat.
+    func point(_ source: ObjectIdentifier, on pad: ObjectIdentifier, x: Float, y: Float) {
+        pushed[pad, default: [:]][source] = MoveDirection.resolve(x: x, y: y, holding: pushed[pad]?[source])
+        let directions = Set(pushed[pad, default: [:]].values)
+        let now = held[pad].flatMap { directions.contains($0) ? $0 : nil }
+            ?? MoveDirection.allCases.first(where: directions.contains)
+        guard now != held[pad] else { return }
+        held[pad] = now
+        repeats[pad]?.cancel()
+        repeats[pad] = nil
         guard let now else { return }
         move(now)
-        repeats[source] = Task { [weak self] in
-            try? await Task.sleep(for: .milliseconds(420))
+        let (delay, interval) = (repeatDelay, repeatInterval)
+        repeats[pad] = Task { [weak self] in
+            try? await Task.sleep(for: delay)
             while !Task.isCancelled {
                 self?.move(now)
-                try? await Task.sleep(for: .milliseconds(130))
+                try? await Task.sleep(for: interval)
             }
         }
     }
