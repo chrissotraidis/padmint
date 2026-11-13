@@ -268,6 +268,11 @@ only.
   joins the checked links, [#261](https://github.com/chrissotraidis/padmint/pull/261);
   double-tap spins a swaying box, [#262](https://github.com/chrissotraidis/padmint/pull/262))
   were checked in the iOS 27 simulator only: check both on a device.
+- The iPhone/iPad library's controller navigation, trackpad scrolling in the 3D
+  carousel, readable header, console badge, merged Grid layout, names-off default
+  and compact list (the iPad library feedback) were checked in the iOS 27
+  simulator only, the controller through Apple's on-screen controller: check them
+  on an iPad with an Xbox controller, a trackpad and an external display.
 - Replace HarkinianPad's card art (`art/harkinianpad.png`, still the old
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):

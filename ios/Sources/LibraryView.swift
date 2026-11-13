@@ -4,7 +4,9 @@ import SwiftUI
 struct LibraryView: View {
     @EnvironmentObject private var library: LibraryModel
     @EnvironmentObject private var covers: CoverStore
-    @AppStorage("layout") private var layout: Layout = .shelf
+    @EnvironmentObject private var focus: ControllerFocus
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @AppStorage("layout") private var layout: Layout = .grid
     @AppStorage("sort") private var sort: SortOrder = .recent
     @AppStorage("startOn") private var startOn: StartOn = .library
     @AppStorage("officialTitles") private var official = false
@@ -23,16 +25,22 @@ struct LibraryView: View {
     @State private var showSettings = false
     @State private var started = false
 
+    private var filter: LibraryFilter {
+        LibraryFilter(console: console, search: search, onlyInstalled: onlyInstalled, showReadyMade: showReadyMade)
+    }
+
     private var shown: [Game] {
-        let matching = library.games.filter { game in
-            (!onlyInstalled || library.installed.contains(game.id))
-                && (console.isEmpty || game.platform == console)
-                && (showReadyMade || game.link != nil)
-                && (search.isEmpty || [game.name, game.title, game.platform].contains {
-                    $0.localizedCaseInsensitiveContains(search)
-                })
-        }
-        return library.sorted(matching, by: sort, official: official)
+        let filter = filter
+        return library.sorted(library.games.filter { filter.matches($0, installed: library.installed) }, by: sort, official: official)
+    }
+
+    /// The screen in front, for the controller's selection.
+    private var activeScope: String {
+        if askBoxArt { return "boxArt" }
+        if showSettings { return "settings" }
+        if missing != nil { return "get" }
+        if let game = path.last { return "detail:\(game.id)" }
+        return "library"
     }
 
     var body: some View {
@@ -50,6 +58,11 @@ struct LibraryView: View {
                         FilterBar()
                     }
                     .padding(.bottom, 8)
+                    // Covers scroll under the header; it keeps a bar behind it so it stays readable.
+                    .background {
+                        Rectangle().fill(.bar).ignoresSafeArea(edges: .top)
+                            .overlay(alignment: .bottom) { Divider() }
+                    }
                 }
                 .navigationTitle("")
                 .navigationBarTitleDisplayMode(.inline)
@@ -77,10 +90,15 @@ struct LibraryView: View {
         }
         .tint(.padMint)
         .preferredColorScheme(appearance.scheme)
-        .environment(\.gameActions, GameActions(play: play, open: { path.append($0) }, chooseCover: chooseCover))
-        .sheet(item: $missing) { GetGameSheet(game: $0) }
-        .sheet(isPresented: $askBoxArt) { BoxArtSheet() }
-        .sheet(isPresented: $showSettings) { SettingsView() }
+        .environment(\.gameActions, GameActions(play: play, open: { path.append($0) }, chooseCover: chooseCover,
+                                                showConsole: showConsole))
+        .sheet(item: $missing) { GetGameSheet(game: $0).environmentObject(focus) }
+        .sheet(isPresented: $askBoxArt) { BoxArtSheet().environmentObject(focus) }
+        .sheet(isPresented: $showSettings) { SettingsView().environmentObject(focus) }
+        .onChange(of: activeScope, initial: true) { _, scope in focus.scope = scope }
+        .onReceive(focus.back) { back() }
+        // Settings can't open over another sheet; Menu there would only take its focus.
+        .onReceive(focus.menu) { if !askBoxArt && missing == nil { showSettings.toggle() } }
         .photosPicker(isPresented: $pickingCover, selection: $picked, matching: .images)
         .onChange(of: picked) { _, item in
             guard let item, let game = coverTarget else { return }
@@ -100,8 +118,7 @@ struct LibraryView: View {
 
     @ViewBuilder private var content: some View {
         switch layout {
-        case .shelf: ShelfLayout(games: shown, sort: sort, searching: !search.isEmpty || !console.isEmpty || onlyInstalled)
-        case .grid: ScrollView { GameGrid(games: shown, sort: sort, heading: nil).padding(.vertical) }
+        case .grid: GridLayout(games: shown, sort: sort, searching: !search.isEmpty || !console.isEmpty || onlyInstalled)
         case .carousel:
             if carouselStyle == .boxes { BoxCarousel(games: shown) } else { FlatCarousel(games: shown) }
         case .list: ListLayout(games: shown, sort: sort)
@@ -120,12 +137,32 @@ struct LibraryView: View {
         coverTarget = game
         pickingCover = true
     }
+
+    /// A game page's console badge: back to the library, showing that console's games.
+    private func showConsole(_ name: String) {
+        var filter = filter
+        filter.show(console: name, in: library.games, installed: library.installed)
+        withAnimation(reduceMotion ? nil : .snappy) {
+            console = filter.console
+            search = filter.search
+            onlyInstalled = filter.onlyInstalled
+        }
+        path = []
+    }
+
+    /// B on a controller: closes a sheet, or goes back a page.
+    private func back() {
+        if askBoxArt { return }
+        if showSettings { showSettings = false }
+        else if missing != nil { missing = nil }
+        else if !path.isEmpty { path.removeLast() }
+    }
 }
 
-// MARK: - Shelf
+// MARK: - Grid
 
-/// A banner for the game you played last, your installed games, then everything.
-private struct ShelfLayout: View {
+/// A banner for the game you played last, your installed games, then every cover.
+private struct GridLayout: View {
     @EnvironmentObject private var library: LibraryModel
     let games: [Game]
     let sort: SortOrder
@@ -144,7 +181,7 @@ private struct ShelfLayout: View {
                         EmptyShelf()
                     }
                 }
-                GameGrid(games: games, sort: sort, heading: searching ? "\(games.count) games" : "All games")
+                GameGrid(games: games, sort: sort, heading: searching ? (games.count == 1 ? "1 game" : "\(games.count) games") : "All games")
             }
             .padding(.vertical)
         }
@@ -168,6 +205,7 @@ private struct HeroBanner: View {
                 .id("\(reflections)-\(boxMotion)")
                 .frame(width: height * 0.95, height: height)
                 .onTapGesture { actions.open(game) }
+                .controllerFocus("hero", isDefault: true, corner: 20) { actions.open(game) }
             VStack(alignment: .leading, spacing: 10) {
                 Text(library.lastPlayed[game.id] == nil ? "READY TO PLAY" : "CONTINUE PLAYING")
                     .font(.caption.weight(.semibold)).foregroundStyle(.secondary).tracking(0.8)
@@ -180,6 +218,7 @@ private struct HeroBanner: View {
                     Label("Play", systemImage: "play.fill").font(.headline).padding(.horizontal, 14)
                 }
                 .buttonStyle(PrimaryButtonStyle())
+                .controllerFocus("hero-play") { actions.play(game) }
                 .padding(.top, 6)
             }
             Spacer(minLength: 0)
@@ -199,6 +238,7 @@ private struct CoverRow: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     @AppStorage("officialTitles") private var official = false
     @AppStorage("coverSize") private var coverSize: CoverSize = .medium
+    @AppStorage("showNames") private var showNames = false
     let title: String
     let games: [Game]
 
@@ -213,12 +253,16 @@ private struct CoverRow: View {
                         Button { actions.play(game) } label: {
                             VStack(alignment: .leading, spacing: 8) {
                                 CoverArt(game: game).frame(width: width, height: height)
-                                Text(game.heading(official: official)).font(.subheadline.weight(.semibold)).lineLimit(1)
-                                    .frame(width: width, alignment: .leading)
+                                if showNames {
+                                    Text(game.heading(official: official)).font(.subheadline.weight(.semibold)).lineLimit(1)
+                                        .frame(width: width, alignment: .leading)
+                                }
                             }
                         }
                         .buttonStyle(PressableStyle())
                         .contextMenu { GameMenu(game: game) }
+                        .accessibilityLabel(game.heading(official: official))
+                        .controllerFocus("row-\(game.id)") { actions.play(game) }
                         .scrollTransition { content, phase in
                             content
                                 .rotation3DEffect(.degrees(phase.value * -18), axis: (x: 0, y: 1, z: 0), perspective: 0.6)
@@ -276,7 +320,7 @@ struct GameTile: View {
     @EnvironmentObject private var library: LibraryModel
     @Environment(\.gameActions) private var actions
     @AppStorage("officialTitles") private var official = false
-    @AppStorage("showNames") private var showNames = true
+    @AppStorage("showNames") private var showNames = false
     let game: Game
     let coverHeight: CGFloat
 
@@ -299,6 +343,7 @@ struct GameTile: View {
         .contextMenu { GameMenu(game: game) }
         .accessibilityIdentifier("tile-\(game.id)")
         .accessibilityLabel("\(game.heading(official: official)), \(game.subheading(official: official))")
+        .controllerFocus("tile-\(game.id)", isDefault: true) { actions.open(game) }
     }
 }
 
@@ -312,6 +357,8 @@ private struct CarouselCaption: View {
     @AppStorage("officialTitles") private var official = false
     let game: Game
     let position: String
+    /// Turns the carousel by one game, for a controller's left and right.
+    let step: (Int) -> Void
 
     var body: some View {
         VStack(spacing: 8) {
@@ -320,6 +367,9 @@ private struct CarouselCaption: View {
                 .font(sizeClass == .regular ? .largeTitle.bold() : .title.bold())
                 .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.7)
                 .accessibilityIdentifier("carousel-title")
+                .padding(.horizontal, 10)
+                .controllerFocus("carousel-game", isDefault: true, handles: .horizontal,
+                                 move: { step($0 == .left ? -1 : $0 == .right ? 1 : 0) }) { actions.open(game) }
             HStack(spacing: 8) {
                 Text(game.subheading(official: official))
                 Text("·")
@@ -333,8 +383,10 @@ private struct CarouselCaption: View {
                         .font(.headline).padding(.horizontal, 12)
                 }
                 .buttonStyle(PrimaryButtonStyle())
+                .controllerFocus("carousel-play") { actions.play(game) }
                 Button { actions.open(game) } label: { Label("Details", systemImage: "info.circle").font(.headline) }
                     .buttonStyle(SecondaryButtonStyle())
+                    .controllerFocus("carousel-details") { actions.open(game) }
             }
             .padding(.top, 6)
         }
@@ -374,7 +426,9 @@ private struct BoxCarousel: View {
                                                startPoint: .top, endPoint: .bottom)
                             }
                         if let current {
-                            CarouselCaption(game: current, position: "\(focused + 1) of \(games.count)")
+                            CarouselCaption(game: current, position: "\(focused + 1) of \(games.count)") { delta in
+                                focused = min(max(focused + delta, 0), games.count - 1)
+                            }
                         }
                         Spacer(minLength: 0)
                     }
@@ -391,6 +445,7 @@ private struct BoxCarousel: View {
 private struct FlatCarousel: View {
     @Environment(\.gameActions) private var actions
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("haptics") private var haptics = true
     let games: [Game]
     @State private var focused: String?
@@ -433,7 +488,11 @@ private struct FlatCarousel: View {
                     .contentMargins(.horizontal, max((geo.size.width - itemWidth) / 2, 0), for: .scrollContent)
                     .frame(height: height + 20)
                     if let current {
-                        CarouselCaption(game: current, position: "\((games.firstIndex(of: current) ?? 0) + 1) of \(games.count)")
+                        let index = games.firstIndex(of: current) ?? 0
+                        CarouselCaption(game: current, position: "\(index + 1) of \(games.count)") { delta in
+                            let next = min(max(index + delta, 0), games.count - 1)
+                            withAnimation(reduceMotion ? nil : .snappy) { focused = games[next].id }
+                        }
                     }
                     Spacer(minLength: 0)
                 }
@@ -446,45 +505,66 @@ private struct FlatCarousel: View {
 
 // MARK: - List
 
+/// One compact row per game: its cover, name, one line of detail and Play.
 private struct ListLayout: View {
     @EnvironmentObject private var library: LibraryModel
     @Environment(\.gameActions) private var actions
+    @Environment(\.dynamicTypeSize) private var typeSize
     @AppStorage("officialTitles") private var official = false
+    @ScaledMetric(relativeTo: .body) private var coverHeight: CGFloat = 46
     let games: [Game]
     let sort: SortOrder
 
     var body: some View {
-        List {
-            ForEach(library.sections(games, by: sort), id: \.title) { section in
-                Section(section.title ?? "") {
-                    ForEach(section.games) { game in
-                        HStack(spacing: 14) {
-                            Button { actions.open(game) } label: {
-                                HStack(spacing: 14) {
-                                    CoverArt(game: game, corner: 5, badge: false).frame(width: 64, height: 72)
-                                    VStack(alignment: .leading, spacing: 3) {
-                                        Text(game.heading(official: official)).font(.headline).lineLimit(2)
-                                        Text(game.subheading(official: official)).font(.subheadline).foregroundStyle(.secondary)
-                                        Label(library.status(game), systemImage: library.installed.contains(game.id) ? "checkmark.circle.fill" : "circle.dashed")
-                                            .font(.caption)
-                                            .foregroundStyle(library.installed.contains(game.id) ? Color.padMint : Color.secondary)
-                                    }
-                                    Spacer(minLength: 0)
-                                }
-                                .contentShape(Rectangle())
-                            }
-                            .buttonStyle(.plain)
-                            if library.canTry(game) {
-                                Button("Play") { actions.play(game) }
-                                    .buttonStyle(PrimaryButtonStyle(compact: true))
-                            }
-                        }
-                        .contextMenu { GameMenu(game: game) }
+            List {
+                ForEach(library.sections(games, by: sort), id: \.title) { section in
+                    Section {
+                        ForEach(section.games) { row($0) }
+                    } header: {
+                        if let title = section.title { Text(title) }
                     }
                 }
             }
+            .listStyle(.plain)
+    }
+
+    private func row(_ game: Game) -> some View {
+        let installed = library.installed.contains(game.id)
+        return HStack(spacing: 12) {
+            Button { actions.open(game) } label: {
+                HStack(spacing: 12) {
+                    CoverArt(game: game, corner: 4, badge: false)
+                        .frame(width: coverHeight * 0.85, height: coverHeight)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(game.heading(official: official))
+                            .font(.body.weight(.semibold))
+                            .lineLimit(typeSize.isAccessibilitySize ? 3 : 1)
+                        HStack(spacing: 4) {
+                            if installed {
+                                Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.padMint)
+                                    .accessibilityLabel("Installed")
+                            }
+                            Text("\(game.subheading(official: official)) · \(library.status(game))")
+                                .foregroundStyle(.secondary)
+                        }
+                        .font(.footnote)
+                        .lineLimit(typeSize.isAccessibilitySize ? 3 : 1)
+                    }
+                    Spacer(minLength: 0)
+                }
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .controllerFocus("list-\(game.id)", isDefault: true, corner: 8, inset: 0) { actions.open(game) }
+            if library.canTry(game) {
+                Button("Play") { actions.play(game) }
+                    .buttonStyle(PrimaryButtonStyle(compact: true))
+                    .controllerFocus("list-play-\(game.id)", corner: 11, inset: 3) { actions.play(game) }
+            }
         }
-        .listStyle(.insetGrouped)
+        .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+        .contextMenu { GameMenu(game: game) }
     }
 }
 

@@ -36,4 +36,25 @@ final class LibraryUITests: XCTestCase {
         XCTAssertTrue(detail.waitForExistence(timeout: 5))
         XCTAssertEqual(detail.label, second)
     }
+
+    /// A game page's console badge goes back to the library, showing that console's games.
+    func testConsoleBadgeShowsConsole() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["-boxArt", "off", "-layout", "grid", "-onlyInstalled", "0", "-sort", "title"]
+        app.launch()
+        let all = app.buttons["All consoles"].firstMatch
+        XCTAssertTrue(all.waitForExistence(timeout: 10))
+        all.tap()
+        let tile = app.buttons["tile-bluewake"]
+        XCTAssertTrue(tile.waitForExistence(timeout: 10))
+        tile.tap()
+        let badge = app.buttons["console-badge"]
+        XCTAssertTrue(badge.waitForExistence(timeout: 5))
+        badge.tap()
+        XCTAssertTrue(app.buttons["GameCube"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["detail-title"].exists, "back on the library")
+        XCTAssertTrue(app.buttons["GameCube"].firstMatch.isSelected)
+        XCTAssertTrue(tile.waitForExistence(timeout: 5))
+        all.tap()
+    }
 }

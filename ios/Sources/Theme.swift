@@ -80,20 +80,31 @@ struct FilterBar: View {
                 } label: {
                     Chip(text: sort.label, symbol: "arrow.up.arrow.down", selected: true)
                 }
+                .chipFocus("sort") { withAnimation(.snappy) { sort = sort.next } }
                 Button { withAnimation(.snappy) { onlyInstalled.toggle() } } label: {
                     Chip(text: "Installed", symbol: "checkmark.circle", selected: onlyInstalled)
                 }
+                .chipFocus("installed") { withAnimation(.snappy) { onlyInstalled.toggle() } }
                 Divider().frame(height: 22)
                 Button { withAnimation(.snappy) { console = "" } } label: { Chip(text: "All consoles", selected: console.isEmpty) }
+                    .chipFocus("console-all") { withAnimation(.snappy) { console = "" } }
                 ForEach(LibraryModel.consoles.filter { name in library.games.contains { $0.platform == name } }, id: \.self) { name in
                     Button { withAnimation(.snappy) { console = console == name ? "" : name } } label: {
                         Chip(text: name, selected: console == name)
                     }
+                    .chipFocus("console-\(name)") { withAnimation(.snappy) { console = console == name ? "" : name } }
                 }
             }
             .buttonStyle(.plain)
             .padding(.horizontal)
+            .padding(.vertical, 4)
         }
+    }
+}
+
+private extension View {
+    func chipFocus(_ id: String, action: @escaping () -> Void) -> some View {
+        controllerFocus("chip-\(id)", corner: 20, inset: 3, action: action)
     }
 }
 
@@ -101,11 +112,14 @@ struct Chip: View {
     let text: String
     var symbol: String?
     var selected = false
+    /// A symbol after the text, such as a chevron on a chip that leads somewhere.
+    var trailing: String?
 
     var body: some View {
         HStack(spacing: 5) {
             if let symbol { Image(systemName: symbol) }
             Text(text)
+            if let trailing { Image(systemName: trailing).font(.caption.weight(.bold)).foregroundStyle(.secondary) }
         }
         .font(.subheadline.weight(.semibold))
         .padding(.horizontal, 12)
@@ -115,6 +129,7 @@ struct Chip: View {
             Capsule().fill(selected ? AnyShapeStyle(Color.primary) : AnyShapeStyle(Color.primary.opacity(0.07)))
         }
         .overlay { Capsule().strokeBorder(Color.primary.opacity(selected ? 0 : 0.1), lineWidth: 0.5) }
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }
 

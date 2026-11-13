@@ -36,12 +36,29 @@ struct Game: Codable, Identifiable, Hashable {
     func subheading(official: Bool) -> String { official ? name : platform }
 }
 
-enum Layout: String, CaseIterable, Identifiable {
-    case shelf, grid, carousel, list
+/// The library's layouts. Grid took over Shelf's banner and Your games row (0.6.5 had both,
+/// showing the same covers), so a saved "shelf" opens Grid, as does any value it doesn't know.
+enum Layout: CaseIterable, Identifiable, RawRepresentable {
+    case grid, carousel, list
+
+    init(rawValue: String) {
+        switch rawValue {
+        case "carousel": self = .carousel
+        case "list": self = .list
+        default: self = .grid
+        }
+    }
+
+    var rawValue: String {
+        switch self {
+        case .grid: "grid"
+        case .carousel: "carousel"
+        case .list: "list"
+        }
+    }
     var id: Self { self }
     var label: String {
         switch self {
-        case .shelf: "Shelf"
         case .grid: "Grid"
         case .carousel: "Carousel"
         case .list: "List"
@@ -49,11 +66,35 @@ enum Layout: String, CaseIterable, Identifiable {
     }
     var symbol: String {
         switch self {
-        case .shelf: "rectangle.stack"
         case .grid: "square.grid.3x3"
         case .carousel: "rectangle.portrait.on.rectangle.portrait.angled"
         case .list: "list.bullet"
         }
+    }
+}
+
+/// Which games the library shows: the console chip, the search and the Installed chip.
+struct LibraryFilter: Equatable {
+    var console = ""
+    var search = ""
+    var onlyInstalled = false
+    var showReadyMade = true
+
+    func matches(_ game: Game, installed: Set<String>) -> Bool {
+        (!onlyInstalled || installed.contains(game.id))
+            && (console.isEmpty || game.platform == console)
+            && (showReadyMade || game.link != nil)
+            && (search.isEmpty || [game.name, game.title, game.platform].contains {
+                $0.localizedCaseInsensitiveContains(search)
+            })
+    }
+
+    /// A game page's console badge: that console's games. The search goes, since it would
+    /// hide them, and so does Installed when none of that console's games is installed.
+    mutating func show(console name: String, in games: [Game], installed: Set<String>) {
+        console = name
+        search = ""
+        if onlyInstalled, !games.contains(where: { matches($0, installed: installed) }) { onlyInstalled = false }
     }
 }
 
@@ -217,6 +258,8 @@ struct GameActions {
     var play: (Game) -> Void = { _ in }
     var open: (Game) -> Void = { _ in }
     var chooseCover: (Game) -> Void = { _ in }
+    /// Back to the library, showing one console's games.
+    var showConsole: (String) -> Void = { _ in }
 }
 
 private struct GameActionsKey: EnvironmentKey {
