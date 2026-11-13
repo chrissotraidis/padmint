@@ -38,10 +38,23 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_TARGET_NAME: PadMintLibrary
         CODE_SIGNING_ALLOWED: NO
+  PadMintLibraryTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [Tests]
+    dependencies:
+      - target: PadMintLibrary
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.chrissotraidis.padmintlibrary.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/PadMint.app/PadMint
+        BUNDLE_LOADER: $(TEST_HOST)
+        CODE_SIGNING_ALLOWED: NO
 schemes:
   PadMintLibrary:
     build:
       targets:
         PadMintLibrary: all
     test:
-      targets: [PadMintLibraryUITests]
+      targets: [PadMintLibraryTests, PadMintLibraryUITests]

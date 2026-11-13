@@ -1,0 +1,110 @@
+import XCTest
+@testable import PadMint
+
+/// The library's own state: saved layouts, the console badge, and the controller's selection.
+final class LibraryStateTests: XCTestCase {
+    private func game(_ id: String, _ platform: String, link: String? = "padmint-x") -> Game {
+        let url = URL(string: "https://example.com/\(id)")!
+        return Game(id: id, name: id, title: id.uppercased(), platform: platform, game: id, repo: url, art: url,
+                    boxArt: nil, boxBack: nil, boxSpine: nil, link: link)
+    }
+
+    func testSavedLayoutsOpenAKnownLayout() {
+        XCTAssertEqual(Layout(rawValue: "shelf"), .grid, "0.6.5's Shelf became Grid")
+        XCTAssertEqual(Layout(rawValue: "grid"), .grid)
+        XCTAssertEqual(Layout(rawValue: "carousel"), .carousel)
+        XCTAssertEqual(Layout(rawValue: "list"), .list)
+        XCTAssertEqual(Layout(rawValue: "spiral"), .grid, "a value from another version")
+        XCTAssertEqual(Layout(rawValue: ""), .grid)
+        for layout in Layout.allCases { XCTAssertEqual(Layout(rawValue: layout.rawValue), layout) }
+    }
+
+    func testSavedLayoutReadsThroughUserDefaults() throws {
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: "LibraryStateTests"))
+        defer { defaults.removePersistentDomain(forName: "LibraryStateTests") }
+        defaults.set("shelf", forKey: "layout")
+        XCTAssertEqual(defaults.string(forKey: "layout").map(Layout.init(rawValue:)), .grid)
+    }
+
+    func testConsoleBadgeClearsWhatWouldHideThatConsole() {
+        let games = [game("jak", "PlayStation 2"), game("kart", "Nintendo 64"), game("halo", "Xbox")]
+        var filter = LibraryFilter(console: "Xbox", search: "kart", onlyInstalled: true)
+        filter.show(console: "PlayStation 2", in: games, installed: ["kart"])
+        XCTAssertEqual(filter, LibraryFilter(console: "PlayStation 2", search: "", onlyInstalled: false))
+        XCTAssertEqual(games.filter { filter.matches($0, installed: ["kart"]) }.map(\.id), ["jak"])
+    }
+
+    func testConsoleBadgeKeepsInstalledWhenSomeAreInstalled() {
+        let games = [game("jak", "PlayStation 2"), game("sly", "PlayStation 2")]
+        var filter = LibraryFilter(onlyInstalled: true)
+        filter.show(console: "PlayStation 2", in: games, installed: ["sly"])
+        XCTAssertTrue(filter.onlyInstalled)
+        XCTAssertEqual(games.filter { filter.matches($0, installed: ["sly"]) }.map(\.id), ["sly"])
+    }
+
+    func testStickNeedsAFirmPushAndHoldsUntilNearlyCentred() {
+        XCTAssertNil(MoveDirection.resolve(x: 0.4, y: 0, holding: nil), "inside the dead zone")
+        XCTAssertEqual(MoveDirection.resolve(x: 0.8, y: 0.2, holding: nil), .right)
+        XCTAssertEqual(MoveDirection.resolve(x: 0, y: -1, holding: nil), .down)
+        XCTAssertEqual(MoveDirection.resolve(x: 0, y: 1, holding: nil), .up)
+        XCTAssertEqual(MoveDirection.resolve(x: -0.4, y: 0, holding: .left), .left, "still held")
+        XCTAssertNil(MoveDirection.resolve(x: -0.2, y: 0, holding: .left), "let go")
+        XCTAssertNil(MoveDirection.resolve(x: 0, y: 0.4, holding: .left), "a weak push another way")
+    }
+
+    /// Three covers in a row and two below, the second row starting under the first.
+    private let grid: [(id: String, frame: CGRect)] = [
+        ("a", CGRect(x: 0, y: 0, width: 100, height: 140)),
+        ("b", CGRect(x: 120, y: 40, width: 100, height: 100)),  // a shorter cover on the same line
+        ("c", CGRect(x: 240, y: 0, width: 100, height: 140)),
+        ("d", CGRect(x: 0, y: 170, width: 100, height: 140)),
+        ("e", CGRect(x: 120, y: 170, width: 100, height: 140)),
+    ]
+
+    private func from(_ id: String, _ direction: MoveDirection) -> String? {
+        let frame = grid.first { $0.id == id }!.frame
+        return direction.nearest(from: frame, among: grid.filter { $0.id != id })
+    }
+
+    func testSelectionMovesToTheNeighbourOnScreen() {
+        XCTAssertEqual(from("a", .right), "b")
+        XCTAssertEqual(from("b", .right), "c")
+        XCTAssertEqual(from("b", .down), "e")
+        XCTAssertEqual(from("c", .down), "e", "the last row is shorter")
+        XCTAssertEqual(from("e", .up), "b")
+        XCTAssertEqual(from("d", .right), "e")
+        XCTAssertNil(from("c", .right))
+        XCTAssertNil(from("a", .up))
+    }
+
+    @MainActor
+    func testFocusStaysOnItsScreenAndCarouselsTurnThemselves() {
+        let focus = ControllerFocus()
+        focus.scope = "library"
+        for item in grid { focus.update("library/\(item.id)", .init(frame: item.frame, scope: "library", isDefault: true)) }
+        // A game's page lies under the library; its items mustn't take the library's focus.
+        focus.update("detail:x/play", .init(frame: CGRect(x: 120, y: 330, width: 100, height: 50), scope: "detail:x"))
+        focus.move(.down)
+        XCTAssertEqual(focus.selected, "library/a", "the first press shows the selection")
+        focus.move(.down)
+        XCTAssertEqual(focus.selected, "library/d")
+        focus.move(.down)
+        XCTAssertEqual(focus.selected, "library/d", "nothing below on this screen")
+
+        focus.update("library/carousel", .init(frame: CGRect(x: 0, y: 330, width: 340, height: 60), scope: "library",
+                                               handles: .horizontal))
+        focus.select("library/carousel")
+        var sent: [ControllerFocus.Command] = []
+        let watch = focus.commands.sink { sent.append($0.command) }
+        focus.move(.right)
+        focus.activate()
+        XCTAssertEqual(sent, [.move(.right), .activate])
+        XCTAssertEqual(focus.selected, "library/carousel")
+        watch.cancel()
+
+        focus.scope = "detail:x"
+        XCTAssertNil(focus.selected)
+        focus.scope = "library"
+        XCTAssertEqual(focus.selected, "library/carousel", "back from a game's page, the selection returns")
+    }
+}

@@ -4,14 +4,15 @@ One library for the games you've built with
 [PadMint](https://github.com/chrissotraidis/padmint) and installed on the device.
 It uses PadMint's icon and lists only games from PadMint's catalog.
 
-- **Four layouts.** *Shelf* has a banner for the game you played last, your
-  installed games and then everything. *Grid* shows every cover. *Carousel* shows
+- **Three layouts.** *Grid* has a banner for the game you played last, your
+  installed games and then every cover (it replaces 0.6.5's separate Shelf and
+  Grid; either saved choice opens it). *Carousel* shows
   each game as a 3D box on a reflective floor, sized to fill the screen: swipe
-  through them, tap the front box to open it, double-tap to spin it. Each box's
+  through them, or scroll with a trackpad or mouse, tap the front box to open it, double-tap to spin it. Each box's
   depth and spines follow its console (black GameCube and PS2 cases with the
   title down the spine, white Wii cases, Xbox's green band, deep printed N64 and
-  PC boxes). A flat cover flow is available in Settings. *List* is compact,
-  with a Play button on each row. Switch layouts from the toolbar.
+  PC boxes). A flat cover flow is available in Settings. *List* has one compact
+  row per game, with a Play button. Switch layouts from the toolbar.
 - **Sorting and filters.** Sort by recently played, title or console (with a
   heading per console), search by title, PadMint name or console, and show only
   installed games.
@@ -19,11 +20,18 @@ It uses PadMint's icon and lists only games from PadMint's catalog.
   play; tap a game anywhere else to open its page.
 - **A page for each game,** with its cover over a blurred copy of it, its console,
   when you last played it, Play (or how to get it with PadMint) and cover options.
+  Tap its console to see that console's games.
+- **A game controller works too.** With a controller connected (an Xbox
+  controller, for example), the D-pad or left stick moves a mint outline between
+  games, buttons and settings, A presses, B goes back or closes a sheet and Menu
+  opens Settings. Touch keeps working as before. This sets nothing inside the
+  games themselves, which keep their own controls.
 - **Official covers and titles, if you want them.** On first launch the app asks.
   If you agree, it downloads box art for every game and shows each game's official
   title (*The Legend of Zelda: The Wind Waker*) with the PadMint name (*BlueWake*)
   underneath, and the 3D boxes get their real backs (36 games) and spines (29).
-  Until then it shows PadMint's own card art and names.
+  Until then it shows PadMint's own card art and names. Names under covers are
+  off unless you turn them on in Settings.
 - **Your own covers.** Long-press any game, or use its page, to pick a picture from
   Photos.
 - **Settings** for the layout, sort order, covers and titles, and what the app
@@ -111,8 +119,12 @@ to edge. `swift scripts/render-icon.swift` renders it into the asset catalog;
 then flatten it with `magick Assets.xcassets/AppIcon.appiconset/AppIcon.png
 -alpha off Assets.xcassets/AppIcon.appiconset/AppIcon.png`.
 
-A UI test opens the grid and a game's page:
+Unit tests (`Tests/`) cover saved layouts, the console badge and the controller's
+selection; UI tests open the grid, a game's page, the carousel and a console badge:
 `xcodebuild test -scheme PadMintLibrary -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)'`.
+`UITests/ShotsUITests.swift` saves review screenshots of each layout when
+`TEST_RUNNER_PADMINT_SHOTS=<folder>` is set; its controller tour uses Apple's on-screen
+controller (`-virtualController 1`, debug builds only) to press the D-pad, A and B.
 
 `UITests/ShowcaseUITests.swift` holds the scripted tours used for release videos (the
 carousel, a game page, the shelf, the grid, a box spinning and Get It). They run only with
