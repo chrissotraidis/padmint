@@ -1,0 +1,30 @@
+name: Commit credits
+
+# Claude or another AI tool must never show up in the Contributors list. GitHub counts every
+# Co-Authored-By line, so a PR whose commits carry an AI co-author fails here (see AGENTS.md).
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  no-ai-coauthors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: No AI co-author lines in the PR's commits or description
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          pattern='^(co-authored-by:.*(claude|anthropic|copilot|codex|openai|gemini|cursor)|.*generated with \[?claude)'
+          found=$( { git log --format=%B "$BASE..$HEAD"; printf '%s\n' "$PR_BODY"; } | grep -iE "$pattern" || true)
+          if [ -n "$found" ]; then
+            echo "$found"
+            echo "::error::Remove the AI co-author lines above (reword or squash the commits). PadMint lists only people as contributors."
+            exit 1
+          fi
