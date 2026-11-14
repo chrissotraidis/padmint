@@ -50,9 +50,14 @@ final class ShotsUITests: XCTestCase {
     func testBadgeAndSettings() {
         let app = launch("grid", console: nil)
         app.buttons["Xbox"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["All consoles"].firstMatch.waitForExistence(timeout: 10))
+        app.buttons["All consoles"].firstMatch.tap()
+        // With a controller connected (the iOS 27 simulator reports one) search opens on
+        // request, and tapping elsewhere closes it again, so open it last.
+        let open = app.navigationBars.buttons["Search"]
+        if open.waitForExistence(timeout: 3) { open.tap() }
         let search = app.searchFields.firstMatch
         XCTAssertTrue(search.waitForExistence(timeout: 10))
-        app.buttons["All consoles"].firstMatch.tap()
         search.tap()
         search.typeText("Jak")
         let tile = app.buttons["tile-ottsel"]
