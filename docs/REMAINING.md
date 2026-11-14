@@ -275,8 +275,15 @@ only.
   on an iPad with an Xbox controller, a trackpad and an external display.
   On the iPad with a physical Xbox controller (14 November), the keyboard kept
   opening and the stick felt slow; the library now takes controller input away
-  from UIKit focus (iOS 18+) and redraws only the outlined items. Check both again
-  on the iPad with the controller.
+  from UIKit focus (iOS 18+) and redraws only the outlined items. The keyboard still
+  opened on every press, so with a controller connected the library now has no
+  search field until Search is pressed. Check both again on the iPad with the
+  controller.
+  After the user's second test (15 November: no keyboard, but navigation felt
+  unpredictable), the controller works like a console home screen: the D-pad
+  stays on the games, LB/RB switch console, LT/RT page, X searches, Y switches
+  layout, the right stick scrolls and one selected game lifts with a glow.
+  Simulator only so far: check it on the iPad with the controller.
 - Replace HarkinianPad's card art (`art/harkinianpad.png`, still the old
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):

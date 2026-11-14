@@ -117,8 +117,7 @@ final class LibraryStateTests: XCTestCase {
             focus.update("library/\(index)", .init(frame: CGRect(x: index * 120, y: 0, width: 100, height: 140), scope: "library"))
         }
         focus.select("library/0")
-        focus.repeatDelay = .milliseconds(300)
-        focus.repeatInterval = .milliseconds(300)
+        focus.timing = RepeatTiming(delay: .milliseconds(300), first: .milliseconds(300), fastest: .milliseconds(300), step: .zero)
         // Kept alive to the end, so no two of them can share an identifier.
         let objects = (0..<4).map { _ in NSObject() }
         let (pad, dpad, stick, other) = (ObjectIdentifier(objects[0]), ObjectIdentifier(objects[1]),
@@ -154,7 +153,7 @@ final class LibraryStateTests: XCTestCase {
             focus.update("library/\(index)", .init(frame: CGRect(x: index * 120, y: 0, width: 100, height: 140), scope: "library"))
         }
         var heard: [String?] = []
-        let watch = focus.highlight.dropFirst().sink { heard.append($0) }
+        let watch = focus.highlight.dropFirst().sink { heard.append($0?.key) }
         var redraws = 0
         let whole = focus.objectWillChange.sink { redraws += 1 }
         focus.select("library/0")
@@ -162,10 +161,84 @@ final class LibraryStateTests: XCTestCase {
         focus.move(.right)
         let lit: (String) -> String? = { focus.connected ? $0 : nil }
         XCTAssertEqual(focus.selected, "library/1")
-        XCTAssertEqual(focus.highlight.value, lit("library/1"))
+        XCTAssertEqual(focus.highlight.value?.key, lit("library/1"))
         XCTAssertEqual(heard, focus.connected ? ["library/0", "library/1"] : [], "once per change, only with a controller")
         XCTAssertEqual(redraws, 0, "a move doesn't redraw every view holding ControllerFocus")
         watch.cancel()
         whole.cancel()
+    }
+
+    /// D-pad up from the top row stays there: nothing above the games takes the selection.
+    @MainActor
+    func testUpFromTheTopRowStays() {
+        let focus = ControllerFocus()
+        focus.scope = "library"
+        for item in grid { focus.update("library/\(item.id)", .init(frame: item.frame, scope: "library", isDefault: true)) }
+        focus.select("library/b")
+        focus.move(.up)
+        XCTAssertEqual(focus.selected, "library/b")
+        focus.select("library/c")
+        focus.move(.right)
+        XCTAssertEqual(focus.selected, "library/c", "edges don't wrap")
+    }
+
+    func testShouldersCycleConsolesThroughAll() {
+        let consoles = ["Nintendo 64", "GameCube", "PC"]
+        XCTAssertEqual(LibraryFilter.console(after: "", step: 1, in: consoles), "Nintendo 64")
+        XCTAssertEqual(LibraryFilter.console(after: "Nintendo 64", step: 1, in: consoles), "GameCube")
+        XCTAssertEqual(LibraryFilter.console(after: "PC", step: 1, in: consoles), "", "RB wraps to All")
+        XCTAssertEqual(LibraryFilter.console(after: "", step: -1, in: consoles), "PC", "LB wraps to the last")
+        XCTAssertEqual(LibraryFilter.console(after: "Wii", step: 1, in: consoles), "Nintendo 64", "a hidden console counts as All")
+    }
+
+    func testHeldDirectionRepeatsSoonThenFaster() {
+        let waits = (0..<8).map { RepeatTiming().wait(before: $0) }
+        XCTAssertEqual(waits, [280, 110, 100, 90, 80, 70, 60, 60].map { Duration.milliseconds($0) })
+    }
+
+    func testStickKeepsItsDirectionThroughADiagonal() {
+        XCTAssertEqual(MoveDirection.resolve(x: 0.6, y: 0.55, holding: .right), .right)
+        XCTAssertEqual(MoveDirection.resolve(x: 0.35, y: 0.5, holding: .right), .right, "a slight turn")
+        XCTAssertEqual(MoveDirection.resolve(x: 0.3, y: 0.8, holding: .right), .up, "a clear turn")
+        XCTAssertEqual(MoveDirection.resolve(x: 0.6, y: 0.55, holding: nil), .right)
+    }
+
+    func testTriggersPageAboutAScreen() {
+        let rows = (0..<10).map { (id: $0, frame: CGRect(x: 0, y: CGFloat($0) * 100, width: 100, height: 80)) }
+        XCTAssertEqual(MoveDirection.down.page(from: rows[0].frame, among: Array(rows.dropFirst()), distance: 350), 3)
+        XCTAssertEqual(MoveDirection.up.page(from: rows[9].frame, among: Array(rows.dropLast()), distance: 350), 6)
+        XCTAssertEqual(MoveDirection.down.page(from: rows[8].frame, among: rows.filter { $0.id != 8 }, distance: 350), 9, "stops at the end")
+        XCTAssertNil(MoveDirection.down.page(from: rows[9].frame, among: Array(rows.dropLast()), distance: 350))
+    }
+
+    /// Exactly one view shows the selection, through scope changes, a second copy of an item
+    /// and the item going away.
+    @MainActor
+    func testExactlyOneViewShowsTheSelection() {
+        let focus = ControllerFocus()
+        focus.connected = true
+        focus.scope = "library"
+        let first = UUID(), second = UUID()
+        focus.update("library/a", .init(frame: CGRect(x: 0, y: 0, width: 100, height: 100), scope: "library", token: first))
+        focus.update("library/b", .init(frame: CGRect(x: 120, y: 0, width: 100, height: 100), scope: "library"))
+        focus.select("library/a")
+        XCTAssertEqual(focus.highlight.value, .init(key: "library/a", token: first))
+        // A second copy (a caption fading in for the next game) takes over; the old one goes dark.
+        focus.update("library/a", .init(frame: CGRect(x: 0, y: 0, width: 100, height: 100), scope: "library", token: second))
+        XCTAssertEqual(focus.highlight.value, .init(key: "library/a", token: second))
+        focus.remove("library/a", token: first)
+        XCTAssertEqual(focus.highlight.value?.token, second, "the old copy leaving changes nothing")
+        // A page opens over the library: nothing in the library stays lit.
+        focus.scope = "detail:x"
+        XCTAssertNil(focus.highlight.value)
+        focus.scope = "library"
+        XCTAssertEqual(focus.highlight.value?.key, "library/a")
+        // A filter removes the selected game: no highlight, then the nearest game takes it.
+        focus.remove("library/a", token: second)
+        XCTAssertNil(focus.highlight.value)
+        focus.reselect()
+        XCTAssertEqual(focus.highlight.value?.key, "library/b")
+        focus.connected = false
+        XCTAssertNil(focus.highlight.value, "no controller, no highlight")
     }
 }

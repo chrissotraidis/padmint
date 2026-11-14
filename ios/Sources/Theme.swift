@@ -71,6 +71,8 @@ struct FilterBar: View {
     @AppStorage("onlyInstalled") private var onlyInstalled = false
 
     var body: some View {
+        // LB/RB change console with a controller; keep the chosen chip in view.
+        ScrollViewReader { proxy in
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 Menu {
@@ -80,31 +82,25 @@ struct FilterBar: View {
                 } label: {
                     Chip(text: sort.label, symbol: "arrow.up.arrow.down", selected: true)
                 }
-                .chipFocus("sort") { withAnimation(.snappy) { sort = sort.next } }
                 Button { withAnimation(.snappy) { onlyInstalled.toggle() } } label: {
                     Chip(text: "Installed", symbol: "checkmark.circle", selected: onlyInstalled)
                 }
-                .chipFocus("installed") { withAnimation(.snappy) { onlyInstalled.toggle() } }
                 Divider().frame(height: 22)
                 Button { withAnimation(.snappy) { console = "" } } label: { Chip(text: "All consoles", selected: console.isEmpty) }
-                    .chipFocus("console-all") { withAnimation(.snappy) { console = "" } }
-                ForEach(LibraryModel.consoles.filter { name in library.games.contains { $0.platform == name } }, id: \.self) { name in
+                    .id("")
+                ForEach(library.consolesShown, id: \.self) { name in
                     Button { withAnimation(.snappy) { console = console == name ? "" : name } } label: {
                         Chip(text: name, selected: console == name)
                     }
-                    .chipFocus("console-\(name)") { withAnimation(.snappy) { console = console == name ? "" : name } }
+                    .id(name)
                 }
             }
             .buttonStyle(.plain)
             .padding(.horizontal)
             .padding(.vertical, 4)
         }
-    }
-}
-
-private extension View {
-    func chipFocus(_ id: String, action: @escaping () -> Void) -> some View {
-        controllerFocus("chip-\(id)", corner: 20, inset: 3, action: action)
+        .onChange(of: console) { _, name in withAnimation(.snappy) { proxy.scrollTo(name, anchor: .center) } }
+        }
     }
 }
 

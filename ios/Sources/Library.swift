@@ -96,6 +96,13 @@ struct LibraryFilter: Equatable {
         search = ""
         if onlyInstalled, !games.contains(where: { matches($0, installed: installed) }) { onlyInstalled = false }
     }
+
+    /// LB/RB: the previous or next console, through All consoles (""), wrapping around.
+    static func console(after current: String, step: Int, in consoles: [String]) -> String {
+        let all = [""] + consoles
+        let index = all.firstIndex(of: current) ?? 0
+        return all[((index + step) % all.count + all.count) % all.count]
+    }
 }
 
 enum SortOrder: String, CaseIterable, Identifiable {
@@ -139,6 +146,8 @@ final class LibraryModel: ObservableObject {
     /// The links this copy of the app declares in Info.plist: the only ones iOS answers for.
     private let declared = Set(Bundle.main.object(forInfoDictionaryKey: "LSApplicationQueriesSchemes") as? [String] ?? [])
     static let consoles = ["Nintendo 64", "GameCube", "Wii", "PlayStation", "PlayStation 2", "Xbox", "PC"]
+    /// The consoles the filter bar offers: those with a game in the catalog.
+    var consolesShown: [String] { Self.consoles.filter { name in games.contains { $0.platform == name } } }
 
     init() {
         if let url = Bundle.main.url(forResource: "library", withExtension: "json"),

@@ -21,11 +21,15 @@ It uses PadMint's icon and lists only games from PadMint's catalog.
 - **A page for each game,** with its cover over a blurred copy of it, its console,
   when you last played it, Play (or how to get it with PadMint) and cover options.
   Tap its console to see that console's games.
-- **A game controller works too.** With a controller connected (an Xbox
-  controller, for example), the D-pad or left stick moves a mint outline between
-  games, buttons and settings, A presses, B goes back or closes a sheet and Menu
-  opens Settings. Touch keeps working as before. This sets nothing inside the
-  games themselves, which keep their own controls.
+- **A game controller works too,** like a console's home screen. With a controller
+  connected (an Xbox controller, for example), the D-pad or left stick moves
+  between games; the selected one lifts a little with a soft glow. In the carousel
+  left and right turn it. A opens a game (and presses Play on its page), B goes
+  back, LB/RB switch console, LT/RT page down and up (five boxes in the carousel),
+  X searches, Y switches layout, Menu opens Settings and the right stick scrolls.
+  A small bar at the bottom says which button does what. Touch keeps working as
+  before. This sets nothing inside the games themselves, which keep their own
+  controls.
 - **Official covers and titles, if you want them.** On first launch the app asks.
   If you agree, it downloads box art for every game and shows each game's official
   title (*The Legend of Zelda: The Wind Waker*) with the PadMint name (*BlueWake*)
