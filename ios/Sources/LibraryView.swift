@@ -5,6 +5,7 @@ struct LibraryView: View {
     @EnvironmentObject private var library: LibraryModel
     @EnvironmentObject private var covers: CoverStore
     @EnvironmentObject private var focus: ControllerFocus
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("layout") private var layout: Layout = .grid
@@ -53,7 +54,7 @@ struct LibraryView: View {
                 .safeAreaInset(edge: .top, spacing: 0) {
                     VStack(spacing: 10) {
                         HStack(alignment: .firstTextBaseline) {
-                            PadMintMark(size: 34)
+                            PadMintMark(size: sizeClass == .regular ? 46 : 34)
                             Spacer()
                             Text("\(library.installed.count) installed · \(library.games.count) games")
                                 .font(.subheadline.weight(.medium)).foregroundStyle(.secondary)
