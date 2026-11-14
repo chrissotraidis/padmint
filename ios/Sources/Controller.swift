@@ -262,6 +262,27 @@ private struct FocusScopeKey: EnvironmentKey {
     static let defaultValue = "library"
 }
 
+/// Takes the window's game controller input for PadMint (iOS 18 and later). Without it, iPadOS
+/// also turns a physical controller's presses into UIKit focus moves and selections, alongside
+/// ControllerFocus: its focus can reach the search field, where A opens the keyboard. With it,
+/// presses reach only the Game Controller framework, which ControllerFocus reads.
+struct ControllerInputOwner: UIViewRepresentable {
+    func makeUIView(context: Context) -> Claim { Claim() }
+    func updateUIView(_ view: Claim, context: Context) {}
+
+    final class Claim: UIView {
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            isUserInteractionEnabled = false
+            guard #available(iOS 18.0, *), let window,
+                  !window.interactions.contains(where: { $0 is GCEventInteraction }) else { return }
+            let interaction = GCEventInteraction()
+            interaction.handledEventTypes = .gamepad
+            window.addInteraction(interaction)
+        }
+    }
+}
+
 extension EnvironmentValues {
     /// Which screen a view belongs to, for ControllerFocus.
     var focusScope: String {
