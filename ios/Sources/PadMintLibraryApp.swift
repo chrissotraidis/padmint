@@ -13,6 +13,7 @@ struct PadMintLibraryApp: App {
                 .environmentObject(library)
                 .environmentObject(covers)
                 .environmentObject(focus)
+                .background(ControllerInputOwner())
                 .task {
                     await covers.warm(library.games)
                     await covers.fetch(library.games)

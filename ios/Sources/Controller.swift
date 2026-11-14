@@ -64,9 +64,13 @@ final class ControllerFocus: ObservableObject {
         var token = UUID()
     }
 
-    @Published private(set) var connected = false
+    // Not @Published: a change would redraw every view holding this object (the whole
+    // library). Only the two items whose outline changes redraw, through `highlight`.
+    private(set) var connected = false { didSet { publishHighlight() } }
     /// The selected item's key (`scope/id`).
-    @Published private(set) var selected: String?
+    private(set) var selected: String? { didSet { publishHighlight() } }
+    /// The key that shows the outline: the selection while a controller is connected.
+    let highlight = CurrentValueSubject<String?, Never>(nil)
     /// The screen in front (the library, a game's page, a sheet); only its items take focus.
     var scope = "library" {
         didSet { if scope != oldValue { scopeChanged() } }
@@ -74,6 +78,11 @@ final class ControllerFocus: ObservableObject {
     let commands = PassthroughSubject<(key: String, command: Command), Never>()
     let back = PassthroughSubject<Void, Never>()
     let menu = PassthroughSubject<Void, Never>()
+
+    private func publishHighlight() {
+        let lit = connected ? selected : nil
+        if highlight.value != lit { highlight.send(lit) }
+    }
 
     private(set) var targets: [String: Target] = [:]
     private var remembered: [String: String] = [:]
@@ -200,6 +209,10 @@ final class ControllerFocus: ObservableObject {
               let window = UIApplication.shared.connectedScenes.compactMap({ ($0 as? UIWindowScene)?.keyWindow }).first
         else { return }
         let centre = CGPoint(x: frame.midX, y: frame.midY)
+        // Well inside the screen, the items around it are drawn already: skip the search
+        // for scroll views, which walks the whole window.
+        let bounds = window.bounds
+        if bounds.insetBy(dx: bounds.width * 0.2, dy: bounds.height * 0.3).contains(centre) { return }
         var holders: [UIScrollView] = []
         func collect(_ view: UIView) {
             if let scroll = view as? UIScrollView, !scroll.isHidden, scroll.isScrollEnabled,
@@ -262,6 +275,27 @@ private struct FocusScopeKey: EnvironmentKey {
     static let defaultValue = "library"
 }
 
+/// Takes the window's game controller input for PadMint (iOS 18 and later). Without it, iPadOS
+/// also turns a physical controller's presses into UIKit focus moves and selections, alongside
+/// ControllerFocus: its focus can reach the search field, where A opens the keyboard. With it,
+/// presses reach only the Game Controller framework, which ControllerFocus reads.
+struct ControllerInputOwner: UIViewRepresentable {
+    func makeUIView(context: Context) -> Claim { Claim() }
+    func updateUIView(_ view: Claim, context: Context) {}
+
+    final class Claim: UIView {
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            isUserInteractionEnabled = false
+            guard #available(iOS 18.0, *), let window,
+                  !window.interactions.contains(where: { $0 is GCEventInteraction }) else { return }
+            let interaction = GCEventInteraction()
+            interaction.handledEventTypes = .gamepad
+            window.addInteraction(interaction)
+        }
+    }
+}
+
 extension EnvironmentValues {
     /// Which screen a view belongs to, for ControllerFocus.
     var focusScope: String {
@@ -275,6 +309,7 @@ private struct ControllerFocusable: ViewModifier {
     @Environment(\.focusScope) private var scope
     @State private var token = UUID()
     @State private var frame: CGRect?
+    @State private var lit = false
     let id: String
     let handles: Axis.Set
     let isDefault: Bool
@@ -288,7 +323,7 @@ private struct ControllerFocusable: ViewModifier {
     func body(content: Content) -> some View {
         content
             .overlay {
-                if focus.connected && focus.selected == key {
+                if lit {
                     RoundedRectangle(cornerRadius: corner, style: .continuous)
                         .strokeBorder(Color.padMintLight, lineWidth: 3)
                         .shadow(color: .padMint.opacity(0.6), radius: 6)
@@ -303,6 +338,7 @@ private struct ControllerFocusable: ViewModifier {
             }
             .onAppear { register() }
             .onDisappear { focus.remove(key, token: token) }
+            .onReceive(focus.highlight.map { [key] in $0 == key }.removeDuplicates()) { lit = $0 }
             .onReceive(focus.commands) { command in
                 guard command.key == key else { return }
                 switch command.command {

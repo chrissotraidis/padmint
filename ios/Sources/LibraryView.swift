@@ -5,6 +5,8 @@ struct LibraryView: View {
     @EnvironmentObject private var library: LibraryModel
     @EnvironmentObject private var covers: CoverStore
     @EnvironmentObject private var focus: ControllerFocus
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("layout") private var layout: Layout = .grid
     @AppStorage("sort") private var sort: SortOrder = .recent
@@ -17,6 +19,9 @@ struct LibraryView: View {
     @AppStorage("carouselStyle") private var carouselStyle: CarouselStyle = .boxes
     @State private var path: [Game] = []
     @State private var search = ""
+    @State private var searching = false
+    /// A game was opened from here; the search closes when PadMint is back in front.
+    @State private var launched = false
     @State private var missing: Game?
     @State private var coverTarget: Game?
     @State private var pickingCover = false
@@ -49,7 +54,7 @@ struct LibraryView: View {
                 .safeAreaInset(edge: .top, spacing: 0) {
                     VStack(spacing: 10) {
                         HStack(alignment: .firstTextBaseline) {
-                            PadMintMark(size: 34)
+                            PadMintMark(size: sizeClass == .regular ? 46 : 34)
                             Spacer()
                             Text("\(library.installed.count) installed · \(library.games.count) games")
                                 .font(.subheadline.weight(.medium)).foregroundStyle(.secondary)
@@ -67,7 +72,7 @@ struct LibraryView: View {
                 .navigationTitle("")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: Game.self) { GameDetail(game: $0) }
-                .searchable(text: $search, prompt: "Search games")
+                .searchable(text: $search, isPresented: $searching, prompt: "Search games")
                 .toolbar {
                     ToolbarItem {
                         Menu {
@@ -96,6 +101,11 @@ struct LibraryView: View {
         .sheet(isPresented: $askBoxArt) { BoxArtSheet().environmentObject(focus) }
         .sheet(isPresented: $showSettings) { SettingsView().environmentObject(focus) }
         .onChange(of: activeScope, initial: true) { _, scope in focus.scope = scope }
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .active, launched else { return }
+            launched = false
+            closeSearch()
+        }
         .onReceive(focus.back) { back() }
         // Settings can't open over another sheet; Menu there would only take its focus.
         .onReceive(focus.menu) { if !askBoxArt && missing == nil { showSettings.toggle() } }
@@ -130,7 +140,15 @@ struct LibraryView: View {
             missing = game
             return
         }
+        // Leaving with the search field active brings its keyboard back on return.
+        closeSearch()
+        launched = true
         Task { if await !library.play(game) { missing = game } }
+    }
+
+    private func closeSearch() {
+        searching = false
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 
     private func chooseCover(_ game: Game) {

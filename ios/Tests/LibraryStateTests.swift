@@ -143,4 +143,29 @@ final class LibraryStateTests: XCTestCase {
         focus.point(dpad, on: other, x: 0, y: 0)
         withExtendedLifetime(objects) {}
     }
+
+    /// Only the outlined item hears about a move: the highlight changes once per move, and
+    /// nothing redraws the rest of the library.
+    @MainActor
+    func testHighlightFollowsTheSelectionOnly() {
+        let focus = ControllerFocus()
+        focus.scope = "library"
+        for index in 0..<3 {
+            focus.update("library/\(index)", .init(frame: CGRect(x: index * 120, y: 0, width: 100, height: 140), scope: "library"))
+        }
+        var heard: [String?] = []
+        let watch = focus.highlight.dropFirst().sink { heard.append($0) }
+        var redraws = 0
+        let whole = focus.objectWillChange.sink { redraws += 1 }
+        focus.select("library/0")
+        focus.select("library/0")
+        focus.move(.right)
+        let lit: (String) -> String? = { focus.connected ? $0 : nil }
+        XCTAssertEqual(focus.selected, "library/1")
+        XCTAssertEqual(focus.highlight.value, lit("library/1"))
+        XCTAssertEqual(heard, focus.connected ? ["library/0", "library/1"] : [], "once per change, only with a controller")
+        XCTAssertEqual(redraws, 0, "a move doesn't redraw every view holding ControllerFocus")
+        watch.cancel()
+        whole.cancel()
+    }
 }
