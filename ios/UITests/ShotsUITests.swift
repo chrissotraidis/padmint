@@ -12,12 +12,13 @@ final class ShotsUITests: XCTestCase {
         XCUIDevice.shared.orientation = .landscapeLeft
     }
 
-    private func launch(_ layout: String, console: String? = "", _ extra: [String] = []) -> XCUIApplication {
+    /// A launch argument outranks what the app saves: pass nil for a setting the test changes.
+    private func launch(_ layout: String?, console: String? = "", _ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments += ["-boxArt", "download", "-officialTitles", "1", "-layout", layout, "-sort", "title",
+        app.launchArguments += ["-boxArt", "download", "-officialTitles", "1", "-sort", "title",
                                 "-onlyInstalled", "0", "-appearance", "dark", "-carouselStyle", "boxes",
                                 "-demoInstalled", ShowcaseUITests.installed, "-demoLastPlayed", "vaultpad"]
-            + (console.map { ["-console", $0] } ?? []) + extra
+            + (layout.map { ["-layout", $0] } ?? []) + (console.map { ["-console", $0] } ?? []) + extra
         app.launch()
         return app
     }
@@ -77,51 +78,84 @@ final class ShotsUITests: XCTestCase {
     }
 
     /// Apple's on-screen controller drives the same GameController input as an Xbox controller.
-    /// Its D-pad and A/B buttons sit at fixed places in the corners.
+    /// Its D-pad, shoulder buttons and triggers sit on the left, A/B/X/Y on the right.
     private func press(_ app: XCUIApplication, _ button: String, times: Int = 1) {
         let spots: [String: CGVector] = ["right": CGVector(dx: 0.1345, dy: 0.761), "left": CGVector(dx: 0.0745, dy: 0.761),
-                                         "down": CGVector(dx: 0.1045, dy: 0.80), "up": CGVector(dx: 0.1045, dy: 0.721),
-                                         "A": CGVector(dx: 0.8655, dy: 0.80), "B": CGVector(dx: 0.922, dy: 0.725)]
+                                         "down": CGVector(dx: 0.1045, dy: 0.8024), "up": CGVector(dx: 0.1045, dy: 0.721),
+                                         "LT": CGVector(dx: 0.0573, dy: 0.699), "RT": CGVector(dx: 0.1518, dy: 0.699),
+                                         "LB": CGVector(dx: 0.0573, dy: 0.824), "RB": CGVector(dx: 0.1518, dy: 0.824),
+                                         "A": CGVector(dx: 0.8936, dy: 0.8145), "B": CGVector(dx: 0.9336, dy: 0.7624),
+                                         "X": CGVector(dx: 0.8536, dy: 0.7624), "Y": CGVector(dx: 0.8936, dy: 0.709)]
         for _ in 0..<times {
             app.coordinate(withNormalizedOffset: spots[button]!).tap()
             Thread.sleep(forTimeInterval: 0.6)
         }
     }
 
+    private func chosen(_ app: XCUIApplication, _ chip: String) -> Bool {
+        let button = app.buttons[chip].firstMatch
+        return button.waitForExistence(timeout: 3) && button.isSelected
+    }
+
     func testVirtualController() {
-        var app = launch("grid", ["-virtualController", "1"])
+        let app = launch(nil, console: nil, ["-virtualController", "1"])
         Thread.sleep(forTimeInterval: 3)
+        // Start from Grid and All consoles, whatever was saved.
+        app.navigationBars.buttons["Layout"].tap()
+        app.buttons["Grid"].firstMatch.tap()
+        app.buttons["All consoles"].firstMatch.tap()
+        Thread.sleep(forTimeInterval: 1)
         shot("13-controller-start")
+        press(app, "up")
+        shot("14-controller-up-stays-on-games")
         press(app, "right")
-        shot("14-controller-right-to-play")
-        press(app, "down")
-        shot("15-controller-down-to-your-games")
-        press(app, "down", times: 2)
+        shot("15-controller-right-to-play")
+        press(app, "down", times: 3)
         shot("16-controller-down-into-grid")
         press(app, "A")
         XCTAssertTrue(app.staticTexts["detail-title"].waitForExistence(timeout: 5), "A opened the selected game")
         shot("17-controller-A-opened-page")
         press(app, "B")
         XCTAssertFalse(app.staticTexts["detail-title"].waitForExistence(timeout: 2), "B went back")
-        shot("18-controller-B-back")
-        // Settings isn't driven here: the on-screen D-pad lies outside its sheet, and a tap
-        // there dismisses the sheet.
 
-        app = launch("carousel", ["-virtualController", "1"])
-        Thread.sleep(forTimeInterval: 3)
+        // LB/RB change console; the selection stays on a game.
+        press(app, "RB")
+        XCTAssertTrue(chosen(app, "Nintendo 64"), "RB: the next console")
+        shot("18-controller-RB-console")
+        press(app, "LB")
+        XCTAssertTrue(chosen(app, "All consoles"), "LB: back to All")
+        press(app, "RT")
+        shot("19-controller-RT-page")
+
+        // Y changes layout; in the carousel left/right turn it and RT jumps five.
+        press(app, "Y")
         let title = app.staticTexts["carousel-title"]
-        XCTAssertTrue(title.waitForExistence(timeout: 10))
-        let first = title.label
-        press(app, "right", times: 2)
-        XCTAssertNotEqual(title.label, first, "right turned the carousel")
-        shot("19-controller-carousel-right")
-        press(app, "down")
-        shot("20-controller-carousel-play")
+        XCTAssertTrue(title.waitForExistence(timeout: 5), "Y: carousel")
+        let position = app.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "[0-9]+ of [0-9]+")).firstMatch
+        XCTAssertTrue(position.waitForExistence(timeout: 5))
+        press(app, "LB"); press(app, "RB")
+        XCTAssertTrue(position.label.hasPrefix("1 of"), position.label)
+        press(app, "right")
+        XCTAssertTrue(position.label.hasPrefix("2 of"), position.label)
+        press(app, "RT")
+        XCTAssertTrue(position.label.hasPrefix("7 of"), "RT jumps five: \(position.label)")
+        shot("20-controller-carousel-RT-jump")
+        press(app, "A")
+        XCTAssertTrue(app.staticTexts["detail-title"].waitForExistence(timeout: 5), "A opened the carousel's game")
+        press(app, "B")
 
-        app = launch("list", ["-virtualController", "1"])
-        Thread.sleep(forTimeInterval: 3)
+        press(app, "Y")  // list
         press(app, "down", times: 3)
         press(app, "right")
         shot("21-controller-list-play")
+
+        press(app, "Y")  // grid again
+        press(app, "X")
+        XCTAssertTrue(app.searchFields.firstMatch.waitForExistence(timeout: 5), "X opens search")
+        shot("22-controller-X-search")
+        // The keyboard covers the on-screen controller here, so close the search by touch.
+        app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'installed'")).firstMatch.tap()
+        XCTAssertFalse(app.searchFields.firstMatch.waitForExistence(timeout: 2), "the field goes again")
+        app.buttons["All consoles"].firstMatch.tap()
     }
 }
