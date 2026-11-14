@@ -20,6 +20,10 @@ struct LibraryView: View {
     @State private var path: [Game] = []
     @State private var search = ""
     @State private var searching = false
+    /// With a controller connected the library has no search field until the player asks
+    /// for one: iPadOS's own controller focus reaches a text field and opens its keyboard.
+    @State private var controller = false
+    @State private var searchRequested = false
     /// A game was opened from here; the search closes when PadMint is back in front.
     @State private var launched = false
     @State private var missing: Game?
@@ -72,8 +76,16 @@ struct LibraryView: View {
                 .navigationTitle("")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: Game.self) { GameDetail(game: $0) }
-                .searchable(text: $search, isPresented: $searching, prompt: "Search games")
+                .modifier(LibrarySearch(attached: !controller || searchRequested, text: $search, isPresented: $searching))
                 .toolbar {
+                    if controller && !searchRequested {
+                        ToolbarItem {
+                            Button(action: openSearch) {
+                                Label("Search", systemImage: search.isEmpty ? "magnifyingglass" : "magnifyingglass.circle.fill")
+                            }
+                            .controllerFocus("search", corner: 10, inset: 4, action: openSearch)
+                        }
+                    }
                     ToolbarItem {
                         Menu {
                             Picker("Layout", selection: $layout.animation(.snappy)) {
@@ -107,6 +119,16 @@ struct LibraryView: View {
             closeSearch()
         }
         .onReceive(focus.back) { back() }
+        .onReceive(focus.connection.removeDuplicates()) { connected in
+            // onReceive hears the current value again whenever this view redraws.
+            guard connected != controller else { return }
+            controller = connected
+            if connected && !searching { searchRequested = false }
+        }
+        .onChange(of: searching) { _, open in
+            // Closed or cancelled: with a controller, the field goes again.
+            if !open { searchRequested = false }
+        }
         // Settings can't open over another sheet; Menu there would only take its focus.
         .onReceive(focus.menu) { if !askBoxArt && missing == nil { showSettings.toggle() } }
         .photosPicker(isPresented: $pickingCover, selection: $picked, matching: .images)
@@ -165,19 +187,42 @@ struct LibraryView: View {
             search = filter.search
             onlyInstalled = filter.onlyInstalled
         }
+        closeSearch()
         path = []
     }
 
     /// B on a controller: closes a sheet, or goes back a page.
     private func back() {
         if askBoxArt { return }
-        if showSettings { showSettings = false }
+        if searching { closeSearch() }
+        else if showSettings { showSettings = false }
         else if missing != nil { missing = nil }
         else if !path.isEmpty { path.removeLast() }
+    }
+
+    /// The search field, attached only on request while a controller is connected.
+    private func openSearch() {
+        searchRequested = true
+        DispatchQueue.main.async { searching = true }
     }
 }
 
 // MARK: - Grid
+
+/// `.searchable` when `attached`; otherwise the library has no text field at all.
+private struct LibrarySearch: ViewModifier {
+    let attached: Bool
+    @Binding var text: String
+    @Binding var isPresented: Bool
+
+    func body(content: Content) -> some View {
+        if attached {
+            content.searchable(text: $text, isPresented: $isPresented, prompt: "Search games")
+        } else {
+            content
+        }
+    }
+}
 
 /// A banner for the game you played last, your installed games, then every cover.
 private struct GridLayout: View {
