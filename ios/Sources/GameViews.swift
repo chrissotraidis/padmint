@@ -66,23 +66,23 @@ struct GameDetail: View {
                         Label("Play", systemImage: "play.fill").font(.title3.bold()).frame(maxWidth: 280)
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    .controllerFocus("play", isDefault: true) { actions.play(game) }
+                    .controllerFocus("play", isDefault: true, lift: 1.04) { actions.play(game) }
                 } else {
                     HowToGet(game: game)
                 }
                 HStack {
                     Button { actions.chooseCover(game) } label: { Label("Choose Cover…", systemImage: "photo") }
-                        .controllerFocus("cover") { actions.chooseCover(game) }
+                        .controllerFocus("cover", lift: 1.04) { actions.chooseCover(game) }
                     if covers.hasChosen(game) {
                         Button(role: .destructive) { covers.removeChosen(game) } label: {
                             Label("Remove Chosen Cover", systemImage: "arrow.uturn.backward")
                         }
-                        .controllerFocus("remove-cover") { covers.removeChosen(game) }
+                        .controllerFocus("remove-cover", lift: 1.04) { covers.removeChosen(game) }
                     }
                 }
                 .buttonStyle(SecondaryButtonStyle())
                 Link("\(game.name) on GitHub", destination: game.repo).font(.footnote)
-                    .controllerFocus("github", corner: 6) { openURL(game.repo) }
+                    .controllerFocus("github", corner: 6, lift: 1) { openURL(game.repo) }
                 if let source = covers.source(for: game) {
                     Text("Box art from \(source)").font(.footnote).foregroundStyle(.secondary)
                 }
@@ -115,7 +115,7 @@ struct HowToGet: View {
                 .foregroundStyle(.secondary)
             Link(game.link == nil ? "Open \(game.name)'s page" : "How to get it with PadMint", destination: page)
                 .buttonStyle(PrimaryButtonStyle())
-                .controllerFocus("how-to-get", isDefault: true) { openURL(page) }
+                .controllerFocus("how-to-get", isDefault: true, lift: 1.04) { openURL(page) }
         }
         .frame(maxWidth: 440)
     }
@@ -196,10 +196,10 @@ struct BoxArtSheet: View {
                 .foregroundStyle(.secondary)
             Button { choose(.download) } label: { Text("Use Official Covers and Titles").frame(maxWidth: 320) }
                 .buttonStyle(PrimaryButtonStyle())
-                .controllerFocus("download", isDefault: true) { choose(.download) }
+                .controllerFocus("download", isDefault: true, lift: 1.04) { choose(.download) }
             Button("Keep PadMint Art and Names") { choose(.off) }
                 .padding(.vertical, 6).padding(.horizontal, 10)
-                .controllerFocus("keep", corner: 10, inset: 0) { choose(.off) }
+                .controllerFocus("keep", corner: 10, inset: 0, lift: 1) { choose(.off) }
         }
         .padding(32)
         .frame(maxWidth: 560)
@@ -318,6 +318,6 @@ struct SettingsView: View {
 private extension View {
     /// A settings row a controller can select; A toggles it or picks the next choice.
     func settingFocus(_ id: String, isDefault: Bool = false, action: @escaping () -> Void) -> some View {
-        controllerFocus(id, isDefault: isDefault, corner: 10, inset: 7, action: action)
+        controllerFocus(id, isDefault: isDefault, corner: 10, inset: 7, lift: 1, action: action)
     }
 }

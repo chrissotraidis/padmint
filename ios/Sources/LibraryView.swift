@@ -83,7 +83,6 @@ struct LibraryView: View {
                             Button(action: openSearch) {
                                 Label("Search", systemImage: search.isEmpty ? "magnifyingglass" : "magnifyingglass.circle.fill")
                             }
-                            .controllerFocus("search", corner: 10, inset: 4, action: openSearch)
                         }
                     }
                     ToolbarItem {
@@ -106,6 +105,11 @@ struct LibraryView: View {
                 }
         }
         .tint(.padMint)
+        // The library draws its own selection; no system focus highlight on top of it.
+        .focusEffectDisabled()
+        .overlay(alignment: .bottom) {
+            if controller { ControllerHints(items: hints) }
+        }
         .preferredColorScheme(appearance.scheme)
         .environment(\.gameActions, GameActions(play: play, open: { path.append($0) }, chooseCover: chooseCover,
                                                 showConsole: showConsole))
@@ -118,7 +122,7 @@ struct LibraryView: View {
             launched = false
             closeSearch()
         }
-        .onReceive(focus.back) { back() }
+        .onReceive(focus.pressed) { press($0) }
         .onReceive(focus.connection.removeDuplicates()) { connected in
             // onReceive hears the current value again whenever this view redraws.
             guard connected != controller else { return }
@@ -129,8 +133,6 @@ struct LibraryView: View {
             // Closed or cancelled: with a controller, the field goes again.
             if !open { searchRequested = false }
         }
-        // Settings can't open over another sheet; Menu there would only take its focus.
-        .onReceive(focus.menu) { if !askBoxArt && missing == nil { showSettings.toggle() } }
         .photosPicker(isPresented: $pickingCover, selection: $picked, matching: .images)
         .onChange(of: picked) { _, item in
             guard let item, let game = coverTarget else { return }
@@ -200,6 +202,42 @@ struct LibraryView: View {
         else if !path.isEmpty { path.removeLast() }
     }
 
+    /// Controller buttons other than A and the D-pad.
+    private func press(_ press: ControllerFocus.Press) {
+        let animation: Animation? = reduceMotion ? nil : .snappy
+        switch press {
+        case .back: back()
+        // Settings can't open over another sheet; Menu there would only take its focus.
+        case .menu: if !askBoxArt && missing == nil { showSettings.toggle() }
+        case .search: if activeScope == "library" && !searching { openSearch() }
+        case .layout: if activeScope == "library" { withAnimation(animation) { layout = layout.next } }
+        case .console(let step):
+            guard activeScope == "library" else { return }
+            withAnimation(animation) { console = LibraryFilter.console(after: console, step: step, in: library.consolesShown) }
+        }
+    }
+
+    /// What the hint bar shows for the screen in front.
+    private var hints: [ControllerHints.Item] {
+        let glyph = { (name: String, fallback: String) in focus.glyphs[name] ?? fallback }
+        let back = ControllerHints.Item(symbols: [glyph("B", "b.circle")], label: "Back")
+        switch activeScope {
+        case "library":
+            return [.init(symbols: [glyph("A", "a.circle")], label: "Open"),
+                    .init(symbols: [glyph("LB", "lb.rectangle.roundedbottom"), glyph("RB", "rb.rectangle.roundedbottom")], label: "Console"),
+                    .init(symbols: [glyph("LT", "lt.rectangle.roundedtop"), glyph("RT", "rt.rectangle.roundedtop")], label: layout == .carousel ? "Jump" : "Page"),
+                    .init(symbols: [glyph("X", "x.circle")], label: "Search"),
+                    .init(symbols: [glyph("Y", "y.circle")], label: "Layout"),
+                    .init(symbols: [glyph("Menu", "line.3.horizontal.circle")], label: "Settings")]
+        case let scope where scope.hasPrefix("detail:"):
+            return [.init(symbols: [glyph("A", "a.circle")], label: "Select"), back,
+                    .init(symbols: [glyph("Menu", "line.3.horizontal.circle")], label: "Settings")]
+        default:
+            return [.init(symbols: [glyph("A", "a.circle")], label: "Select"),
+                    .init(symbols: [glyph("B", "b.circle")], label: "Close")]
+        }
+    }
+
     /// The search field, attached only on request while a controller is connected.
     private func openSearch() {
         searchRequested = true
@@ -208,6 +246,37 @@ struct LibraryView: View {
 }
 
 // MARK: - Grid
+
+/// A small bar at the bottom while a controller is connected: which button does what here.
+private struct ControllerHints: View {
+    struct Item: Hashable {
+        var symbols: [String]
+        var label: String
+    }
+    let items: [Item]
+
+    var body: some View {
+        HStack(spacing: 16) {
+            ForEach(items, id: \.self) { item in
+                HStack(spacing: 4) {
+                    ForEach(item.symbols, id: \.self) { Image(systemName: $0) }
+                    Text(item.label)
+                }
+            }
+        }
+        .font(.footnote.weight(.semibold))
+        .foregroundStyle(.secondary)
+        .lineLimit(1)
+        .fixedSize()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(.ultraThinMaterial, in: Capsule())
+        .overlay { Capsule().strokeBorder(Color.primary.opacity(0.1), lineWidth: 0.5) }
+        .padding(.bottom, 6)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
 
 /// `.searchable` when `attached`; otherwise the library has no text field at all.
 private struct LibrarySearch: ViewModifier {
@@ -268,7 +337,7 @@ private struct HeroBanner: View {
                 .id("\(reflections)-\(boxMotion)")
                 .frame(width: height * 0.95, height: height)
                 .onTapGesture { actions.open(game) }
-                .controllerFocus("hero", isDefault: true, corner: 20) { actions.open(game) }
+                .controllerFocus("hero", isDefault: true, corner: 20, lift: 1.03) { actions.open(game) }
             VStack(alignment: .leading, spacing: 10) {
                 Text(library.lastPlayed[game.id] == nil ? "READY TO PLAY" : "CONTINUE PLAYING")
                     .font(.caption.weight(.semibold)).foregroundStyle(.secondary).tracking(0.8)
@@ -281,7 +350,7 @@ private struct HeroBanner: View {
                     Label("Play", systemImage: "play.fill").font(.headline).padding(.horizontal, 14)
                 }
                 .buttonStyle(PrimaryButtonStyle())
-                .controllerFocus("hero-play") { actions.play(game) }
+                .controllerFocus("hero-play", lift: 1.04) { actions.play(game) }
                 .padding(.top, 6)
             }
             Spacer(minLength: 0)
@@ -431,8 +500,10 @@ private struct CarouselCaption: View {
                 .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.7)
                 .accessibilityIdentifier("carousel-title")
                 .padding(.horizontal, 10)
-                .controllerFocus("carousel-game", isDefault: true, handles: .horizontal,
-                                 move: { step($0 == .left ? -1 : $0 == .right ? 1 : 0) }) { actions.open(game) }
+                // The carousel is one stop: left and right turn it, LT/RT jump five, A opens.
+                .controllerFocus("carousel-game", isDefault: true, lift: 1, handles: .horizontal,
+                                 move: { step($0 == .left ? -1 : $0 == .right ? 1 : 0) },
+                                 page: { step($0 * 5) }) { actions.open(game) }
             HStack(spacing: 8) {
                 Text(game.subheading(official: official))
                 Text("·")
@@ -446,10 +517,8 @@ private struct CarouselCaption: View {
                         .font(.headline).padding(.horizontal, 12)
                 }
                 .buttonStyle(PrimaryButtonStyle())
-                .controllerFocus("carousel-play") { actions.play(game) }
                 Button { actions.open(game) } label: { Label("Details", systemImage: "info.circle").font(.headline) }
                     .buttonStyle(SecondaryButtonStyle())
-                    .controllerFocus("carousel-details") { actions.open(game) }
             }
             .padding(.top, 6)
         }
@@ -619,11 +688,11 @@ private struct ListLayout: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .controllerFocus("list-\(game.id)", isDefault: true, corner: 8, inset: 0) { actions.open(game) }
+            .controllerFocus("list-\(game.id)", isDefault: true, corner: 8, inset: 0, lift: 1) { actions.open(game) }
             if library.canTry(game) {
                 Button("Play") { actions.play(game) }
                     .buttonStyle(PrimaryButtonStyle(compact: true))
-                    .controllerFocus("list-play-\(game.id)", corner: 11, inset: 3) { actions.play(game) }
+                    .controllerFocus("list-play-\(game.id)", corner: 11, inset: 3, lift: 1.04) { actions.play(game) }
             }
         }
         .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
