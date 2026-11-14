@@ -57,4 +57,24 @@ final class LibraryUITests: XCTestCase {
         XCTAssertTrue(tile.waitForExistence(timeout: 5))
         all.tap()
     }
+
+    /// With a game controller connected the library has no search field until Search is
+    /// pressed, and cancelling removes it again. Skipped when no controller is connected.
+    func testSearchFieldOnlyOnRequestWithController() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["-boxArt", "off", "-layout", "grid"]
+        app.launch()
+        XCTAssertTrue(app.buttons["Settings"].firstMatch.waitForExistence(timeout: 10))
+        let open = app.navigationBars.buttons["Search"]
+        try XCTSkipUnless(open.waitForExistence(timeout: 3), "no game controller connected")
+        XCTAssertFalse(app.searchFields.firstMatch.exists, "no text field while a controller is connected")
+        open.tap()
+        let field = app.searchFields.firstMatch
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        // iPadOS 27 puts the field in the navigation bar without a Cancel button; tapping
+        // elsewhere ends the search.
+        app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'installed'")).firstMatch.tap()
+        XCTAssertTrue(open.waitForExistence(timeout: 5), "Search is back")
+        XCTAssertFalse(app.searchFields.firstMatch.exists, "the field is gone again")
+    }
 }

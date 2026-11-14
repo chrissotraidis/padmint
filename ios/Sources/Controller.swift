@@ -66,11 +66,18 @@ final class ControllerFocus: ObservableObject {
 
     // Not @Published: a change would redraw every view holding this object (the whole
     // library). Only the two items whose outline changes redraw, through `highlight`.
-    private(set) var connected = false { didSet { publishHighlight() } }
+    private(set) var connected = false {
+        didSet {
+            publishHighlight()
+            if connection.value != connected { connection.send(connected) }
+        }
+    }
     /// The selected item's key (`scope/id`).
     private(set) var selected: String? { didSet { publishHighlight() } }
     /// The key that shows the outline: the selection while a controller is connected.
     let highlight = CurrentValueSubject<String?, Never>(nil)
+    /// Whether a game controller is connected, for views that change with it.
+    let connection = CurrentValueSubject<Bool, Never>(false)
     /// The screen in front (the library, a game's page, a sheet); only its items take focus.
     var scope = "library" {
         didSet { if scope != oldValue { scopeChanged() } }
