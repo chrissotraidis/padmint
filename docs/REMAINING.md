@@ -1,9 +1,9 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **12 November 2026** for PadMint **0.6.5**,
-using the live catalog audit (41 entries, 0 problems) and the open pull requests
-in PadMint and each game's repository. Any PR that finishes an item below
+continuing work. It was updated on **16 November 2026** for PadMint **0.6.6**. The platform
+counts below remain the 12 November snapshot; the dated release section records
+the newer release checks and open pull requests. Any PR that finishes an item below
 updates this page too.
 
 Evidence and history live in other files:
@@ -23,7 +23,7 @@ Portuguese.
 
 ## Where it stands
 
-These counts cover the 39 entries players can use: 31 games PadMint builds and 8
+The 12 November counts cover the 39 entries players can use: 31 games PadMint builds and 8
 ready-made apps. EctoPad is paused and not counted.
 
 | Measure | Mac (Apple Silicon) | Mac (Intel) | Windows PC | Linux |
@@ -85,6 +85,62 @@ Times include fresh tool downloads on ARM64 but not on x86-64, so they don't
 compare. Players get Linux for each game with its next release, whose recipe
 PadMint reads; until then the counts above stay at KartPad only. No Linux-built
 copy has been played on a device, and no run used a native Linux PC.
+
+## Display and touch releases — 16 November 2026
+
+On 15 November, 28 releases were published with the window/scene and controller
+changes: AnnePad, BallPad, BananaPad, BarrelPad, BearBirdPad, BellPad, BrawlerPad,
+CaesarPad, CTRPad, DaggerPad, DarkPad, DevilTouch, DinoPad, Emerald Tablet, F0x,
+GalaxyPad, HarkinianPad, MaskPad, NightPad, OpenRCT2 Touch, PaperPad, RATouch,
+SnapPad, SpaghettiPad, StarshipPad, TribesPad, UTP and VaultPad. Every attached
+file passed PadMint's audit and the private reference gate before publication.
+HaloPad 0.3.16 and PeonPad preview.2 were already live. These are release/build
+results; physical TV and controller acceptance is still pending.
+
+Post-publish checks use `scripts/player-check.sh` from PadMint main, Apple's
+Python 3.9, no source checkout and an empty PadMint folder. As of 01:22 JST,
+21 of the 22 checks pass: AnnePad, BallPad, BananaPad, BarrelPad, BearBirdPad,
+BellPad, BrawlerPad, CTRPad, DinoPad, F0x, GalaxyPad, HarkinianPad, MaskPad,
+NightPad, OpenRCT2 Touch, PaperPad, SnapPad, SpaghettiPad, StarshipPad, TribesPad
+and UTP. DarkPad initially stopped at the catalog mismatch.
+[#274](https://github.com/chrissotraidis/padmint/pull/274) is merged and
+[PadMint 0.6.6](https://github.com/chrissotraidis/padmint/releases/tag/v0.6.6)
+is published: its experimental Mac source-build route is intentionally unoffered.
+All 32 CI checks passed, including the clean Mac builds and the Linux x64
+compiler probe; all five release assets passed both gates. DarkPad still needs
+its local post-publish player check. It cannot start while the Mac is below
+the 30 GB free-space reserve (about 13 GB available at the last check).
+Free space, then run `scripts/player-check.sh darkpad ios -` from current main.
+The other earlier failures were network failures and passed on retry.
+SnapPad's binutils download does not retry interrupted partial transfers; a
+small robustness fix remains a separate follow-up.
+
+Release state rechecked on GitHub:
+
+- **BlueWake 0.12.0 remains a draft.** The Windows ZIP and Linux AppImage have
+  now arrived, superseding the earlier missing-build blocker. The draft still
+  lacks `SHA256SUMS` and contains checksum/validation placeholders. On 16 November,
+  both PadMint and the private reference gate **failed the Windows ZIP** because
+  `BuilderProvenance.json` declares `containsTranslatedGameCode: true`. That is
+  a release stop. The AppImage passed the direct file scans; its packed contents
+  were not independently verified. Resolve the gate failure and finish release
+  text before publication, then run the iOS player check and remove the README's
+  unreleased note. The old 0.11.1 draft also remains.
+- **KartPad 0.8.11 is now a public prerelease** (15 November), and
+  [kartpad#573](https://github.com/chrissotraidis/kartpad/pull/573) is merged.
+  PadMint and KartPad's update check still select stable 0.8.10. The release
+  records pre-tag iOS, Mac and Android player checks; that does not establish
+  post-publish selection of the prerelease. Physical-device checks remain open.
+- **AgePad 0.1.1:** [agepad#15](https://github.com/chrissotraidis/agepad/pull/15)
+  is still a draft awaiting an iPad match. Merge with main's display fix, rebuild
+  the base app, publish and run the player check after that acceptance.
+- **EctoPad:** [#10](https://github.com/chrissotraidis/ectopad/pull/10) and stacked
+  [#11](https://github.com/chrissotraidis/ectopad/pull/11) remain open. Private
+  upstream mirrors and missing licenses still block the proposed public release.
+- **Touch-only drafts:** GoldenPad 0.3.2, MeleePad 0.3.1, SunPad 0.3.2,
+  SquirrelPad 0.2.1 and Ottsel 0.1.1 remain unpublished. Their publication needs
+  a separate decision, asset audits and player checks. Remove the relevant
+  README's unreleased note only after publishing.
 
 ## Chromebooks
 
@@ -303,8 +359,8 @@ only.
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):
   a 144×144 PNG made from HarkinianPad's `assets/AppIcon.appiconset/AppIcon.png`,
-  shipped in the first PadMint release after HarkinianPad v0.2.3 publishes the
-  new icon. The latest release is still v0.2.2.
+  to ship in a PadMint release. HarkinianPad v0.2.3 published the new icon on
+  15 November; the PadMint card-art change is still pending.
 - MaskPad's card art (`art/maskpad.png`) is now the crescent moon with a
   controller from [MaskPad v0.2.3](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.3)
   ([maskpad#26](https://github.com/chrissotraidis/maskpad/pull/26)), a 144×144
