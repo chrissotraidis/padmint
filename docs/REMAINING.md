@@ -98,24 +98,29 @@ HaloPad 0.3.16 and PeonPad preview.2 were already live. These are release/build
 results; physical TV and controller acceptance is still pending.
 
 Post-publish checks use `scripts/player-check.sh` from PadMint main, Apple's
-Python 3.9, no source checkout and an empty PadMint folder. As of 00:44 JST:
-13 of the 22 checks pass (AnnePad, BananaPad, BarrelPad, CTRPad, F0x, GalaxyPad,
-HarkinianPad, MaskPad, NightPad, OpenRCT2 Touch, PaperPad, SpaghettiPad and
-StarshipPad). BearBirdPad, DinoPad, SnapPad and TribesPad are running; BallPad,
-BellPad, BrawlerPad and UTP are queued. DarkPad stops at the catalog mismatch;
+Python 3.9, no source checkout and an empty PadMint folder. As of 01:22 JST,
+21 of the 22 checks pass: AnnePad, BallPad, BananaPad, BarrelPad, BearBirdPad,
+BellPad, BrawlerPad, CTRPad, DinoPad, F0x, GalaxyPad, HarkinianPad, MaskPad,
+NightPad, OpenRCT2 Touch, PaperPad, SnapPad, SpaghettiPad, StarshipPad, TribesPad
+and UTP. DarkPad stopped at the catalog mismatch;
 [#274](https://github.com/chrissotraidis/padmint/pull/274) records its experimental
-Mac source-build route as intentionally unoffered. Chris approved the PadMint
-update once checks pass; rerun DarkPad after it ships. Earlier network failures
-are being retried. SnapPad's binutils download does not retry interrupted
-partial transfers; a small robustness fix remains a separate follow-up.
+Mac source-build route as intentionally unoffered and prepares PadMint 0.6.6.
+Chris approved that release once checks pass; rerun DarkPad after it ships.
+The other earlier failures were network failures and passed on retry.
+SnapPad's binutils download does not retry interrupted partial transfers; a
+small robustness fix remains a separate follow-up.
 
 Release state rechecked on GitHub:
 
 - **BlueWake 0.12.0 remains a draft.** The Windows ZIP and Linux AppImage have
   now arrived, superseding the earlier missing-build blocker. The draft still
-  lacks `SHA256SUMS` and contains checksum/validation placeholders. Complete
-  the audits and release text before publication; then run the iOS player check
-  and remove the README's unreleased note. The old 0.11.1 draft also remains.
+  lacks `SHA256SUMS` and contains checksum/validation placeholders. On 16 November,
+  both PadMint and the private reference gate **failed the Windows ZIP** because
+  `BuilderProvenance.json` declares `containsTranslatedGameCode: true`. That is
+  a release stop. The AppImage passed the direct file scans; its packed contents
+  were not independently verified. Resolve the gate failure and finish release
+  text before publication, then run the iOS player check and remove the README's
+  unreleased note. The old 0.11.1 draft also remains.
 - **KartPad 0.8.11 is now a public prerelease** (15 November), and
   [kartpad#573](https://github.com/chrissotraidis/kartpad/pull/573) is merged.
   PadMint and KartPad's update check still select stable 0.8.10. The release
