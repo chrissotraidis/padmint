@@ -117,12 +117,6 @@ enum SortOrder: String, CaseIterable, Identifiable {
     }
 }
 
-enum StartOn: String, CaseIterable, Identifiable {
-    case library, lastPlayed
-    var id: Self { self }
-    var label: String { self == .library ? "Library" : "Last game played" }
-}
-
 private struct LibraryFile: Codable {
     let games: [Game]
 }
@@ -167,6 +161,18 @@ final class LibraryModel: ObservableObject {
 
     var lastPlayedGame: Game? {
         games.filter { lastPlayed[$0.id] != nil }.max { lastPlayed[$0.id]! < lastPlayed[$1.id]! }
+    }
+
+    /// How many times each game was opened from the library (counted from 0.6.6).
+    @Published private(set) var playCounts: [String: Int] =
+        (UserDefaults.standard.dictionary(forKey: "playCounts") as? [String: Int]) ?? [:] {
+        didSet { UserDefaults.standard.set(playCounts, forKey: "playCounts") }
+    }
+
+    /// A game opened from the library: when, and one more time.
+    func recordPlay(_ game: Game) {
+        lastPlayed[game.id] = Date()
+        playCounts[game.id, default: 0] += 1
     }
 
     func sorted(_ list: [Game], by order: SortOrder, official: Bool) -> [Game] {
@@ -242,11 +248,25 @@ final class LibraryModel: ObservableObject {
         return checked(game) ? "Not installed" : "Tap Play to check"
     }
 
+    /// The status beside a check mark: nothing for an installed game never played, since the
+    /// check mark already says it's installed.
+    func note(_ game: Game) -> String? {
+        installed.contains(game.id) && lastPlayed[game.id] == nil ? nil : status(game)
+    }
+
+    /// "Played 2 hours ago · 3 times", from what the library recorded.
+    func playedText(_ game: Game) -> String? {
+        guard let date = lastPlayed[game.id] else { return nil }
+        let count = playCounts[game.id] ?? 0
+        let times = count == 0 ? nil : count == 1 ? "once" : "\(count) times"
+        return [lastPlayedText(date), times].compactMap { $0 }.joined(separator: " · ")
+    }
+
     /// Opens the game; false when no app answers to its link.
     func play(_ game: Game) async -> Bool {
         guard let url = game.linkURL else { return false }
         let success = await UIApplication.shared.open(url)
-        if success { lastPlayed[game.id] = Date() }
+        if success { recordPlay(game) }
         if !checked(game) {
             // Every game inside the same app (TribesPad's three) shares its answer.
             let siblings = games.filter { $0.link == game.link }.map(\.id)
