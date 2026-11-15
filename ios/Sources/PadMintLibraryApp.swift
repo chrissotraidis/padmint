@@ -6,6 +6,7 @@ struct PadMintLibraryApp: App {
     @StateObject private var covers = CoverStore()
     @StateObject private var focus = ControllerFocus()
     @Environment(\.scenePhase) private var scenePhase
+    @State private var wasInBackground = false
 
     var body: some Scene {
         WindowGroup {
@@ -15,14 +16,19 @@ struct PadMintLibraryApp: App {
                 .environmentObject(focus)
                 .background(ControllerInputOwner { focus.touch() })
                 .task {
-                    await covers.warm(library.games)
+                    covers.warm(library.games)
                     await covers.fetch(library.games)
                     await library.refresh()
                     await covers.fetch(library.games)
                 }
-                // A game installed or deleted while PadMint was in the background.
+                // A game installed or deleted while PadMint was in the background. Not at launch:
+                // the library has just checked.
                 .onChange(of: scenePhase) { _, phase in
-                    if phase == .active { library.checkInstalled() }
+                    if phase == .background { wasInBackground = true }
+                    if phase == .active, wasInBackground {
+                        wasInBackground = false
+                        library.checkInstalled()
+                    }
                 }
         }
     }

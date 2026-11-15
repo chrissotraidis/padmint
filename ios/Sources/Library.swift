@@ -208,13 +208,15 @@ final class LibraryModel: ObservableObject {
     }
 
     func refresh() async {
-        checkInstalled()
         guard let (data, response) = try? await URLSession.shared.data(from: remote),
               (response as? HTTPURLResponse)?.statusCode == 200,
               let file = try? JSONDecoder().decode(LibraryFile.self, from: data),
               !file.games.isEmpty else { return }
+        // Each check asks iOS about 25 links on the main thread (about 0.1–0.25 s), so only
+        // when the list of links changed; init already checked the bundled list.
+        let changed = file.games.map(\.link) != games.map(\.link)
         games = file.games
-        checkInstalled()
+        if changed { checkInstalled() }
     }
 
     /// Whether this copy of the app can ask iOS if the game is installed; other games are
@@ -224,7 +226,7 @@ final class LibraryModel: ObservableObject {
     func checked(_ game: Game) -> Bool { game.link.map(declared.contains) ?? false }
 
     func checkInstalled() {
-        installed = Set(games.compactMap { game in
+        var found = Set<String>(games.compactMap { game -> String? in
             guard let url = game.linkURL else { return nil }
             if checked(game) { return UIApplication.shared.canOpenURL(url) ? game.id : nil }
             return opened.contains(game.id) ? game.id : nil
@@ -232,9 +234,11 @@ final class LibraryModel: ObservableObject {
         #if DEBUG
         // Demo recordings in the simulator, where no game is installed: -demoInstalled id,id,...
         if let demo = UserDefaults.standard.string(forKey: "demoInstalled") {
-            installed = Set(demo.split(separator: ",").map(String.init))
+            found = Set(demo.split(separator: ",").map(String.init))
         }
         #endif
+        // Publishing redraws the whole library: only when something changed.
+        if found != installed { installed = found }
     }
 
     /// Whether Play can be tried: installed, or a game this app can't check (it may be there).
