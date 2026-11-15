@@ -14,21 +14,24 @@
     "steps": [
       "Download the PeonPad IPA from https://github.com/chrissotraidis/peonpad/releases and check it against the SHA-256 file beside it.",
       "Install it with AltStore Classic, SideStore or Sideloadly, signed with your own Apple ID.",
-      "Copy your own Warcraft II data, extracted with Wargus, to Files › On My iPad › PeonPad › data.Wargus, then open PeonPad."
+      "Copy your own Warcraft II data, extracted with Wargus, to Files › On My iPad › PeonPad › data.Wargus, then open PeonPad.",
+      "If PeonPad stops, it shows why in a “PeonPad stopped” message and saves PeonPad.log next to data.Wargus. Attach that log when you report a problem at https://github.com/chrissotraidis/peonpad/issues."
     ],
     "translations": {
       "es": {
         "steps": [
           "Descarga la IPA de PeonPad desde https://github.com/chrissotraidis/peonpad/releases y compruébalo con el archivo SHA-256 que lo acompaña.",
           "Instálala con AltStore Classic, SideStore o Sideloadly, firmada con tu propio Apple ID.",
-          "Copia tus propios datos de Warcraft II, extraídos con Wargus, a Archivos › En mi iPad › PeonPad › data.Wargus y abre PeonPad."
+          "Copia tus propios datos de Warcraft II, extraídos con Wargus, a Archivos › En mi iPad › PeonPad › data.Wargus y abre PeonPad.",
+          "Si PeonPad se detiene, muestra el motivo en un mensaje «PeonPad stopped» y guarda PeonPad.log junto a data.Wargus. Adjunta ese registro cuando informes de un problema en https://github.com/chrissotraidis/peonpad/issues."
         ]
       },
       "pt": {
         "steps": [
           "Baixe o IPA do PeonPad em https://github.com/chrissotraidis/peonpad/releases e confira-o com o arquivo SHA-256 ao lado dele.",
           "Instale-o com AltStore Classic, SideStore ou Sideloadly, assinado com o seu próprio Apple ID.",
-          "Copie seus próprios dados do Warcraft II, extraídos com o Wargus, para Arquivos › No meu iPad › PeonPad › data.Wargus e abra o PeonPad."
+          "Copie seus próprios dados do Warcraft II, extraídos com o Wargus, para Arquivos › No meu iPad › PeonPad › data.Wargus e abra o PeonPad.",
+          "Se o PeonPad parar, ele mostra o motivo numa mensagem “PeonPad stopped” e salva o PeonPad.log ao lado de data.Wargus. Anexe esse registro ao relatar um problema em https://github.com/chrissotraidis/peonpad/issues."
         ]
       }
     }
