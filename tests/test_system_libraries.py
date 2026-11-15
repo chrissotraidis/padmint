@@ -64,6 +64,20 @@ class SystemLibraryTests(unittest.TestCase):
                     self.assertIsNone(tools.link_system_library("llvm", "linux-arm64", tool))
                     self.assertFalse(link.is_symlink())
 
+    def test_system_link_uses_the_host_specific_compiler_root(self):
+        lock = {"llvm": {"env": {"PADMINT_LLVM_ROOT": "LLVM-ARM64"},
+                         "hosts": {"linux-x86_64": {"env": {"PADMINT_LLVM_ROOT": "LLVM-X64"}}}}}
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            system = root / "libxml2.so.16"
+            system.touch()
+            with mock.patch.object(tools, "lock", return_value=lock), \
+                    mock.patch.object(tools, "_loadable", return_value=False), \
+                    mock.patch.object(tools, "_system_path", return_value=system):
+                link = tools.link_system_library("llvm", "linux-x86_64", root / "tool")
+                self.assertEqual(link, root / "tool/LLVM-X64/lib/libxml2.so.2")
+                self.assertEqual(link.resolve(), system)
+
     def test_the_failure_summary_leaves_out_the_harmless_warning(self):
         with tempfile.TemporaryDirectory() as folder:
             log = Path(folder) / "backend.log"

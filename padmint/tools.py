@@ -310,7 +310,9 @@ def link_system_library(name, host, folder):
     need = SYSTEM_LIBRARIES.get((name, host))
     if not need:
         return None
-    root = next(iter(lock()[name].get("env", {}).values()), "")
+    tool = lock()[name]
+    entry = host_entry(tool, host) or {}
+    root = next(iter(entry.get("env", tool.get("env", {})).values()), "")
     link = folder / root / "lib" / need["library"]
     if _loadable(need["library"]):
         if link.is_symlink():
