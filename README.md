@@ -163,6 +163,7 @@ column works from any computer with a browser.
 | MeleePad | Super Smash Bros. Melee (GameCube) | ✓ + Mac app | Exp. | — |
 | NightPad | 007: Nightfire (Xbox) | ✓ | — | — |
 | OpenRCT2 Touch | RollerCoaster Tycoon 2 (PC) | ✓ | — | ✓ |
+| OpenTTDPad | OpenTTD (Transport Tycoon Deluxe) | ✓ | — | — |
 | Ottsel | Jak and Daxter: The Precursor Legacy (PS2) | ✓ + Mac app | — | — |
 | PaperPad | Paper Mario (N64) | ✓ | — | ✓ |
 | RingPad | Sonic Adventure (Dreamcast) | ✓ | — | — |

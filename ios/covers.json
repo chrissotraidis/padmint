@@ -174,6 +174,11 @@
       "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/285330/library_600x900_2x.jpg",
       "box_back": "https://images.launchbox-app.com/0353bd99-b1f0-45f5-9a00-8d4f57d83012.jpg"
     },
+    "openttdpad": {
+      "title": "OpenTTD",
+      "platform": "PC",
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1536610/library_600x900_2x.jpg"
+    },
     "ottsel": {
       "title": "Jak and Daxter: The Precursor Legacy",
       "platform": "PlayStation 2",
