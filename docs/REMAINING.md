@@ -1,9 +1,9 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **12 November 2026** for PadMint **0.6.5**,
-using the live catalog audit (41 entries, 0 problems) and the open pull requests
-in PadMint and each game's repository. Any PR that finishes an item below
+continuing work. It was updated on **16 November 2026** for PadMint **0.6.6**. The platform
+counts below remain the 12 November snapshot; the dated release section records
+the newer release checks and open pull requests. Any PR that finishes an item below
 updates this page too.
 
 Evidence and history live in other files:
@@ -23,7 +23,7 @@ Portuguese.
 
 ## Where it stands
 
-These counts cover the 39 entries players can use: 31 games PadMint builds and 8
+The 12 November counts cover the 39 entries players can use: 31 games PadMint builds and 8
 ready-made apps. EctoPad is paused and not counted.
 
 | Measure | Mac (Apple Silicon) | Mac (Intel) | Windows PC | Linux |
@@ -102,10 +102,15 @@ Python 3.9, no source checkout and an empty PadMint folder. As of 01:22 JST,
 21 of the 22 checks pass: AnnePad, BallPad, BananaPad, BarrelPad, BearBirdPad,
 BellPad, BrawlerPad, CTRPad, DinoPad, F0x, GalaxyPad, HarkinianPad, MaskPad,
 NightPad, OpenRCT2 Touch, PaperPad, SnapPad, SpaghettiPad, StarshipPad, TribesPad
-and UTP. DarkPad stopped at the catalog mismatch;
-[#274](https://github.com/chrissotraidis/padmint/pull/274) records its experimental
-Mac source-build route as intentionally unoffered and prepares PadMint 0.6.6.
-Chris approved that release once checks pass; rerun DarkPad after it ships.
+and UTP. DarkPad initially stopped at the catalog mismatch.
+[#274](https://github.com/chrissotraidis/padmint/pull/274) is merged and
+[PadMint 0.6.6](https://github.com/chrissotraidis/padmint/releases/tag/v0.6.6)
+is published: its experimental Mac source-build route is intentionally unoffered.
+All 32 CI checks passed, including the clean Mac builds and the Linux x64
+compiler probe; all five release assets passed both gates. DarkPad still needs
+its local post-publish player check. It cannot start while the Mac is below
+the 30 GB free-space reserve (about 13 GB available at the last check).
+Free space, then run `scripts/player-check.sh darkpad ios -` from current main.
 The other earlier failures were network failures and passed on retry.
 SnapPad's binutils download does not retry interrupted partial transfers; a
 small robustness fix remains a separate follow-up.
