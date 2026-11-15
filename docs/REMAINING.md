@@ -86,6 +86,52 @@ compare. Players get Linux for each game with its next release, whose recipe
 PadMint reads; until then the counts above stay at KartPad only. No Linux-built
 copy has been played on a device, and no run used a native Linux PC.
 
+## Display and touch releases — 16 November 2026
+
+On 15 November, 28 releases were published with the window/scene and controller
+changes: AnnePad, BallPad, BananaPad, BarrelPad, BearBirdPad, BellPad, BrawlerPad,
+CaesarPad, CTRPad, DaggerPad, DarkPad, DevilTouch, DinoPad, Emerald Tablet, F0x,
+GalaxyPad, HarkinianPad, MaskPad, NightPad, OpenRCT2 Touch, PaperPad, RATouch,
+SnapPad, SpaghettiPad, StarshipPad, TribesPad, UTP and VaultPad. Every attached
+file passed PadMint's audit and the private reference gate before publication.
+HaloPad 0.3.16 and PeonPad preview.2 were already live. These are release/build
+results; physical TV and controller acceptance is still pending.
+
+Post-publish checks use `scripts/player-check.sh` from PadMint main, Apple's
+Python 3.9, no source checkout and an empty PadMint folder. As of 00:44 JST:
+13 of the 22 checks pass (AnnePad, BananaPad, BarrelPad, CTRPad, F0x, GalaxyPad,
+HarkinianPad, MaskPad, NightPad, OpenRCT2 Touch, PaperPad, SpaghettiPad and
+StarshipPad). BearBirdPad, DinoPad, SnapPad and TribesPad are running; BallPad,
+BellPad, BrawlerPad and UTP are queued. DarkPad stops at the catalog mismatch;
+[#274](https://github.com/chrissotraidis/padmint/pull/274) records its experimental
+Mac source-build route as intentionally unoffered. Chris approved the PadMint
+update once checks pass; rerun DarkPad after it ships. Earlier network failures
+are being retried. SnapPad's binutils download does not retry interrupted
+partial transfers; a small robustness fix remains a separate follow-up.
+
+Release state rechecked on GitHub:
+
+- **BlueWake 0.12.0 remains a draft.** The Windows ZIP and Linux AppImage have
+  now arrived, superseding the earlier missing-build blocker. The draft still
+  lacks `SHA256SUMS` and contains checksum/validation placeholders. Complete
+  the audits and release text before publication; then run the iOS player check
+  and remove the README's unreleased note. The old 0.11.1 draft also remains.
+- **KartPad 0.8.11 is now a public prerelease** (15 November), and
+  [kartpad#573](https://github.com/chrissotraidis/kartpad/pull/573) is merged.
+  PadMint and KartPad's update check still select stable 0.8.10. The release
+  records pre-tag iOS, Mac and Android player checks; that does not establish
+  post-publish selection of the prerelease. Physical-device checks remain open.
+- **AgePad 0.1.1:** [agepad#15](https://github.com/chrissotraidis/agepad/pull/15)
+  is still a draft awaiting an iPad match. Merge with main's display fix, rebuild
+  the base app, publish and run the player check after that acceptance.
+- **EctoPad:** [#10](https://github.com/chrissotraidis/ectopad/pull/10) and stacked
+  [#11](https://github.com/chrissotraidis/ectopad/pull/11) remain open. Private
+  upstream mirrors and missing licenses still block the proposed public release.
+- **Touch-only drafts:** GoldenPad 0.3.2, MeleePad 0.3.1, SunPad 0.3.2,
+  SquirrelPad 0.2.1 and Ottsel 0.1.1 remain unpublished. Their publication needs
+  a separate decision, asset audits and player checks. Remove the relevant
+  README's unreleased note only after publishing.
+
 ## Chromebooks
 
 No Chromebook has been tested, and the README says so. The answer below follows
@@ -303,8 +349,8 @@ only.
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):
   a 144×144 PNG made from HarkinianPad's `assets/AppIcon.appiconset/AppIcon.png`,
-  shipped in the first PadMint release after HarkinianPad v0.2.3 publishes the
-  new icon. The latest release is still v0.2.2.
+  to ship in a PadMint release. HarkinianPad v0.2.3 published the new icon on
+  15 November; the PadMint card-art change is still pending.
 - MaskPad's card art (`art/maskpad.png`) is now the crescent moon with a
   controller from [MaskPad v0.2.3](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.3)
   ([maskpad#26](https://github.com/chrissotraidis/maskpad/pull/26)), a 144×144
