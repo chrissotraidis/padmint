@@ -90,12 +90,13 @@ struct RepeatTiming: Equatable {
 }
 
 /// Moves one visible selection around the game content with a game controller, console-style:
-/// the D-pad or left stick moves it, A presses, B goes back, LB/RB change console, LT/RT page,
-/// X searches, Y changes layout, Menu opens Settings and the right stick scrolls. Touch keeps
-/// working as before; the selection only shows while a controller is connected.
+/// the D-pad or left stick moves it, A plays or presses, View opens a game's page, B goes back,
+/// LB/RB change console, LT/RT page, X searches, Y changes layout, Menu opens Settings and the
+/// right stick scrolls and turns boxes. Any touch hides the selection until the next controller
+/// input; the selection only shows while a controller is connected.
 @MainActor
 final class ControllerFocus: ObservableObject {
-    enum Command: Equatable { case activate, move(MoveDirection), page(Int) }
+    enum Command: Equatable { case activate, details, move(MoveDirection), page(Int) }
     /// Buttons the screen in front handles itself.
     enum Press: Equatable { case back, menu, search, layout, console(Int) }
 
@@ -138,6 +139,13 @@ final class ControllerFocus: ObservableObject {
         didSet { if scope != oldValue { scopeChanged() } }
     }
     let commands = PassthroughSubject<(key: String, command: Command), Never>()
+    /// The right stick turning the box on a screen: radians this frame.
+    let spin = PassthroughSubject<(scope: String, radians: CGFloat), Never>()
+    /// A finger (or pointer) touched the screen since the last controller input: the selection
+    /// hides, and nothing scrolls for the controller until it's used again.
+    private(set) var touched = false { didSet { publishHighlight() } }
+    /// The visible area, for tests; otherwise the window's bounds.
+    var viewport: CGRect?
     let pressed = PassthroughSubject<Press, Never>()
     var timing = RepeatTiming()
 
@@ -150,7 +158,7 @@ final class ControllerFocus: ObservableObject {
     /// The one direction each gamepad holds, and its repeat.
     private var held: [ObjectIdentifier: MoveDirection] = [:]
     private var repeats: [ObjectIdentifier: Task<Void, Never>] = [:]
-    private var scrolling: (link: CADisplayLink, view: UIScrollView, speed: CGFloat)?
+    private var stick: (link: CADisplayLink, x: CGFloat, y: CGFloat, view: UIScrollView?)?
     private var observers: [NSObjectProtocol] = []
     #if DEBUG
     /// -virtualController 1: Apple's on-screen controller, so the simulator can drive the
@@ -193,20 +201,20 @@ final class ControllerFocus: ObservableObject {
                     MainActor.assumeIsolated { self?.point(ObjectIdentifier(element), on: id, x: x, y: y) }
                 }
             }
-            pad.rightThumbstick.valueChangedHandler = { [weak self] _, _, y in
-                MainActor.assumeIsolated { self?.scroll(y) }
+            pad.rightThumbstick.valueChangedHandler = { [weak self] _, x, y in
+                MainActor.assumeIsolated { self?.rightStick(x: x, y: y) }
             }
             let buttons: [(GCControllerButtonInput, () -> Void)] = [
                 (pad.buttonA, { [weak self] in self?.activate() }),
-                (pad.buttonB, { [weak self] in self?.pressed.send(.back) }),
-                (pad.buttonX, { [weak self] in self?.pressed.send(.search) }),
-                (pad.buttonY, { [weak self] in self?.pressed.send(.layout) }),
-                (pad.buttonMenu, { [weak self] in self?.pressed.send(.menu) }),
-                (pad.leftShoulder, { [weak self] in self?.pressed.send(.console(-1)) }),
-                (pad.rightShoulder, { [weak self] in self?.pressed.send(.console(1)) }),
+                (pad.buttonB, { [weak self] in self?.press(.back) }),
+                (pad.buttonX, { [weak self] in self?.press(.search) }),
+                (pad.buttonY, { [weak self] in self?.press(.layout) }),
+                (pad.buttonMenu, { [weak self] in self?.press(.menu) }),
+                (pad.leftShoulder, { [weak self] in self?.press(.console(-1)) }),
+                (pad.rightShoulder, { [weak self] in self?.press(.console(1)) }),
                 (pad.leftTrigger, { [weak self] in self?.page(-1) }),
                 (pad.rightTrigger, { [weak self] in self?.page(1) }),
-            ]
+            ] + (pad.buttonOptions.map { [($0, { [weak self] in self?.details() })] } ?? [])
             for (button, action) in buttons {
                 button.pressedChangedHandler = { _, _, down in
                     if down { MainActor.assumeIsolated { action() } }
@@ -217,6 +225,7 @@ final class ControllerFocus: ObservableObject {
             let named: [(String, GCControllerElement)] = [("A", pad.buttonA), ("B", pad.buttonB), ("X", pad.buttonX), ("Y", pad.buttonY),
                                                           ("LB", pad.leftShoulder), ("RB", pad.rightShoulder), ("LT", pad.leftTrigger),
                                                           ("RT", pad.rightTrigger), ("Menu", pad.buttonMenu)]
+                + (pad.buttonOptions.map { [("View", $0)] } ?? [])
             glyphs = Dictionary(uniqueKeysWithValues: named.compactMap { name, element in element.sfSymbolsName.map { (name, $0) } })
         }
         let was = connected
@@ -224,12 +233,48 @@ final class ControllerFocus: ObservableObject {
         if connected && !was { showSoon() }
     }
 
+    /// Stops every held direction and the right stick: on backgrounding, disconnect, a new
+    /// screen and a touch, so nothing keeps moving on its own.
     private func release() {
         repeats.values.forEach { $0.cancel() }
         repeats = [:]
         held = [:]
         pushed = [:]
-        scroll(0)
+        rightStick(x: 0, y: 0)
+    }
+
+    /// A finger touched the screen: hide the selection and leave the scrolling to the finger.
+    func touch() {
+        guard !touched else { return }
+        touched = true
+        release()
+    }
+
+    /// The first controller input after a touch: the selection comes back on the item nearest
+    /// the middle of what's on screen now. True when it did, so that input does nothing else.
+    @discardableResult
+    func resume() -> Bool {
+        guard touched else { return false }
+        touched = false
+        let screen = visible
+        let mine = targets.filter { $0.value.scope == scope && screen.intersects($0.value.frame) }
+        let defaults = mine.filter(\.value.isDefault)
+        let pool = defaults.isEmpty ? mine : defaults
+        let centre = CGPoint(x: screen.midX, y: screen.midY)
+        if let nearest = pool.min(by: { distance($0.value.frame, centre) < distance($1.value.frame, centre) }) {
+            select(nearest.key, reveal: false)
+        }
+        return true
+    }
+
+    private func distance(_ frame: CGRect, _ point: CGPoint) -> CGFloat { hypot(frame.midX - point.x, frame.midY - point.y) }
+
+    private var visible: CGRect { viewport ?? window?.bounds ?? .infinite }
+
+    /// B, X, Y, LB/RB and Menu act even right after a touch; the selection comes back too.
+    func press(_ press: Press) {
+        resume()
+        pressed.send(press)
     }
 
     /// A held direction moves at once, then repeats, faster the longer it's held. A gamepad
@@ -265,6 +310,7 @@ final class ControllerFocus: ObservableObject {
     }
 
     func move(_ direction: MoveDirection) {
+        if resume() { return }
         guard let key = current, let target = targets[key] else { return selectDefault() }
         if target.handles.contains(direction.axis) { return commands.send((key, .move(direction))) }
         if let next = direction.nearest(from: target.frame, among: others(than: key)) { select(next) }
@@ -272,6 +318,7 @@ final class ControllerFocus: ObservableObject {
 
     /// LT/RT: a carousel jumps; anything else moves the selection about a page.
     func page(_ step: Int) {
+        if resume() { return }
         guard let key = current, let target = targets[key] else { return selectDefault() }
         if target.pages { return commands.send((key, .page(step))) }
         let height = window?.bounds.height ?? 800
@@ -280,15 +327,23 @@ final class ControllerFocus: ObservableObject {
     }
 
     func activate() {
+        if resume() { return }
         guard let key = current else { return selectDefault() }
         commands.send((key, .activate))
     }
 
-    func select(_ key: String) {
+    /// The View button: the selected game's page.
+    func details() {
+        if resume() { return }
+        guard let key = current else { return selectDefault() }
+        commands.send((key, .details))
+    }
+
+    func select(_ key: String, reveal shows: Bool = true) {
         selected = key
         remembered[scope] = key
         lastFrame = targets[key]?.frame
-        reveal(key)
+        if shows { reveal(key) }
     }
 
     private var window: UIWindow? {
@@ -313,13 +368,15 @@ final class ControllerFocus: ObservableObject {
     /// first (a row of covers, then the page). Centred, the items around it are drawn too:
     /// lazy grids and lists only make what's on screen.
     private func reveal(_ key: String) {
-        guard connected, var frame = targets[key]?.frame, let window else { return }
+        guard connected, !touched, var frame = targets[key]?.frame, let window else { return }
         let centre = CGPoint(x: frame.midX, y: frame.midY)
         // Well inside the screen, the items around it are drawn already: skip the search
         // for scroll views, which walks the whole window.
         let bounds = window.bounds
         if bounds.insetBy(dx: bounds.width * 0.2, dy: bounds.height * 0.3).contains(centre) { return }
         for scroll in scrollViews(at: centre, in: window).reversed() {
+            // Never pull against a finger, or against a scroll still coasting from one.
+            guard !scroll.isTracking, !scroll.isDragging, !scroll.isDecelerating else { return }
             let inset = scroll.adjustedContentInset
             let visible = scroll.convert(scroll.bounds.inset(by: inset), to: nil)
             let room = CGSize(width: scroll.contentSize.width + inset.left + inset.right - scroll.bounds.width,
@@ -334,33 +391,43 @@ final class ControllerFocus: ObservableObject {
         }
     }
 
-    /// The right stick scrolls the page under the selection (or the middle of the screen)
-    /// without moving the selection; speed follows how far the stick is pushed.
-    private func scroll(_ y: Float) {
-        let speed = abs(y) < 0.25 ? 0 : CGFloat(-y * abs(y)) * 1600
-        if speed == 0 {
-            scrolling?.link.invalidate()
-            scrolling = nil
+    /// The right stick: up and down scroll the page under the selection (or the middle of the
+    /// screen) without moving the selection; left and right turn the box on screen. Speed
+    /// follows how far it's pushed.
+    private func rightStick(x: Float, y: Float) {
+        let dead: Float = 0.25
+        let sx = abs(x) < dead ? 0 : CGFloat(x * abs(x)), sy = abs(y) < dead ? 0 : CGFloat(-y * abs(y))
+        if sx == 0 && sy == 0 {
+            stick?.link.invalidate()
+            stick = nil
             return
         }
-        if scrolling != nil { scrolling?.speed = speed; return }
-        guard let window else { return }
-        let point = current.flatMap { targets[$0]?.frame }.map { CGPoint(x: $0.midX, y: $0.midY) }
-            ?? CGPoint(x: window.bounds.midX, y: window.bounds.midY)
-        guard let view = scrollViews(at: point, in: window).last(where: {
-            $0.contentSize.height + $0.adjustedContentInset.top + $0.adjustedContentInset.bottom > $0.bounds.height + 1
-        }) else { return }
-        let link = CADisplayLink(target: Ticker { [weak self] link in self?.scrollTick(link) }, selector: #selector(Ticker.fire(_:)))
-        link.add(to: .main, forMode: .common)
-        scrolling = (link, view, speed)
+        resume()
+        if stick == nil {
+            let link = CADisplayLink(target: Ticker { [weak self] link in self?.stickTick(link) }, selector: #selector(Ticker.fire(_:)))
+            link.add(to: .main, forMode: .common)
+            stick = (link, sx, sy, nil)
+        }
+        stick?.x = sx
+        stick?.y = sy
     }
 
-    private func scrollTick(_ link: CADisplayLink) {
-        guard let view = scrolling?.view, let speed = scrolling?.speed else { return }
+    private func stickTick(_ link: CADisplayLink) {
+        guard let current = stick else { return }
+        let time = CGFloat(link.targetTimestamp - link.timestamp)
+        if current.x != 0 { spin.send((scope, current.x * 4 * time)) }
+        guard current.y != 0 else { return }
+        if current.view == nil, let window {
+            let point = self.current.flatMap { targets[$0]?.frame }.map { CGPoint(x: $0.midX, y: $0.midY) }
+                ?? CGPoint(x: window.bounds.midX, y: window.bounds.midY)
+            stick?.view = scrollViews(at: point, in: window).last(where: {
+                $0.contentSize.height + $0.adjustedContentInset.top + $0.adjustedContentInset.bottom > $0.bounds.height + 1
+            })
+        }
+        guard let view = stick?.view, !view.isTracking else { return }
         let inset = view.adjustedContentInset
         let top = -inset.top, bottom = max(top, view.contentSize.height + inset.bottom - view.bounds.height)
-        let y = min(max(view.contentOffset.y + speed * CGFloat(link.targetTimestamp - link.timestamp), top), bottom)
-        view.contentOffset.y = y
+        view.contentOffset.y = min(max(view.contentOffset.y + current.y * 1600 * time, top), bottom)
     }
 
     /// The top-most default item on screen, or the top-most item when none is marked.
@@ -377,20 +444,22 @@ final class ControllerFocus: ObservableObject {
 
     /// The selected item went away (a filter, a layout change, a lazy list dropping it): select
     /// the item nearest where it was, so the selection stays on a game near the same place.
+    /// Only items on screen are considered, and nothing scrolls: the page stays where it is.
     func reselect() {
-        guard current == nil, selected != nil || lastFrame != nil else { return }
-        let mine = targets.filter { $0.value.scope == scope }
+        guard !touched, current == nil, selected != nil || lastFrame != nil else { return }
+        let screen = visible
+        let mine = targets.filter { $0.value.scope == scope && screen.intersects($0.value.frame) }
         let defaults = mine.filter(\.value.isDefault)
         let pool = defaults.isEmpty ? mine : defaults
-        guard let last = lastFrame else { return selectDefault() }
-        let nearest = pool.min { a, b in
-            hypot(a.value.frame.midX - last.midX, a.value.frame.midY - last.midY)
-                < hypot(b.value.frame.midX - last.midX, b.value.frame.midY - last.midY)
+        let last = lastFrame.map { CGPoint(x: $0.midX, y: $0.midY) } ?? CGPoint(x: screen.midX, y: screen.midY)
+        if let nearest = pool.min(by: { distance($0.value.frame, last) < distance($1.value.frame, last) }) {
+            select(nearest.key, reveal: false)
         }
-        if let nearest { select(nearest.key) } else { selectDefault() }
     }
 
     private func scopeChanged() {
+        // A held direction mustn't carry on into the new screen.
+        release()
         selected = remembered[scope]
         lastFrame = selected.flatMap { targets[$0]?.frame }
         showSoon()
@@ -401,14 +470,14 @@ final class ControllerFocus: ObservableObject {
         guard connected else { return }
         Task { [weak self] in
             try? await Task.sleep(for: .milliseconds(350))
-            guard let self, self.connected, self.current == nil else { return }
+            guard let self, self.connected, !self.touched, self.current == nil else { return }
             self.selectDefault()
         }
     }
 
     /// Exactly one view shows the selection: the one that registered its key last.
     private func publishHighlight() {
-        let lit = connected ? selected.flatMap { key in
+        let lit = connected && !touched ? selected.flatMap { key in
             targets[key].flatMap { $0.scope == scope ? Lit(key: key, token: $0.token) : nil }
         } : nil
         if highlight.value != lit { highlight.send(lit) }
@@ -450,21 +519,69 @@ private struct FocusScopeKey: EnvironmentKey {
 /// also turns a physical controller's presses into UIKit focus moves and selections, alongside
 /// ControllerFocus: its focus can reach the search field, where A opens the keyboard. With it,
 /// presses reach only the Game Controller framework, which ControllerFocus reads.
+///
+/// It also tells ControllerFocus when a finger or pointer touches anywhere, without taking the
+/// touch from the views under it.
 struct ControllerInputOwner: UIViewRepresentable {
-    func makeUIView(context: Context) -> Claim { Claim() }
+    let touched: () -> Void
+
+    func makeUIView(context: Context) -> Claim { Claim(touched: touched) }
     func updateUIView(_ view: Claim, context: Context) {}
 
     final class Claim: UIView {
+        let touched: () -> Void
+
+        init(touched: @escaping () -> Void) {
+            self.touched = touched
+            super.init(frame: .zero)
+        }
+
+        required init?(coder: NSCoder) { fatalError() }
+
         override func didMoveToWindow() {
             super.didMoveToWindow()
             isUserInteractionEnabled = false
-            guard #available(iOS 18.0, *), let window,
-                  !window.interactions.contains(where: { $0 is GCEventInteraction }) else { return }
+            guard let window, !(window.gestureRecognizers ?? []).contains(where: { $0 is TouchWatcher }) else { return }
+            window.addGestureRecognizer(TouchWatcher(touched))
+            guard #available(iOS 18.0, *) else { return }
             let interaction = GCEventInteraction()
             interaction.handledEventTypes = .gamepad
             window.addInteraction(interaction)
         }
     }
+}
+
+/// Sees every touch begin and lets it through: it never recognizes, delays or cancels anything.
+private final class TouchWatcher: UIGestureRecognizer, UIGestureRecognizerDelegate {
+    private let touched: () -> Void
+
+    init(_ touched: @escaping () -> Void) {
+        self.touched = touched
+        super.init(target: nil, action: nil)
+        cancelsTouchesInView = false
+        delaysTouchesBegan = false
+        delaysTouchesEnded = false
+        delegate = self
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        // Apple's on-screen controller (GCVirtualController) is drawn in the app's window: its
+        // buttons are controller input, not a finger taking over.
+        if touches.contains(where: { !Self.onController($0.view) }) { touched() }
+        state = .failed
+    }
+
+    private static func onController(_ view: UIView?) -> Bool {
+        var view = view
+        while let current = view {
+            if String(describing: type(of: current)).hasPrefix("GC") { return true }
+            view = current.superview
+        }
+        return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { true }
 }
 
 extension EnvironmentValues {
@@ -491,6 +608,7 @@ private struct ControllerFocusable: ViewModifier {
     let action: () -> Void
     let move: (MoveDirection) -> Void
     let page: ((Int) -> Void)?
+    let details: (() -> Void)?
 
     private var key: String { "\(scope)/\(id)" }
 
@@ -510,6 +628,10 @@ private struct ControllerFocusable: ViewModifier {
             .scaleEffect(lit && !reduceMotion ? lift : 1)
             .shadow(color: .padMint.opacity(lit ? 0.5 : 0), radius: lit ? 16 : 0)
             .zIndex(lit ? 1 : 0)
+            #if DEBUG
+            // UI tests read the controller's selection.
+            .accessibilityValue(lit ? "controller-selected" : "")
+            #endif
             .animation(reduceMotion ? nil : .snappy(duration: 0.18), value: lit)
             .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { new in
                 frame = new
@@ -524,6 +646,7 @@ private struct ControllerFocusable: ViewModifier {
                 case .activate: action()
                 case .move(let direction): move(direction)
                 case .page(let step): page?(step)
+                case .details: details?()
                 }
             }
     }
@@ -540,9 +663,10 @@ extension View {
     /// selected card grows (1 for full-width rows).
     func controllerFocus(_ id: String, isDefault: Bool = false, corner: CGFloat = 14, inset: CGFloat = 5,
                          lift: CGFloat = 1.05, handles: Axis.Set = [], move: @escaping (MoveDirection) -> Void = { _ in },
-                         page: ((Int) -> Void)? = nil, action: @escaping () -> Void) -> some View {
+                         page: ((Int) -> Void)? = nil, details: (() -> Void)? = nil,
+                         action: @escaping () -> Void) -> some View {
         modifier(ControllerFocusable(id: id, handles: handles, isDefault: isDefault, corner: corner, inset: inset,
-                                     lift: lift, action: action, move: move, page: page))
+                                     lift: lift, action: action, move: move, page: page, details: details))
     }
 }
 

@@ -1,6 +1,39 @@
+import Combine
 import SceneKit
 import SwiftUI
 import UIKit
+
+/// Turns a box with the controller's right stick. It settles facing front a moment after the
+/// stick lets go, like a box let go by a finger.
+@MainActor
+final class StickTurn {
+    private var settle: DispatchWorkItem?
+
+    /// `starting` runs before the first turn (to stop the box swaying); `settled` after it's back.
+    func turn(_ node: SCNNode, by radians: CGFloat, in view: StageView?,
+              starting: () -> Void = {}, settled: @escaping () -> Void = {}) {
+        if settle == nil {
+            starting()
+            node.removeAllActions()
+            view?.hold(true)
+        }
+        settle?.cancel()
+        node.eulerAngles.y += Float(radians)
+        let work = DispatchWorkItem { [weak self, weak node, weak view] in
+            self?.settle = nil
+            view?.hold(false)
+            view?.play(for: 0.8)
+            guard let node else { return }
+            let turns = (node.eulerAngles.y / (.pi * 2)).rounded() * .pi * 2
+            node.runAction(.sequence([
+                .rotateTo(x: 0, y: CGFloat(turns), z: 0, duration: 0.6, usesShortestUnitArc: false),
+                .run { $0.eulerAngles.y = 0 },
+            ])) { DispatchQueue.main.async(execute: settled) }
+        }
+        settle = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: work)
+    }
+}
 
 /// The printed faces of a game box. A missing back or spine is drawn by the app.
 struct BoxFaces {
@@ -210,6 +243,8 @@ struct CoverFlow3D: UIViewRepresentable {
     @Binding var focused: Int
     let faces: (Game) -> BoxFaces
     let open: (Game) -> Void
+    /// The right stick turning the front box.
+    var spin: AnyPublisher<CGFloat, Never>? = nil
 
     func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
 
@@ -232,6 +267,7 @@ struct CoverFlow3D: UIViewRepresentable {
         view.addGestureRecognizer(tap)
         coordinator.view = view
         coordinator.sync(animated: false)
+        coordinator.watch(spin)
         return view
     }
 
@@ -253,9 +289,26 @@ struct CoverFlow3D: UIViewRepresentable {
         private var panStart: CGFloat = 0
         private var panning = false
         private var swaying: String?
+        private var spinWatch: AnyCancellable?
+        private let turner = StickTurn()
         /// Half the visible width at the boxes, to skip drawing boxes off screen.
         private var halfWidth: CGFloat = 3
         private let haptics = UISelectionFeedbackGenerator()
+
+        func watch(_ spin: AnyPublisher<CGFloat, Never>?) {
+            spinWatch = spin?.sink { [weak self] radians in self?.turnFront(by: radians) }
+        }
+
+        private func turnFront(by radians: CGFloat) {
+            guard !panning, order.indices.contains(parent.focused) else { return }
+            let id = order[parent.focused]
+            guard let holder = nodes[id], let box = holder.childNode(withName: "box", recursively: false) else { return }
+            turner.turn(box, by: radians, in: view, settled: { [weak self] in
+                // Sway again if it's still the front box.
+                guard let self, self.swaying == id, GameBox.sway(holder, on: true) else { return }
+                self.view?.play(for: GameBox.swayTime)
+            })
+        }
 
         init(parent: CoverFlow3D) {
             self.parent = parent
@@ -437,6 +490,8 @@ struct CoverFlow3D: UIViewRepresentable {
 struct SpinningBox: UIViewRepresentable {
     let game: Game
     let faces: BoxFaces
+    /// The right stick turning the box (on a game's page).
+    var spin: AnyPublisher<CGFloat, Never>? = nil
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
@@ -446,6 +501,7 @@ struct SpinningBox: UIViewRepresentable {
         coordinator.view = view
         view.addGestureRecognizer(UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.pan)))
         coordinator.show(faces: faces, game: game)
+        coordinator.watch(spin)
         return view
     }
 
@@ -461,10 +517,22 @@ struct SpinningBox: UIViewRepresentable {
         private var holder: SCNNode?
         private var shown: [ObjectIdentifier?]?
         private var start: Float = 0
+        private var spinWatch: AnyCancellable?
+        private let turner = StickTurn()
 
         override init() {
             (scene, camera) = GameBox.stage()
             super.init()
+        }
+
+        func watch(_ spin: AnyPublisher<CGFloat, Never>?) {
+            spinWatch = spin?.sink { [weak self] radians in
+                guard let self, let holder = self.holder else { return }
+                self.turner.turn(holder, by: radians, in: self.view, starting: { GameBox.sway(holder, on: false) }) { [weak self] in
+                    guard let self, let holder = self.holder, GameBox.sway(holder, on: true) else { return }
+                    self.view?.play(for: GameBox.swayTime)
+                }
+            }
         }
 
         func show(faces: BoxFaces, game: Game) {
