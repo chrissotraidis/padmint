@@ -215,6 +215,18 @@ needs, the game file it asks for, its install steps or its card art.
 
 Still open:
 
+- **DarkPad 0.1.1 catalog reconciliation (16 November).** Its published recipe
+  includes an experimental Mac Catalyst target, while its player documentation
+  directs Mac users to a source build. The catalog records that target as
+  intentionally unoffered; iPhone/iPad remains the PadMint route. Shipping this
+  catalog correction is prepared for PadMint 0.6.6 with Chris's approval; run
+  the post-publish DarkPad player check after publication. The earlier `--recipe` check missed this
+  because it only reports hidden iPhone build hosts, not additional targets.
+  CI also exposed the Linux x64 module compiler needing `libxml2.so.2` on the
+  new Ubuntu 26.04 runner. The existing ARM64 library check and local link to
+  the newer system library now cover x64 too. The Ubuntu 26.04 module probe
+  passes, and 529 local Python tests pass (three skipped).
+
 - **Previews are invisible.** Seven download-only apps publish prereleases,
   which `/releases/latest` skips, so players never see those updates. Decide a
   release channel for each game, then test preview-only, stable plus preview,

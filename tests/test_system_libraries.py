@@ -10,16 +10,16 @@ from unittest import mock
 from padmint import cli, tools
 
 LOCK = {"android-ndk": {"version": "29", "hosts": {"linux-arm64": {"with": ["llvm"]}, "linux-x86_64": {}}},
-        "llvm": {"version": "21", "only_where_listed": True, "hosts": {"linux-arm64": {}}}}
+        "llvm": {"version": "21", "only_where_listed": True, "hosts": {"linux-arm64": {}, "linux-x86_64": {}}}}
 
 
 class SystemLibraryTests(unittest.TestCase):
-    def missing(self, host, loadable, which=None, only_new=False):
+    def missing(self, host, loadable, which=None, only_new=False, names=None):
         with mock.patch.object(tools, "lock", return_value=LOCK), \
                 mock.patch.object(tools, "_loadable", side_effect=lambda lib: lib in loadable), \
                 mock.patch.object(tools.shutil, "which", side_effect=lambda cmd: cmd if cmd == which else None), \
                 mock.patch.object(tools, "_only_new_libxml2", return_value=only_new):
-            return tools.missing_system_library(["android-ndk"], host)
+            return tools.missing_system_library(names or ["android-ndk"], host)
 
     def test_llvm_on_linux_arm64_needs_libxml2_found_through_the_ndk(self):
         self.assertIsNone(self.missing("linux-arm64", {"libxml2.so.2"}))
@@ -29,8 +29,16 @@ class SystemLibraryTests(unittest.TestCase):
         self.assertIn("Nothing has been downloaded yet", fix)
         self.assertIn("sudo dnf install libxml2", self.missing("linux-arm64", set(), which="dnf")[1])
 
-    def test_other_hosts_need_nothing(self):
+    def test_x64_ndk_does_not_need_the_separate_llvm_library(self):
         self.assertIsNone(self.missing("linux-x86_64", set(), which="apt-get"))
+
+    def test_linux_x64_module_compiler_checks_libxml2(self):
+        self.assertIsNone(self.missing("linux-x86_64", {"libxml2.so.2"}, names=["llvm"]))
+        self.assertIsNone(self.missing("linux-x86_64", {"libxml2.so.16"}, names=["llvm"]))
+        library, fix = self.missing("linux-x86_64", set(), which="apt-get",
+                                    only_new=True, names=["llvm"])
+        self.assertEqual(library, "libxml2.so.2")
+        self.assertIn("sudo apt install libxml2-16", fix)
 
     def test_the_newer_libxml2_is_enough_and_its_package_is_named_when_missing(self):
         self.assertIsNone(self.missing("linux-arm64", {"libxml2.so.16"}, which="apt-get"))
@@ -51,10 +59,24 @@ class SystemLibraryTests(unittest.TestCase):
                     self.assertEqual(link, tool / "LLVM-21/lib/libxml2.so.2")
                     self.assertEqual(Path(os.readlink(link)), system)
                     self.assertEqual(tools.link_system_library("llvm", "linux-arm64", tool), link)
-                    self.assertIsNone(tools.link_system_library("llvm", "linux-x86_64", tool))
+                    self.assertEqual(tools.link_system_library("llvm", "linux-x86_64", tool), link)
                 with mock.patch.object(tools, "_loadable", return_value=True):
                     self.assertIsNone(tools.link_system_library("llvm", "linux-arm64", tool))
                     self.assertFalse(link.is_symlink())
+
+    def test_system_link_uses_the_host_specific_compiler_root(self):
+        lock = {"llvm": {"env": {"PADMINT_LLVM_ROOT": "LLVM-ARM64"},
+                         "hosts": {"linux-x86_64": {"env": {"PADMINT_LLVM_ROOT": "LLVM-X64"}}}}}
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            system = root / "libxml2.so.16"
+            system.touch()
+            with mock.patch.object(tools, "lock", return_value=lock), \
+                    mock.patch.object(tools, "_loadable", return_value=False), \
+                    mock.patch.object(tools, "_system_path", return_value=system):
+                link = tools.link_system_library("llvm", "linux-x86_64", root / "tool")
+                self.assertEqual(link, root / "tool/LLVM-X64/lib/libxml2.so.2")
+                self.assertEqual(link.resolve(), system.resolve())
 
     def test_the_failure_summary_leaves_out_the_harmless_warning(self):
         with tempfile.TemporaryDirectory() as folder:

@@ -7,6 +7,9 @@
   "player_targets": [
     "ios"
   ],
+  "unoffered_targets": {
+    "macos": "DarkPad documents its experimental Mac Catalyst app as a source build using scripts/build-personal-macos.sh. PadMint offers iPhone/iPad builds; offering the Mac app needs a separate player check and catalog finishing steps."
+  },
   "game_ids": [
     "NPDE"
   ],
