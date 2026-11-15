@@ -40,6 +40,11 @@ struct BoxFaces {
     var front: UIImage?
     var back: UIImage? = nil
     var spine: UIImage? = nil
+    /// The front's average and strongest colours, worked out when it was decoded.
+    var average: UIColor? = nil
+    var accent: UIColor? = nil
+    /// False while another of this game's covers is still decoding.
+    var complete = true
 
     /// Changes when any face's picture changes, so a box is redressed only then.
     var identity: [ObjectIdentifier?] { [front, back, spine].map { $0.map(ObjectIdentifier.init) } }
@@ -80,18 +85,26 @@ enum GameBox {
         let (width, height) = size(for: image)
         let depth = depth(for: platform) * max(height, 0.8)
         let geometry = SCNBox(width: width, height: height, length: depth, chamferRadius: min(depth, width) * 0.08)
-        let average = image?.averageColor ?? UIColor(red: 0.13, green: 0.74, blue: 0.48, alpha: 1)
-        let accent = image?.vividColor ?? average
-        let spine: UIImage = faces.spine ?? Spine.image(game: game, cover: accent, length: height, depth: depth)
+        let average = faces.average ?? UIColor(red: 0.13, green: 0.74, blue: 0.48, alpha: 1)
+        let accent = faces.accent ?? average
         let lid = Spine.lid(platform: platform, cover: average)
-        geometry.materials = [
-            material(image ?? average, gloss: true),                         // front
-            material(spine),                                                 // right: spine too, so boxes on either side show it
-            material(faces.back ?? Spine.back(platform: platform, cover: average), gloss: faces.back != nil),  // back
-            material(spine),                                                 // left: the printed spine
-            material(lid),                                                   // top
-            material(lid),                                                   // bottom
-        ]
+        let back = Spine.back(platform: platform, cover: average)
+        if let image {
+            let spine: UIImage = faces.spine ?? Spine.image(game: game, cover: accent, length: height, depth: depth)
+            geometry.materials = [
+                material(image, gloss: true),                                // front
+                material(spine),                                             // right: spine too, so boxes on either side show it
+                material(faces.back ?? back, gloss: faces.back != nil),      // back
+                material(spine),                                             // left: the printed spine
+                material(lid),                                               // top
+                material(lid),                                               // bottom
+            ]
+        } else {
+            // Until the cover is decoded: the title on a card and the case's own colours, cheap
+            // enough that a fast spin never shows an empty box.
+            geometry.materials = [material(placeholder(game), gloss: true), material(back), material(back),
+                                  material(back), material(lid), material(lid)]
+        }
         box.geometry = geometry
         box.position = SCNVector3(0, Float(height / 2), 0)
         // A faint mirror image under the box stands in for a reflective floor; as a child
@@ -116,6 +129,31 @@ enum GameBox {
         material.locksAmbientWithDiffuse = true
         material.isDoubleSided = true  // the mirrored reflection shows its inner faces
         return material
+    }
+
+    private static var placeholders: [String: UIImage] = [:]
+
+    /// A small card with the game's name, like the grid shows before a cover arrives.
+    static func placeholder(_ game: Game) -> UIImage {
+        if let image = placeholders[game.id] { return image }
+        let size = CGSize(width: 213, height: 300)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let image = UIGraphicsImageRenderer(size: size, format: format).image { context in
+            let colors = [UIColor.systemMint.cgColor, UIColor.systemTeal.cgColor] as CFArray
+            if let gradient = CGGradient(colorsSpace: nil, colors: colors, locations: [0, 1]) {
+                context.cgContext.drawLinearGradient(gradient, start: .zero, end: CGPoint(x: size.width, y: size.height), options: [])
+            }
+            let style = NSMutableParagraphStyle()
+            style.alignment = .center
+            let text = NSAttributedString(string: game.name, attributes: [
+                .font: UIFont.systemFont(ofSize: 26, weight: .bold), .foregroundColor: UIColor.white, .paragraphStyle: style])
+            let box = CGRect(x: 12, y: 0, width: size.width - 24, height: size.height)
+            let height = text.boundingRect(with: box.size, options: .usesLineFragmentOrigin, context: nil).height
+            text.draw(with: box.insetBy(dx: 0, dy: (size.height - height) / 2), options: .usesLineFragmentOrigin, context: nil)
+        }
+        placeholders[game.id] = image
+        return image
     }
 
     /// A stage with soft lights; the background stays clear so the blurred cover behind
@@ -243,6 +281,8 @@ struct CoverFlow3D: UIViewRepresentable {
     @Binding var focused: Int
     let faces: (Game) -> BoxFaces
     let open: (Game) -> Void
+    /// Asks for these games' covers first (the front box and its neighbours).
+    var prefetch: ([Game]) -> Void = { _ in }
     /// The right stick turning the front box.
     var spin: AnyPublisher<CGFloat, Never>? = nil
 
@@ -289,6 +329,9 @@ struct CoverFlow3D: UIViewRepresentable {
         private var panStart: CGFloat = 0
         private var panning = false
         private var swaying: String?
+        /// Boxes still showing a placeholder or an older cover.
+        private var waiting: Set<String> = []
+        private var draining = false
         private var spinWatch: AnyCancellable?
         private let turner = StickTurn()
         /// Half the visible width at the boxes, to skip drawing boxes off screen.
@@ -337,26 +380,69 @@ struct CoverFlow3D: UIViewRepresentable {
                 node.removeFromParentNode()
                 nodes[id] = nil
                 dressedWith[id] = nil
+                waiting.remove(id)
             }
-            for game in games {
+            let focus = min(max(parent.focused, 0), max(ids.count - 1, 0))
+            parent.prefetch(neighbours(of: focus, in: games))
+            for (index, game) in games.enumerated() {
                 let faces = parent.faces(game)
                 let identity = faces.identity
-                if let node = nodes[game.id] {
-                    if dressedWith[game.id] != identity {
-                        GameBox.dress(node, faces: faces, game: game)
-                        view?.play(for: 0.2)  // a cover arrived while resting
-                    }
-                } else {
-                    let node = GameBox.make(faces: faces, game: game)
+                if nodes[game.id] == nil {
+                    // A new box is dressed at once: fully near the front, else as a placeholder
+                    // until its turn comes, so opening the carousel never waits on 41 boxes.
+                    let near = abs(index - focus) <= 6
+                    let node = GameBox.make(faces: near ? faces : BoxFaces(front: nil), game: game)
                     scene.rootNode.addChildNode(node)
                     nodes[game.id] = node
+                    if near { dressedWith[game.id] = identity } else { waiting.insert(game.id) }
+                } else if dressedWith[game.id] != identity {
+                    waiting.insert(game.id)  // a cover arrived: fitted a few boxes at a time
                 }
-                dressedWith[game.id] = identity
             }
             order = ids
+            drain()
             guard !panning else { return }
-            let target = CGFloat(min(max(parent.focused, 0), max(ids.count - 1, 0)))
+            let target = CGFloat(focus)
             if animated && target != offset { move(to: target) } else { offset = target; layout() }
+        }
+
+        /// The front box and five on each side: their covers decode first.
+        private func neighbours(of index: Int, in games: [Game]) -> [Game] {
+            guard !games.isEmpty else { return [] }
+            let around = (0...5).flatMap { [index + $0, index - $0] }.filter { games.indices.contains($0) }
+            var seen = Set<Int>()
+            return around.filter { seen.insert($0).inserted }.map { games[$0] }
+        }
+
+        /// Fits waiting boxes with their covers, nearest the front first and one per frame
+        /// (new geometry can wait on SceneKit's renderer for tens of milliseconds), and uploads
+        /// their textures in the background before they're shown. Every box is fitted soon after
+        /// launch, so a fast spin later has nothing left to do.
+        private func drain() {
+            guard !draining, !waiting.isEmpty else { return }
+            draining = true
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.draining = false
+                let front = self.offset.rounded()
+                let distance = { (id: String) in abs(CGFloat(self.order.firstIndex(of: id) ?? 0) - front) }
+                let next = self.waiting.min { distance($0) < distance($1) }.map { [$0] } ?? []
+                for id in next {
+                    self.waiting.remove(id)
+                    guard let node = self.nodes[id], let game = self.parent.games.first(where: { $0.id == id }) else { continue }
+                    let faces = self.parent.faces(game)
+                    // Still decoding: it comes back when everything is ready, so it's fitted once.
+                    guard faces.front != nil, faces.complete else { continue }
+                    GameBox.dress(node, faces: faces, game: game)
+                    self.dressedWith[id] = faces.identity
+                    self.view?.prepare([node], completionHandler: nil)
+                    self.view?.play(for: 0.2)
+                }
+                // Nothing near enough to fit: stop until the carousel turns or a cover arrives.
+                guard !next.isEmpty else { return }
+                self.layout()
+                self.drain()
+            }
         }
 
         private func size(_ id: String) -> (width: CGFloat, depth: CGFloat) {
@@ -448,8 +534,11 @@ struct CoverFlow3D: UIViewRepresentable {
                 offset = max(-0.45, min(CGFloat(order.count) - 0.55, panStart - along(gesture.translation(in: view)) / unit))
                 layout()
                 SCNTransaction.commit()
-                if Int(offset.rounded()) != before, UserDefaults.standard.flag("haptics") {
-                    haptics.selectionChanged()
+                if Int(offset.rounded()) != before {
+                    if UserDefaults.standard.flag("haptics") { haptics.selectionChanged() }
+                    let index = min(max(Int(offset.rounded()), 0), parent.games.count - 1)
+                    parent.prefetch(neighbours(of: index, in: parent.games))
+                    drain()
                 }
             default:
                 panning = false

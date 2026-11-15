@@ -547,6 +547,7 @@ private struct BoxCarousel: View {
     @AppStorage("boxMotion") private var boxMotion = true
     @AppStorage("reflections") private var reflections = true
     @EnvironmentObject private var covers: CoverStore
+    @EnvironmentObject private var focus: ControllerFocus
     @Environment(\.gameActions) private var actions
     @AppStorage("haptics") private var haptics = true
     let games: [Game]
@@ -562,7 +563,9 @@ private struct BoxCarousel: View {
                     ContentUnavailableView("No games match", systemImage: "magnifyingglass")
                 } else {
                     VStack(spacing: 0) {
-                        CoverFlow3D(games: games, focused: $focused, faces: { covers.faces(for: $0) }, open: actions.open)
+                        CoverFlow3D(games: games, focused: $focused, faces: { covers.faces(for: $0) }, open: actions.open,
+                                    prefetch: { covers.prefetch($0) },
+                                    spin: focus.spin.filter { $0.scope == "library" }.map(\.radians).eraseToAnyPublisher())
                             .id("\(reflections)-\(boxMotion)")
                             .frame(height: geo.size.height * 0.7)
                             // The reflection fades into the floor instead of ending at the edge.
