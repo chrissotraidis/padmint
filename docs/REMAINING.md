@@ -98,34 +98,34 @@ HaloPad 0.3.16 and PeonPad preview.2 were already live. These are release/build
 results; physical TV and controller acceptance is still pending.
 
 Post-publish checks use `scripts/player-check.sh` from PadMint main, Apple's
-Python 3.9, no source checkout and an empty PadMint folder. As of 01:22 JST,
-21 of the 22 checks pass: AnnePad, BallPad, BananaPad, BarrelPad, BearBirdPad,
-BellPad, BrawlerPad, CTRPad, DinoPad, F0x, GalaxyPad, HarkinianPad, MaskPad,
+Python 3.9, no source checkout and an empty PadMint folder. All 22 original
+post-publish checks pass: AnnePad, BallPad, BananaPad, BarrelPad, BearBirdPad,
+BellPad, BrawlerPad, CTRPad, DarkPad, DinoPad, F0x, GalaxyPad, HarkinianPad, MaskPad,
 NightPad, OpenRCT2 Touch, PaperPad, SnapPad, SpaghettiPad, StarshipPad, TribesPad
 and UTP. DarkPad initially stopped at the catalog mismatch.
 [#274](https://github.com/chrissotraidis/padmint/pull/274) is merged and
 [PadMint 0.6.6](https://github.com/chrissotraidis/padmint/releases/tag/v0.6.6)
 is published: its experimental Mac source-build route is intentionally unoffered.
 All 32 CI checks passed, including the clean Mac builds and the Linux x64
-compiler probe; all five release assets passed both gates. DarkPad still needs
-its local post-publish player check. It cannot start while the Mac is below
-the 30 GB free-space reserve (about 13 GB available at the last check).
-Free space, then run `scripts/player-check.sh darkpad ios -` from current main.
+compiler probe; all five release assets passed both gates. After space was
+freed, DarkPad 0.1.1 passed its clean local player check on 16 November in
+about seven minutes, using PadMint main `3bbf6c0`.
 The other earlier failures were network failures and passed on retry.
 SnapPad's binutils download does not retry interrupted partial transfers; a
 small robustness fix remains a separate follow-up.
 
 Release state rechecked on GitHub:
 
-- **BlueWake 0.12.0 remains a draft.** The Windows ZIP and Linux AppImage have
-  now arrived, superseding the earlier missing-build blocker. The draft still
-  lacks `SHA256SUMS` and contains checksum/validation placeholders. On 16 November,
-  both PadMint and the private reference gate **failed the Windows ZIP** because
-  `BuilderProvenance.json` declares `containsTranslatedGameCode: true`. That is
-  a release stop. The AppImage passed the direct file scans; its packed contents
-  were not independently verified. Resolve the gate failure and finish release
-  text before publication, then run the iOS player check and remove the README's
-  unreleased note. The old 0.11.1 draft also remains.
+- **BlueWake 0.12.0 is published** (15 November at 23:20 UTC), with all six
+  assets and verified checksums. Its README update #611 is merged and the
+  superseded 0.11.1 draft was deleted. **Correction to the earlier status:**
+  the Windows ZIP's translated-code finding is explicitly accepted by
+  [BlueWake's release rules](https://github.com/chrissotraidis/bluewake/blob/main/AGENTS.md#releases).
+  Its [release record](https://github.com/chrissotraidis/bluewake/blob/main/docs/status/RELEASE_0.12.0.md)
+  also records inspection of the unpacked AppImage. The prior report treated
+  the desktop exception as a blocker incorrectly; PadMint's generic gate has
+  not been weakened. Its post-publish iOS player-check retry is running after
+  the earlier attempt stopped for disk space.
 - **KartPad 0.8.11 is now a public prerelease** (15 November), and
   [kartpad#573](https://github.com/chrissotraidis/kartpad/pull/573) is merged.
   PadMint and KartPad's update check still select stable 0.8.10. The release
@@ -138,9 +138,12 @@ Release state rechecked on GitHub:
   [#11](https://github.com/chrissotraidis/ectopad/pull/11) remain open. Private
   upstream mirrors and missing licenses still block the proposed public release.
 - **Touch-only drafts:** GoldenPad 0.3.2, MeleePad 0.3.1, SunPad 0.3.2,
-  SquirrelPad 0.2.1 and Ottsel 0.1.1 remain unpublished. Their publication needs
-  a separate decision, asset audits and player checks. Remove the relevant
-  README's unreleased note only after publishing.
+  SquirrelPad 0.2.1 and Ottsel 0.1.1 were authorized and published on 16 November
+  JST. All 14 assets passed both gates, their recipes match the release commits
+  and catalog, and all tags point at those commits. Their release records
+  document passing pre-tag player checks. Fresh post-publish checks are running;
+  README corrections remove the unreleased wording. Physical TV/controller
+  acceptance remains pending.
 
 ## Chromebooks
 
