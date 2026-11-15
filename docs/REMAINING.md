@@ -215,6 +215,14 @@ needs, the game file it asks for, its install steps or its card art.
 
 Still open:
 
+- **DarkPad 0.1.1 catalog reconciliation (16 November).** Its published recipe
+  includes an experimental Mac Catalyst target, while its player documentation
+  directs Mac users to a source build. The catalog records that target as
+  intentionally unoffered; iPhone/iPad remains the PadMint route. Shipping this
+  catalog correction needs Chris's approval for a PadMint release, followed by
+  the post-publish DarkPad player check. The earlier `--recipe` check missed this
+  because it only reports hidden iPhone build hosts, not additional targets.
+
 - **Previews are invisible.** Seven download-only apps publish prereleases,
   which `/releases/latest` skips, so players never see those updates. Decide a
   release channel for each game, then test preview-only, stable plus preview,
