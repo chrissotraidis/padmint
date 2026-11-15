@@ -117,8 +117,7 @@ final class LibraryStateTests: XCTestCase {
             focus.update("library/\(index)", .init(frame: CGRect(x: index * 120, y: 0, width: 100, height: 140), scope: "library"))
         }
         focus.select("library/0")
-        focus.repeatDelay = .milliseconds(300)
-        focus.repeatInterval = .milliseconds(300)
+        focus.timing = RepeatTiming(delay: .milliseconds(300), first: .milliseconds(300), fastest: .milliseconds(300), step: .zero)
         // Kept alive to the end, so no two of them can share an identifier.
         let objects = (0..<4).map { _ in NSObject() }
         let (pad, dpad, stick, other) = (ObjectIdentifier(objects[0]), ObjectIdentifier(objects[1]),
@@ -154,7 +153,7 @@ final class LibraryStateTests: XCTestCase {
             focus.update("library/\(index)", .init(frame: CGRect(x: index * 120, y: 0, width: 100, height: 140), scope: "library"))
         }
         var heard: [String?] = []
-        let watch = focus.highlight.dropFirst().sink { heard.append($0) }
+        let watch = focus.highlight.dropFirst().sink { heard.append($0?.key) }
         var redraws = 0
         let whole = focus.objectWillChange.sink { redraws += 1 }
         focus.select("library/0")
@@ -162,10 +161,175 @@ final class LibraryStateTests: XCTestCase {
         focus.move(.right)
         let lit: (String) -> String? = { focus.connected ? $0 : nil }
         XCTAssertEqual(focus.selected, "library/1")
-        XCTAssertEqual(focus.highlight.value, lit("library/1"))
+        XCTAssertEqual(focus.highlight.value?.key, lit("library/1"))
         XCTAssertEqual(heard, focus.connected ? ["library/0", "library/1"] : [], "once per change, only with a controller")
         XCTAssertEqual(redraws, 0, "a move doesn't redraw every view holding ControllerFocus")
         watch.cancel()
         whole.cancel()
+    }
+
+    /// D-pad up from the top row stays there: nothing above the games takes the selection.
+    @MainActor
+    func testUpFromTheTopRowStays() {
+        let focus = ControllerFocus()
+        focus.scope = "library"
+        for item in grid { focus.update("library/\(item.id)", .init(frame: item.frame, scope: "library", isDefault: true)) }
+        focus.select("library/b")
+        focus.move(.up)
+        XCTAssertEqual(focus.selected, "library/b")
+        focus.select("library/c")
+        focus.move(.right)
+        XCTAssertEqual(focus.selected, "library/c", "edges don't wrap")
+    }
+
+    func testShouldersCycleConsolesThroughAll() {
+        let consoles = ["Nintendo 64", "GameCube", "PC"]
+        XCTAssertEqual(LibraryFilter.console(after: "", step: 1, in: consoles), "Nintendo 64")
+        XCTAssertEqual(LibraryFilter.console(after: "Nintendo 64", step: 1, in: consoles), "GameCube")
+        XCTAssertEqual(LibraryFilter.console(after: "PC", step: 1, in: consoles), "", "RB wraps to All")
+        XCTAssertEqual(LibraryFilter.console(after: "", step: -1, in: consoles), "PC", "LB wraps to the last")
+        XCTAssertEqual(LibraryFilter.console(after: "Wii", step: 1, in: consoles), "Nintendo 64", "a hidden console counts as All")
+    }
+
+    func testHeldDirectionRepeatsSoonThenFaster() {
+        let waits = (0..<8).map { RepeatTiming().wait(before: $0) }
+        XCTAssertEqual(waits, [280, 110, 100, 90, 80, 70, 60, 60].map { Duration.milliseconds($0) })
+    }
+
+    func testStickKeepsItsDirectionThroughADiagonal() {
+        XCTAssertEqual(MoveDirection.resolve(x: 0.6, y: 0.55, holding: .right), .right)
+        XCTAssertEqual(MoveDirection.resolve(x: 0.35, y: 0.5, holding: .right), .right, "a slight turn")
+        XCTAssertEqual(MoveDirection.resolve(x: 0.3, y: 0.8, holding: .right), .up, "a clear turn")
+        XCTAssertEqual(MoveDirection.resolve(x: 0.6, y: 0.55, holding: nil), .right)
+    }
+
+    func testTriggersPageAboutAScreen() {
+        let rows = (0..<10).map { (id: $0, frame: CGRect(x: 0, y: CGFloat($0) * 100, width: 100, height: 80)) }
+        XCTAssertEqual(MoveDirection.down.page(from: rows[0].frame, among: Array(rows.dropFirst()), distance: 350), 3)
+        XCTAssertEqual(MoveDirection.up.page(from: rows[9].frame, among: Array(rows.dropLast()), distance: 350), 6)
+        XCTAssertEqual(MoveDirection.down.page(from: rows[8].frame, among: rows.filter { $0.id != 8 }, distance: 350), 9, "stops at the end")
+        XCTAssertNil(MoveDirection.down.page(from: rows[9].frame, among: Array(rows.dropLast()), distance: 350))
+    }
+
+    /// Exactly one view shows the selection, through scope changes, a second copy of an item
+    /// and the item going away.
+    @MainActor
+    func testExactlyOneViewShowsTheSelection() {
+        let focus = ControllerFocus()
+        focus.connected = true
+        focus.scope = "library"
+        let first = UUID(), second = UUID()
+        focus.update("library/a", .init(frame: CGRect(x: 0, y: 0, width: 100, height: 100), scope: "library", token: first))
+        focus.update("library/b", .init(frame: CGRect(x: 120, y: 0, width: 100, height: 100), scope: "library"))
+        focus.select("library/a")
+        XCTAssertEqual(focus.highlight.value, .init(key: "library/a", token: first))
+        // A second copy (a caption fading in for the next game) takes over; the old one goes dark.
+        focus.update("library/a", .init(frame: CGRect(x: 0, y: 0, width: 100, height: 100), scope: "library", token: second))
+        XCTAssertEqual(focus.highlight.value, .init(key: "library/a", token: second))
+        focus.remove("library/a", token: first)
+        XCTAssertEqual(focus.highlight.value?.token, second, "the old copy leaving changes nothing")
+        // A page opens over the library: nothing in the library stays lit.
+        focus.scope = "detail:x"
+        XCTAssertNil(focus.highlight.value)
+        focus.scope = "library"
+        XCTAssertEqual(focus.highlight.value?.key, "library/a")
+        // A filter removes the selected game: no highlight, then the nearest game takes it.
+        focus.remove("library/a", token: second)
+        XCTAssertNil(focus.highlight.value)
+        focus.reselect()
+        XCTAssertEqual(focus.highlight.value?.key, "library/b")
+        focus.connected = false
+        XCTAssertNil(focus.highlight.value, "no controller, no highlight")
+    }
+
+    /// A plays the selected game; View opens its page.
+    @MainActor
+    func testAPlaysAndViewOpensDetails() {
+        let focus = ControllerFocus()
+        focus.scope = "library"
+        focus.update("library/tile", .init(frame: CGRect(x: 0, y: 0, width: 100, height: 100), scope: "library"))
+        focus.select("library/tile")
+        var sent: [ControllerFocus.Command] = []
+        let watch = focus.commands.sink { sent.append($0.command) }
+        focus.activate()
+        focus.details()
+        XCTAssertEqual(sent, [.activate, .details])
+        watch.cancel()
+    }
+
+    /// A touch hides the selection; the next controller input brings it back on the item nearest
+    /// the middle of the screen, without moving or pressing anything.
+    @MainActor
+    func testTouchHidesTheSelectionUntilTheNextInput() {
+        let focus = ControllerFocus()
+        focus.connected = true
+        focus.scope = "library"
+        focus.viewport = CGRect(x: 0, y: 0, width: 400, height: 400)
+        let frames = ["top": CGRect(x: 150, y: 0, width: 100, height: 60), "middle": CGRect(x: 150, y: 170, width: 100, height: 60),
+                      "below": CGRect(x: 150, y: 500, width: 100, height: 60)]
+        for (id, frame) in frames { focus.update("library/\(id)", .init(frame: frame, scope: "library")) }
+        focus.select("library/top")
+        var sent: [ControllerFocus.Command] = []
+        let watch = focus.commands.sink { sent.append($0.command) }
+        focus.touch()
+        XCTAssertNil(focus.highlight.value, "a finger hides the selection")
+        focus.remove("library/top", token: focus.targets["library/top"]!.token)
+        focus.reselect()
+        XCTAssertNil(focus.highlight.value, "nothing re-selects (or scrolls) while the finger is in charge")
+        focus.activate()
+        XCTAssertEqual(focus.selected, "library/middle", "back on the item nearest the middle of the screen")
+        XCTAssertEqual(focus.highlight.value?.key, "library/middle")
+        XCTAssertEqual(sent, [], "that first press only shows the selection")
+        focus.move(.down)
+        XCTAssertEqual(focus.selected, "library/below", "then the D-pad moves as usual")
+        watch.cancel()
+    }
+
+    /// A held direction stops on a new screen and on a touch: nothing keeps moving by itself.
+    @MainActor
+    func testHeldDirectionStopsOnScreenChangeAndTouch() async throws {
+        let focus = ControllerFocus()
+        focus.connected = true
+        focus.scope = "library"
+        for index in 0..<12 {
+            focus.update("library/\(index)", .init(frame: CGRect(x: index * 120, y: 0, width: 100, height: 100), scope: "library"))
+        }
+        focus.timing = RepeatTiming(delay: .milliseconds(100), first: .milliseconds(100), fastest: .milliseconds(100), step: .zero)
+        let objects = [NSObject(), NSObject()]
+        let (pad, dpad) = (ObjectIdentifier(objects[0]), ObjectIdentifier(objects[1]))
+
+        focus.select("library/0")
+        focus.point(dpad, on: pad, x: 1, y: 0)
+        XCTAssertEqual(focus.selected, "library/1")
+        focus.scope = "detail:x"
+        focus.scope = "library"
+        try await Task.sleep(for: .milliseconds(350))
+        XCTAssertEqual(focus.selected, "library/1", "the page opening stopped the repeat")
+        // The D-pad is still down after the screen change: a new push is needed to move again.
+        focus.point(dpad, on: pad, x: 0, y: 0)
+        focus.point(dpad, on: pad, x: 1, y: 0)
+        XCTAssertEqual(focus.selected, "library/2")
+        focus.touch()
+        try await Task.sleep(for: .milliseconds(350))
+        XCTAssertEqual(focus.selected, "library/2", "the touch stopped the repeat")
+        withExtendedLifetime(objects) {}
+    }
+
+    /// When the selected game goes away (a filter, a lazy row), the nearest game on screen takes
+    /// the selection; one off screen never does, so the page isn't pulled anywhere.
+    @MainActor
+    func testReselectStaysOnScreen() {
+        let focus = ControllerFocus()
+        focus.connected = true
+        focus.scope = "library"
+        focus.viewport = CGRect(x: 0, y: 0, width: 400, height: 400)
+        let gone = UUID()
+        focus.update("library/gone", .init(frame: CGRect(x: 0, y: 380, width: 100, height: 100), scope: "library", token: gone))
+        focus.update("library/far", .init(frame: CGRect(x: 0, y: 500, width: 100, height: 100), scope: "library"))
+        focus.update("library/shown", .init(frame: CGRect(x: 250, y: 200, width: 100, height: 100), scope: "library"))
+        focus.select("library/gone")
+        focus.remove("library/gone", token: gone)
+        focus.reselect()
+        XCTAssertEqual(focus.selected, "library/shown", "the nearest game on screen, not the closer one below it")
     }
 }

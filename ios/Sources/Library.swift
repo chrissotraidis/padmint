@@ -96,6 +96,13 @@ struct LibraryFilter: Equatable {
         search = ""
         if onlyInstalled, !games.contains(where: { matches($0, installed: installed) }) { onlyInstalled = false }
     }
+
+    /// LB/RB: the previous or next console, through All consoles (""), wrapping around.
+    static func console(after current: String, step: Int, in consoles: [String]) -> String {
+        let all = [""] + consoles
+        let index = all.firstIndex(of: current) ?? 0
+        return all[((index + step) % all.count + all.count) % all.count]
+    }
 }
 
 enum SortOrder: String, CaseIterable, Identifiable {
@@ -108,12 +115,6 @@ enum SortOrder: String, CaseIterable, Identifiable {
         case .console: "Console"
         }
     }
-}
-
-enum StartOn: String, CaseIterable, Identifiable {
-    case library, lastPlayed
-    var id: Self { self }
-    var label: String { self == .library ? "Library" : "Last game played" }
 }
 
 private struct LibraryFile: Codable {
@@ -139,6 +140,8 @@ final class LibraryModel: ObservableObject {
     /// The links this copy of the app declares in Info.plist: the only ones iOS answers for.
     private let declared = Set(Bundle.main.object(forInfoDictionaryKey: "LSApplicationQueriesSchemes") as? [String] ?? [])
     static let consoles = ["Nintendo 64", "GameCube", "Wii", "PlayStation", "PlayStation 2", "Xbox", "PC"]
+    /// The consoles the filter bar offers: those with a game in the catalog.
+    var consolesShown: [String] { Self.consoles.filter { name in games.contains { $0.platform == name } } }
 
     init() {
         if let url = Bundle.main.url(forResource: "library", withExtension: "json"),
@@ -158,6 +161,18 @@ final class LibraryModel: ObservableObject {
 
     var lastPlayedGame: Game? {
         games.filter { lastPlayed[$0.id] != nil }.max { lastPlayed[$0.id]! < lastPlayed[$1.id]! }
+    }
+
+    /// How many times each game was opened from the library (counted from 0.6.6).
+    @Published private(set) var playCounts: [String: Int] =
+        (UserDefaults.standard.dictionary(forKey: "playCounts") as? [String: Int]) ?? [:] {
+        didSet { UserDefaults.standard.set(playCounts, forKey: "playCounts") }
+    }
+
+    /// A game opened from the library: when, and one more time.
+    func recordPlay(_ game: Game) {
+        lastPlayed[game.id] = Date()
+        playCounts[game.id, default: 0] += 1
     }
 
     func sorted(_ list: [Game], by order: SortOrder, official: Bool) -> [Game] {
@@ -233,11 +248,25 @@ final class LibraryModel: ObservableObject {
         return checked(game) ? "Not installed" : "Tap Play to check"
     }
 
+    /// The status beside a check mark: nothing for an installed game never played, since the
+    /// check mark already says it's installed.
+    func note(_ game: Game) -> String? {
+        installed.contains(game.id) && lastPlayed[game.id] == nil ? nil : status(game)
+    }
+
+    /// "Played 2 hours ago · 3 times", from what the library recorded.
+    func playedText(_ game: Game) -> String? {
+        guard let date = lastPlayed[game.id] else { return nil }
+        let count = playCounts[game.id] ?? 0
+        let times = count == 0 ? nil : count == 1 ? "once" : "\(count) times"
+        return [lastPlayedText(date), times].compactMap { $0 }.joined(separator: " · ")
+    }
+
     /// Opens the game; false when no app answers to its link.
     func play(_ game: Game) async -> Bool {
         guard let url = game.linkURL else { return false }
         let success = await UIApplication.shared.open(url)
-        if success { lastPlayed[game.id] = Date() }
+        if success { recordPlay(game) }
         if !checked(game) {
             // Every game inside the same app (TribesPad's three) shares its answer.
             let siblings = games.filter { $0.link == game.link }.map(\.id)

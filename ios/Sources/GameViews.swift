@@ -26,17 +26,20 @@ struct GameDetail: View {
     @AppStorage("reflections") private var reflections = true
     @EnvironmentObject private var library: LibraryModel
     @EnvironmentObject private var covers: CoverStore
+    @EnvironmentObject private var focus: ControllerFocus
     @Environment(\.gameActions) private var actions
     @Environment(\.horizontalSizeClass) private var sizeClass
-    @Environment(\.openURL) private var openURL
     @AppStorage("officialTitles") private var official = false
     let game: Game
+
+    private var scope: String { "detail:\(game.id)" }
 
     var body: some View {
         ScrollView {
             VStack(spacing: 18) {
-                SpinningBox(game: game, faces: covers.faces(for: game))
-                .id("\(reflections)-\(boxMotion)")
+                SpinningBox(game: game, faces: covers.faces(for: game),
+                            spin: focus.spin.filter { [scope] in $0.scope == scope }.map(\.radians).eraseToAnyPublisher())
+                    .id("\(reflections)-\(boxMotion)")
                     .frame(height: sizeClass == .regular ? 440 : 330)
                     .overlay(alignment: .bottom) {
                         Text("Drag to turn the box").font(.caption).foregroundStyle(.secondary).padding(.bottom, 4)
@@ -58,33 +61,21 @@ struct GameDetail: View {
                             Chip(text: "Installed", symbol: "checkmark.circle.fill", selected: true)
                         }
                     }
-                    Text(library.status(game))
-                        .font(.subheadline).foregroundStyle(.secondary)
+                    // The chip says installed; underneath, only what adds to it.
+                    if let played = library.playedText(game) {
+                        Text(played).font(.subheadline).foregroundStyle(.secondary)
+                    } else if !library.installed.contains(game.id) {
+                        Text(library.status(game)).font(.subheadline).foregroundStyle(.secondary)
+                    }
                 }
                 if library.canTry(game) {
                     Button { actions.play(game) } label: {
                         Label("Play", systemImage: "play.fill").font(.title3.bold()).frame(maxWidth: 280)
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    .controllerFocus("play", isDefault: true) { actions.play(game) }
+                    .controllerFocus("play", isDefault: true, lift: 1.04) { actions.play(game) }
                 } else {
                     HowToGet(game: game)
-                }
-                HStack {
-                    Button { actions.chooseCover(game) } label: { Label("Choose Cover…", systemImage: "photo") }
-                        .controllerFocus("cover") { actions.chooseCover(game) }
-                    if covers.hasChosen(game) {
-                        Button(role: .destructive) { covers.removeChosen(game) } label: {
-                            Label("Remove Chosen Cover", systemImage: "arrow.uturn.backward")
-                        }
-                        .controllerFocus("remove-cover") { covers.removeChosen(game) }
-                    }
-                }
-                .buttonStyle(SecondaryButtonStyle())
-                Link("\(game.name) on GitHub", destination: game.repo).font(.footnote)
-                    .controllerFocus("github", corner: 6) { openURL(game.repo) }
-                if let source = covers.source(for: game) {
-                    Text("Box art from \(source)").font(.footnote).foregroundStyle(.secondary)
                 }
                 MoreOnConsole(game: game)
                     .padding(.top, 12)
@@ -96,7 +87,23 @@ struct GameDetail: View {
         .background { Backdrop(game: game) }
         .navigationTitle(game.heading(official: official))
         .navigationBarTitleDisplayMode(.inline)
-        .environment(\.focusScope, "detail:\(game.id)")
+        .toolbar {
+            ToolbarItem {
+                Menu {
+                    Button { actions.chooseCover(game) } label: { Label("Choose Cover…", systemImage: "photo") }
+                    if covers.hasChosen(game) {
+                        Button(role: .destructive) { covers.removeChosen(game) } label: {
+                            Label("Remove Chosen Cover", systemImage: "arrow.uturn.backward")
+                        }
+                    }
+                    Link(destination: game.repo) { Label("\(game.name) on GitHub", systemImage: "arrow.up.right.square") }
+                } label: {
+                    Label("Options", systemImage: "ellipsis.circle")
+                }
+                .accessibilityIdentifier("game-options")
+            }
+        }
+        .environment(\.focusScope, scope)
     }
 }
 
@@ -115,7 +122,7 @@ struct HowToGet: View {
                 .foregroundStyle(.secondary)
             Link(game.link == nil ? "Open \(game.name)'s page" : "How to get it with PadMint", destination: page)
                 .buttonStyle(PrimaryButtonStyle())
-                .controllerFocus("how-to-get", isDefault: true) { openURL(page) }
+                .controllerFocus("how-to-get", isDefault: true, lift: 1.04) { openURL(page) }
         }
         .frame(maxWidth: 440)
     }
@@ -125,6 +132,7 @@ struct HowToGet: View {
 private struct MoreOnConsole: View {
     @EnvironmentObject private var library: LibraryModel
     @Environment(\.gameActions) private var actions
+    @EnvironmentObject private var covers: CoverStore
     @AppStorage("officialTitles") private var official = false
     @AppStorage("showNames") private var showNames = false
     let game: Game
@@ -138,12 +146,15 @@ private struct MoreOnConsole: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(alignment: .bottom, spacing: 16) {
                         ForEach(others) { other in
+                            // Each cover at its own shape and one height, so a row of wide N64
+                            // boxes leaves no gap above it.
+                            let width = 130 * covers.aspect(for: other)
                             Button { actions.open(other) } label: {
                                 VStack(alignment: .leading, spacing: 6) {
-                                    CoverArt(game: other).frame(width: 120, height: 150, alignment: .bottom)
+                                    CoverArt(game: other).frame(width: width, height: 130)
                                     if showNames {
                                         Text(other.heading(official: official)).font(.caption.weight(.semibold))
-                                            .lineLimit(2, reservesSpace: true).frame(width: 120, alignment: .leading)
+                                            .lineLimit(2, reservesSpace: true).frame(width: width, alignment: .leading)
                                     }
                                 }
                             }
@@ -196,10 +207,10 @@ struct BoxArtSheet: View {
                 .foregroundStyle(.secondary)
             Button { choose(.download) } label: { Text("Use Official Covers and Titles").frame(maxWidth: 320) }
                 .buttonStyle(PrimaryButtonStyle())
-                .controllerFocus("download", isDefault: true) { choose(.download) }
+                .controllerFocus("download", isDefault: true, lift: 1.04) { choose(.download) }
             Button("Keep PadMint Art and Names") { choose(.off) }
                 .padding(.vertical, 6).padding(.horizontal, 10)
-                .controllerFocus("keep", corner: 10, inset: 0) { choose(.off) }
+                .controllerFocus("keep", corner: 10, inset: 0, lift: 1) { choose(.off) }
         }
         .padding(32)
         .frame(maxWidth: 560)
@@ -221,7 +232,6 @@ struct SettingsView: View {
     @AppStorage("layout") private var layout: Layout = .grid
     @AppStorage("carouselStyle") private var carouselStyle: CarouselStyle = .boxes
     @AppStorage("sort") private var sort: SortOrder = .recent
-    @AppStorage("startOn") private var startOn: StartOn = .library
     @AppStorage("officialTitles") private var official = false
     @AppStorage("onlyInstalled") private var onlyInstalled = false
     @AppStorage("coverSize") private var coverSize: CoverSize = .medium
@@ -260,10 +270,6 @@ struct SettingsView: View {
                             .settingFocus("installed") { onlyInstalled.toggle() }
                         Toggle("Show ready-made apps", isOn: $showReadyMade)
                             .settingFocus("ready-made") { showReadyMade.toggle() }
-                        Picker("When PadMint opens", selection: $startOn) {
-                            ForEach(StartOn.allCases) { Text($0.label).tag($0) }
-                        }
-                        .settingFocus("start") { startOn = startOn.next }
                     }
                     Section("Look") {
                         Picker("Appearance", selection: $appearance) {
@@ -295,7 +301,15 @@ struct SettingsView: View {
                     } header: {
                         Text("Covers and titles")
                     } footer: {
-                        Text("Official titles put the game's real name first, with its PadMint name underneath. Box art comes from libretro-thumbnails, Steam, GOG and Wikipedia and stays on this device. Long-press any game to choose your own picture.")
+                        Text("Official titles put the game's real name first, with its PadMint name underneath. Long-press any game, or use ⋯ on its page, to choose your own picture.")
+                    }
+                    Section {
+                        LabeledContent("Box art", value: "libretro-thumbnails, Steam, GOG, Wikipedia")
+                        LabeledContent("Backs and spines", value: "LaunchBox Games Database")
+                    } header: {
+                        Text("Artwork")
+                    } footer: {
+                        Text("Downloaded only with official box art on, and kept on this device. PadMint includes no box art.")
                     }
                     Section {
                         LabeledContent("Version", value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")
@@ -318,6 +332,6 @@ struct SettingsView: View {
 private extension View {
     /// A settings row a controller can select; A toggles it or picks the next choice.
     func settingFocus(_ id: String, isDefault: Bool = false, action: @escaping () -> Void) -> some View {
-        controllerFocus(id, isDefault: isDefault, corner: 10, inset: 7, action: action)
+        controllerFocus(id, isDefault: isDefault, corner: 10, inset: 7, lift: 1, action: action)
     }
 }

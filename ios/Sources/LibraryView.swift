@@ -10,7 +10,6 @@ struct LibraryView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("layout") private var layout: Layout = .grid
     @AppStorage("sort") private var sort: SortOrder = .recent
-    @AppStorage("startOn") private var startOn: StartOn = .library
     @AppStorage("officialTitles") private var official = false
     @AppStorage("onlyInstalled") private var onlyInstalled = false
     @AppStorage("console") private var console = ""
@@ -58,7 +57,7 @@ struct LibraryView: View {
                 .safeAreaInset(edge: .top, spacing: 0) {
                     VStack(spacing: 10) {
                         HStack(alignment: .firstTextBaseline) {
-                            PadMintMark(size: sizeClass == .regular ? 46 : 34)
+                            PadMintMark(size: sizeClass == .regular ? 54 : 36, animated: true)
                             Spacer()
                             Text("\(library.installed.count) installed · \(library.games.count) games")
                                 .font(.subheadline.weight(.medium)).foregroundStyle(.secondary)
@@ -83,7 +82,6 @@ struct LibraryView: View {
                             Button(action: openSearch) {
                                 Label("Search", systemImage: search.isEmpty ? "magnifyingglass" : "magnifyingglass.circle.fill")
                             }
-                            .controllerFocus("search", corner: 10, inset: 4, action: openSearch)
                         }
                     }
                     ToolbarItem {
@@ -106,6 +104,12 @@ struct LibraryView: View {
                 }
         }
         .tint(.padMint)
+        // The library draws its own selection; no system focus highlight on top of it.
+        .focusEffectDisabled()
+        // Space for the hint bar, so it never covers the games or a page's last row.
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if controller { ControllerHints(items: hints) }
+        }
         .preferredColorScheme(appearance.scheme)
         .environment(\.gameActions, GameActions(play: play, open: { path.append($0) }, chooseCover: chooseCover,
                                                 showConsole: showConsole))
@@ -118,7 +122,7 @@ struct LibraryView: View {
             launched = false
             closeSearch()
         }
-        .onReceive(focus.back) { back() }
+        .onReceive(focus.pressed) { press($0) }
         .onReceive(focus.connection.removeDuplicates()) { connected in
             // onReceive hears the current value again whenever this view redraws.
             guard connected != controller else { return }
@@ -129,8 +133,6 @@ struct LibraryView: View {
             // Closed or cancelled: with a controller, the field goes again.
             if !open { searchRequested = false }
         }
-        // Settings can't open over another sheet; Menu there would only take its focus.
-        .onReceive(focus.menu) { if !askBoxArt && missing == nil { showSettings.toggle() } }
         .photosPicker(isPresented: $pickingCover, selection: $picked, matching: .images)
         .onChange(of: picked) { _, item in
             guard let item, let game = coverTarget else { return }
@@ -144,7 +146,6 @@ struct LibraryView: View {
             guard !started else { return }
             started = true
             if covers.boxArt == .ask { askBoxArt = true }
-            if startOn == .lastPlayed, let game = library.lastPlayedGame { path = [game] }
         }
     }
 
@@ -200,6 +201,40 @@ struct LibraryView: View {
         else if !path.isEmpty { path.removeLast() }
     }
 
+    /// Controller buttons other than A and the D-pad.
+    private func press(_ press: ControllerFocus.Press) {
+        let animation: Animation? = reduceMotion ? nil : .snappy
+        switch press {
+        case .back: back()
+        // Settings can't open over another sheet; Menu there would only take its focus.
+        case .menu: if !askBoxArt && missing == nil { showSettings.toggle() }
+        case .search: if activeScope == "library" && !searching { openSearch() }
+        case .layout: if activeScope == "library" { withAnimation(animation) { layout = layout.next } }
+        case .console(let step):
+            guard activeScope == "library" else { return }
+            withAnimation(animation) { console = LibraryFilter.console(after: console, step: step, in: library.consolesShown) }
+        }
+    }
+
+    /// What the hint bar shows for the screen in front.
+    private var hints: [ControllerHints.Item] {
+        let glyph = { (name: String, fallback: String) in focus.glyphs[name] ?? fallback }
+        let settings = ControllerHints.Item(symbols: [glyph("Menu", "line.3.horizontal.circle")], label: "Settings")
+        switch activeScope {
+        case "library":
+            return [.init(symbols: [glyph("A", "a.circle")], label: "Play"),
+                    .init(symbols: [glyph("View", "rectangle.on.rectangle.circle")], label: "Details"),
+                    .init(symbols: [glyph("LB", "lb.rectangle.roundedbottom"), glyph("RB", "rb.rectangle.roundedbottom")], label: "Console"),
+                    .init(symbols: [glyph("Y", "y.circle")], label: "Layout"), settings]
+        case let scope where scope.hasPrefix("detail:"):
+            return [.init(symbols: [glyph("A", "a.circle")], label: "Select"),
+                    .init(symbols: [glyph("B", "b.circle")], label: "Back"), settings]
+        default:
+            return [.init(symbols: [glyph("A", "a.circle")], label: "Select"),
+                    .init(symbols: [glyph("B", "b.circle")], label: "Close")]
+        }
+    }
+
     /// The search field, attached only on request while a controller is connected.
     private func openSearch() {
         searchRequested = true
@@ -208,6 +243,56 @@ struct LibraryView: View {
 }
 
 // MARK: - Grid
+
+/// A game's small line: a check mark when it's installed, its subheading, and its status
+/// unless the check mark already says it all.
+private struct GameNote: View {
+    @EnvironmentObject private var library: LibraryModel
+    @AppStorage("officialTitles") private var official = false
+    let game: Game
+
+    var body: some View {
+        HStack(spacing: 4) {
+            if library.installed.contains(game.id) {
+                Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.padMint)
+                    .accessibilityLabel("Installed")
+            }
+            Text([game.subheading(official: official), library.note(game)].compactMap { $0 }.joined(separator: " · "))
+        }
+        .foregroundStyle(.secondary)
+    }
+}
+
+/// A small bar at the bottom while a controller is connected: which button does what here.
+private struct ControllerHints: View {
+    struct Item: Hashable {
+        var symbols: [String]
+        var label: String
+    }
+    let items: [Item]
+
+    var body: some View {
+        HStack(spacing: 16) {
+            ForEach(items, id: \.self) { item in
+                HStack(spacing: 4) {
+                    ForEach(item.symbols, id: \.self) { Image(systemName: $0) }
+                    Text(item.label)
+                }
+            }
+        }
+        .font(.footnote.weight(.semibold))
+        .foregroundStyle(.secondary)
+        .lineLimit(1)
+        .fixedSize()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(.ultraThinMaterial, in: Capsule())
+        .overlay { Capsule().strokeBorder(Color.primary.opacity(0.1), lineWidth: 0.5) }
+        .padding(.bottom, 6)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
 
 /// `.searchable` when `attached`; otherwise the library has no text field at all.
 private struct LibrarySearch: ViewModifier {
@@ -268,7 +353,7 @@ private struct HeroBanner: View {
                 .id("\(reflections)-\(boxMotion)")
                 .frame(width: height * 0.95, height: height)
                 .onTapGesture { actions.open(game) }
-                .controllerFocus("hero", isDefault: true, corner: 20) { actions.open(game) }
+                .controllerFocus("hero", isDefault: true, corner: 20, lift: 1.03, details: { actions.open(game) }) { actions.play(game) }
             VStack(alignment: .leading, spacing: 10) {
                 Text(library.lastPlayed[game.id] == nil ? "READY TO PLAY" : "CONTINUE PLAYING")
                     .font(.caption.weight(.semibold)).foregroundStyle(.secondary).tracking(0.8)
@@ -276,12 +361,14 @@ private struct HeroBanner: View {
                     .font(sizeClass == .regular ? .largeTitle.bold() : .title2.bold())
                     .lineLimit(3).minimumScaleFactor(0.7)
                 Text(game.subheading(official: official)).font(.headline).foregroundStyle(.secondary)
-                Text(library.status(game)).font(.subheadline).foregroundStyle(.secondary)
+                if let played = library.playedText(game) {
+                    Text(played).font(.subheadline).foregroundStyle(.secondary)
+                }
                 Button { actions.play(game) } label: {
                     Label("Play", systemImage: "play.fill").font(.headline).padding(.horizontal, 14)
                 }
                 .buttonStyle(PrimaryButtonStyle())
-                .controllerFocus("hero-play") { actions.play(game) }
+                .controllerFocus("hero-play", lift: 1.04, details: { actions.open(game) }) { actions.play(game) }
                 .padding(.top, 6)
             }
             Spacer(minLength: 0)
@@ -325,7 +412,8 @@ private struct CoverRow: View {
                         .buttonStyle(PressableStyle())
                         .contextMenu { GameMenu(game: game) }
                         .accessibilityLabel(game.heading(official: official))
-                        .controllerFocus("row-\(game.id)") { actions.play(game) }
+                        .accessibilityIdentifier("row-\(game.id)")
+                        .controllerFocus("row-\(game.id)", details: { actions.open(game) }) { actions.play(game) }
                         .scrollTransition { content, phase in
                             content
                                 .rotation3DEffect(.degrees(phase.value * -18), axis: (x: 0, y: 1, z: 0), perspective: 0.6)
@@ -406,7 +494,8 @@ struct GameTile: View {
         .contextMenu { GameMenu(game: game) }
         .accessibilityIdentifier("tile-\(game.id)")
         .accessibilityLabel("\(game.heading(official: official)), \(game.subheading(official: official))")
-        .controllerFocus("tile-\(game.id)", isDefault: true) { actions.open(game) }
+        // A plays, as in the carousel; View (and a tap) opens the game's page.
+        .controllerFocus("tile-\(game.id)", isDefault: true, details: { actions.open(game) }) { actions.play(game) }
     }
 }
 
@@ -431,26 +520,20 @@ private struct CarouselCaption: View {
                 .multilineTextAlignment(.center).lineLimit(2).minimumScaleFactor(0.7)
                 .accessibilityIdentifier("carousel-title")
                 .padding(.horizontal, 10)
-                .controllerFocus("carousel-game", isDefault: true, handles: .horizontal,
-                                 move: { step($0 == .left ? -1 : $0 == .right ? 1 : 0) }) { actions.open(game) }
-            HStack(spacing: 8) {
-                Text(game.subheading(official: official))
-                Text("·")
-                Text(library.status(game))
-                    .foregroundStyle(library.installed.contains(game.id) ? Color.padMintLight : Color.secondary)
+                .contentShape(Rectangle())
+                .onTapGesture { actions.open(game) }
+                .accessibilityAction(named: "Open") { actions.open(game) }
+                // The carousel is one stop: left and right turn it, LT/RT jump five, A plays and
+                // View opens the game's page (as tapping the title or the front box does).
+                .controllerFocus("carousel-game", isDefault: true, lift: 1, handles: .horizontal,
+                                 move: { step($0 == .left ? -1 : $0 == .right ? 1 : 0) },
+                                 page: { step($0 * 5) }, details: { actions.open(game) }) { actions.play(game) }
+            GameNote(game: game).font(.headline)
+            Button { actions.play(game) } label: {
+                Label(library.canTry(game) ? "Play" : "Get It", systemImage: library.canTry(game) ? "play.fill" : "arrow.down.circle")
+                    .font(.headline).padding(.horizontal, 12)
             }
-            .font(.headline).foregroundStyle(.secondary)
-            HStack(spacing: 12) {
-                Button { actions.play(game) } label: {
-                    Label(library.canTry(game) ? "Play" : "Get It", systemImage: library.canTry(game) ? "play.fill" : "arrow.down.circle")
-                        .font(.headline).padding(.horizontal, 12)
-                }
-                .buttonStyle(PrimaryButtonStyle())
-                .controllerFocus("carousel-play") { actions.play(game) }
-                Button { actions.open(game) } label: { Label("Details", systemImage: "info.circle").font(.headline) }
-                    .buttonStyle(SecondaryButtonStyle())
-                    .controllerFocus("carousel-details") { actions.open(game) }
-            }
+            .buttonStyle(PrimaryButtonStyle())
             .padding(.top, 6)
         }
         .padding(.horizontal)
@@ -592,8 +675,7 @@ private struct ListLayout: View {
     }
 
     private func row(_ game: Game) -> some View {
-        let installed = library.installed.contains(game.id)
-        return HStack(spacing: 12) {
+        HStack(spacing: 12) {
             Button { actions.open(game) } label: {
                 HStack(spacing: 12) {
                     CoverArt(game: game, corner: 4, badge: false)
@@ -602,16 +684,9 @@ private struct ListLayout: View {
                         Text(game.heading(official: official))
                             .font(.body.weight(.semibold))
                             .lineLimit(typeSize.isAccessibilitySize ? 3 : 1)
-                        HStack(spacing: 4) {
-                            if installed {
-                                Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.padMint)
-                                    .accessibilityLabel("Installed")
-                            }
-                            Text("\(game.subheading(official: official)) · \(library.status(game))")
-                                .foregroundStyle(.secondary)
-                        }
-                        .font(.footnote)
-                        .lineLimit(typeSize.isAccessibilitySize ? 3 : 1)
+                        GameNote(game: game)
+                            .font(.footnote)
+                            .lineLimit(typeSize.isAccessibilitySize ? 3 : 1)
                     }
                     Spacer(minLength: 0)
                 }
@@ -619,11 +694,12 @@ private struct ListLayout: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .controllerFocus("list-\(game.id)", isDefault: true, corner: 8, inset: 0) { actions.open(game) }
+            // One stop per row: A plays, View opens the page.
+            .controllerFocus("list-\(game.id)", isDefault: true, corner: 8, inset: 0, lift: 1,
+                             details: { actions.open(game) }) { actions.play(game) }
             if library.canTry(game) {
                 Button("Play") { actions.play(game) }
                     .buttonStyle(PrimaryButtonStyle(compact: true))
-                    .controllerFocus("list-play-\(game.id)", corner: 11, inset: 3) { actions.play(game) }
             }
         }
         .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))

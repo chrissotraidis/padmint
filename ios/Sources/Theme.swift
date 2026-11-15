@@ -16,18 +16,41 @@ extension Color {
 /// PadMint's logo and wordmark, for the top of the library.
 struct PadMintMark: View {
     var size: CGFloat = 30
+    /// On the library: a small bounce and one shimmer across the icon when it first appears
+    /// (nothing moves with Reduce Motion).
+    var animated = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var shown = false
+    @State private var shine: CGFloat = -1
+
+    private var moving: Bool { animated && !reduceMotion }
 
     var body: some View {
         HStack(spacing: 10) {
             Image("Logo").resizable().frame(width: size, height: size)
+                .overlay {
+                    if moving {
+                        LinearGradient(colors: [.clear, .white.opacity(0.5), .clear], startPoint: .leading, endPoint: .trailing)
+                            .frame(width: size * 0.5, height: size * 1.6)
+                            .rotationEffect(.degrees(20))
+                            .offset(x: shine * size)
+                            .allowsHitTesting(false)
+                    }
+                }
                 .clipShape(RoundedRectangle(cornerRadius: size * 0.24, style: .continuous))
                 .shadow(color: .padMint.opacity(0.45), radius: 6)
+                .scaleEffect(moving && !shown ? 0.8 : 1)
             Text("PadMint")
                 .font(.system(size: size * 0.72, weight: .bold, design: .rounded))
                 .foregroundStyle(.primary)
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("PadMint")
+        .onAppear {
+            guard moving, !shown else { return }
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.5).delay(0.15)) { shown = true }
+            withAnimation(.easeInOut(duration: 1.0).delay(0.5)) { shine = 1 }
+        }
     }
 }
 
@@ -71,6 +94,8 @@ struct FilterBar: View {
     @AppStorage("onlyInstalled") private var onlyInstalled = false
 
     var body: some View {
+        // LB/RB change console with a controller; keep the chosen chip in view.
+        ScrollViewReader { proxy in
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 Menu {
@@ -80,31 +105,25 @@ struct FilterBar: View {
                 } label: {
                     Chip(text: sort.label, symbol: "arrow.up.arrow.down", selected: true)
                 }
-                .chipFocus("sort") { withAnimation(.snappy) { sort = sort.next } }
                 Button { withAnimation(.snappy) { onlyInstalled.toggle() } } label: {
                     Chip(text: "Installed", symbol: "checkmark.circle", selected: onlyInstalled)
                 }
-                .chipFocus("installed") { withAnimation(.snappy) { onlyInstalled.toggle() } }
                 Divider().frame(height: 22)
                 Button { withAnimation(.snappy) { console = "" } } label: { Chip(text: "All consoles", selected: console.isEmpty) }
-                    .chipFocus("console-all") { withAnimation(.snappy) { console = "" } }
-                ForEach(LibraryModel.consoles.filter { name in library.games.contains { $0.platform == name } }, id: \.self) { name in
+                    .id("")
+                ForEach(library.consolesShown, id: \.self) { name in
                     Button { withAnimation(.snappy) { console = console == name ? "" : name } } label: {
                         Chip(text: name, selected: console == name)
                     }
-                    .chipFocus("console-\(name)") { withAnimation(.snappy) { console = console == name ? "" : name } }
+                    .id(name)
                 }
             }
             .buttonStyle(.plain)
             .padding(.horizontal)
             .padding(.vertical, 4)
         }
-    }
-}
-
-private extension View {
-    func chipFocus(_ id: String, action: @escaping () -> Void) -> some View {
-        controllerFocus("chip-\(id)", corner: 20, inset: 3, action: action)
+        .onChange(of: console) { _, name in withAnimation(.snappy) { proxy.scrollTo(name, anchor: .center) } }
+        }
     }
 }
 
