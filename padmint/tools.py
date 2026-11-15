@@ -245,9 +245,12 @@ def replace_folder(source, target):
 
 
 # Libraries a downloaded tool loads from the system, per host. Checked before any
-# download: LLVM's linker for Linux arm64 needs libxml2.so.2, which minimal Linux
+# download: LLVM's linker for Linux needs libxml2.so.2, which minimal Linux
 # installs lack and Ubuntu 25.10 and later no longer ship (they have libxml2.so.16).
-SYSTEM_LIBRARIES = {("llvm", "linux-arm64"): {"library": "libxml2.so.2", "newer": "libxml2.so.16"}}
+SYSTEM_LIBRARIES = {
+    ("llvm", host): {"library": "libxml2.so.2", "newer": "libxml2.so.16"}
+    for host in ("linux-arm64", "linux-x86_64")
+}
 
 
 def _loadable(library):

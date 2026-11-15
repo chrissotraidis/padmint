@@ -222,6 +222,9 @@ Still open:
   catalog correction needs Chris's approval for a PadMint release, followed by
   the post-publish DarkPad player check. The earlier `--recipe` check missed this
   because it only reports hidden iPhone build hosts, not additional targets.
+  CI also exposed the Linux x64 module compiler needing `libxml2.so.2` on the
+  new Ubuntu 26.04 runner. The existing ARM64 library check and local link to
+  the newer system library now cover x64 too; the real CI probe must pass.
 
 - **Previews are invisible.** Seven download-only apps publish prereleases,
   which `/releases/latest` skips, so players never see those updates. Decide a
