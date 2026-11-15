@@ -77,4 +77,31 @@ final class LibraryUITests: XCTestCase {
         XCTAssertTrue(open.waitForExistence(timeout: 5), "Search is back")
         XCTAssertFalse(app.searchFields.firstMatch.exists, "the field is gone again")
     }
+
+    /// A game's page says installed once (the chip), keeps artwork credits in Settings and puts
+    /// Choose Cover in its ⋯ menu.
+    func testGamePageSaysInstalledOnce() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["-boxArt", "off", "-layout", "grid", "-console", "", "-onlyInstalled", "0",
+                                "-demoInstalled", "bluewake"]
+        app.launch()
+        let tile = app.buttons["tile-bluewake"]
+        XCTAssertTrue(tile.waitForExistence(timeout: 10))
+        tile.tap()
+        XCTAssertTrue(app.staticTexts["detail-title"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts.matching(NSPredicate(format: "label == 'Installed'")).count, 1)
+        XCTAssertFalse(app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Box art from'")).firstMatch.exists)
+        XCTAssertFalse(app.buttons["Choose Cover…"].exists, "no big Choose Cover button")
+        app.buttons["game-options"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Choose Cover…"].waitForExistence(timeout: 3), "it's in the ⋯ menu")
+    }
+
+    /// The old "When PadMint opens: last game played" setting is ignored: PadMint opens on the library.
+    func testOpensOnTheLibraryWhateverWasSaved() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["-boxArt", "off", "-layout", "grid", "-startOn", "lastPlayed", "-demoLastPlayed", "vaultpad"]
+        app.launch()
+        XCTAssertTrue(app.buttons["tile-bluewake"].waitForExistence(timeout: 10))
+        XCTAssertFalse(app.staticTexts["detail-title"].exists)
+    }
 }

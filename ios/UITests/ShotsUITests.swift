@@ -97,6 +97,12 @@ final class ShotsUITests: XCTestCase {
         return button.waitForExistence(timeout: 3) && button.isSelected
     }
 
+    /// The tile or Your games cover the controller has selected (debug builds give it a value).
+    private func selectedGame(_ app: XCUIApplication) -> XCUIElement? {
+        let found = app.buttons.matching(NSPredicate(format: "value == 'controller-selected' AND (identifier BEGINSWITH 'tile-' OR identifier BEGINSWITH 'row-')")).firstMatch
+        return found.exists ? found : nil
+    }
+
     func testVirtualController() {
         let app = launch(nil, console: nil, ["-virtualController", "1"])
         Thread.sleep(forTimeInterval: 3)
@@ -105,20 +111,37 @@ final class ShotsUITests: XCTestCase {
         app.buttons["Grid"].firstMatch.tap()
         app.buttons["All consoles"].firstMatch.tap()
         Thread.sleep(forTimeInterval: 1)
-        shot("13-controller-start")
-        press(app, "up")
+        press(app, "down")  // after a touch, the first press only brings the selection back
+        shot("13-controller-library-hint-bar")
+        press(app, "up", times: 6)
+        XCTAssertNil(selectedGame(app), "up from the top stays on the banner, never the chips")
         shot("14-controller-up-stays-on-games")
-        press(app, "right")
-        shot("15-controller-right-to-play")
         press(app, "down", times: 3)
-        shot("16-controller-down-into-grid")
+        let picked = selectedGame(app)?.identifier ?? ""
+        XCTAssertFalse(picked.isEmpty, "down reaches the games")
+        shot("15-controller-down-into-grid")
         press(app, "A")
-        XCTAssertTrue(app.staticTexts["detail-title"].waitForExistence(timeout: 5), "A opened the selected game")
-        shot("17-controller-A-opened-page")
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 5), "A plays (the simulator has no game, so Get It opens)")
+        XCTAssertFalse(app.staticTexts["detail-title"].exists, "A doesn't open the page")
+        shot("16-controller-A-plays")
         press(app, "B")
-        XCTAssertFalse(app.staticTexts["detail-title"].waitForExistence(timeout: 2), "B went back")
+        XCTAssertFalse(app.buttons["Done"].waitForExistence(timeout: 2), "B closed the sheet")
 
-        // LB/RB change console; the selection stays on a game.
+        // A finger takes over: the selection hides and the page stays where the finger left it.
+        app.swipeUp(); app.swipeUp()
+        Thread.sleep(forTimeInterval: 1)
+        XCTAssertNil(selectedGame(app), "a touch hides the selection")
+        let marker = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'tile-' AND identifier != %@", picked))
+            .allElementsBoundByIndex.first { $0.isHittable }
+        let before = marker?.frame
+        Thread.sleep(forTimeInterval: 1.5)
+        XCTAssertEqual(marker?.frame, before, "nothing scrolled back to the old selection")
+        shot("17-touch-hides-selection")
+        press(app, "down")
+        let back = selectedGame(app)
+        XCTAssertTrue(back?.isHittable ?? false, "the next press selects a game on screen")
+
+        // LB/RB change console.
         press(app, "RB")
         XCTAssertTrue(chosen(app, "Nintendo 64"), "RB: the next console")
         shot("18-controller-RB-console")
@@ -127,10 +150,11 @@ final class ShotsUITests: XCTestCase {
         press(app, "RT")
         shot("19-controller-RT-page")
 
-        // Y changes layout; in the carousel left/right turn it and RT jumps five.
+        // Y changes layout; in the carousel left/right turn it, RT jumps five and A plays.
         press(app, "Y")
         let title = app.staticTexts["carousel-title"]
         XCTAssertTrue(title.waitForExistence(timeout: 5), "Y: carousel")
+        XCTAssertFalse(app.buttons["Details"].exists, "the carousel has only Play")
         let position = app.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "[0-9]+ of [0-9]+")).firstMatch
         XCTAssertTrue(position.waitForExistence(timeout: 5))
         press(app, "LB"); press(app, "RB")
@@ -139,23 +163,32 @@ final class ShotsUITests: XCTestCase {
         XCTAssertTrue(position.label.hasPrefix("2 of"), position.label)
         press(app, "RT")
         XCTAssertTrue(position.label.hasPrefix("7 of"), "RT jumps five: \(position.label)")
-        shot("20-controller-carousel-RT-jump")
+        shot("20-controller-carousel")
         press(app, "A")
-        XCTAssertTrue(app.staticTexts["detail-title"].waitForExistence(timeout: 5), "A opened the carousel's game")
+        XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 5), "A plays the carousel's game")
         press(app, "B")
+        // Tapping the title opens the game's page.
+        title.tap()
+        XCTAssertTrue(app.staticTexts["detail-title"].waitForExistence(timeout: 5), "the title opens the page")
+        Thread.sleep(forTimeInterval: 1)
+        shot("21-game-page")
+        press(app, "B")
+        XCTAssertFalse(app.staticTexts["detail-title"].waitForExistence(timeout: 2), "B went back")
 
         press(app, "Y")  // list
         press(app, "down", times: 3)
-        press(app, "right")
-        shot("21-controller-list-play")
+        shot("22-controller-list")
 
         press(app, "Y")  // grid again
         press(app, "X")
         XCTAssertTrue(app.searchFields.firstMatch.waitForExistence(timeout: 5), "X opens search")
-        shot("22-controller-X-search")
         // The keyboard covers the on-screen controller here, so close the search by touch.
         app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'installed'")).firstMatch.tap()
         XCTAssertFalse(app.searchFields.firstMatch.waitForExistence(timeout: 2), "the field goes again")
+        app.navigationBars.buttons["Settings"].tap()
+        Thread.sleep(forTimeInterval: 1)
+        shot("23-settings")
+        app.buttons["Done"].firstMatch.tap()
         app.buttons["All consoles"].firstMatch.tap()
     }
 }

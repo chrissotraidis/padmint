@@ -19,27 +19,29 @@ It uses PadMint's icon and lists only games from PadMint's catalog.
 - **Installed games** carry a green check mark. Tap a cover in *Your games* to
   play; tap a game anywhere else to open its page.
 - **A page for each game,** with its cover over a blurred copy of it, its console,
-  when you last played it, Play (or how to get it with PadMint) and cover options.
-  Tap its console to see that console's games.
+  when you last played it and how often, and Play (or how to get it with PadMint).
+  Tap its console to see that console's games; ⋯ has cover options and the
+  game's GitHub page.
 - **A game controller works too,** like a console's home screen. With a controller
   connected (an Xbox controller, for example), the D-pad or left stick moves
   between games; the selected one lifts a little with a soft glow. In the carousel
-  left and right turn it. A opens a game (and presses Play on its page), B goes
+  left and right turn it. A plays the selected game, View opens its page, B goes
   back, LB/RB switch console, LT/RT page down and up (five boxes in the carousel),
-  X searches, Y switches layout, Menu opens Settings and the right stick scrolls.
-  A small bar at the bottom says which button does what. Touch keeps working as
-  before. This sets nothing inside the games themselves, which keep their own
-  controls.
+  X searches, Y switches layout and Menu opens Settings. The right stick scrolls
+  up and down and turns the box left and right. A small bar at the bottom says
+  which button does what. Touching the screen hides the selection until the
+  controller is used again. This sets nothing inside the games themselves, which
+  keep their own controls.
 - **Official covers and titles, if you want them.** On first launch the app asks.
   If you agree, it downloads box art for every game and shows each game's official
   title (*The Legend of Zelda: The Wind Waker*) with the PadMint name (*BlueWake*)
   underneath, and the 3D boxes get their real backs (36 games) and spines (29).
   Until then it shows PadMint's own card art and names. Names under covers are
   off unless you turn them on in Settings.
-- **Your own covers.** Long-press any game, or use its page, to pick a picture from
-  Photos.
-- **Settings** for the layout, sort order, covers and titles, and what the app
-  opens to: the library or the last game you played.
+- **Your own covers.** Long-press any game, or use ⋯ on its page, to pick a picture
+  from Photos.
+- **Settings** for the layout, sort order, covers and titles, with the artwork
+  credits. PadMint always opens on the library.
 
 Covers keep their real shapes: wide N64 boxes, square PlayStation cases and tall
 GameCube, Wii, PS2, Xbox and PC boxes all stand on one line.

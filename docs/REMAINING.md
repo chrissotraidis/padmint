@@ -284,6 +284,9 @@ only.
   stays on the games, LB/RB switch console, LT/RT page, X searches, Y switches
   layout, the right stick scrolls and one selected game lifts with a glow.
   Simulator only so far: check it on the iPad with the controller.
+  Third round (15 November): A plays and View opens a game's page, the right
+  stick turns boxes, a touch hides the selection without pulling the page back,
+  and the game page is tidier. Simulator only: check it on the iPad.
 - Replace HarkinianPad's card art (`art/harkinianpad.png`, still the old
   ship's wheel) with the blue ocarina from
   [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):
