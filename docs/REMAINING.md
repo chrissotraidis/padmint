@@ -293,6 +293,11 @@ only.
   a 144×144 PNG made from HarkinianPad's `assets/AppIcon.appiconset/AppIcon.png`,
   shipped in the first PadMint release after HarkinianPad v0.2.3 publishes the
   new icon. The latest release is still v0.2.2.
+- MaskPad's card art (`art/maskpad.png`) is now the crescent moon with a
+  controller from [MaskPad v0.2.3](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.3)
+  ([maskpad#26](https://github.com/chrissotraidis/maskpad/pull/26)), a 144×144
+  PNG made from MaskPad's `ios/IconSource.png`. The iPhone/iPad library loads
+  it from `main` already; the Mac app shows it from the next PadMint release.
 - [#172](https://github.com/chrissotraidis/padmint/pull/172): iPhone SDK headers
   for game modules (draft). It belongs to step 3 and waits for the first game
   that needs it.
