@@ -219,12 +219,13 @@ Still open:
   includes an experimental Mac Catalyst target, while its player documentation
   directs Mac users to a source build. The catalog records that target as
   intentionally unoffered; iPhone/iPad remains the PadMint route. Shipping this
-  catalog correction needs Chris's approval for a PadMint release, followed by
-  the post-publish DarkPad player check. The earlier `--recipe` check missed this
+  catalog correction is prepared for PadMint 0.6.6 with Chris's approval; run
+  the post-publish DarkPad player check after publication. The earlier `--recipe` check missed this
   because it only reports hidden iPhone build hosts, not additional targets.
   CI also exposed the Linux x64 module compiler needing `libxml2.so.2` on the
   new Ubuntu 26.04 runner. The existing ARM64 library check and local link to
-  the newer system library now cover x64 too; the real CI probe must pass.
+  the newer system library now cover x64 too. The Ubuntu 26.04 module probe
+  passes, and 529 local Python tests pass (three skipped).
 
 - **Previews are invisible.** Seven download-only apps publish prereleases,
   which `/releases/latest` skips, so players never see those updates. Decide a
