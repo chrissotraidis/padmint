@@ -76,7 +76,7 @@ class SystemLibraryTests(unittest.TestCase):
                     mock.patch.object(tools, "_system_path", return_value=system):
                 link = tools.link_system_library("llvm", "linux-x86_64", root / "tool")
                 self.assertEqual(link, root / "tool/LLVM-X64/lib/libxml2.so.2")
-                self.assertEqual(link.resolve(), system)
+                self.assertEqual(link.resolve(), system.resolve())
 
     def test_the_failure_summary_leaves_out_the_harmless_warning(self):
         with tempfile.TemporaryDirectory() as folder:
