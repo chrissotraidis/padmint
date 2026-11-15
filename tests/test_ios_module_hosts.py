@@ -82,6 +82,7 @@ class ModuleHostTests(unittest.TestCase):
                     mock.patch.object(cli, "catalog", return_value={"hostpad": entry}), \
                     mock.patch.object(cli, "release_source", return_value=(self.root, "test-ref", {})), \
                     mock.patch.object(cli, "manifest_for", return_value=(self.recipe, "repository")), \
+                    mock.patch.object(cli.tools, "missing_system_library", return_value=None), \
                     mock.patch.object(cli.tools, "tools_root", return_value=self.root / "tools"), \
                     mock.patch.object(cli.tools, "install") as install, \
                     mock.patch.object(cli, "finish_submodules"), \
