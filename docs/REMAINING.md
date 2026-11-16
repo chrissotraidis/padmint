@@ -133,8 +133,10 @@ Release state rechecked on GitHub:
 - **KartPad 0.8.11 is now stable/latest**, promoted after its initial
   15 November prerelease; PadMint's live audit selects it.
   [kartpad#573](https://github.com/chrissotraidis/kartpad/pull/573) is merged.
-  Its separate release task is rerunning post-publish player checks against
-  the stable version. Physical-device acceptance remains separate.
+  Its separate release task completed the post-publish Android, iPhone/iPad
+  and Mac player checks against the stable version;
+  [kartpad#574](https://github.com/chrissotraidis/kartpad/pull/574) is merged.
+  Physical-device acceptance remains separate.
 - **AgePad 0.1.1:** [agepad#15](https://github.com/chrissotraidis/agepad/pull/15)
   is still a draft awaiting an iPad match. Merge with main's display fix, rebuild
   the base app, publish and run the player check after that acceptance.
