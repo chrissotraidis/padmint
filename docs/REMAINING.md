@@ -60,8 +60,8 @@ The Windows counts break down as follows:
 - 5 games still need an Apple Silicon Mac: SnapPad, AnnePad, Ottsel, AgePad
   and NightPad. HaloPad's Custom Edition also needs a Mac.
 
-Linux builds KartPad locally (x64 and ARM64 in its recipe) and can start the
-same 17 cloud builds.
+Linux can build KartPad and SunPad locally (x64 and ARM64 in their published
+recipes, experimental) and can start the same cloud builds.
 
 **Linux test builds, 8 November.** The six N64 and GameCube Windows routes also
 build on Linux with a two-line recipe change: the Windows module steps run on
@@ -83,7 +83,8 @@ generator tools natively, the same reason Windows asks for Visual Studio.
 
 Times include fresh tool downloads on ARM64 but not on x86-64, so they don't
 compare. Players get Linux for each game with its next release, whose recipe
-PadMint reads; until then the counts above stay at KartPad only. No Linux-built
+PadMint reads; those six PRs remain open as of 16 November. The two published local Linux
+routes counted above are KartPad and SunPad. No Linux-built
 copy has been played on a device, and no run used a native Linux PC.
 
 ## Display and touch releases — 16 November 2026
@@ -114,6 +115,8 @@ The other earlier failures were network failures and passed on retry.
 SnapPad's binutils download does not retry interrupted partial transfers; a
 small robustness fix remains a separate follow-up.
 
+The live catalog audit checked all 41 entries with zero problems.
+
 Release state rechecked on GitHub:
 
 - **BlueWake 0.12.0 is published** (15 November at 23:20 UTC), with all six
@@ -124,13 +127,16 @@ Release state rechecked on GitHub:
   Its [release record](https://github.com/chrissotraidis/bluewake/blob/main/docs/status/RELEASE_0.12.0.md)
   also records inspection of the unpacked AppImage. The prior report treated
   the desktop exception as a blocker incorrectly; PadMint's generic gate has
-  not been weakened. Its post-publish iOS player-check retry is running after
-  the earlier attempt stopped for disk space.
-- **KartPad 0.8.11 is now a public prerelease** (15 November), and
+  not been weakened. Its fresh post-publish iOS player check passed on
+  16 November in 84.7 minutes with Apple Python 3.9.6, local training and an
+  empty PadMint folder; the earlier disk-space stop is resolved.
+- **KartPad 0.8.11 is now stable/latest**, promoted after its initial
+  15 November prerelease; PadMint's live audit selects it.
   [kartpad#573](https://github.com/chrissotraidis/kartpad/pull/573) is merged.
-  PadMint and KartPad's update check still select stable 0.8.10. The release
-  records pre-tag iOS, Mac and Android player checks; that does not establish
-  post-publish selection of the prerelease. Physical-device checks remain open.
+  Its separate release task completed the post-publish Android, iPhone/iPad
+  and Mac player checks against the stable version;
+  [kartpad#574](https://github.com/chrissotraidis/kartpad/pull/574) is merged.
+  Physical-device acceptance remains separate.
 - **AgePad 0.1.1:** [agepad#15](https://github.com/chrissotraidis/agepad/pull/15)
   is still a draft awaiting an iPad match. Merge with main's display fix, rebuild
   the base app, publish and run the player check after that acceptance.
@@ -141,8 +147,11 @@ Release state rechecked on GitHub:
   SquirrelPad 0.2.1 and Ottsel 0.1.1 were authorized and published on 16 November
   JST. All 14 assets passed both gates, their recipes match the release commits
   and catalog, and all tags point at those commits. Their release records
-  document passing pre-tag player checks. Fresh post-publish checks are running;
-  README corrections remove the unreleased wording. Physical TV/controller
+  document passing pre-tag player checks. Fresh post-publish checks pass for
+  GoldenPad (11.8 minutes), SquirrelPad (18.5 minutes), Ottsel (8.5 minutes),
+  MeleePad (47 minutes) and SunPad (26.3 minutes). All five checks used Apple
+  Python 3.9.6, an empty PadMint folder and the public release, without a
+  checkout. README corrections are merged. Physical TV/controller
   acceptance remains pending.
 
 ## Chromebooks
@@ -272,19 +281,20 @@ fork** and run the workflow again. PadMint itself changes only when something
 the catalog describes changes: the computers a game builds on, the programs it
 needs, the game file it asks for, its install steps or its card art.
 
-Still open:
+Recent completion:
 
 - **DarkPad 0.1.1 catalog reconciliation (16 November).** Its published recipe
   includes an experimental Mac Catalyst target, while its player documentation
   directs Mac users to a source build. The catalog records that target as
-  intentionally unoffered; iPhone/iPad remains the PadMint route. Shipping this
-  catalog correction is prepared for PadMint 0.6.6 with Chris's approval; run
-  the post-publish DarkPad player check after publication. The earlier `--recipe` check missed this
+  intentionally unoffered; iPhone/iPad remains the PadMint route. This catalog correction shipped in PadMint 0.6.6 with Chris's approval;
+  the post-publish DarkPad player check passed on 16 November. The earlier `--recipe` check missed this
   because it only reports hidden iPhone build hosts, not additional targets.
   CI also exposed the Linux x64 module compiler needing `libxml2.so.2` on the
   new Ubuntu 26.04 runner. The existing ARM64 library check and local link to
   the newer system library now cover x64 too. The Ubuntu 26.04 module probe
   passes, and 529 local Python tests pass (three skipped).
+
+Still open:
 
 - **Previews are invisible.** Seven download-only apps publish prereleases,
   which `/releases/latest` skips, so players never see those updates. Decide a
