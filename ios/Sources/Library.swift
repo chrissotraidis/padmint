@@ -139,7 +139,7 @@ final class LibraryModel: ObservableObject {
     private let remote = URL(string: "https://raw.githubusercontent.com/chrissotraidis/padmint/main/ios/library.json")!
     /// The links this copy of the app declares in Info.plist: the only ones iOS answers for.
     private let declared = Set(Bundle.main.object(forInfoDictionaryKey: "LSApplicationQueriesSchemes") as? [String] ?? [])
-    static let consoles = ["Nintendo 64", "GameCube", "Wii", "PlayStation", "PlayStation 2", "Xbox", "PC"]
+    static let consoles = ["Nintendo 64", "GameCube", "Wii", "PlayStation", "PlayStation 2", "Dreamcast", "Xbox", "PC"]
     /// The consoles the filter bar offers: those with a game in the catalog.
     var consolesShown: [String] { Self.consoles.filter { name in games.contains { $0.platform == name } } }
 

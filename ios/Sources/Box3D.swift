@@ -52,7 +52,7 @@ enum GameBox {
     static func depth(for platform: String) -> CGFloat {
         switch platform {
         case "Nintendo 64", "PC": 0.22
-        case "PlayStation": 0.09
+        case "PlayStation", "Dreamcast": 0.09
         default: 0.075
         }
     }

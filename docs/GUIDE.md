@@ -213,7 +213,7 @@ which every game built with PadMint 0.5.34 or newer does.
 
 - A game you built before 0.5.34 still opens from its own icon. Build it again
   and install it over the old one to see it in the library.
-- iOS lets the app ask about 25 games. Six others say **Tap Play to check**:
+- iOS lets the app ask about 25 games. Seven others say **Tap Play to check**:
   tap Play, and if the game opens, the library remembers it.
 - The eight ready-made apps are listed, but the app can't tell whether they're
   installed.

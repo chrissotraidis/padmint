@@ -11,7 +11,7 @@ enum Spine {
         case "GameCube", "PlayStation 2": .blackCase
         case "Wii": .whiteCase
         case "Xbox": .xboxCase
-        case "PlayStation": .jewelCase
+        case "PlayStation", "Dreamcast": .jewelCase
         default: .bigBox  // Nintendo 64 and PC: printed card
         }
     }

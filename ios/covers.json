@@ -207,6 +207,11 @@
       "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Command%20and%20Conquer%20-%20Red%20Alert.png",
       "box_back": "https://images.launchbox-app.com/d5dff873-1b2c-473d-9e90-50c2aec6ae24.jpg"
     },
+    "ringpad": {
+      "title": "Sonic Adventure",
+      "platform": "Dreamcast",
+      "box_art": "https://thumbnails.libretro.com/Sega%20-%20Dreamcast/Named_Boxarts/Sonic%20Adventure%20%28Europe%29%20%28En%2CJa%2CFr%2CDe%2CEs%29.png"
+    },
     "snappad": {
       "title": "Pokémon Snap",
       "platform": "Nintendo 64",
