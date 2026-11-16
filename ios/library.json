@@ -444,7 +444,7 @@
       "repo": "https://github.com/chrissotraidis/ringpad",
       "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ringpad.png",
       "box_art": "https://thumbnails.libretro.com/Sega%20-%20Dreamcast/Named_Boxarts/Sonic%20Adventure%20%28Europe%29%20%28En%2CJa%2CFr%2CDe%2CEs%29.png",
-      "box_back": null,
+      "box_back": "https://images.launchbox-app.com/2b08d8da-bc43-4973-89ff-2aa5f1f9c623.jpg",
       "box_spine": null,
       "link": "padmint-ringpad",
       "checked": true
