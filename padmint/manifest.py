@@ -11,6 +11,10 @@ import platform
 import re
 import string
 
+# Removed recipe-only wrappers for another person's project. Local recipes must
+# not bring them back through build --repo, plan, doctor or tools.
+REMOVED_GAMES = frozenset({"melee-pc", "melee-pc-padmint"})
+
 SCHEMA_VERSION = 2
 KINDS = {"disc-translation", "emulator-shell", "decomp-patches", "upstream-engine", "clean-engine"}
 STATUSES = {"draft-untested", "experimental", "supported", "retired"}
@@ -456,6 +460,9 @@ def repository_manifest(repo):
 
 def manifest_for(game, repo=None):
     """The game repository's own manifest wins; otherwise the catalog's interim one."""
+    if game in REMOVED_GAMES:
+        raise ValueError(f"{game} was removed: PadMint only supports Chris's own ports; "
+                         "a local recipe cannot re-enable it")
     path = repository_manifest(repo) if repo is not None else None
     if path is not None:
         data = load_manifest(path)

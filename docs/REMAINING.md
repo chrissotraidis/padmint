@@ -257,8 +257,9 @@ problems:
   everywhere (seven of the eight run on iPad only; Emerald Tablet also runs on
   iPhone). `why_2` names KartPad's ready-to-play download as Android, and
   `update_help` tells Mac and Linux players to use the version button.
-- **The GitHub steps (`github_steps`) are one paragraph of about ten actions.**
-  Make them numbered steps.
+- **GitHub steps are already numbered.** Rechecked on 16 November: English,
+  Spanish and Portuguese each supply five steps, rendered as an ordered list.
+  The earlier paragraph-only item was stale.
 - **"Copy", "app", "build" and ".ipa" are used interchangeably** for what the
   player gets. Decide when each word is used and apply that everywhere.
 
@@ -314,10 +315,16 @@ Still open:
 ### 7. Ownership check for `build --repo`
 
 Normal library, `make`, `get` and cached-source routes reject removed games.
-`build --repo` still accepts any local `padmint.json`. Enforce the only-Chris's-ports
-rule there while keeping development of a new own-port recipe possible (see the
-[roadmap](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#next-implementation-pass)). Test with synthetic fixtures
-only.
+The local-recipe path now also refuses the known removed IDs `melee-pc` and
+`melee-pc-padmint` before reading a recipe (16 November; pending the next release).
+This covers `build --repo` and other commands using the same manifest lookup.
+Synthetic tests verify rejection and preserve new-recipe development with both
+`padmint.json` and legacy `padforge.json`.
+
+Still open: a broader ownership check for unknown local recipes. The removed-ID
+guard is not proof that another recipe belongs to Chris. Keep new own-port
+recipe development possible (see the
+[roadmap](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md#next-implementation-pass)).
 
 ### 8. Small items and drafts to reconcile
 
@@ -346,9 +353,9 @@ only.
   denied"** ([#255](https://github.com/chrissotraidis/padmint/issues/255), 9
   November): Windows refuses to rename a folder while antivirus still has a new
   file in it open. [bluewake#596](https://github.com/chrissotraidis/bluewake/pull/596)
-  makes BlueWake's builder wait and try again; it needs a BlueWake release to
-  reach players. Since 0.6.5, PadMint does the same for its own
-  renames after unpacking a tool and after downloading a game's source, where a
+  makes BlueWake's builder wait and try again and is included in published
+  BlueWake 0.12.0 (release ancestry rechecked on 16 November). Since 0.6.5,
+  PadMint does the same for its own renames after unpacking a tool and after downloading a game's source, where a
   failure meant downloading again. Checked on Windows 11 ARM64 with a file held
   open; the x64 PC that reported it hasn't built with either change.
 - The iPhone/iPad app changes in 0.6.5 (an older copy keeps Play when a game
