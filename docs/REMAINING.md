@@ -296,10 +296,16 @@ Recent completion:
 
 Still open:
 
-- **Previews are invisible.** Seven download-only apps publish prereleases,
-  which `/releases/latest` skips, so players never see those updates. Decide a
-  release channel for each game, then test preview-only, stable plus preview,
-  missing-asset and offline cases.
+- **Download-only previews (16 November, pending the next PadMint release).**
+  The download button already opens the full releases page, including previews;
+  the computer app's version lookup was still using stable-only `/releases/latest`.
+  It now reads the newest public release with an attached IPA, including previews,
+  skipping source-only releases and reporting no update news when offline.
+  PadMint itself and normal game builds keep their existing release selection.
+  Regression checks cover preview-only, stable plus preview, missing-IPA and
+  offline cases. Installed app versions often omit preview/build suffixes, so
+  same-version preview revisions still need manual comparison on the release page.
+  The iPad library does not install updates or verify installed game versions.
 - **A game update can silently break a Windows route.** The player check runs
   on a Mac, and the daily catalog check reads recipes without building. Add a
   Windows build to the release checklist (or CI) of each game with a Windows
@@ -402,7 +408,8 @@ decision on distribution first.
    ([comparison](BUILD_ROUTE_COPY.md#darkpad-is-not-technically-a-different-kind-of-personal-build)).
 2. **Publishing PadMint's Windows builds of IDO, binutils, Rabbitizer and
    asm-processor.** This unblocks SnapPad and AnnePad.
-3. **A release channel for preview-only apps.**
+3. **Any future automatic preview installation.** Download-only previews are
+   discoverable; installation stays a deliberate player action.
 4. **Whether PadMint should build desktop games or Android apps** in addition to
    iPhone/iPad.
 5. **Any new game in the catalog.**

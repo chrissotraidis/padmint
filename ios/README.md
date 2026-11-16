@@ -4,6 +4,11 @@ One library for the games you've built with
 [PadMint](https://github.com/chrissotraidis/padmint) and installed on the device.
 It uses PadMint's icon and lists only games from PadMint's catalog.
 
+The library refreshes its game list, but does not update itself or installed game
+apps. A green check means the game can be opened, not that its installed version
+is current. Build or download updates on your computer and install them over the
+existing app with the same signing identity to retain its data.
+
 - **Three layouts.** *Grid* has a banner for the game you played last, your
   installed games and then every cover (it replaces 0.6.5's separate Shelf and
   Grid; either saved choice opens it). *Carousel* shows

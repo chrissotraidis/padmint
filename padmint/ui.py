@@ -232,8 +232,26 @@ def library():
 VERSIONS = {"done": False, "padmint": None, "games": {}}
 
 
-def release_tag(repo_url):
-    """A repository's latest release tag, from where /releases/latest lands."""
+def release_tag(repo_url, *, download=False):
+    """Latest stable tag, or newest public IPA release for a download-only game.
+
+    The public listing includes previews but excludes drafts. Require an attached
+    IPA so a source-only release does not advertise an unavailable app. This is
+    discovery only; the download instructions still require checksum verification.
+    """
+    if download:
+        base = repo_url.removesuffix(".git").rstrip("/")
+        for tag in cli.release_tags(base)[:cli.RECENT_RELEASES]:
+            quoted = urllib.parse.quote(tag, safe="")
+            try:
+                with tools.open_url(f"{base}/releases/expanded_assets/{quoted}") as response:
+                    page = response.read().decode("utf-8", "replace")
+            except (RuntimeError, OSError):
+                continue
+            prefix = urllib.parse.urlsplit(base).path + "/releases/download/" + quoted + "/"
+            if re.search(r'href="' + re.escape(prefix) + r'[^"<>]+\.ipa"', page, re.IGNORECASE):
+                return tag
+        return None
     with tools.open_url(repo_url.removesuffix(".git").rstrip("/") + "/releases/latest") as response:
         landed = response.geturl()
     return urllib.parse.unquote(landed.rsplit("/releases/tag/", 1)[1].split("?")[0].strip("/")) \
@@ -256,7 +274,7 @@ def check_versions():
                     if not source.startswith("PadMint's built-in copy"):
                         RECIPES[game] = recipe
             else:
-                VERSIONS["games"][game] = release_tag(entry["repo_url"])
+                VERSIONS["games"][game] = release_tag(entry["repo_url"], download=bool(entry.get("download")))
         except Exception:  # offline: the page simply shows no update news
             pass
 

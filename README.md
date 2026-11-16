@@ -68,6 +68,14 @@ extract it and open PadMint from the **new folder**. The game list ships inside
 that folder, so refreshing the browser or opening the old folder keeps the old
 list. Your game files, builds and saves stay where they are.
 
+**Game updates:** publishing a release does not replace an app already on your
+phone or tablet. Build or download the new copy, then install it over the existing
+app with the same signing identity; do not delete the app and its saves first.
+For **Download the app** games, the computer app looks for the newest public
+release with an IPA, including previews. Read the release notes and verify its
+checksum before installing. Normal game builds keep their existing latest-release
+recipe selection; PadMint itself follows stable releases.
+
 ## How it works
 
 No PadMint download contains a game. Each Pad port is open source code without
@@ -267,9 +275,9 @@ mark and a Play button.
 
 In the app:
 
-- **Four layouts**, switched from the toolbar: a shelf with the game you played
-  last, a grid of every game, a carousel of 3D boxes you swipe through, and a
-  compact list.
+- **Three layouts**, switched from the toolbar: a grid with your recently played
+  and installed games, a carousel of 3D boxes you swipe through, and a compact
+  list.
 - **Search, sorting and console filters**, and a switch to show only installed
   games.
 - **A page for each game** with Play. A game you haven't installed says how to
