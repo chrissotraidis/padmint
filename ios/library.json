@@ -436,6 +436,20 @@
       "checked": false
     },
     {
+      "id": "ringpad",
+      "name": "RingPad",
+      "title": "Sonic Adventure",
+      "platform": "Dreamcast",
+      "game": "Sonic Adventure (Dreamcast)",
+      "repo": "https://github.com/chrissotraidis/ringpad",
+      "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/ringpad.png",
+      "box_art": "https://thumbnails.libretro.com/Sega%20-%20Dreamcast/Named_Boxarts/Sonic%20Adventure%20%28Europe%29%20%28En%2CJa%2CFr%2CDe%2CEs%29.png",
+      "box_back": null,
+      "box_spine": null,
+      "link": "padmint-ringpad",
+      "checked": true
+    },
+    {
       "id": "snappad",
       "name": "SnapPad",
       "title": "Pokémon Snap",
@@ -447,7 +461,7 @@
       "box_back": "https://images.launchbox-app.com/57b30e6f-c14e-4ace-84e5-cde12f114fcc.jpg",
       "box_spine": "https://images.launchbox-app.com/19adedb1-360f-44e8-aa37-5a5b8d341e64.jpg",
       "link": "padmint-snappad",
-      "checked": true
+      "checked": false
     },
     {
       "id": "spaghettipad",
