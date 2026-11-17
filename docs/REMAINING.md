@@ -381,12 +381,15 @@ recipe development possible (see the
   Third round (15 November): A plays and View opens a game's page, the right
   stick turns boxes, a touch hides the selection without pulling the page back,
   and the game page is tidier. Simulator only: check it on the iPad.
-- Replace HarkinianPad's card art (`art/harkinianpad.png`, still the old
-  ship's wheel) with the blue ocarina from
-  [harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41):
-  a 144×144 PNG made from HarkinianPad's `assets/AppIcon.appiconset/AppIcon.png`,
-  to ship in a PadMint release. HarkinianPad v0.2.3 published the new icon on
-  15 November; the PadMint card-art change is still pending.
+- HarkinianPad's card art (`art/harkinianpad.png`) is now the blue ocarina from
+  [HarkinianPad v0.2.3](https://github.com/chrissotraidis/harkinianpad/releases/tag/v0.2.3)
+  ([harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41)), a
+  144×144 PNG made from HarkinianPad's `assets/AppIcon.appiconset/AppIcon.png`.
+  The iPhone/iPad library loads it from `main` already; the Mac app shows it
+  from the next PadMint release.
+- A finished step's summary (such as *You add it inside the app after
+  installing*) now wraps instead of being cut off with "…" (17 November;
+  pending the next release).
 - MaskPad's card art (`art/maskpad.png`) is now the crescent moon with a
   controller from [MaskPad v0.2.3](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.3)
   ([maskpad#26](https://github.com/chrissotraidis/maskpad/pull/26)), a 144×144
