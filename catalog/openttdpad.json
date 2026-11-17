@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "id": "openttdpad",
+  "repo_url": "https://github.com/chrissotraidis/OpenTTDPad",
+  "name": "OpenTTDPad",
+  "game": "OpenTTD (Transport Tycoon Deluxe)",
+  "player_targets": [
+    "ios"
+  ],
+  "free_space_gb": 4,
+  "player_game_file": "in-app",
+  "player_help": "https://github.com/chrissotraidis/OpenTTDPad#get-openttdpad",
+  "reviewed_revision": null,
+  "notes": "Manifest owned by the game repository: OpenTTD 15.3 with the iPad shell and pinned iOS dependencies, built with free OpenGFX, OpenSFX and OpenMSX content. Nothing to supply; original Transport Tycoon Deluxe data is optional and added in the app.",
+  "manifest": null
+}

@@ -366,6 +366,20 @@
       "checked": true
     },
     {
+      "id": "openttdpad",
+      "name": "OpenTTDPad",
+      "title": "OpenTTD",
+      "platform": "PC",
+      "game": "OpenTTD (Transport Tycoon Deluxe)",
+      "repo": "https://github.com/chrissotraidis/OpenTTDPad",
+      "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/openttdpad.png",
+      "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1536610/library_600x900_2x.jpg",
+      "box_back": null,
+      "box_spine": null,
+      "link": "padmint-openttdpad",
+      "checked": true
+    },
+    {
       "id": "ottsel",
       "name": "Ottsel",
       "title": "Jak and Daxter: The Precursor Legacy",
@@ -447,7 +461,7 @@
       "box_back": "https://images.launchbox-app.com/2b08d8da-bc43-4973-89ff-2aa5f1f9c623.jpg",
       "box_spine": null,
       "link": "padmint-ringpad",
-      "checked": true
+      "checked": false
     },
     {
       "id": "snappad",
