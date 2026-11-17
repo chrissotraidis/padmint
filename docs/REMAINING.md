@@ -297,7 +297,7 @@ Recent completion:
 
 Still open:
 
-- **Download-only previews (16 November, pending the next PadMint release).**
+- **Download-only previews (shipped in 0.6.7).**
   The download button already opens the full releases page, including previews;
   the computer app's version lookup was still using stable-only `/releases/latest`.
   It now reads the newest public release with an attached IPA, including previews,
@@ -316,7 +316,7 @@ Still open:
 
 Normal library, `make`, `get` and cached-source routes reject removed games.
 The local-recipe path now also refuses the known removed IDs `melee-pc` and
-`melee-pc-padmint` before reading a recipe (16 November; pending the next release).
+`melee-pc-padmint` before reading a recipe (shipped in 0.6.7).
 This covers `build --repo` and other commands using the same manifest lookup.
 Synthetic tests verify rejection and preserve new-recipe development with both
 `padmint.json` and legacy `padforge.json`.
@@ -385,16 +385,13 @@ recipe development possible (see the
   [HarkinianPad v0.2.3](https://github.com/chrissotraidis/harkinianpad/releases/tag/v0.2.3)
   ([harkinianpad#41](https://github.com/chrissotraidis/harkinianpad/pull/41)), a
   144×144 PNG made from HarkinianPad's `assets/AppIcon.appiconset/AppIcon.png`.
-  The iPhone/iPad library loads it from `main` already; the Mac app shows it
-  from the next PadMint release.
+  Shipped in 0.6.8.
 - A finished step's summary (such as *You add it inside the app after
-  installing*) now wraps instead of being cut off with "…" (17 November;
-  pending the next release).
+  installing*) now wraps instead of being cut off with "…" (shipped in 0.6.8).
 - MaskPad's card art (`art/maskpad.png`) is now the crescent moon with a
   controller from [MaskPad v0.2.3](https://github.com/chrissotraidis/maskpad/releases/tag/v0.2.3)
   ([maskpad#26](https://github.com/chrissotraidis/maskpad/pull/26)), a 144×144
-  PNG made from MaskPad's `ios/IconSource.png`. The iPhone/iPad library loads
-  it from `main` already; the Mac app shows it from the next PadMint release.
+  PNG made from MaskPad's `ios/IconSource.png`. Shipped in 0.6.6.
 - [#172](https://github.com/chrissotraidis/padmint/pull/172): iPhone SDK headers
   for game modules (draft). It belongs to step 3 and waits for the first game
   that needs it.
