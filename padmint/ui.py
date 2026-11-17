@@ -887,9 +887,9 @@ button.main:active:not(:disabled){transform:translateY(1px)}
 @media (max-width:620px){.lib,.item{flex-wrap:wrap}.side{width:100%;justify-content:flex-start;padding-left:calc(52px + .95rem)}#hero{flex-direction:column;align-items:flex-start}}
 
 .card.done{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 1.2rem;animation:rise .25s both}
-.card.done>:not(h2):not(.sum){display:none!important}.card.done h2{margin:0;font-size:.95rem;color:var(--muted);font-weight:600}
-.sum{display:none}.card.done .sum{display:flex;align-items:center;gap:.9rem;min-width:0}
-.sum b{color:var(--mint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card.done>:not(h2):not(.sum){display:none!important}.card.done h2{margin:0;font-size:.95rem;color:var(--muted);font-weight:600;white-space:nowrap}
+.sum{display:none}.card.done .sum{display:flex;align-items:center;justify-content:flex-end;gap:.9rem;min-width:0}
+.sum b{color:var(--mint);text-align:right;overflow-wrap:anywhere}
 button.btn.link{background:none;border:0;color:var(--mint);font-weight:650;padding:.2rem .3rem}button.btn.link:hover{text-decoration:underline}
 #nowBox{display:flex;align-items:center;gap:1rem;margin:1.4rem 0 0;padding:1rem 1.1rem;border-radius:16px;cursor:pointer;border:1px solid color-mix(in srgb,var(--mint) 50%,var(--line));background:linear-gradient(100deg,color-mix(in srgb,var(--mint) 16%,var(--panel)),var(--panel));animation:rise .3s both}
 #nowBox.hidden{display:none}#nowBox.failed{border-color:var(--bad)}#nowBox .bar{margin:.45rem 0 0}
