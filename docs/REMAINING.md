@@ -420,12 +420,6 @@ decision on distribution first.
 4. **Whether PadMint should build desktop games or Android apps** in addition to
    iPhone/iPad.
 5. **Any new game in the catalog.**
-6. **Ask GitHub Support to refresh the Contributors list.** The sidebar still
-   shows Claude on 18 November 2026, but no commit on `main`, any branch or any
-   tag credits it any more, and the contributors API lists only Chris and
-   DoubleGate. The one remaining Claude co-author line is in DoubleGate's commit
-   `a48d163`, kept only by the read-only PR refs of #264 and #266. Only the repo
-   owner can ask Support to rebuild the cached list and, if needed, remove those PR refs.
 
 ## Keeping this page true
 
