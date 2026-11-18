@@ -5,28 +5,36 @@
 <h1 align="center">PadMint</h1>
 
 <p align="center">
-  <strong>Build your own iPhone, iPad and Mac copy of a game from your own game file.</strong>
+  <strong>Build the Pad game ports from your own game files, then play them from one library on your iPhone or iPad.</strong>
 </p>
 
 <p align="center">
   <a href="https://github.com/chrissotraidis/padmint/releases/latest"><img alt="Latest PadMint" src="https://img.shields.io/github/v/release/chrissotraidis/padmint?label=PadMint&color=34C759"></a>
-  <img alt="Windows, Mac and Linux" src="https://img.shields.io/badge/runs%20on-Windows%20%7C%20Mac%20%7C%20Linux-0A84FF">
+  <img alt="Builder: Windows, Mac and Linux" src="https://img.shields.io/badge/builder-Windows%20%7C%20Mac%20%7C%20Linux-0A84FF">
+  <img alt="Library: iPhone and iPad" src="https://img.shields.io/badge/library-iPhone%20%7C%20iPad-5E5CE6">
   <img alt="Game files not included" src="https://img.shields.io/badge/game%20files-not%20included-FF453A">
   <a href="https://discord.gg/xwHfUD2bxW"><img alt="Discord" src="https://img.shields.io/badge/Discord-ask%20for%20help-5865F2?logo=discord&amp;logoColor=white"></a>
 </p>
 
-PadMint is a free app that builds the Pad game ports (KartPad, BlueWake, HaloPad
-and three dozen more) for your iPhone, iPad, Mac or Android phone. You pick a game, give
-it your own disc image or ROM when the game needs one, and PadMint downloads the
-source and free tools, builds your copy and tells you how to install it.
+PadMint is two free apps that work together:
 
-PadMint contains no games, and your game file never leaves your computer. Once
-your games are on your iPhone or iPad, the
-[PadMint app](#padmint-on-your-iphone-or-ipad) keeps them in one library.
+- **The builder** runs on your Windows PC, Mac or Linux computer. You pick one of
+  the Pad game ports (KartPad, BlueWake, HaloPad and three dozen more), give it
+  your own disc image or ROM when the game needs one, and PadMint downloads the
+  port's source and free tools, builds your copy for iPhone, iPad, Mac or Android
+  and tells you how to install it.
+- **The library** runs on your iPhone or iPad. It gathers every game you've
+  installed into one home screen of box art, as a grid, a carousel of 3D boxes or
+  a list, and opens each one with a Play button or a game controller.
 
 <p align="center">
-  <img src="docs/images/padmint-library.jpg" width="820" alt="PadMint on a Mac: the sidebar with My games, Updates, All games, devices and Storage, and the game library with search, a systems menu and groups">
+  <img src="docs/images/padmint-library.jpg" height="340" alt="The PadMint builder on a Mac: the sidebar with My games, Updates, All games, devices and Storage, and the game library with search, a systems menu and groups">
+  &nbsp;
+  <img src="docs/images/padmint-ios-library.jpg" height="340" alt="The PadMint library on an iPad: a Continue Playing banner with a Play button, a Your games row and the All games grid, with a green check mark on each installed game">
 </p>
+<p align="center"><sub>Left: the builder on a Mac. Right: the library on an iPad.</sub></p>
+
+PadMint contains no games, and your game file never leaves your computer.
 
 ## Quick start
 
@@ -58,9 +66,9 @@ copy**. A first build takes from a few minutes to a few hours.
 ([steps below](#install-on-iphone-or-ipad)). The page also explains Mac and
 Android installs.
 
-**5. Optional: add the PadMint app** to the same iPhone or iPad
+**5. Add the PadMint library** to the same iPhone or iPad
 ([steps below](#padmint-on-your-iphone-or-ipad)). It lines up every game you've
-installed in one library, each with a Play button.
+installed in one place, each with a Play button.
 
 **Updating PadMint:** on a Mac or Linux, click the version button at the bottom
 of the sidebar when it offers an update. On Windows, download the ZIP again,
@@ -76,7 +84,7 @@ release with an IPA, including previews. Read the release notes and verify its
 checksum before installing. Normal game builds keep their existing latest-release
 recipe selection; PadMint itself follows stable releases.
 
-## How it works
+## How the builder works
 
 No PadMint download contains a game. Each Pad port is open source code without
 the game in it, and PadMint combines that code with your own copy of the game on
@@ -252,16 +260,13 @@ covers Mac apps, KartPad on Android, HaloPad's signing and installing from Linux
 Everything PadMint makes comes from your copy of the game. Please don't share
 it, and don't ask others for theirs.
 
-## PadMint on your iPhone or iPad
+<a id="padmint-on-your-iphone-or-ipad"></a>
+## The PadMint library on iPhone and iPad
 
-<p align="center">
-  <img src="docs/images/padmint-ios-library.jpg" width="420" alt="PadMint on an iPad: a Continue Playing banner with a Play button, a Your games row and the All games grid, with a green check mark on each installed game">
-</p>
-
-PadMint also comes as an app for iPhone and iPad: one library for the games
-you've built and installed. It doesn't build or download games. You make each
-game on your computer as above, and the app then shows it with a green check
-mark and a Play button.
+The library is PadMint's home screen for your games: every game you've built
+and installed shows up with a green check mark and a Play button. It doesn't
+build or download games. You make each game on your computer as above, and the
+library finds it.
 
 1. Download `PadMint-ios-unsigned.ipa` from the
    [latest release](https://github.com/chrissotraidis/padmint/releases/latest).
@@ -277,13 +282,17 @@ mark and a Play button.
 
 In the app:
 
-- **Three layouts**, switched from the toolbar: a grid with your recently played
-  and installed games, a carousel of 3D boxes you swipe through, and a compact
-  list.
+- **Three layouts**, switched from the toolbar: a grid that opens on the game you
+  played last and your installed games, a carousel of 3D boxes shaped like each
+  console's case that you swipe through, and a compact list.
 - **Search, sorting and console filters**, and a switch to show only installed
   games.
-- **A page for each game** with Play. A game you haven't installed says how to
-  build it with PadMint instead.
+- **A page for each game** with Play, your play history and a link to its port.
+  A game you haven't installed says how to build it with PadMint instead.
+- **Controller support.** With a controller connected, the library works like a
+  console's home screen: the D-pad moves between games, A plays, B goes back
+  and the shoulder buttons switch consoles.
+- **Your own covers.** Long-press any game to use a picture from Photos.
 - TribesPad appears as the three games it holds.
 
 Good to know:
