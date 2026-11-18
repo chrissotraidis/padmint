@@ -28,9 +28,9 @@ PadMint is two free apps that work together:
   a list, and opens each one with a Play button or a game controller.
 
 <p align="center">
-  <img src="docs/images/padmint-library.jpg" height="340" alt="The PadMint builder on a Mac: the sidebar with My games, Updates, All games, devices and Storage, and the game library with search, a systems menu and groups">
+  <img src="docs/images/padmint-library.jpg" width="520" alt="The PadMint builder on a Mac: the sidebar with My games, Updates, All games, devices and Storage, and the game library with search, a systems menu and groups">
   &nbsp;
-  <img src="docs/images/padmint-ios-library.jpg" height="340" alt="The PadMint library on an iPad: a Continue Playing banner with a Play button, a Your games row and the All games grid, with a green check mark on each installed game">
+  <img src="docs/images/padmint-ios-library.jpg" width="219" alt="The PadMint library on an iPad: a Continue Playing banner with a Play button, a Your games row and the All games grid, with a green check mark on each installed game">
 </p>
 <p align="center"><sub>Left: the builder on a Mac. Right: the library on an iPad.</sub></p>
 
