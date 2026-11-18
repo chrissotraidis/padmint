@@ -302,10 +302,9 @@ Still open:
   choose: players download the free official data in the app. The entry offers
   the iPad build and holds back the Mac app (a source build that needs launch
   settings and a separate bot runtime). Its library card uses ETPad's own
-  poster art, unchecked so no other game loses its launch-link check. It waits
-  for ETPad v0.1.0, published as a normal release (PadMint skips pre-releases)
-  with `ETPad-v0.1.0-padmint.json` attached. Then: run the player check without
-  a checkout, merge, and release PadMint with a STATUS entry.
+  poster art; it takes one of the 25 checked launch links, so ProjectReach now
+  says *Tap Play to check*. Ships in PadMint 0.6.10 with ETPad v0.1.0, a normal
+  release (PadMint skips pre-releases) with `ETPad-v0.1.0-padmint.json` attached.
 - **Download-only previews (shipped in 0.6.7).**
   The download button already opens the full releases page, including previews;
   the computer app's version lookup was still using stable-only `/releases/latest`.
