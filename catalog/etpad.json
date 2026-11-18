@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "etpad",
+  "repo_url": "https://github.com/chrissotraidis/etpad",
+  "name": "ETPad",
+  "game": "Wolfenstein: Enemy Territory (ET: Legacy)",
+  "player_targets": [
+    "ios"
+  ],
+  "unoffered_targets": {
+    "macos": "ETPad's Apple silicon Mac app is a source build that needs launch settings and a separately prepared bot runtime. PadMint offers the iPad build; offering the Mac app needs its own player check and finishing steps."
+  },
+  "free_space_gb": 5,
+  "player_game_file": "in-app",
+  "player_help": "https://github.com/chrissotraidis/etpad#get-etpad",
+  "reviewed_revision": null,
+  "notes": "Manifest owned by the game repository: ET: Legacy 2.86.2 with ETPad's iPad app, built by scripts/build-etpad.sh. Nothing to supply; players download the free official Wolfenstein: Enemy Territory data in the app.",
+  "manifest": null,
+  "before_build": {
+    "commands": [
+      "brew install cmake ninja xcodegen"
+    ]
+  },
+  "player_next": {
+    "ios": {
+      "sideload": true,
+      "steps": [
+        "Open ETPad and tap Download Free Game Data. ETPad fetches Splash Damage's free Enemy Territory release and verifies it, or you can import your own pak0.pk3, pak1.pk3 and pak2.pk3 from Files.",
+        "Tap Play Online to join a live ET: Legacy server, or Practice with Bots for an offline round.",
+        "Install updates over the existing app to keep your settings and game data."
+      ]
+    }
+  }
+}

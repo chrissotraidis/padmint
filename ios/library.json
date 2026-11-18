@@ -226,6 +226,20 @@
       "checked": false
     },
     {
+      "id": "etpad",
+      "name": "ETPad",
+      "title": "Wolfenstein: Enemy Territory",
+      "platform": "PC",
+      "game": "Wolfenstein: Enemy Territory (ET: Legacy)",
+      "repo": "https://github.com/chrissotraidis/etpad",
+      "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/etpad.png",
+      "box_art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/etpad-box.jpg",
+      "box_back": null,
+      "box_spine": null,
+      "link": "padmint-etpad",
+      "checked": false
+    },
+    {
       "id": "f0x",
       "name": "F0X",
       "title": "F-Zero X",

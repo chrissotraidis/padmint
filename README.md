@@ -161,6 +161,7 @@ column works from any computer with a browser.
 | CTRPad | Crash Team Racing (PlayStation) | ✓ + Mac app | — | ✓ |
 | DarkPad | Perfect Dark (N64) | ✓ | — | Exp. ² |
 | DinoPad | Dinosaur Planet (N64 prototype) | ✓ | Exp. | — |
+| ETPad | Wolfenstein: Enemy Territory (ET: Legacy) | ✓ | — | — |
 | F0X | F-Zero X (N64) | ✓ + Mac app | — | ✓ |
 | GalaxyPad | Super Mario Galaxy (Wii) | ✓ | — | ✓ |
 | GoldenPad | GoldenEye 007 (N64) | ✓ | Exp. | — |

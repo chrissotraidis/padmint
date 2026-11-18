@@ -107,6 +107,11 @@
       "platform": "PC",
       "box_art": "https://images.gog-statics.com/bf97d30ca61ed4a8ffbb75380a2a8f59ac3efabdb9cf6c9a397d53a652df9fcb_glx_vertical_cover.jpg"
     },
+    "etpad": {
+      "title": "Wolfenstein: Enemy Territory",
+      "platform": "PC",
+      "box_art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/etpad-box.jpg"
+    },
     "f0x": {
       "title": "F-Zero X",
       "platform": "Nintendo 64",
