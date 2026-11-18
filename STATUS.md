@@ -1,10 +1,12 @@
 # PadMint status
 
-What each recent PadMint release changed. Updated **17 November 2026**.
+What each recent PadMint release changed. Updated **18 November 2026**.
 
 **Next work:** [What PadMint still needs](docs/REMAINING.md) is the current
 queue. Older releases, from 0.5.22 back, and the October build evidence are in
 [STATUS-HISTORY.md](STATUS-HISTORY.md).
+
+**v0.6.10:** adds [ETPad](https://github.com/chrissotraidis/etpad), Wolfenstein: Enemy Territory on iPad through ET: Legacy 2.86.2, with live servers, offline bots, touch and controller play. There is no game file to choose: ETPad downloads Splash Damage's free official data in the app. On an Apple Silicon Mac with Xcode and `brew install cmake ninja xcodegen`, choose ETPad and PadMint builds a personal IPA from the published [v0.1.0](https://github.com/chrissotraidis/etpad/releases/tag/v0.1.0) release in about 13 minutes using about 3.2 GB. The player check passed against the clean release checkout with Apple's Python 3.9 and an empty PadMint folder (gate PASS, no findings, launch link `padmint-etpad`), and a development-signed build of the release commit launched on an iPad Pro 12.9-inch (6th generation) into an offline bot round and the live server list. ETPad's Mac app stays unoffered for now. The iPhone/iPad library lists it under PC with ETPad's poster art; ETPad takes one of the 25 links the library checks, so ProjectReach now says *Tap Play to check*.
 
 **v0.6.9:** adds [OpenTTDPad](https://github.com/chrissotraidis/OpenTTDPad), OpenTTD 15.3 on iPad with touch-first construction. There is no game file to choose: the free OpenGFX, OpenSFX and OpenMSX sets are built in. On an Apple Silicon Mac with Xcode 26 or newer, choose OpenTTDPad and PadMint builds a personal IPA from the published [v0.2.0](https://github.com/chrissotraidis/OpenTTDPad/releases/tag/v0.2.0) release in about 7 minutes using about 2 GB. The player check passed against that release with Apple's Python 3.9 and an empty PadMint folder, and the PadMint-built copy installed and launched on an iPad Pro 12.9-inch (6th generation) with iPadOS 27.2.1. The iPhone/iPad library lists it under PC with the OpenTTD logo; OpenTTDPad takes one of the 25 links the library checks, so RingPad now says *Tap Play to check*.
 

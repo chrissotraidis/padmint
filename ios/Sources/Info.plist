@@ -43,6 +43,7 @@
 		<string>padmint-ctrpad</string>
 		<string>padmint-darkpad</string>
 		<string>padmint-dinopad</string>
+		<string>padmint-etpad</string>
 		<string>padmint-f0x</string>
 		<string>padmint-galaxypad</string>
 		<string>padmint-goldenpad</string>
@@ -55,7 +56,6 @@
 		<string>padmint-openttdpad</string>
 		<string>padmint-ottsel</string>
 		<string>padmint-paperpad</string>
-		<string>padmint-projectreach</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

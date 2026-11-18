@@ -124,7 +124,7 @@ that work on the computer you're using:
 
 | Your computer | Builds here | Builds on GitHub's Mac |
 |---|---|---|
-| **Mac with Apple Silicon** (M1 or newer) | All 33 games for iPhone/iPad, 12 of them also as Mac apps, and Lemonade Remixed for Mac | 17 games, under **Other ways to build** |
+| **Mac with Apple Silicon** (M1 or newer) | All 34 games for iPhone/iPad, 12 of them also as Mac apps, and Lemonade Remixed for Mac | 17 games, under **Other ways to build** |
 | **Windows PC** | 9 games, experimental | 17 games |
 | **Linux** | KartPad and SunPad, experimental | 17 games |
 | **Intel Mac** | KartPad, experimental | 17 games |
@@ -161,6 +161,7 @@ column works from any computer with a browser.
 | CTRPad | Crash Team Racing (PlayStation) | ✓ + Mac app | — | ✓ |
 | DarkPad | Perfect Dark (N64) | ✓ | — | Exp. ² |
 | DinoPad | Dinosaur Planet (N64 prototype) | ✓ | Exp. | — |
+| ETPad | Wolfenstein: Enemy Territory (ET: Legacy) | ✓ | — | — |
 | F0X | F-Zero X (N64) | ✓ + Mac app | — | ✓ |
 | GalaxyPad | Super Mario Galaxy (Wii) | ✓ | — | ✓ |
 | GoldenPad | GoldenEye 007 (N64) | ✓ | Exp. | — |

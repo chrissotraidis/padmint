@@ -226,6 +226,20 @@
       "checked": false
     },
     {
+      "id": "etpad",
+      "name": "ETPad",
+      "title": "Wolfenstein: Enemy Territory",
+      "platform": "PC",
+      "game": "Wolfenstein: Enemy Territory (ET: Legacy)",
+      "repo": "https://github.com/chrissotraidis/etpad",
+      "art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/etpad.png",
+      "box_art": "https://raw.githubusercontent.com/chrissotraidis/padmint/main/art/etpad-box.jpg",
+      "box_back": null,
+      "box_spine": null,
+      "link": "padmint-etpad",
+      "checked": true
+    },
+    {
       "id": "f0x",
       "name": "F0X",
       "title": "F-Zero X",
@@ -433,7 +447,7 @@
       "box_back": "https://images.launchbox-app.com/3c79936a-0aec-4df9-bc55-34284fa00979.jpg",
       "box_spine": "https://images.launchbox-app.com/0ccb6a54-93b1-4233-ac14-3a00e13fcfa4.jpg",
       "link": "padmint-projectreach",
-      "checked": true
+      "checked": false
     },
     {
       "id": "ratouch",
