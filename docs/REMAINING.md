@@ -348,9 +348,9 @@ recipe development possible (see the
   installed earlier show up only after a rebuild, and iOS 27 lets an app check at most
   25 links, so six games say *Tap Play to check*.
   A ready-made app whose catalog entry has `"answers_link": true` now gets its link in
-  the library, after the 25 checked links of PadMint-built games (19 November:
-  VaultPad and Emerald Tablet, whose iPad builds answer `padmint-<game>://`). They say
-  *Tap Play to check* until opened once from PadMint.
+  the library, after the 25 checked links of PadMint-built games (19 November: all
+  eight ready-made apps, whose current iPad builds answer `padmint-<game>://`). They
+  say *Tap Play to check* until opened once from PadMint.
 - **A SunPad 0.2.3 player's rebuild stopped with "Backend has local changes"**
   (7 November) without saying what changed. PadMint 0.5.31 did not reproduce it
   on an M3 Max: a first build (35 min), an interrupted dependency download and a

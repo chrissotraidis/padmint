@@ -138,7 +138,7 @@
       "box_art": "https://images.gog-statics.com/f1309e35fc9db9fb4fe280bc3a99c6029b63af50554cbee494ac0bffec444608_glx_vertical_cover.jpg",
       "box_back": "https://images.launchbox-app.com/bcde06e0-42ff-47ab-ba30-676eb7ae739e.jpg",
       "box_spine": null,
-      "link": null,
+      "link": "padmint-caesarpad",
       "checked": false
     },
     {
@@ -166,7 +166,7 @@
       "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1812390/library_600x900_2x.jpg",
       "box_back": "https://images.launchbox-app.com/2da5be0e-e80a-44f9-aae1-514f945dd0bc.jpg",
       "box_spine": null,
-      "link": null,
+      "link": "padmint-daggerpad",
       "checked": false
     },
     {
@@ -194,7 +194,7 @@
       "box_art": "https://upload.wikimedia.org/wikipedia/en/3/3a/Diablo_Coverart.png",
       "box_back": "https://images.launchbox-app.com/ac0ae857-cbeb-48b6-97c7-0fcb17bc925e.jpg",
       "box_spine": "https://images.launchbox-app.com/28322126-9208-43d7-a735-bb96d08b1641.jpg",
-      "link": null,
+      "link": "padmint-deviltouch",
       "checked": false
     },
     {
@@ -320,7 +320,7 @@
       "box_art": "https://upload.wikimedia.org/wikipedia/en/1/15/Kid_Pix_1.0_About.png",
       "box_back": null,
       "box_spine": null,
-      "link": null,
+      "link": "padmint-kidpad",
       "checked": false
     },
     {
@@ -432,7 +432,7 @@
       "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Warcraft%20II%20-%20Tides%20of%20Darkness.png",
       "box_back": "https://images.launchbox-app.com/48af818b-5be3-4766-b075-552ef12b7d56.jpg",
       "box_spine": null,
-      "link": null,
+      "link": "padmint-peonpad",
       "checked": false
     },
     {
@@ -460,7 +460,7 @@
       "box_art": "https://thumbnails.libretro.com/DOS/Named_Boxarts/Command%20and%20Conquer%20-%20Red%20Alert.png",
       "box_back": "https://images.launchbox-app.com/d5dff873-1b2c-473d-9e90-50c2aec6ae24.jpg",
       "box_spine": null,
-      "link": null,
+      "link": "padmint-ratouch",
       "checked": false
     },
     {
