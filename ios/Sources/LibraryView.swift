@@ -22,6 +22,7 @@ struct LibraryView: View {
     /// With a controller connected the library has no search field until the player asks
     /// for one: iPadOS's own controller focus reaches a text field and opens its keyboard.
     @State private var controller = false
+    @State private var onSecondScreen = false
     @State private var searchRequested = false
     /// A game was opened from here; the search closes when PadMint is back in front.
     @State private var launched = false
@@ -108,8 +109,11 @@ struct LibraryView: View {
         .focusEffectDisabled()
         // Space for the hint bar, so it never covers the games or a page's last row.
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            if controller { ControllerHints(items: hints) }
+            // A TV crops its edges, and iPadOS puts the window's handle at the bottom
+            // middle of a second screen, so the bar sits higher there.
+            if controller { ControllerHints(items: hints).padding(.bottom, onSecondScreen ? 36 : 0) }
         }
+        .background { SecondScreenProbe(onSecondScreen: $onSecondScreen) }
         .preferredColorScheme(appearance.scheme)
         .environment(\.gameActions, GameActions(play: play, open: { path.append($0) }, chooseCover: chooseCover,
                                                 showConsole: showConsole))
@@ -291,6 +295,39 @@ private struct ControllerHints: View {
         .padding(.bottom, 6)
         .allowsHitTesting(false)
         .accessibilityHidden(true)
+    }
+}
+
+/// Tells whether the library's window is on a second screen (a TV or monitor), which
+/// often crops the picture's edges.
+private struct SecondScreenProbe: UIViewRepresentable {
+    @Binding var onSecondScreen: Bool
+
+    func makeUIView(context: Context) -> Probe { Probe { onSecondScreen = $0 } }
+    func updateUIView(_ view: Probe, context: Context) {}
+
+    final class Probe: UIView {
+        private let report: (Bool) -> Void
+        private var last: Bool?
+
+        init(report: @escaping (Bool) -> Void) {
+            self.report = report
+            super.init(frame: .zero)
+            isUserInteractionEnabled = false
+        }
+        required init?(coder: NSCoder) { nil }
+
+        override func didMoveToWindow() { super.didMoveToWindow(); check() }
+        // Moving the window to another screen resizes it.
+        override func layoutSubviews() { super.layoutSubviews(); check() }
+
+        private func check() {
+            guard let screen = window?.windowScene?.screen else { return }
+            let second = screen !== UIScreen.screens.first
+            guard second != last else { return }
+            last = second
+            DispatchQueue.main.async { self.report(second) }
+        }
     }
 }
 
