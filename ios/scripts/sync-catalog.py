@@ -44,8 +44,10 @@ def games(padmint, covers):
             "box_art": cover["box_art"],
             "box_back": cover.get("box_back"),
             "box_spine": cover.get("box_spine"),
-            # Ready-made apps aren't built by PadMint, so they answer to no link yet.
-            "link": f"padmint-{entry['id']}" if built else None,
+            # Ready-made apps answer to no link unless their catalog entry says so
+            # ("answers_link": true: the app declares padmint-<game>://).
+            "link": f"padmint-{entry['id']}" if built or entry.get("answers_link") else None,
+            "_ready_made": not built,
         }
         found.append(game)
         # One app holding several games (TribesPad: Starsiege: Tribes, Tribes 2 and
@@ -61,8 +63,12 @@ def main():
     padmint = ROOT.parent
     covers = json.loads((ROOT / "covers.json").read_text(encoding="utf-8"))["games"]
     listed = games(padmint, covers)
-    links = list(dict.fromkeys(game["link"] for game in listed if game["link"]))[:CHECKED_LINKS]
+    # PadMint-built games come first, so adding a ready-made link never takes a
+    # checked slot from one of them.
+    ordered = sorted(listed, key=lambda game: game["_ready_made"])
+    links = list(dict.fromkeys(game["link"] for game in ordered if game["link"]))[:CHECKED_LINKS]
     for game in listed:
+        del game["_ready_made"]
         game["checked"] = game["link"] in links
     (ROOT / "library.json").write_text(json.dumps({"schema_version": 1, "games": listed},
                                                   indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

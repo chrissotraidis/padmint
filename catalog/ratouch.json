@@ -9,6 +9,7 @@
   "repo_url": "https://github.com/chrissotraidis/ratouch",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/ratouch#unsigned-ipa",
+  "answers_link": true,
   "notes": "No build needed: the published app contains no game data and the player imports their own Red Alert files in the app. Played on a physical iPad by its maintainer.",
   "manifest": null,
   "download": {

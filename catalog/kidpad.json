@@ -9,6 +9,7 @@
   "repo_url": "https://github.com/chrissotraidis/kidpad",
   "reviewed_revision": null,
   "player_help": "https://github.com/chrissotraidis/kidpad#create-a-local-unsigned-ipa",
+  "answers_link": true,
   "notes": "No build needed: the published app contains no game data and the player adds their own files in the app. Listed while the Public Repo Audit Tracker row allows its existing public release.",
   "download": {
     "steps": [
