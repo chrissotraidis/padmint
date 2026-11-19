@@ -222,7 +222,7 @@
       "box_art": "https://images.gog-statics.com/bf97d30ca61ed4a8ffbb75380a2a8f59ac3efabdb9cf6c9a397d53a652df9fcb_glx_vertical_cover.jpg",
       "box_back": null,
       "box_spine": null,
-      "link": null,
+      "link": "padmint-emeraldtablet",
       "checked": false
     },
     {
@@ -614,7 +614,7 @@
       "box_art": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/38410/library_600x900_2x.jpg",
       "box_back": "https://images.launchbox-app.com/dd089bf6-9747-41bd-9c67-162cc3d8c715.jpg",
       "box_spine": "https://images.launchbox-app.com/f625b944-b2b9-41d7-9271-63e81e441990.jpg",
-      "link": null,
+      "link": "padmint-vaultpad",
       "checked": false
     }
   ]
