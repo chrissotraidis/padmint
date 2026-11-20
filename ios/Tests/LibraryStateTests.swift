@@ -332,4 +332,33 @@ final class LibraryStateTests: XCTestCase {
         focus.reselect()
         XCTAssertEqual(focus.selected, "library/shown", "the nearest game on screen, not the closer one below it")
     }
+
+    /// Covers decode no larger than they're shown: fronts at 1000 px, spines 768, the rest 512,
+    /// and a small picture isn't scaled up.
+    func testCoversDecodeAtTheirShownSize() throws {
+        XCTAssertEqual(CoverStore.maxPixels("boxart-bluewake"), 1000)
+        XCTAssertEqual(CoverStore.maxPixels("chosen-bluewake"), 1000)
+        XCTAssertEqual(CoverStore.maxPixels("spine-bluewake"), 768)
+        XCTAssertEqual(CoverStore.maxPixels("back-bluewake"), 512)
+        XCTAssertEqual(CoverStore.maxPixels("card-bluewake"), 512)
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        func write(_ size: CGSize, _ name: String) throws -> URL {
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            let data = UIGraphicsImageRenderer(size: size, format: format).pngData { context in
+                UIColor.systemTeal.setFill()
+                context.fill(CGRect(origin: .zero, size: size))
+            }
+            let url = folder.appendingPathComponent(name)
+            try data.write(to: url)
+            return url
+        }
+        let big = try XCTUnwrap(CoverStore.decode(write(CGSize(width: 1400, height: 2000), "big"), maxPixels: 1000))
+        XCTAssertEqual(max(big.size.width, big.size.height), 1000)
+        XCTAssertEqual(big.size.width / big.size.height, 0.7, accuracy: 0.01, "keeps its shape")
+        let small = try XCTUnwrap(CoverStore.decode(write(CGSize(width: 300, height: 400), "small"), maxPixels: 1000))
+        XCTAssertEqual(small.size, CGSize(width: 300, height: 400))
+    }
 }
