@@ -601,7 +601,9 @@ private struct BoxCarousel: View {
                     VStack(spacing: 0) {
                         CoverFlow3D(games: games, focused: $focused, faces: { covers.faces(for: $0) }, open: actions.open)
                             .id("\(reflections)-\(boxMotion)")
-                            .frame(height: geo.size.height * 0.7)
+                            // Up to 70% of the height: on a wide screen (a TV) the caption below
+                            // keeps its room and the boxes take what is left.
+                            .frame(maxHeight: geo.size.height * 0.7)
                             // The reflection fades into the floor instead of ending at the edge.
                             .mask {
                                 LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.7),
@@ -612,6 +614,8 @@ private struct BoxCarousel: View {
                             CarouselCaption(game: current, position: "\(focused + 1) of \(games.count)") { delta in
                                 focused = min(max(focused + delta, 0), games.count - 1)
                             }
+                            .fixedSize(horizontal: false, vertical: true)
+                            .layoutPriority(1)
                         }
                         Spacer(minLength: 0)
                     }
@@ -638,7 +642,8 @@ private struct FlatCarousel: View {
     var body: some View {
         GeometryReader { geo in
             let itemWidth = min(geo.size.width * (sizeClass == .regular ? 0.36 : 0.66), 460)
-            let height = min(geo.size.height * 0.6, itemWidth * 1.45)
+            // Leave the caption (name, status and Play) its room on a wide screen such as a TV.
+            let height = max(min(geo.size.height * 0.6, geo.size.height - 250, itemWidth * 1.45), 80)
             ZStack {
                 Backdrop(game: current)
                 VStack(spacing: 22) {
