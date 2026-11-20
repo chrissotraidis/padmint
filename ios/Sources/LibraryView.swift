@@ -75,7 +75,12 @@ struct LibraryView: View {
                 }
                 .navigationTitle("")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationDestination(for: Game.self) { GameDetail(game: $0) }
+                // The hint bar is inset inside the stack, like the header: an inset on the
+                // stack itself left the carousel's Play button under the bar on a TV.
+                .safeAreaInset(edge: .bottom, spacing: 0) { hintBar }
+                .navigationDestination(for: Game.self) {
+                    GameDetail(game: $0).safeAreaInset(edge: .bottom, spacing: 0) { hintBar }
+                }
                 .modifier(LibrarySearch(attached: !controller || searchRequested, text: $search, isPresented: $searching))
                 .toolbar {
                     if controller && !searchRequested {
@@ -107,12 +112,6 @@ struct LibraryView: View {
         .tint(.padMint)
         // The library draws its own selection; no system focus highlight on top of it.
         .focusEffectDisabled()
-        // Space for the hint bar, so it never covers the games or a page's last row.
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            // A TV crops its edges, and iPadOS puts the window's handle at the bottom
-            // middle of a second screen, so the bar sits higher there.
-            if controller { ControllerHints(items: hints).padding(.bottom, onSecondScreen ? 36 : 0) }
-        }
         .background { SecondScreenProbe(onSecondScreen: $onSecondScreen) }
         .preferredColorScheme(appearance.scheme)
         .environment(\.gameActions, GameActions(play: play, open: { path.append($0) }, chooseCover: chooseCover,
@@ -218,6 +217,13 @@ struct LibraryView: View {
             guard activeScope == "library" else { return }
             withAnimation(animation) { console = LibraryFilter.console(after: console, step: step, in: library.consolesShown) }
         }
+    }
+
+    /// Space for the hint bar, so it never covers the games or a page's last row. A TV crops
+    /// its edges, and iPadOS puts the window's handle at the bottom middle of a second
+    /// screen, so the bar sits higher there.
+    @ViewBuilder private var hintBar: some View {
+        if controller { ControllerHints(items: hints).padding(.bottom, onSecondScreen ? 36 : 0) }
     }
 
     /// What the hint bar shows for the screen in front.
