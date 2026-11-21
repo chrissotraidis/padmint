@@ -22,6 +22,7 @@ struct LibraryView: View {
     /// With a controller connected the library has no search field until the player asks
     /// for one: iPadOS's own controller focus reaches a text field and opens its keyboard.
     @State private var controller = false
+    @State private var onSecondScreen = false
     @State private var searchRequested = false
     /// A game was opened from here; the search closes when PadMint is back in front.
     @State private var launched = false
@@ -74,7 +75,12 @@ struct LibraryView: View {
                 }
                 .navigationTitle("")
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationDestination(for: Game.self) { GameDetail(game: $0) }
+                // The hint bar is inset inside the stack, like the header: an inset on the
+                // stack itself left the carousel's Play button under the bar on a TV.
+                .safeAreaInset(edge: .bottom, spacing: 0) { hintBar }
+                .navigationDestination(for: Game.self) {
+                    GameDetail(game: $0).safeAreaInset(edge: .bottom, spacing: 0) { hintBar }
+                }
                 .modifier(LibrarySearch(attached: !controller || searchRequested, text: $search, isPresented: $searching))
                 .toolbar {
                     if controller && !searchRequested {
@@ -106,10 +112,7 @@ struct LibraryView: View {
         .tint(.padMint)
         // The library draws its own selection; no system focus highlight on top of it.
         .focusEffectDisabled()
-        // Space for the hint bar, so it never covers the games or a page's last row.
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            if controller { ControllerHints(items: hints) }
-        }
+        .background { SecondScreenProbe(onSecondScreen: $onSecondScreen) }
         .preferredColorScheme(appearance.scheme)
         .environment(\.gameActions, GameActions(play: play, open: { path.append($0) }, chooseCover: chooseCover,
                                                 showConsole: showConsole))
@@ -216,6 +219,13 @@ struct LibraryView: View {
         }
     }
 
+    /// Space for the hint bar, so it never covers the games or a page's last row. A TV crops
+    /// its edges, and iPadOS puts the window's handle at the bottom middle of a second
+    /// screen, so the bar sits higher there.
+    @ViewBuilder private var hintBar: some View {
+        if controller { ControllerHints(items: hints).padding(.bottom, onSecondScreen ? 36 : 0) }
+    }
+
     /// What the hint bar shows for the screen in front.
     private var hints: [ControllerHints.Item] {
         let glyph = { (name: String, fallback: String) in focus.glyphs[name] ?? fallback }
@@ -291,6 +301,39 @@ private struct ControllerHints: View {
         .padding(.bottom, 6)
         .allowsHitTesting(false)
         .accessibilityHidden(true)
+    }
+}
+
+/// Tells whether the library's window is on a second screen (a TV or monitor), which
+/// often crops the picture's edges.
+private struct SecondScreenProbe: UIViewRepresentable {
+    @Binding var onSecondScreen: Bool
+
+    func makeUIView(context: Context) -> Probe { Probe { onSecondScreen = $0 } }
+    func updateUIView(_ view: Probe, context: Context) {}
+
+    final class Probe: UIView {
+        private let report: (Bool) -> Void
+        private var last: Bool?
+
+        init(report: @escaping (Bool) -> Void) {
+            self.report = report
+            super.init(frame: .zero)
+            isUserInteractionEnabled = false
+        }
+        required init?(coder: NSCoder) { nil }
+
+        override func didMoveToWindow() { super.didMoveToWindow(); check() }
+        // Moving the window to another screen resizes it.
+        override func layoutSubviews() { super.layoutSubviews(); check() }
+
+        private func check() {
+            guard let screen = window?.windowScene?.screen else { return }
+            let second = screen !== UIScreen.screens.first
+            guard second != last else { return }
+            last = second
+            DispatchQueue.main.async { self.report(second) }
+        }
     }
 }
 
@@ -564,7 +607,9 @@ private struct BoxCarousel: View {
                     VStack(spacing: 0) {
                         CoverFlow3D(games: games, focused: $focused, faces: { covers.faces(for: $0) }, open: actions.open)
                             .id("\(reflections)-\(boxMotion)")
-                            .frame(height: geo.size.height * 0.7)
+                            // Up to 70% of the height: on a wide screen (a TV) the caption below
+                            // keeps its room and the boxes take what is left.
+                            .frame(maxHeight: geo.size.height * 0.7)
                             // The reflection fades into the floor instead of ending at the edge.
                             .mask {
                                 LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.7),
@@ -575,6 +620,8 @@ private struct BoxCarousel: View {
                             CarouselCaption(game: current, position: "\(focused + 1) of \(games.count)") { delta in
                                 focused = min(max(focused + delta, 0), games.count - 1)
                             }
+                            .fixedSize(horizontal: false, vertical: true)
+                            .layoutPriority(1)
                         }
                         Spacer(minLength: 0)
                     }
@@ -601,7 +648,8 @@ private struct FlatCarousel: View {
     var body: some View {
         GeometryReader { geo in
             let itemWidth = min(geo.size.width * (sizeClass == .regular ? 0.36 : 0.66), 460)
-            let height = min(geo.size.height * 0.6, itemWidth * 1.45)
+            // Leave the caption (name, status and Play) its room on a wide screen such as a TV.
+            let height = max(min(geo.size.height * 0.6, geo.size.height - 250, itemWidth * 1.45), 80)
             ZStack {
                 Backdrop(game: current)
                 VStack(spacing: 22) {
