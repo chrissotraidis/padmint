@@ -384,6 +384,11 @@ def phases(events, code):
     return result, list(tool_list.values()), stage
 
 
+# One Open dialog at a time: a second click while the first is still opening
+# would otherwise stack another dialog behind it (issue #295).
+PICKING = threading.Lock()
+
+
 def pick_file(title, folder):
     """The system's own Open dialog: the chosen path, None if cancelled, False if there is none."""
     env = dict(os.environ, PADMINT_PICK_TITLE=title, PADMINT_PICK_FOLDER=str(folder))
@@ -615,7 +620,12 @@ def make_handler(token, builds, restart=None):
                 form = json.loads(self.rfile.read(length) or b"{}")
                 route, lang = urlparse(self.path).path, self.lang(form)
                 if route == "/api/pick":
-                    path = pick_file(phrase("w_file", lang), cli.player_folder())
+                    if not PICKING.acquire(blocking=False):
+                        return self.reply(200, {"path": None, "available": True})
+                    try:
+                        path = pick_file(phrase("w_file", lang), cli.player_folder())
+                    finally:
+                        PICKING.release()
                     return self.reply(200, {"path": path or None, "available": path is not False})
                 if route == "/api/file":
                     return self.reply(200, {"problem": check_file(form["game"], form["path"], lang)})
@@ -1449,8 +1459,9 @@ async function useFile(path){if(!path)return;const request=++fileRequest,selecte
  $("fileState").textContent="…";const r=await post("/api/file",{game:selected,path});if(request!=fileRequest||sel!=selected)return;reading=false;
  if(r.problem||r.error){$("fileState").className="state bad";$("fileState").textContent=r.problem||r.error}
  else{file=path;editFile=false;$("fileState").className="state ok";$("fileState").textContent="✓ "+fill("file_ok",{file:base(path)});if(dev)await pickDevice(dev)}ready()}
-$("choose").onclick=async()=>{const request=fileRequest,selected=sel;$("fileState").className="state muted";$("fileState").textContent=S.picker_open;
- const r=await post("/api/pick");if(request!=fileRequest||sel!=selected)return;if($("fileState").textContent==S.picker_open)$("fileState").textContent="";
+$("choose").onclick=async()=>{if($("choose").disabled)return;const request=fileRequest,selected=sel;$("fileState").className="state muted";$("fileState").textContent=S.picker_open;
+ $("choose").disabled=true;let r;try{r=await post("/api/pick")}finally{$("choose").disabled=false}
+ if(request!=fileRequest||sel!=selected)return;if($("fileState").textContent==S.picker_open)$("fileState").textContent="";
  if(r.path)useFile(r.path);else if(!r.available){$("typeBox").open=true;$("path").focus()}};
 $("use").onclick=()=>useFile($("path").value.trim().replace(/^["']|["']$/g,""));
 $("make").onclick=async()=>{const action=$("make").dataset.action;if(action=="file"){$("fileBox").scrollIntoView({behavior:"smooth",block:"center"});$("choose").click();return}
