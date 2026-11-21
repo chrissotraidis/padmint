@@ -116,6 +116,15 @@ pending[0].resolve({path:'/old.exe',available:true});await picking;
 assert.equal(pending.length,1);assert.equal(file,null);assert.equal(reading,false);
 ''')
 
+    def test_second_click_does_not_open_another_picker(self):
+        self.run_case(r'''
+select('a');const picking=$('choose').onclick();
+assert.equal($('choose').disabled,true);await $('choose').onclick();
+assert.equal(pending.filter(p=>p.url=='/api/pick').length,1);
+pending[0].resolve({path:null,available:true});await picking;
+assert.equal($('choose').disabled,false);
+''')
+
 
 if __name__ == '__main__':
     unittest.main()
