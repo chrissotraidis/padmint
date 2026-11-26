@@ -169,6 +169,25 @@ struct PrimaryButtonStyle: ButtonStyle {
     }
 }
 
+/// Text size on a TV or monitor. iPadOS gives a window on a higher-resolution TV more points, so text at its usual
+/// size gets smaller as the resolution goes up. Read well on a 720-point TV, text grows one step for every quarter
+/// taller the window is (1080 points: two steps), up to three, on top of the size chosen in Settings. On the iPad's
+/// own screen nothing changes.
+enum TVText {
+    static let readableHeight: CGFloat = 720
+
+    static func steps(onSecondScreen: Bool, height: CGFloat) -> Int {
+        guard onSecondScreen, height > readableHeight else { return 0 }
+        return min(3, Int(((height / readableHeight - 1) / 0.25).rounded()))
+    }
+
+    static func size(base: DynamicTypeSize, onSecondScreen: Bool, height: CGFloat) -> DynamicTypeSize {
+        let all = DynamicTypeSize.allCases
+        guard let index = all.firstIndex(of: base) else { return base }
+        return all[min(all.count - 1, index + steps(onSecondScreen: onSecondScreen, height: height))]
+    }
+}
+
 /// Everything else: frosted, with a hairline edge.
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {

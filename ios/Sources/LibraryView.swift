@@ -23,6 +23,9 @@ struct LibraryView: View {
     /// for one: iPadOS's own controller focus reaches a text field and opens its keyboard.
     @State private var controller = false
     @State private var onSecondScreen = false
+    @Environment(\.dynamicTypeSize) private var typeSize
+    /// The window's height in points, for sizing text on a TV.
+    @State private var windowHeight: CGFloat = 0
     @State private var searchRequested = false
     /// A game was opened from here; the search closes when PadMint is back in front.
     @State private var launched = false
@@ -112,6 +115,7 @@ struct LibraryView: View {
         .tint(.padMint)
         // The library draws its own selection; no system focus highlight on top of it.
         .focusEffectDisabled()
+        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { windowHeight = $0 }
         .background { SecondScreenProbe(onSecondScreen: $onSecondScreen) }
         .preferredColorScheme(appearance.scheme)
         .environment(\.gameActions, GameActions(play: play, open: { path.append($0) }, chooseCover: chooseCover,
@@ -150,6 +154,9 @@ struct LibraryView: View {
             started = true
             if covers.boxArt == .ask { askBoxArt = true }
         }
+        // A higher-resolution TV gives the window more points, so text at its usual size is smaller there. Last, so
+        // the sheets (Settings, Get the Game, Box Art) grow with the library.
+        .dynamicTypeSize(TVText.size(base: typeSize, onSecondScreen: onSecondScreen, height: windowHeight))
     }
 
     @ViewBuilder private var content: some View {
