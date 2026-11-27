@@ -1,7 +1,8 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **16 November 2026** for PadMint **0.6.6**. The platform
+continuing work. It was updated on **27 November 2026** with the TV test results (PadMint
+**0.6.10**); the rest was last updated on 16 November for PadMint 0.6.6. The platform
 counts below remain the 12 November snapshot; the dated release section records
 the newer release checks and open pull requests. Any PR that finishes an item below
 updates this page too.
@@ -9,6 +10,7 @@ updates this page too.
 Evidence and history live in other files:
 
 - [WINDOWS.md](WINDOWS.md): the Windows evidence for each game
+- [TV-TESTS.md](TV-TESTS.md): the latest TV test pass and the open issues from it
 - [COMPATIBILITY.md](COMPATIBILITY.md): the recipe matrix
 - [BUILD_ROUTE_COPY.md](BUILD_ROUTE_COPY.md): wording decisions
 - [ROADMAP.md](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md): longer-term ideas and earlier handoffs
@@ -97,6 +99,18 @@ SnapPad, SpaghettiPad, StarshipPad, TribesPad, UTP and VaultPad. Every attached
 file passed PadMint's audit and the private reference gate before publication.
 HaloPad 0.3.16 and PeonPad preview.2 were already live. These are release/build
 results; physical TV and controller acceptance is still pending.
+
+## TV test pass — 26 November 2026
+
+Every port was played on an iPad connected to a TV with a controller. Twelve
+passed and shipped on 27 November (DevilTouch, VaultPad, CaesarPad, PeonPad,
+RAtouch, SquirrelPad, ETPad, BearBirdPad, OpenTTDPad, BananaPad, DinoPad,
+Emerald Tablet), and the TV changes for DaggerPad, AgePad and GoldenPad are
+merged. Still open, in order: MeleePad is unplayable, Tribes 2 crashes on
+launch, screen flashing (KidPad 2.0.1 waits for it), AgePad's first-launch exit
+and black screen on quit, GoldenPad's right-stick speed, DaggerPad's controller,
+and the PadMint logo position. [TV-TESTS.md](TV-TESTS.md) has the details and
+the next step for each.
 
 Post-publish checks use `scripts/player-check.sh` from PadMint main, Apple's
 Python 3.9, no source checkout and an empty PadMint folder. All 22 original
