@@ -138,8 +138,7 @@ stick look, A activate/click, B jump/back, X weapon, Y cast, R2 attack, L2
 recast, R1 run, L1 character sheet, d-pad automap/inventory/rest/travel map,
 Menu pauses. A controller driving play keeps look mode, so the pointer goes
 away ([daggerpad#12](https://github.com/chrissotraidis/daggerpad/pull/12),
-build 7). **Not built:** Unity reports no valid license on the Mac; sign in
-to Unity Hub, then it can be built and installed. **Retest:** every control
+build 7, on the iPad). **Retest:** every control
 above, in play and in menus.
 
 ### 7. PadMint library
