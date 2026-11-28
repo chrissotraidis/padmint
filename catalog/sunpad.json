@@ -5,68 +5,40 @@
   "name": "SunPad",
   "game": "Super Mario Sunshine (GameCube)",
   "player_targets": [
-    "ios",
-    "macos"
+    "ios"
   ],
-  "ios_hosts": [
-    "macos-arm64",
-    "windows-arm64",
-    "windows-x86_64",
-    "linux-arm64",
-    "linux-x86_64"
-  ],
-  "host_notes": {
-    "windows": {
-      "text": "Experimental on Windows: a copy built on Windows 11 ARM64 has been installed and played on an iPad, but a native x64 Windows PC hasn't been tried yet. The first build takes a few hours.",
-      "translations": {
-        "es": {
-          "text": "Experimental en Windows: una copia creada en Windows 11 ARM64 se instaló y se jugó en un iPad, pero todavía no se ha probado en un PC con Windows x64 nativo. La primera compilación tarda unas horas."
-        },
-        "pt": {
-          "text": "Experimental no Windows: uma cópia criada no Windows 11 ARM64 foi instalada e jogada num iPad, mas um PC com Windows x64 nativo ainda não foi testado. A primeira compilação leva algumas horas."
-        }
-      }
-    },
-    "linux": {
-      "text": "Experimental on Linux: this build has completed in Linux containers, but not on a Linux PC, and a Linux-built copy hasn't been installed and played on an iPhone or iPad yet. Installing the app needs a Windows PC or Mac.",
-      "translations": {
-        "es": {
-          "text": "Experimental en Linux: esta compilación se completó en contenedores Linux, pero no en un PC con Linux, y todavía no se ha instalado ni jugado en un iPhone o iPad una copia creada en Linux. Para instalar la app hace falta un PC con Windows o un Mac."
-        },
-        "pt": {
-          "text": "Experimental no Linux: esta compilação foi concluída em contêineres Linux, mas não num PC com Linux, e uma cópia criada no Linux ainda não foi instalada e jogada num iPhone ou iPad. Para instalar o app é preciso um PC com Windows ou um Mac."
-        }
-      }
-    }
-  },
   "game_ids": [
     "GMSE01"
   ],
   "free_space_gb": 8,
+  "player_game_file": "in-app",
   "player_help": "https://github.com/chrissotraidis/sunpad#get-sunpad",
   "reviewed_revision": null,
-  "notes": "Empty app plus a game module made from the player's own disc (D11: no Nintendo keys in the published app).",
+  "notes": "Empty app plus the decompilation engine PadMint builds on the player's Mac with Homebrew LLVM; the disc is chosen in the app. The legacy translated-module entry is kept in SunPad's docs/legacy/padmint-catalog-sunpad.json.",
   "manifest": null,
+  "before_build": {
+    "commands": [
+      "brew install cmake ninja llvm"
+    ]
+  },
   "player_next": {
-    "macos": {
+    "ios": {
+      "sideload": true,
       "steps": [
-        "Open {file} and move SunPad.app to your Applications folder.",
-        "Open SunPad. macOS asks whether SunPad may open files in your Documents folder: allow it if your disc image is there. SunPad already contains the game translated from your disc.",
-        "Updating? Replace the old SunPad.app with the new one. Your saves are kept."
+        "Open SunPad and choose your own Super Mario Sunshine (USA, GMSE01, revision 0) .iso in Files: ••• → Game Data → Import or Reimport Game Data. SunPad checks it and keeps a private copy.",
+        "Updating from SunPad 0.3? Install over the existing app with the same signing setup. Your saves carry over on first launch, and the old save files stay as they were."
       ],
       "translations": {
         "es": {
           "steps": [
-            "Abre {file} y mueve SunPad.app a tu carpeta Aplicaciones.",
-            "Abre SunPad. macOS pregunta si SunPad puede abrir archivos de tu carpeta Documentos: permítelo si tu imagen de disco está ahí. SunPad ya contiene el juego traducido de tu disco.",
-            "¿Actualizando? Reemplaza el SunPad.app anterior por el nuevo. Tus partidas guardadas se conservan."
+            "Abre SunPad y elige en Archivos tu propia imagen .iso de Super Mario Sunshine (USA, GMSE01, revisión 0): ••• → Game Data → Import or Reimport Game Data. SunPad la comprueba y guarda una copia privada.",
+            "¿Actualizas desde SunPad 0.3? Instala sobre la app existente con la misma configuración de firma. Tus partidas se trasladan en el primer inicio y los archivos de guardado antiguos quedan como estaban."
           ]
         },
         "pt": {
           "steps": [
-            "Abra {file} e mova o SunPad.app para a sua pasta Aplicativos.",
-            "Abra o SunPad. O macOS pergunta se o SunPad pode abrir arquivos da sua pasta Documentos: permita se a sua imagem de disco estiver lá. O SunPad já contém o jogo traduzido do seu disco.",
-            "Atualizando? Substitua o SunPad.app antigo pelo novo. Seus saves são mantidos."
+            "Abra o SunPad e escolha no Arquivos sua própria imagem .iso de Super Mario Sunshine (USA, GMSE01, revisão 0): ••• → Game Data → Import or Reimport Game Data. O SunPad a verifica e guarda uma cópia privada.",
+            "Atualizando do SunPad 0.3? Instale por cima do app existente com a mesma configuração de assinatura. Seus saves são transferidos na primeira abertura, e os arquivos de save antigos ficam como estavam."
           ]
         }
       }

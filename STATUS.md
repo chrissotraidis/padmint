@@ -1,10 +1,12 @@
 # PadMint status
 
-What each recent PadMint release changed. Updated **18 November 2026**.
+What each recent PadMint release changed. Updated **28 November 2026**.
 
 **Next work:** [What PadMint still needs](docs/REMAINING.md) is the current
 queue. Older releases, from 0.5.22 back, and the October build evidence are in
 [STATUS-HISTORY.md](STATUS-HISTORY.md).
+
+**v0.6.11:** SunPad moves to [SunPad 0.4.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.4.0), which runs the Super Mario Sunshine decompilation as native code (through a fork of chasem-dev's sms-pc-port, drawing through MoltenVK) instead of the translated-module engine. PadMint builds the engine on an Apple Silicon Mac with Xcode and `brew install cmake ninja llvm` and adds it to the published app, which carries no game code. The disc is no longer read during the build: players choose it in SunPad (••• → Game Data). Installing over 0.3.x keeps saves and settings. SunPad is Mac only for now: Windows and Linux list it under *Needs Apple Silicon Mac*, and its Mac app is withdrawn until the new engine has one, so the README counts drop to 8 Windows games, KartPad on Linux and 11 Mac apps. The player check passed before tagging and against the published release with Apple's Python 3.9 and an empty PadMint folder, and the copy PadMint built from the release installed over 0.4.0 on an iPad Pro 12.9-inch (6th generation), where a migrated 94-Shine save loaded at 30 FPS. The catalog audit reads SunPad's v0.4.0 recipe with no problems.
 
 **v0.6.10:** adds [ETPad](https://github.com/chrissotraidis/etpad), Wolfenstein: Enemy Territory on iPad through ET: Legacy 2.86.2, with live servers, offline bots, touch and controller play. There is no game file to choose: ETPad downloads Splash Damage's free official data in the app. On an Apple Silicon Mac with Xcode and `brew install cmake ninja xcodegen`, choose ETPad and PadMint builds a personal IPA from the published [v0.1.0](https://github.com/chrissotraidis/etpad/releases/tag/v0.1.0) release in about 13 minutes using about 3.2 GB. The player check passed against the clean release checkout with Apple's Python 3.9 and an empty PadMint folder (gate PASS, no findings, launch link `padmint-etpad`), and a development-signed build of the release commit launched on an iPad Pro 12.9-inch (6th generation) into an offline bot round and the live server list. ETPad's Mac app stays unoffered for now. The iPhone/iPad library lists it under PC with ETPad's poster art; ETPad takes one of the 25 links the library checks, so ProjectReach now says *Tap Play to check*.
 

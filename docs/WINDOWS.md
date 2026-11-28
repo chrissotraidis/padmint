@@ -35,15 +35,15 @@ Updated **1 November 2026** for PadMint **0.5.29**, from the live catalog audit
 work queue for "every game can be built from Windows". A game moves to **Build
 here** only after the gates in [Active queue](#active-queue) are met.
 
-**Today, from Windows** (counts updated 12 November for PadMint 0.6.4): 26 of
-the 31 games with build routes can produce an iPhone/iPad app (9 built locally,
-17 on GitHub's Mac), and all 8 ready-made apps install with Sideloadly. Five
+**Today, from Windows** (counts updated 28 November for PadMint 0.6.11): 25 of
+the 31 games with build routes can produce an iPhone/iPad app (8 built locally,
+17 on GitHub's Mac), and all 8 ready-made apps install with Sideloadly. Six
 other games still need an Apple Silicon Mac for iPhone/iPad: SnapPad, AnnePad,
-Ottsel, AgePad (which has a known Steam-version blocker) and NightPad. EctoPad
-is a separate paused entry. The nine local Windows builds are experimental:
-a maintainer has built each one only on Windows 11 ARM64, and SunPad is the
-only one whose Windows-built copy a maintainer has installed and played on an
-iPad.
+Ottsel, AgePad (which has a known Steam-version blocker), NightPad and SunPad,
+whose 0.4.0 engine builds only on a Mac for now. EctoPad is a separate paused
+entry. The eight local Windows builds are experimental: a maintainer has built
+each one only on Windows 11 ARM64. SunPad 0.3.0 was the only one whose
+Windows-built copy a maintainer installed and played on an iPad.
 
 | Game (port) | From Windows today | Why there is no local Windows build yet | Next fix |
 |---|---|---|---|
@@ -55,7 +55,7 @@ iPad.
 | GoldenEye 007 (GoldenPad) | **Build here** (experimental), [goldenpad v0.3.0](https://github.com/chrissotraidis/goldenpad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (126 s). Next: install and play a Windows-built copy on a device |
 | Banjo-Kazooie (BearBirdPad) | **Build here** (experimental), [bearbirdpad v0.3.0](https://github.com/chrissotraidis/bearbirdpad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (155 s). Next: install and play a Windows-built copy on a device |
 | Donkey Kong 64 (BananaPad) | **Build here** (experimental), [bananapad v0.3.0](https://github.com/chrissotraidis/bananapad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (134 s). Next: install and play a Windows-built copy on a device |
-| Super Mario Sunshine (SunPad) | **Build here** (experimental), [sunpad v0.3.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.3.0) | — | PadMint 0.6.3 for Windows built it on Windows 11 ARM64 (2 h 23 min plus 26 min of tools), and that copy was installed and played on an iPad Pro: gameplay, a save and a reload after a cold relaunch. Next: a native x64 Windows PC |
+| Super Mario Sunshine (SunPad) | Apple Silicon Mac since [sunpad v0.4.0](https://github.com/chrissotraidis/sunpad/releases/tag/v0.4.0) | Its new engine compiles the Super Mario Sunshine decompilation with an LLVM pass plugin, which Clang on Windows can't load, and includes system headers the open-source SDK lacks | A standalone pointer-pass tool and those headers (SunPad's task E8.5). SunPad 0.3.0, on the legacy engine, built on Windows 11 ARM64 and was played on an iPad Pro |
 | Super Smash Bros. Melee (MeleePad) | **Build here** (experimental), [meleepad v0.3.0](https://github.com/chrissotraidis/meleepad/releases/tag/v0.3.0) | — | PadMint built the published release from the player's file on Windows 11 ARM64 (3,863 s). Next: install and play a Windows-built copy on a device |
 | Pokémon Snap (SnapPad) | Apple Silicon Mac | Reads the ROM while compiling; its decompilation tools still come from a private, locally verified bundle | [snappad#12](https://github.com/chrissotraidis/snappad/pull/12): publish those tools through PadMint's managed tools, then add Windows hosts to the recipe. SnapPad's release pause still applies |
 | The Wind Waker (BlueWake) | **Build here** (experimental), [bluewake v0.11.0](https://github.com/chrissotraidis/bluewake/releases/tag/v0.11.0). BlueWake also has ready-to-play Windows and Linux desktop downloads | — | The recipe declares Windows ARM64 and x64 since 0.11.0 (8 November), and PadMint lists them from 0.6.2. The Windows proof ([bluewake#100](https://github.com/chrissotraidis/bluewake/pull/100)) took 2 h 19 min on Windows 11 ARM64 from the original disc, and a contributor built and played an x64 copy. Next: a maintainer installs and plays a Windows-built copy on a device |
@@ -191,8 +191,9 @@ and recheck each affected PR and release before using this per-game queue.
    (its backend still reads a private, locally verified bundle), then add
    Windows x64 and ARM64 to the recipe, publish it and run the physical-device
    check. SnapPad's release pause still applies.
-3. SunPad: done in 0.3.0 (10 November), including a device check of a
-   Windows-built copy. A native x64 PC remains.
+3. SunPad: 0.3.0 built on Windows (10 November, with a device check). Its
+   0.4.0 engine is Mac only until a standalone pointer-pass tool exists
+   (SunPad's task E8.5).
 4. BlueWake: publish an iPhone recipe with Windows hosts and the matching app,
    then a device check. The current 0.10.0 desktop downloads are already published.
    AnnePad (#20) and SnapPad (#12) wait for the published IDO, binutils and

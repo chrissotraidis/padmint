@@ -11,16 +11,16 @@
   ],
   "later": {
     "status": "paused",
-    "text": "EctoPad is paused. It is built on Metaforce, whose developers made its source private until their own public release, so PadMint can't download what a build needs. PadMint will offer EctoPad again once Metaforce's source is public.",
+    "text": "EctoPad is paused until further notice. It is built on Metaforce, whose developers have made its source private, so PadMint can't build it.",
     "translations": {
       "es": {
-        "text": "EctoPad está en pausa. Se basa en Metaforce, cuyo código sus desarrolladores han hecho privado hasta su propio lanzamiento público, así que PadMint no puede descargar lo que necesita la compilación. PadMint volverá a ofrecer EctoPad cuando el código de Metaforce sea público."
+        "text": "EctoPad está en pausa hasta nuevo aviso. Se basa en Metaforce, cuyos desarrolladores han hecho privado su código, así que PadMint no puede compilarlo."
       },
       "pt": {
-        "text": "O EctoPad está em pausa. Ele é feito com o Metaforce, cujo código os desenvolvedores tornaram privado até o próprio lançamento público, então o PadMint não consegue baixar o que a compilação precisa. O PadMint voltará a oferecer o EctoPad quando o código do Metaforce for público."
+        "text": "O EctoPad está em pausa até novo aviso. Ele é feito com o Metaforce, cujos desenvolvedores tornaram o código privado, então o PadMint não consegue compilá-lo."
       }
     }
   },
-  "notes": "Paused 24 Oct 2026: AxioDL made Metaforce and Zeus private until their public release, so scripts/bootstrap-workspace.sh cannot fetch them. Restore the build entry from git history (catalog/ectopad.json before this change) when they are public again.",
+  "notes": "Paused 24 Oct 2026; paused until further notice since 20 Nov 2026 (EctoPad will not redistribute Metaforce while it is private). Do not restore a build entry without Chris's go-ahead.",
   "manifest": null
 }

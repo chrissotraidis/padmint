@@ -67,7 +67,7 @@ On a Mac, each game says how much setup it needs:
 | Tag on the page | Games | What you need |
 |---|---|---|
 | **Easiest** | KartPad for Android (Mario Kart Wii) | Any Windows, Mac or Linux computer, an Android phone and the **European** disc. Install the ready-to-play app; PadMint makes its game data. |
-| **Needs Xcode** | BlueWake, SunPad, KartPad for Mac and iPhone, AgePad | A Mac with Apple Silicon and [Xcode](https://apps.apple.com/app/xcode/id497799835), free from the App Store. |
+| **Needs Xcode** | BlueWake, KartPad for Mac and iPhone, AgePad | A Mac with Apple Silicon and [Xcode](https://apps.apple.com/app/xcode/id497799835), free from the App Store. |
 | **Needs Xcode + Homebrew** | Most other games | The same, plus one Homebrew line the page shows with a **Copy** button. |
 
 **On a Windows PC,** KartPad needs no extra setup. GoldenPad, BearBirdPad,
@@ -304,12 +304,12 @@ nothing to build or download yet.
 <details>
 <summary><strong>Can I build iPhone apps on Windows or Linux?</strong></summary>
 
-Yes. A Windows PC builds nine games itself, experimentally: KartPad, GoldenPad,
-BearBirdPad, BananaPad, SquirrelPad, DinoPad, MeleePad, BlueWake and SunPad.
-Linux builds KartPad and SunPad.
+Yes. A Windows PC builds eight games itself, experimentally: KartPad, GoldenPad,
+BearBirdPad, BananaPad, SquirrelPad, DinoPad, MeleePad and BlueWake.
+Linux builds KartPad.
 From either, 17 more build on [GitHub's Mac](../README.md#github-cloud-build-no-mac-needed).
-The other five (AgePad, AnnePad, NightPad, Ottsel and SnapPad) still need an
-Apple Silicon Mac; [Building games on Windows](WINDOWS.md)
+The other six (AgePad, AnnePad, NightPad, Ottsel, SnapPad and SunPad, whose
+new engine builds only on a Mac from 0.4.0) still need an Apple Silicon Mac; [Building games on Windows](WINDOWS.md)
 tracks each one.
 
 </details>

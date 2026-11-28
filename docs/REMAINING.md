@@ -1,7 +1,8 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **16 November 2026** for PadMint **0.6.6**. The platform
+continuing work. It was updated on **28 November 2026** with the TV fixes (PadMint
+**0.6.10**); the rest was last updated on 16 November for PadMint 0.6.6. The platform
 counts below remain the 12 November snapshot; the dated release section records
 the newer release checks and open pull requests. Any PR that finishes an item below
 updates this page too.
@@ -9,6 +10,7 @@ updates this page too.
 Evidence and history live in other files:
 
 - [WINDOWS.md](WINDOWS.md): the Windows evidence for each game
+- [TV-TESTS.md](TV-TESTS.md): the latest TV test pass and the open issues from it
 - [COMPATIBILITY.md](COMPATIBILITY.md): the recipe matrix
 - [BUILD_ROUTE_COPY.md](BUILD_ROUTE_COPY.md): wording decisions
 - [ROADMAP.md](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md): longer-term ideas and earlier handoffs
@@ -50,18 +52,19 @@ in [HaloPad 0.3.14](https://github.com/chrissotraidis/projectreach/releases/tag/
 
 The Windows counts break down as follows:
 
-- 9 games build locally, all experimental and all built by a maintainer only on
+- 8 games build locally, all experimental and all built by a maintainer only on
   Windows 11 ARM64. Their recipes also declare Windows x64, but no maintainer's
   build has run on a native x64 PC (a BlueWake contributor built and played an
-  x64 copy). SunPad (0.3.0, 10 November) is the first whose Windows-built copy
-  a maintainer has played on an iPad.
+  x64 copy). SunPad 0.3.0 (10 November) was the first whose Windows-built copy
+  a maintainer played on an iPad. SunPad 0.4.0's new engine builds only on a
+  Mac for now.
 - 17 build on GitHub's Mac.
 - All 8 ready-made apps install with Sideloadly.
-- 5 games still need an Apple Silicon Mac: SnapPad, AnnePad, Ottsel, AgePad
-  and NightPad. HaloPad's Custom Edition also needs a Mac.
+- 6 games still need an Apple Silicon Mac: SnapPad, AnnePad, Ottsel, AgePad,
+  NightPad and SunPad. HaloPad's Custom Edition also needs a Mac.
 
-Linux can build KartPad and SunPad locally (x64 and ARM64 in their published
-recipes, experimental) and can start the same cloud builds.
+Linux can build KartPad locally (x64 and ARM64 in its published recipe,
+experimental) and can start the same cloud builds.
 
 **Linux test builds, 8 November.** The six N64 and GameCube Windows routes also
 build on Linux with a two-line recipe change: the Windows module steps run on
@@ -83,8 +86,8 @@ generator tools natively, the same reason Windows asks for Visual Studio.
 
 Times include fresh tool downloads on ARM64 but not on x86-64, so they don't
 compare. Players get Linux for each game with its next release, whose recipe
-PadMint reads; those six PRs remain open as of 16 November. The two published local Linux
-routes counted above are KartPad and SunPad. No Linux-built
+PadMint reads; those six PRs remain open as of 16 November. The published local Linux
+route counted above is KartPad's (SunPad's ended with 0.4.0). No Linux-built
 copy has been played on a device, and no run used a native Linux PC.
 
 ## Display and touch releases — 16 November 2026
@@ -97,6 +100,21 @@ SnapPad, SpaghettiPad, StarshipPad, TribesPad, UTP and VaultPad. Every attached
 file passed PadMint's audit and the private reference gate before publication.
 HaloPad 0.3.16 and PeonPad preview.2 were already live. These are release/build
 results; physical TV and controller acceptance is still pending.
+
+## TV test pass — 26 November 2026
+
+Every port was played on an iPad connected to a TV with a controller. Twelve
+passed and shipped on 27 November (DevilTouch, VaultPad, CaesarPad, PeonPad,
+RAtouch, SquirrelPad, ETPad, BearBirdPad, OpenTTDPad, BananaPad, DinoPad,
+Emerald Tablet), and the TV changes for DaggerPad, AgePad and GoldenPad are
+merged. On 28 November each open issue got a fix on a draft PR: MeleePad's load
+speed, the Tribes 2 crash, KidPad's flashing (plus an ETPad crash on TV
+disconnect found in the logs), AgePad's first-launch exit, GoldenPad's
+right-stick speed, DaggerPad's controller scheme and the PadMint logo. Tribes,
+KidPad, AgePad, GoldenPad, PadMint, MeleePad, ETPad and DaggerPad are on the
+iPad. AgePad's black
+screen on quit is still open, and RAtouch's sidebar needs only a TV check.
+[TV-TESTS.md](TV-TESTS.md) has what Chris retests on the TV for each.
 
 Post-publish checks use `scripts/player-check.sh` from PadMint main, Apple's
 Python 3.9, no source checkout and an empty PadMint folder. All 22 original
