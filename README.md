@@ -124,9 +124,9 @@ that work on the computer you're using:
 
 | Your computer | Builds here | Builds on GitHub's Mac |
 |---|---|---|
-| **Mac with Apple Silicon** (M1 or newer) | All 34 games for iPhone/iPad, 12 of them also as Mac apps, and Lemonade Remixed for Mac | 17 games, under **Other ways to build** |
-| **Windows PC** | 9 games, experimental | 17 games |
-| **Linux** | KartPad and SunPad, experimental | 17 games |
+| **Mac with Apple Silicon** (M1 or newer) | All 34 games for iPhone/iPad, 11 of them also as Mac apps, and Lemonade Remixed for Mac | 17 games, under **Other ways to build** |
+| **Windows PC** | 8 games, experimental | 17 games |
+| **Linux** | KartPad, experimental | 17 games |
 | **Intel Mac** | KartPad, experimental | 17 games |
 | **Android phone**, no computer | KartPad's game data, [experimental](docs/GUIDE.md#android-phone-only-experimental) | — |
 | **Chromebook** (untested) | With Linux turned on, the same as Linux | 17 games |
@@ -180,7 +180,7 @@ column works from any computer with a browser.
 | SpaghettiPad | Mario Kart 64 (N64) | ✓ | — | ✓ |
 | SquirrelPad | Conker's Bad Fur Day (N64) | ✓ | Exp. | — |
 | StarshipPad | Star Fox 64 (N64) | ✓ | — | ✓ |
-| SunPad | Super Mario Sunshine (GameCube) | ✓ + Mac app | Exp. ⁴ | — |
+| SunPad | Super Mario Sunshine (GameCube) | ✓ | — | — |
 | TribesPad | Tribes 2 (PC), Starsiege: Tribes and Tribes: Vengeance | ✓ + Mac app | — | ✓ |
 | UTP | Unreal Tournament (PC) | ✓ | — | ✓ |
 
@@ -189,8 +189,7 @@ column works from any computer with a browser.
 2. DarkPad builds from a private copy of PadMint: [steps](docs/GUIDE.md#darkpad-private-github-build).
 3. With HaloPad's own workflow: [steps](docs/GUIDE.md#halopad-xbox-edition-on-github).
 4. KartPad also builds for iPhone/iPad on Linux and Intel Macs (experimental),
-   and its Android game data builds on any of them. SunPad also builds for
-   iPhone/iPad on Linux (experimental).
+   and its Android game data builds on any of them.
 
 **Mac only:** Lemonade Remixed (Lemonade Tycoon Deluxe, the 2002 Windows game)
 builds as a Mac app on an Apple Silicon Mac. You choose your own Setup.exe in
