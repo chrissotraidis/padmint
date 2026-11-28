@@ -52,18 +52,19 @@ in [HaloPad 0.3.14](https://github.com/chrissotraidis/projectreach/releases/tag/
 
 The Windows counts break down as follows:
 
-- 9 games build locally, all experimental and all built by a maintainer only on
+- 8 games build locally, all experimental and all built by a maintainer only on
   Windows 11 ARM64. Their recipes also declare Windows x64, but no maintainer's
   build has run on a native x64 PC (a BlueWake contributor built and played an
-  x64 copy). SunPad (0.3.0, 10 November) is the first whose Windows-built copy
-  a maintainer has played on an iPad.
+  x64 copy). SunPad 0.3.0 (10 November) was the first whose Windows-built copy
+  a maintainer played on an iPad. SunPad 0.4.0's new engine builds only on a
+  Mac for now.
 - 17 build on GitHub's Mac.
 - All 8 ready-made apps install with Sideloadly.
-- 5 games still need an Apple Silicon Mac: SnapPad, AnnePad, Ottsel, AgePad
-  and NightPad. HaloPad's Custom Edition also needs a Mac.
+- 6 games still need an Apple Silicon Mac: SnapPad, AnnePad, Ottsel, AgePad,
+  NightPad and SunPad. HaloPad's Custom Edition also needs a Mac.
 
-Linux can build KartPad and SunPad locally (x64 and ARM64 in their published
-recipes, experimental) and can start the same cloud builds.
+Linux can build KartPad locally (x64 and ARM64 in its published recipe,
+experimental) and can start the same cloud builds.
 
 **Linux test builds, 8 November.** The six N64 and GameCube Windows routes also
 build on Linux with a two-line recipe change: the Windows module steps run on
@@ -85,8 +86,8 @@ generator tools natively, the same reason Windows asks for Visual Studio.
 
 Times include fresh tool downloads on ARM64 but not on x86-64, so they don't
 compare. Players get Linux for each game with its next release, whose recipe
-PadMint reads; those six PRs remain open as of 16 November. The two published local Linux
-routes counted above are KartPad and SunPad. No Linux-built
+PadMint reads; those six PRs remain open as of 16 November. The published local Linux
+route counted above is KartPad's (SunPad's ended with 0.4.0). No Linux-built
 copy has been played on a device, and no run used a native Linux PC.
 
 ## Display and touch releases — 16 November 2026
