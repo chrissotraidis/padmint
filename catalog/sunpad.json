@@ -7,33 +7,6 @@
   "player_targets": [
     "ios"
   ],
-  "ios_hosts": [
-    "macos-arm64"
-  ],
-  "host_notes": {
-    "windows": {
-      "text": "SunPad 0.4.0 runs on a new engine that PadMint builds only on a Mac with Apple silicon for now.",
-      "translations": {
-        "es": {
-          "text": "SunPad 0.4.0 usa un motor nuevo que, por ahora, PadMint solo compila en un Mac con Apple silicon."
-        },
-        "pt": {
-          "text": "O SunPad 0.4.0 usa um motor novo que, por enquanto, o PadMint só compila num Mac com Apple silicon."
-        }
-      }
-    },
-    "linux": {
-      "text": "SunPad 0.4.0 runs on a new engine that PadMint builds only on a Mac with Apple silicon for now.",
-      "translations": {
-        "es": {
-          "text": "SunPad 0.4.0 usa un motor nuevo que, por ahora, PadMint solo compila en un Mac con Apple silicon."
-        },
-        "pt": {
-          "text": "O SunPad 0.4.0 usa um motor novo que, por enquanto, o PadMint só compila num Mac com Apple silicon."
-        }
-      }
-    }
-  },
   "game_ids": [
     "GMSE01"
   ],
