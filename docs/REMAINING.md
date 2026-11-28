@@ -1,7 +1,7 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **27 November 2026** with the TV test results (PadMint
+continuing work. It was updated on **28 November 2026** with the TV fixes (PadMint
 **0.6.10**); the rest was last updated on 16 November for PadMint 0.6.6. The platform
 counts below remain the 12 November snapshot; the dated release section records
 the newer release checks and open pull requests. Any PR that finishes an item below
@@ -106,11 +106,14 @@ Every port was played on an iPad connected to a TV with a controller. Twelve
 passed and shipped on 27 November (DevilTouch, VaultPad, CaesarPad, PeonPad,
 RAtouch, SquirrelPad, ETPad, BearBirdPad, OpenTTDPad, BananaPad, DinoPad,
 Emerald Tablet), and the TV changes for DaggerPad, AgePad and GoldenPad are
-merged. Still open, in order: MeleePad is unplayable, Tribes 2 crashes on
-launch, screen flashing (KidPad 2.0.1 waits for it), AgePad's first-launch exit
-and black screen on quit, GoldenPad's right-stick speed, DaggerPad's controller,
-and the PadMint logo position. [TV-TESTS.md](TV-TESTS.md) has the details and
-the next step for each.
+merged. On 28 November each open issue got a fix on a draft PR: MeleePad's load
+speed, the Tribes 2 crash, KidPad's flashing (plus an ETPad crash on TV
+disconnect found in the logs), AgePad's first-launch exit, GoldenPad's
+right-stick speed, DaggerPad's controller scheme and the PadMint logo. Tribes,
+KidPad, AgePad, GoldenPad and PadMint are on the iPad; MeleePad and ETPad wait for
+disk space on the Mac, and DaggerPad waits for a Unity sign-in. AgePad's black
+screen on quit is still open, and RAtouch's sidebar needs only a TV check.
+[TV-TESTS.md](TV-TESTS.md) has what Chris retests on the TV for each.
 
 Post-publish checks use `scripts/player-check.sh` from PadMint main, Apple's
 Python 3.9, no source checkout and an empty PadMint folder. All 22 original
