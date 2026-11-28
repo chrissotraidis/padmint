@@ -9,6 +9,17 @@ final class LibraryStateTests: XCTestCase {
                     boxArt: nil, boxBack: nil, boxSpine: nil, link: link)
     }
 
+    func testTextGrowsOnlyOnATallerSecondScreen() {
+        XCTAssertEqual(TVText.steps(onSecondScreen: false, height: 2160), 0, "the iPad's own screen keeps its size")
+        XCTAssertEqual(TVText.steps(onSecondScreen: true, height: 720), 0, "a 720-point TV already reads well")
+        XCTAssertEqual(TVText.steps(onSecondScreen: true, height: 900), 1)
+        XCTAssertEqual(TVText.steps(onSecondScreen: true, height: 1080), 2)
+        XCTAssertEqual(TVText.steps(onSecondScreen: true, height: 2160), 3, "at most three steps")
+        XCTAssertEqual(TVText.size(base: .large, onSecondScreen: true, height: 1080), .xxLarge)
+        XCTAssertEqual(TVText.size(base: .accessibility5, onSecondScreen: true, height: 1080), .accessibility5, "never past the largest size")
+        XCTAssertEqual(TVText.size(base: .small, onSecondScreen: false, height: 1080), .small)
+    }
+
     func testSavedLayoutsOpenAKnownLayout() {
         XCTAssertEqual(Layout(rawValue: "shelf"), .grid, "0.6.5's Shelf became Grid")
         XCTAssertEqual(Layout(rawValue: "grid"), .grid)

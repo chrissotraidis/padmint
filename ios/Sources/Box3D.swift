@@ -57,10 +57,14 @@ enum GameBox {
         }
     }
 
-    /// Width and height in scene units: tall cases are 1 high, wide boxes 1.25 wide.
+    /// Width and height in scene units: tall cases are 1 high, wide boxes up to 1.25 wide
+    /// and never taller than a tall case (a square PlayStation or Dreamcast cover is 1 by 1;
+    /// at 1.25 high it ran under the header).
     static func size(for image: UIImage?) -> (width: CGFloat, height: CGFloat) {
         let aspect = image.map { $0.size.width / max($0.size.height, 1) } ?? 0.71
-        return aspect >= 1 ? (1.25, 1.25 / aspect) : (aspect, 1)
+        guard aspect >= 1 else { return (aspect, 1) }
+        let width = min(1.25, aspect)
+        return (width, width / aspect)
     }
 
     /// A holder node (placed by the caller) with the box as its child, standing on y = 0.
