@@ -58,9 +58,11 @@ those wait loops
 Forcing the same idle on the iPad took character select and menus to 60 fps
 and cut slow frames from 552 to 16.
 
-**Status:** built from a fresh clone; **not on the iPad yet**, because the Mac is
-below the 60 GB free-space reserve, which blocks the backup. Matches are a separate
-limit: 27–40 fps with the CPU thread at 99%, also in the 20 November TV log.
+**Status:** on the iPad (build 40). On the iPad's own screen with no overrides,
+the classic-v1 route now runs menus and character select at 60 fps (speed
+1.00); build 39 ran character select at 12.6 fps (speed 0.21). Matches are a
+separate limit: 33–44 fps with the CPU thread at 99%, also in the 20 November
+TV log.
 
 **Retest on the TV:** start a match from the main menu. Character select, menus
 and loading should run at full speed. Note the match frame rate.
@@ -100,8 +102,7 @@ then check Starsiege with the controller connected.
   when the TV scene was torn down, in SDL 2.30.9's `UIKit_DelDisplay`. It
   now carries SDL 2.30.12's one-line fix
   ([etpad#6](https://github.com/chrissotraidis/etpad/pull/6), 0.1.1 build 3).
-  Built; **not on the iPad yet** (same disk-space block). Retest: play, then
-  unplug the TV or switch away and back.
+  On the iPad. Retest: play, then unplug the TV or switch away and back.
 
 ### 4. AgePad
 

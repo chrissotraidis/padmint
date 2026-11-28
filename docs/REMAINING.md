@@ -111,8 +111,8 @@ merged. On 28 November each open issue got a fix on a draft PR: MeleePad's load
 speed, the Tribes 2 crash, KidPad's flashing (plus an ETPad crash on TV
 disconnect found in the logs), AgePad's first-launch exit, GoldenPad's
 right-stick speed, DaggerPad's controller scheme and the PadMint logo. Tribes,
-KidPad, AgePad, GoldenPad and PadMint are on the iPad; MeleePad and ETPad wait for
-disk space on the Mac, and DaggerPad waits for a Unity sign-in. AgePad's black
+KidPad, AgePad, GoldenPad, PadMint, MeleePad and ETPad are on the iPad;
+DaggerPad waits for a Unity Hub sign-in to build. AgePad's black
 screen on quit is still open, and RAtouch's sidebar needs only a TV check.
 [TV-TESTS.md](TV-TESTS.md) has what Chris retests on the TV for each.
 
