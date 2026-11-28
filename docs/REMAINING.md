@@ -2,7 +2,7 @@
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
 continuing work. It was updated on **28 November 2026** with the TV fixes (PadMint
-**0.6.10**); the rest was last updated on 16 November for PadMint 0.6.6. The platform
+**0.6.11**); the rest was last updated on 16 November for PadMint 0.6.6. The platform
 counts below remain the 12 November snapshot; the dated release section records
 the newer release checks and open pull requests. Any PR that finishes an item below
 updates this page too.
@@ -10,10 +10,48 @@ updates this page too.
 Evidence and history live in other files:
 
 - [WINDOWS.md](WINDOWS.md): the Windows evidence for each game
-- [TV-TESTS.md](TV-TESTS.md): the latest TV test pass and the open issues from it
+- [TV-TESTS.md](TV-TESTS.md): the latest TV test pass, the open issues and what to retest on a TV
 - [COMPATIBILITY.md](COMPATIBILITY.md): the recipe matrix
 - [BUILD_ROUTE_COPY.md](BUILD_ROUTE_COPY.md): wording decisions
 - [ROADMAP.md](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md): longer-term ideas and earlier handoffs
+
+## Not published yet: come back to these
+
+Built and tested as far as possible without a TV, but **held** until Chris
+retests them on a TV (iPad connected to a TV, with a controller). Each one is
+installed on Chris's iPad and sits on a draft PR. When one passes the TV
+retest: merge its PR, bump the version if that version is already published,
+tag, run `scripts/player-check.sh` before and after, and move its row out
+of this table. What to test on the TV for each is in [TV-TESTS.md](TV-TESTS.md).
+
+| App | Built and on the iPad | PR | Fixes | Before release |
+|---|---|---|---|---|
+| MeleePad | 0.3.2 (40) | [meleepad#63](https://github.com/chrissotraidis/meleepad/pull/63) | Full-speed menus and loading on v1.02; TV orientations | Merge [RecompCore#71](https://github.com/chrissotraidis/RecompCore/pull/71), then [ModernGekko#5](https://github.com/chrissotraidis/ModernGekko/pull/5), then #63. Player check needs the base app as its fifth argument |
+| TribesPad | 0.3.2 (8) | [tribespad#47](https://github.com/chrissotraidis/tribespad/pull/47) | Tribes 2 crash on Play; TV display | |
+| KidPad | 2.0.1 (4) | [kidpad#8](https://github.com/chrissotraidis/kidpad/pull/8) | Screen flashing on the TV | The draft 2.0.1 release and its tag point at the previous main: move the tag or release 2.0.2 |
+| ETPad | 0.1.1 (3) | [etpad#6](https://github.com/chrissotraidis/etpad/pull/6) | Crash when the TV disconnects | 0.1.1 is published, so release as 0.1.2 |
+| AgePad | 1.2.1 (6) | [agepad#20](https://github.com/chrissotraidis/agepad/pull/20) | Closing on first launch from PadMint | Black screen on quit is still open |
+| GoldenPad | 0.3.3 (22) | [goldenpad#63](https://github.com/chrissotraidis/goldenpad/pull/63) | Right-stick speed setting; TV display (#62, merged) | |
+| DaggerPad | 0.1.1 (7) | [daggerpad#12](https://github.com/chrissotraidis/daggerpad/pull/12) | iPad controller scheme; TV display (#11, merged) | |
+| PadMint library app | 0.6.11 (17) | [padmint#294](https://github.com/chrissotraidis/padmint/pull/294) | TV hint bar, text size on bigger TVs, logo position | Ships in the next PadMint release |
+| KartPad | (TV change not built) | branch `codex/tv-extended-display-rebased` | TV orientations | 0.8.13 shipped without it; ship it with the next KartPad release |
+
+Also unpublished, for other reasons:
+
+- **BlueWake 0.13.0:** a draft release from 22 November waits for review. The
+  iPad has 0.12.1 (13); 0.12.0 is the published release.
+- **BananaPad, BearBirdPad, DinoPad:** draft PRs that drop the "releases are
+  paused" note ([bananapad#29](https://github.com/chrissotraidis/bananapad/pull/29),
+  [bearbirdpad#34](https://github.com/chrissotraidis/bearbirdpad/pull/34),
+  [dinopad#27](https://github.com/chrissotraidis/dinopad/pull/27)).
+- **Open bugs with no fix yet:** AgePad's black screen on quit, Starsiege
+  stopping input with a controller, GoldenPad textures, MeleePad matches at
+  33–44 fps.
+
+On 28 November every catalog game on Chris's iPad was at or ahead of its
+published release (KartPad 0.8.13 and SunPad 0.4.0 included), and each answers
+its padmint-<game> link.
+
 
 ## The goal
 

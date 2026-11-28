@@ -167,9 +167,11 @@ sidebar should appear. Tap the Sidebar tab to toggle it.
 
 ## Parked
 
-- **SunPad:** moving to a decompilation port; its status-bar PR was closed.
-- **KartPad:** the TV change is ready on a local branch; decide whether it ships
-  alone or with the next KartPad release.
+- **SunPad:** 0.4.0 on its new engine shipped on 28 November (PadMint 0.6.11)
+  and is on the iPad; it needs its own TV pass.
+- **KartPad:** 0.8.13 shipped on 28 November without the TV change, which is on
+  the pushed branch `codex/tv-extended-display-rebased`; ship it with the next
+  KartPad release.
 - **BlueWake 0.13.0:** a draft release made on 22 November waits for review.
 - **UTP:** the trackpad cursor offset is in UTP's known issues and needs a
   trackpad session.
