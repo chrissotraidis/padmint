@@ -60,8 +60,7 @@ struct LibraryView: View {
             content
                 .safeAreaInset(edge: .top, spacing: 0) {
                     VStack(spacing: 10) {
-                        HStack(alignment: .firstTextBaseline) {
-                            PadMintMark(size: sizeClass == .regular ? 54 : 36, animated: true)
+                        HStack {
                             Spacer()
                             Text("\(library.installed.count) installed · \(library.games.count) games")
                                 .font(.subheadline.weight(.medium)).foregroundStyle(.secondary)
@@ -86,6 +85,13 @@ struct LibraryView: View {
                 }
                 .modifier(LibrarySearch(attached: !controller || searchRequested, text: $search, isPresented: $searching))
                 .toolbar {
+                    // The logo sits in the bar with the buttons, level with them; in the
+                    // header below it sat under an empty bar and looked too low.
+                    if #available(iOS 26.0, *) {
+                        ToolbarItem(placement: .topBarLeading) { logo }.sharedBackgroundVisibility(.hidden)
+                    } else {
+                        ToolbarItem(placement: .topBarLeading) { logo }
+                    }
                     if controller && !searchRequested {
                         ToolbarItem {
                             Button(action: openSearch) {
@@ -229,6 +235,11 @@ struct LibraryView: View {
     /// Space for the hint bar, so it never covers the games or a page's last row. A TV crops
     /// its edges, and iPadOS puts the window's handle at the bottom middle of a second
     /// screen, so the bar sits higher there.
+    /// PadMint's mark for the navigation bar (no glass behind it, unlike the buttons).
+    private var logo: some View {
+        PadMintMark(size: sizeClass == .regular ? 40 : 30, animated: true).fixedSize()
+    }
+
     @ViewBuilder private var hintBar: some View {
         if controller { ControllerHints(items: hints).padding(.bottom, onSecondScreen ? 36 : 0) }
     }
