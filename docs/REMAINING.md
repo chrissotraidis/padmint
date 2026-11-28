@@ -1,11 +1,11 @@
 # What PadMint still needs
 
 This page answers **"what do we still need to do for PadMint?"** Start here when
-continuing work. It was updated on **28 November 2026** with the TV fixes (PadMint
-**0.6.11**); the rest was last updated on 16 November for PadMint 0.6.6. The platform
-counts below remain the 12 November snapshot; the dated release section records
-the newer release checks and open pull requests. Any PR that finishes an item below
-updates this page too.
+continuing work. **Where we are** (29 November 2026, PadMint **0.6.11**) is the
+first section; then what is built but not published. The platform counts under
+"Where it stands" remain the 12 November snapshot, and the dated sections after it
+are history with their evidence. Any PR that finishes an item below updates this
+page too.
 
 Evidence and history live in other files:
 
@@ -14,6 +14,38 @@ Evidence and history live in other files:
 - [COMPATIBILITY.md](COMPATIBILITY.md): the recipe matrix
 - [BUILD_ROUTE_COPY.md](BUILD_ROUTE_COPY.md): wording decisions
 - [ROADMAP.md](https://github.com/chrissotraidis/padmint/blob/main/docs/ROADMAP.md): longer-term ideas and earlier handoffs
+
+## Where we are — 29 November 2026
+
+Ask "where are we at?" and this section is the answer; the rest of the page has
+the detail and the evidence.
+
+- **PadMint:** [0.6.11](https://github.com/chrissotraidis/padmint/releases/tag/v0.6.11)
+  is the latest release (SunPad 0.4.0 on its new engine). The catalog audit
+  reads the 34 published game recipes with zero problems (29 November); the
+  other catalog entries are ready-made apps and paused EctoPad.
+  The next PadMint release would carry the library's TV changes
+  ([#294](https://github.com/chrissotraidis/padmint/pull/294)), which wait for a
+  TV retest.
+- **Games:** every catalog game has a published release. AgePad v0.1.0 no
+  longer builds once Steam updates; its fix (0.1.1) is merged but unreleased.
+  The latest TV pass (26 November) shipped twelve games; seven more have TV
+  fixes built and held (the table below).
+- **Chris's iPad (iPad Pro 12.9-inch, 6th generation):** every catalog game is
+  at or ahead of its published release, including KartPad 0.8.13 (279), SunPad
+  0.4.0 (22) and the held TV builds, and each answers its padmint-<game> link.
+  The PadMint library app on it is 0.6.11 (17) with #294.
+- **Backups on the Mac:** one latest verified backup per game in
+  `~/.codex/private/ipad-backups-20261119/<game>` (its manifest.json names it),
+  and the library app's in `~/.codex/private/tv-rollout/staging/padmint-abrmqbd6`.
+  Older backups were deleted on 29 November. TribesPad's backup leaves out the
+  Vengeance game files, which come from `tribespad/ref/downloads/TribesVengeance.zip`.
+  DinoPad's ROM for local builds is `dinopad/ref/dino.z64`.
+- **Waiting on Chris:** the TV retest of the held builds ([TV-TESTS.md](TV-TESTS.md)
+  says what to check on each) and the [decisions](#decisions-only-chris-can-make)
+  at the end of this page.
+- **Next work without Chris:** the [queue](#the-queue-in-order), starting with
+  Windows and Linux routes; the open bugs listed under the table below.
 
 ## Not published yet: come back to these
 
@@ -150,8 +182,8 @@ speed, the Tribes 2 crash, KidPad's flashing (plus an ETPad crash on TV
 disconnect found in the logs), AgePad's first-launch exit, GoldenPad's
 right-stick speed, DaggerPad's controller scheme and the PadMint logo. Tribes,
 KidPad, AgePad, GoldenPad, PadMint, MeleePad, ETPad and DaggerPad are on the
-iPad. AgePad's black
-screen on quit is still open, and RAtouch's sidebar needs only a TV check.
+iPad. AgePad's black screen on quit is still open, and RAtouch's sidebar needs
+only a TV check.
 [TV-TESTS.md](TV-TESTS.md) has what Chris retests on the TV for each.
 
 Post-publish checks use `scripts/player-check.sh` from PadMint main, Apple's
@@ -194,11 +226,12 @@ Release state rechecked on GitHub:
   [kartpad#574](https://github.com/chrissotraidis/kartpad/pull/574) is merged.
   Physical-device acceptance remains separate.
 - **AgePad 0.1.1:** [agepad#15](https://github.com/chrissotraidis/agepad/pull/15)
-  is still a draft awaiting an iPad match. Merge with main's display fix, rebuild
-  the base app, publish and run the player check after that acceptance.
-- **EctoPad:** [#10](https://github.com/chrissotraidis/ectopad/pull/10) and stacked
-  [#11](https://github.com/chrissotraidis/ectopad/pull/11) remain open. Private
-  upstream mirrors and missing licenses still block the proposed public release.
+  is merged (29 November recheck), but AgePad's latest release is still v0.1.0.
+  Releasing 0.1.1 waits with the held TV fix
+  ([agepad#20](https://github.com/chrissotraidis/agepad/pull/20)).
+- **EctoPad:** [#10](https://github.com/chrissotraidis/ectopad/pull/10) is merged
+  and stacked [#11](https://github.com/chrissotraidis/ectopad/pull/11) is closed
+  (29 November recheck). EctoPad stays paused in the catalog.
 - **Touch-only drafts:** GoldenPad 0.3.2, MeleePad 0.3.1, SunPad 0.3.2,
   SquirrelPad 0.2.1 and Ottsel 0.1.1 were authorized and published on 16 November
   JST. All 14 assets passed both gates, their recipes match the release commits
@@ -340,6 +373,11 @@ needs, the game file it asks for, its install steps or its card art.
 
 Recent completion:
 
+- **ETPad joined the catalog** in PadMint 0.6.10 (18 November) and SunPad 0.4.0
+  in 0.6.11 (28 November). The Choose-file fix
+  ([#296](https://github.com/chrissotraidis/padmint/pull/296)) shipped in 0.6.11,
+  so [#295](https://github.com/chrissotraidis/padmint/issues/295) can be closed.
+
 - **DarkPad 0.1.1 catalog reconciliation (16 November).** Its published recipe
   includes an experimental Mac Catalyst target, while its player documentation
   directs Mac users to a source build. The catalog records that target as
@@ -353,14 +391,6 @@ Recent completion:
 
 Still open:
 
-- **ETPad joins the catalog (approved by Chris, 18 November).** ETPad is
-  Wolfenstein: Enemy Territory on iPad through ET: Legacy, with nothing to
-  choose: players download the free official data in the app. The entry offers
-  the iPad build and holds back the Mac app (a source build that needs launch
-  settings and a separate bot runtime). Its library card uses ETPad's own
-  poster art; it takes one of the 25 checked launch links, so ProjectReach now
-  says *Tap Play to check*. Ships in PadMint 0.6.10 with ETPad v0.1.0, a normal
-  release (PadMint skips pre-releases) with `ETPad-v0.1.0-padmint.json` attached.
 - **Download-only previews (shipped in 0.6.7).**
   The download button already opens the full releases page, including previews;
   the computer app's version lookup was still using stable-only `/releases/latest`.
@@ -465,6 +495,12 @@ recipe development possible (see the
   that needs it.
 - [#168](https://github.com/chrissotraidis/padmint/pull/168): plan for KartPad
   Android and BlueWake Windows built locally. Reconcile it with item 9.
+- [#272](https://github.com/chrissotraidis/padmint/pull/272): iPad library covers
+  off the main thread and a faster 3D carousel (open since 15 November). Check it
+  against #294 before merging either.
+- The six Linux recipe PRs in "Where it stands" (bearbirdpad#29, goldenpad#54,
+  bananapad#24, squirrelpad#11, dinopad#22, meleepad#60) are still open
+  (29 November recheck).
 
 ### 9. Later: games for desktops and Android
 

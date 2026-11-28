@@ -14,7 +14,7 @@ Tracking issues: [#75](https://github.com/chrissotraidis/padmint/issues/75)
 
 ## Resume work
 
-**Current queue: [What PadMint still needs](REMAINING.md)** (2 November 2026).
+**Current queue: [What PadMint still needs](REMAINING.md)**, which opens with where we are (updated 29 November 2026).
 It replaces the lists below as the place to start; they stay as dated notes.
 
 **Owner handoff, 29 October 2026:** save the documentation and small fixes now,
